@@ -1,10 +1,22 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsilon", "Epsilon\Epsilon.csproj", "{4E213E9F-99B4-49DA-8219-0FEA4033523E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsilon.Abstractions", "Epsilon.Abstractions\Epsilon.Abstractions.csproj", "{19DBF63A-751B-407B-94D3-904CD090CDD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E213E9F-99B4-49DA-8219-0FEA4033523E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E213E9F-99B4-49DA-8219-0FEA4033523E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E213E9F-99B4-49DA-8219-0FEA4033523E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E213E9F-99B4-49DA-8219-0FEA4033523E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19DBF63A-751B-407B-94D3-904CD090CDD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19DBF63A-751B-407B-94D3-904CD090CDD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19DBF63A-751B-407B-94D3-904CD090CDD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19DBF63A-751B-407B-94D3-904CD090CDD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
