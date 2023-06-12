@@ -15,16 +15,36 @@ public class PageEndpoint : IPageEndpoint
         _client = client;
     }
 
-    public async Task<IEnumerable<Revision>?> GetRevisions(int courseId, string id)
+    public async Task<IEnumerable<PageRevision>?> GetRevisions(int courseId, string pageId)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Get, $"v1/courses/{courseId}/pages/{id}/revisions");
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"v1/courses/{courseId}/pages/{pageId}/revisions");
         using var response = await _client.SendAsync(request);
 
         return response.StatusCode == HttpStatusCode.OK
-            ? await response.Content.ReadFromJsonAsync<IEnumerable<Revision>>()
+            ? await response.Content.ReadFromJsonAsync<IEnumerable<PageRevision>>()
             : null;
     }
+
+    public async Task<PageRevision?> GetClosestRevisionByDates(int courseId, string pageId, DateTime startDate, DateTime endDate)
+    {
+        var revisions = await GetRevisions(courseId, pageId);
+        var closestRevision = revisions!
+            .OrderBy(obj => Math.Abs((obj.UpdatedAt!.Value - startDate).Ticks))
+            .FirstOrDefault(obj => obj.UpdatedAt >= startDate && obj.UpdatedAt <= endDate);
+
+        return closestRevision; 
+    }
     
+    public async Task<PageRevision?> GetRevision(int courseId, string pageId, int revisionId)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"v1/courses/{courseId}/pages/{pageId}/revisions/{revisionId}");
+        using var response = await _client.SendAsync(request);
+
+        return response.StatusCode == HttpStatusCode.OK
+            ? await response.Content.ReadFromJsonAsync<PageRevision>()
+            : null;
+    }
+
     public async Task<Page?> UpdateOrCreatePage(int courseId, string id, string html)
     {
         var existingPage = await GetPage(courseId, id);

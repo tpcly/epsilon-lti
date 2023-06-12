@@ -2,10 +2,12 @@ namespace Epsilon.Canvas.Abstractions.Rest;
 
 public interface IPageEndpoint
 {
-    Task<IEnumerable<Revision>?> GetRevisions(int courseId, string id);
+    Task<IEnumerable<PageRevision>?> GetRevisions(int courseId, string pageId);
 
-    // Task<Revision?> GetRevision(int courseId, string id, DateTime startDate, DateTime endDate);
+    Task<PageRevision?> GetRevision(int courseId, string pageId, int revisionId);
     
+    Task<PageRevision?> GetClosestRevisionByDates(int courseId, string pageId, DateTime startDate, DateTime endDate);
+
     Task<Page?> UpdateOrCreatePage(int courseId, string id, string html);
 
     Task<Page?> CreatePage(int courseId, string id, string html);
