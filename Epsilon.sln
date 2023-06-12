@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsilon.Canvas", "Epsilon.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsilon.Canvas.Abstractions", "Epsilon.Canvas.Abstractions\Epsilon.Canvas.Abstractions.csproj", "{3016CF47-6FA0-4774-AE8B-60C941C956FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsilon.Host.WebApi", "Epsilon.Host.WebApi\Epsilon.Host.WebApi.csproj", "{0A05DAA2-D51B-4783-871F-7571C1A2B968}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{3016CF47-6FA0-4774-AE8B-60C941C956FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3016CF47-6FA0-4774-AE8B-60C941C956FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3016CF47-6FA0-4774-AE8B-60C941C956FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A05DAA2-D51B-4783-871F-7571C1A2B968}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A05DAA2-D51B-4783-871F-7571C1A2B968}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A05DAA2-D51B-4783-871F-7571C1A2B968}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A05DAA2-D51B-4783-871F-7571C1A2B968}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
