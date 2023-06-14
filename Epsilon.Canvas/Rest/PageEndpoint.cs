@@ -13,6 +13,11 @@ public class PageEndpoint : IPageEndpoint
         _client = client;
     }
 
+    private static object ParseToInputValue(Page page)
+    {
+        return new { wiki_page = new { title = page.Url, body = page.Body, }, };
+    }
+
     public async Task<Page?> GetPage(int courseId, string id)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, $"v1/courses/{courseId}/pages/{id}");
@@ -22,7 +27,7 @@ public class PageEndpoint : IPageEndpoint
             ? await response.Content.ReadFromJsonAsync<Page>()
             : null;
     }
-    
+
     public async Task<IEnumerable<Page>?> GetAll(int courseId, IEnumerable<string> include)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, $"v1/courses/{courseId}/pages");
@@ -32,35 +37,27 @@ public class PageEndpoint : IPageEndpoint
             ? await response.Content.ReadFromJsonAsync<IEnumerable<Page>>()
             : null;
     }
-    
+
     public async Task<Page?> CreatePage(int courseId, Page page)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, $"v1/courses/{courseId}/pages")
-        {
-            Content = JsonContent.Create( new { wiki_page = new { title = page.Url, body = page.Body, },}),
-        };
-
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"v1/courses/{courseId}/pages") { Content = JsonContent.Create(ParseToInputValue(page)), };
         using var response = await _client.SendAsync(request);
 
         return response.StatusCode == HttpStatusCode.OK
             ? await response.Content.ReadFromJsonAsync<Page?>()
             : null;
     }
-    
+
     public async Task<Page?> UpdatePage(int courseId, Page page)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Put, $"v1/courses/{courseId}/pages/{page.Url}")
-        {
-            Content = JsonContent.Create( new { wiki_page = new { title = page.Url, body = page.Body, },}),
-        };
-
+        using var request = new HttpRequestMessage(HttpMethod.Put, $"v1/courses/{courseId}/pages/{page.Url}") { Content = JsonContent.Create(ParseToInputValue(page)), };
         using var response = await _client.SendAsync(request);
 
         return response.StatusCode == HttpStatusCode.OK
             ? await response.Content.ReadFromJsonAsync<Page?>()
             : null;
     }
-    
+
     public async Task<Page?> UpdateOrCreatePage(int courseId, Page page)
     {
         if (page.PageId == null && page.Url == null)
@@ -71,7 +68,7 @@ public class PageEndpoint : IPageEndpoint
         var id = page.PageId != null
             ? page.PageId.ToString()
             : page.Url;
-        
+
         var existingPage = await GetPage(courseId, id!);
 
         if (existingPage == null)
@@ -81,7 +78,7 @@ public class PageEndpoint : IPageEndpoint
 
         return await UpdatePage(courseId, page);
     }
-    
+
     public async Task<IEnumerable<PageRevision>?> GetRevisions(int courseId, string pageId)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, $"v1/courses/{courseId}/pages/{pageId}/revisions");
