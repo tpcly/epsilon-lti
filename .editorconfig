@@ -443,6 +443,9 @@ dotnet_diagnostic.ca1848.severity = none
 # CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly.
 dotnet_diagnostic.ca1826.severity = none
 
+# CA1056: URI properties should not be strings
+dotnet_diagnostic.ca1056.severity = none
+
 # Code style errors
 dotnet_diagnostic.ide0001.severity = error
 dotnet_diagnostic.ide0002.severity = error
