@@ -1,5 +1,6 @@
 using Epsilon.Abstractions.Service;
 using Epsilon.Canvas.Abstractions.Rest;
+using Epsilon.Host.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Epsilon.Host.WebApi.Controllers;
@@ -14,9 +15,9 @@ public class ComponentController : ControllerBase
     {
         _pageEndpoint = pageEndpoint;
     }
-    
-    [HttpGet("Page/{pageName}")]
-    public async Task<ActionResult<Page>> GetPage(string pageName, int courseId)
+
+    [HttpGet("page/{pageName}")]
+    public async Task<ActionResult<Page>> GetPage(int courseId, string pageName)
     {
         var page = await _pageEndpoint.GetPage(courseId, pageName);
 
@@ -27,24 +28,11 @@ public class ComponentController : ControllerBase
 
         return Ok(page);
     }
-    
-    [HttpPost("Page/persona")]
-    public async Task<ActionResult<Page>> UpdatePersona(int courseId, string html)
-    {
-        var page = await _pageEndpoint.UpdateOrCreatePage(courseId, "persona", html);
 
-        if (page == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(page);
-    }
-    
-    [HttpPost("Page/reflection")]
-    public async Task<ActionResult<Page>> UpdateReflection(int courseId, string html)
+    [HttpPost("page/{pageName}")]
+    public async Task<ActionResult<Page>> UpdateOrCreatePage(int courseId, string pageName, [FromBody] PageUpdateRequest updateRequest)
     {
-        var page = await _pageEndpoint.UpdateOrCreatePage(courseId, "reflection", html);
+        var page = await _pageEndpoint.UpdateOrCreatePage(courseId, new Page { Url = pageName, Body = updateRequest.Body, });
 
         if (page == null)
         {
