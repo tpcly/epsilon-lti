@@ -9,12 +9,11 @@ namespace Epsilon.Canvas.Rest;
 public class PageEndpoint : IPageEndpoint
 {
     private readonly HttpClient _client;
-    private readonly JsonSerializerOptions _serializerOptions;
+    private static readonly JsonSerializerOptions s_serializerOptions = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault, };
 
     public PageEndpoint(HttpClient client)
     {
         _client = client;
-        _serializerOptions = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault, };
     }
 
     public async Task<Page?> GetPage(int courseId, string id)
@@ -41,7 +40,7 @@ public class PageEndpoint : IPageEndpoint
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, $"v1/courses/{courseId}/pages")
         {
-            Content = JsonContent.Create(new PageMutation(page), options: _serializerOptions),
+            Content = JsonContent.Create(new PageMutation(page), options: s_serializerOptions),
         };
 
         using var response = await _client.SendAsync(request);
@@ -59,7 +58,7 @@ public class PageEndpoint : IPageEndpoint
 
         using var request = new HttpRequestMessage(HttpMethod.Put, $"v1/courses/{courseId}/pages/{id}")
         {
-            Content = JsonContent.Create(new PageMutation(page), options: _serializerOptions),
+            Content = JsonContent.Create(new PageMutation(page), options: s_serializerOptions),
         };
 
         using var response = await _client.SendAsync(request);
