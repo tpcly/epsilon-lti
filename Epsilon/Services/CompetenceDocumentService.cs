@@ -1,6 +1,7 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
 
@@ -14,24 +15,30 @@ public class CompetenceDocumentService : ICompetenceDocumentService
     {
         _pageComponents = pageComponents;
     }
-
-    public async Task<Stream> WriteDocument(Stream stream, DateTime from, DateTime to)
+    
+    public async Task<CompetenceDocument> GetDocument(DateTime from, DateTime to)
     {
         var components = await FetchComponents(from, to).ToListAsync();
+
+        return new CompetenceDocument(components);
+    }
+
+    public async Task<Stream> WriteDocument(Stream stream, CompetenceDocument document)
+    {
         var startPosition = stream.Position;
 
-        using var document = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
+        using var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
-        document.AddMainDocumentPart();
-        document.MainDocumentPart!.Document = new Document();
+        wordDocument.AddMainDocumentPart();
+        wordDocument.MainDocumentPart!.Document = new Document();
 
-        foreach (var competenceWordComponent in components)
+        foreach (var competenceWordComponent in document.Components)
         {
-            competenceWordComponent.AddToWordDocument(document.MainDocumentPart);
+            competenceWordComponent.AddToWordDocument(wordDocument.MainDocumentPart);
         }
 
-        document.Save();
-        document.Close();
+        wordDocument.Save();
+        wordDocument.Close();
 
         // Reset stream position to start position
         stream.Position = startPosition;
