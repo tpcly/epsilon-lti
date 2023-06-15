@@ -1,37 +1,47 @@
 using Epsilon.Abstractions.Components;
-using Epsilon.Canvas.Abstractions;
 using Epsilon.Canvas.Abstractions.Rest;
 using HtmlAgilityPack;
 
 namespace Epsilon.Components;
 
-public class PageComponentFetcher
+public class PageComponentManager : IPageComponentManager
 {
     private readonly ICanvasRestApi _canvasRestApi;
-    private readonly CanvasUserSession _canvasUserSession;
 
-    public PageComponentFetcher(ICanvasRestApi canvasRestApi, CanvasUserSession canvasUserSession)
+    public PageComponentManager(ICanvasRestApi canvasRestApi)
     {
         _canvasRestApi = canvasRestApi;
-        _canvasUserSession = canvasUserSession;
     }
 
-    public async Task<PageComponent> Fetch(string pageName)
+    public async Task<PageComponent> Fetch(int courseId, string pageName)
     {
-        var personaPage = await _canvasRestApi.Pages.GetPage(_canvasUserSession.CourseId, pageName);
-        if (personaPage == null)
+        var page = await _canvasRestApi.Pages.GetPage(courseId, pageName);
+
+        return await ConvertPageToComponent(pageName, page);
+    }
+
+    public async Task<PageComponent> CreateOrUpdate(int courseId, string pageName, string body)
+    {
+        var page = await _canvasRestApi.Pages.UpdateOrCreatePage(courseId, new Page(pageName) { Title = pageName, Body = body, });
+
+        return await ConvertPageToComponent(pageName, page);
+    }
+
+    private async Task<PageComponent> ConvertPageToComponent(string pageName, Page? page)
+    {
+        if (page == null)
         {
             return new PageComponent($"<p>Page {pageName} could not be found</p>");
         }
 
-        if (personaPage.Body == null)
+        if (page.Body == null)
         {
             return new PageComponent($"<p>Page {pageName} has an empty body</p>");
         }
 
-        var updatedPersonaHtml = await SubstituteImagesWithBase64(personaPage.Body);
+        var html = await SubstituteImagesWithBase64(page.Body);
 
-        return new PageComponent(updatedPersonaHtml);
+        return new PageComponent(html);
     }
 
     private async Task<string> SubstituteImagesWithBase64(string html)

@@ -1,5 +1,4 @@
-using Epsilon.Abstractions.Service;
-using Epsilon.Canvas.Abstractions.Rest;
+using Epsilon.Abstractions.Components;
 using Epsilon.Host.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,36 +8,26 @@ namespace Epsilon.Host.WebApi.Controllers;
 [Route("[controller]")]
 public class ComponentController : ControllerBase
 {
-    private readonly IPageEndpoint _pageEndpoint;
+    private readonly IPageComponentManager _pageComponentManager;
 
-    public ComponentController(IPageEndpoint pageEndpoint)
+    public ComponentController(IPageComponentManager pageComponentManager)
     {
-        _pageEndpoint = pageEndpoint;
+        _pageComponentManager = pageComponentManager;
     }
 
     [HttpGet("page/{pageName}")]
-    public async Task<ActionResult<Page>> GetPage(int courseId, string pageName)
+    public async Task<ActionResult<PageComponent>> GetPage(int courseId, string pageName)
     {
-        var page = await _pageEndpoint.GetPage(courseId, pageName);
+        var pageComponent = await _pageComponentManager.Fetch(courseId, pageName);
 
-        if (page == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(page);
+        return Ok(pageComponent);
     }
 
     [HttpPost("page/{pageName}")]
-    public async Task<ActionResult<Page>> UpdateOrCreatePage(int courseId, string pageName, [FromBody] PageUpdateRequest updateRequest)
+    public async Task<ActionResult<PageComponent>> UpdateOrCreatePage(int courseId, string pageName, [FromBody] PageUpdateRequest updateRequest)
     {
-        var page = await _pageEndpoint.UpdateOrCreatePage(courseId, new Page(pageName) { Title = pageName, Body = updateRequest.Body, });
+        var createdPageComponent = await _pageComponentManager.CreateOrUpdate(courseId, pageName, updateRequest.Body);
 
-        if (page == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(page);
+        return Ok(createdPageComponent);
     }
 }

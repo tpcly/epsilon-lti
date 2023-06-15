@@ -15,9 +15,9 @@ public class DocumentController : Controller
     }
 
     [HttpGet("word")]
-    public async Task<IActionResult> DownloadWord(DateTime from, DateTime to)
+    public async Task<IActionResult> DownloadWord(int courseId, DateTime from, DateTime to)
     {
-        var document = await _competenceDocumentService.GetDocument(from, to);
+        var document = await _competenceDocumentService.GetDocument(courseId, from, to);
 
         var stream = new MemoryStream();
         await _competenceDocumentService.WriteDocument(stream, document);

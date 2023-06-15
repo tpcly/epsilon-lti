@@ -48,7 +48,7 @@ builder.Services.AddScoped<CanvasUserSession>(static services =>
     return new CanvasUserSession(options.CourseId, options.StudentId, options.AccessToken);
 });
 
-builder.Services.AddScoped<PageComponentFetcher>();
+builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
 
 // Add Swagger
