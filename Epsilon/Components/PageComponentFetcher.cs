@@ -66,5 +66,4 @@ public class PageComponentFetcher : IFetcher<PageComponent>
 
         return document.Text;
     }
-
 }
