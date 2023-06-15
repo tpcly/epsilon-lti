@@ -52,11 +52,7 @@ public class PageEndpoint : IPageEndpoint
 
     public async Task<Page?> UpdatePage(int courseId, Page page)
     {
-        var id = page.PageId != null
-            ? page.PageId.ToString()
-            : page.Url;
-
-        using var request = new HttpRequestMessage(HttpMethod.Put, $"v1/courses/{courseId}/pages/{id}")
+        using var request = new HttpRequestMessage(HttpMethod.Put, $"v1/courses/{courseId}/pages/{page.Id}")
         {
             Content = JsonContent.Create(new PageMutation(page), options: s_serializerOptions),
         };
@@ -70,16 +66,7 @@ public class PageEndpoint : IPageEndpoint
 
     public async Task<Page?> UpdateOrCreatePage(int courseId, Page page)
     {
-        if (page.PageId == null && page.Url == null)
-        {
-            throw new ArgumentNullException(nameof(page));
-        }
-
-        var id = page.PageId != null
-            ? page.PageId.ToString()
-            : page.Url;
-
-        var existingPage = await GetPage(courseId, id!);
+        var existingPage = await GetPage(courseId, page.Id);
 
         if (existingPage == null)
         {

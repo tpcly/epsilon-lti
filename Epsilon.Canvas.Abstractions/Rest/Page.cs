@@ -4,6 +4,26 @@ namespace Epsilon.Canvas.Abstractions.Rest;
 
 public record Page
 {
+    public Page(string id)
+    {
+        // Required due to the fact that Canvas uses both the PageId and Url as identifiers.
+        if (int.TryParse(id, out var pageId))
+        {
+            PageId = pageId;
+        }
+        else
+        {
+            Url = id;
+        }
+    }
+
+    [JsonIgnore]
+    public string Id => (
+        PageId != null
+            ? PageId.ToString()
+            : Url
+    ) ?? throw new InvalidOperationException("Both should not be null, either PageId or Url has a value");
+
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 

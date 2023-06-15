@@ -32,7 +32,7 @@ public class ComponentController : ControllerBase
     [HttpPost("page/{pageName}")]
     public async Task<ActionResult<Page>> UpdateOrCreatePage(int courseId, string pageName, [FromBody] PageUpdateRequest updateRequest)
     {
-        var page = await _pageEndpoint.UpdateOrCreatePage(courseId, new Page { Url = pageName, Title = pageName, Body = updateRequest.Body, });
+        var page = await _pageEndpoint.UpdateOrCreatePage(courseId, new Page(pageName) { Title = pageName, Body = updateRequest.Body, });
 
         if (page == null)
         {
