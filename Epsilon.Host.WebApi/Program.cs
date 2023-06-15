@@ -11,7 +11,6 @@ using Epsilon.Host.WebApi.Options;
 using Epsilon.Services;
 using Microsoft.Extensions.Options;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -49,21 +48,18 @@ builder.Services.AddScoped<CanvasUserSession>(static services =>
     return new CanvasUserSession(options.CourseId, options.StudentId, options.AccessToken);
 });
 
-builder.Services.AddScoped<IFetcher<PageComponent>, PageComponentFetcher>(
-    static services => new PageComponentFetcher(
-        services.GetRequiredService<ICanvasRestApi>(),
-        services.GetRequiredService<CanvasUserSession>(),
-        "homepage"
-    )
-);
-
-builder.Services.AddScoped<IFetcher<PageComponent>, PageComponentFetcher>(
-    static services => new PageComponentFetcher(
-        services.GetRequiredService<ICanvasRestApi>(),
-        services.GetRequiredService<CanvasUserSession>(),
-        "projects"
-    )
-);
+// Register page services
+var pageNames = new[] { "homepage", "projects", };
+foreach (var pageName in pageNames)
+{
+    builder.Services.AddScoped<IFetcher<PageComponent>, PageComponentFetcher>(
+        services => new PageComponentFetcher(
+            services.GetRequiredService<ICanvasRestApi>(),
+            services.GetRequiredService<CanvasUserSession>(),
+            pageName
+        )
+    );
+}
 
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
 
