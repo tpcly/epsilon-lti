@@ -8,8 +8,9 @@ namespace Epsilon.Canvas.Rest;
 
 public class PageEndpoint : IPageEndpoint
 {
-    private readonly HttpClient _client;
     private static readonly JsonSerializerOptions s_serializerOptions = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault, };
+
+    private readonly HttpClient _client;
 
     public PageEndpoint(HttpClient client)
     {
