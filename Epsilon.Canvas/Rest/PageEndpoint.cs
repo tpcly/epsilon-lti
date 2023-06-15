@@ -89,7 +89,7 @@ public class PageEndpoint : IPageEndpoint
         return await UpdatePage(courseId, page);
     }
 
-    public async Task<IEnumerable<PageRevision>?> GetRevisions(int courseId, string pageId)
+    public async Task<IEnumerable<PageRevision>?> GetAllRevisions(int courseId, string pageId)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, $"v1/courses/{courseId}/pages/{pageId}/revisions");
         using var response = await _client.SendAsync(request);
@@ -111,7 +111,7 @@ public class PageEndpoint : IPageEndpoint
 
     public async Task<PageRevision?> GetClosestRevisionByDates(int courseId, string pageId, DateTime startDate, DateTime endDate)
     {
-        var revisions = await GetRevisions(courseId, pageId);
+        var revisions = await GetAllRevisions(courseId, pageId);
         var closestRevision = revisions!
                               .OrderBy(obj => Math.Abs((obj.UpdatedAt!.Value - startDate).Ticks))
                               .FirstOrDefault(obj => obj.UpdatedAt >= startDate && obj.UpdatedAt <= endDate);
