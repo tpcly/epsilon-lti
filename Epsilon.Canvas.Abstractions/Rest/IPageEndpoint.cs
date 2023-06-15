@@ -12,7 +12,7 @@ public interface IPageEndpoint
     
     Task<Page?> UpdateOrCreatePage(int courseId, Page page);
 
-    Task<IEnumerable<PageRevision>?> GetRevisions(int courseId, string pageId);
+    Task<IEnumerable<PageRevision>?> GetAllRevisions(int courseId, string pageId);
 
     Task<PageRevision?> GetRevision(int courseId, string pageId, int revisionId);
     
