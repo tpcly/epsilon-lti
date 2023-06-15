@@ -4,21 +4,22 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
+using Epsilon.Components;
 
 namespace Epsilon.Services;
 
 public class CompetenceDocumentService : ICompetenceDocumentService
 {
-    private readonly IEnumerable<IFetcher<PageComponent>> _pageComponents;
+    private readonly PageComponentFetcher _pageComponent;
 
-    public CompetenceDocumentService(IEnumerable<IFetcher<PageComponent>> pageComponents)
+    public CompetenceDocumentService(PageComponentFetcher pageComponent)
     {
-        _pageComponents = pageComponents;
+        _pageComponent = pageComponent;
     }
-    
+
     public async Task<CompetenceDocument> GetDocument(DateTime from, DateTime to)
     {
-        var components = await FetchComponents(from, to).ToListAsync();
+        var components = await FetchComponents().ToListAsync();
 
         return new CompetenceDocument(components);
     }
@@ -46,11 +47,9 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         return stream;
     }
 
-    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(DateTime from, DateTime to)
+    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents()
     {
-        foreach (var pageComponentFetcher in _pageComponents)
-        {
-            yield return await pageComponentFetcher.Fetch(from, to);
-        }
+        yield return await _pageComponent.Fetch("homepage");
+        yield return await _pageComponent.Fetch("projects");
     }
 }

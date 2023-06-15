@@ -5,30 +5,28 @@ using HtmlAgilityPack;
 
 namespace Epsilon.Components;
 
-public class PageComponentFetcher : IFetcher<PageComponent>
+public class PageComponentFetcher
 {
     private readonly ICanvasRestApi _canvasRestApi;
     private readonly CanvasUserSession _canvasUserSession;
-    private readonly string _pageName;
 
-    public PageComponentFetcher(ICanvasRestApi canvasRestApi, CanvasUserSession canvasUserSession, string pageName)
+    public PageComponentFetcher(ICanvasRestApi canvasRestApi, CanvasUserSession canvasUserSession)
     {
         _canvasRestApi = canvasRestApi;
         _canvasUserSession = canvasUserSession;
-        _pageName = pageName;
     }
 
-    public async Task<PageComponent> Fetch(DateTime from, DateTime to)
+    public async Task<PageComponent> Fetch(string pageName)
     {
-        var personaPage = await _canvasRestApi.Pages.GetPage(_canvasUserSession.CourseId, _pageName);
+        var personaPage = await _canvasRestApi.Pages.GetPage(_canvasUserSession.CourseId, pageName);
         if (personaPage == null)
         {
-            return new PageComponent($"<p>Page {_pageName} could not be found</p>");
+            return new PageComponent($"<p>Page {pageName} could not be found</p>");
         }
 
         if (personaPage.Body == null)
         {
-            return new PageComponent($"<p>Page {_pageName} has an empty body</p>");
+            return new PageComponent($"<p>Page {pageName} has an empty body</p>");
         }
 
         var updatedPersonaHtml = await SubstituteImagesWithBase64(personaPage.Body);

@@ -48,19 +48,7 @@ builder.Services.AddScoped<CanvasUserSession>(static services =>
     return new CanvasUserSession(options.CourseId, options.StudentId, options.AccessToken);
 });
 
-// Register page services
-var pageNames = new[] { "homepage", "projects", };
-foreach (var pageName in pageNames)
-{
-    builder.Services.AddScoped<IFetcher<PageComponent>, PageComponentFetcher>(
-        services => new PageComponentFetcher(
-            services.GetRequiredService<ICanvasRestApi>(),
-            services.GetRequiredService<CanvasUserSession>(),
-            pageName
-        )
-    );
-}
-
+builder.Services.AddScoped<PageComponentFetcher>();
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
 
 // Add Swagger
