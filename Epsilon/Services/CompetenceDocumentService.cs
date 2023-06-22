@@ -1,41 +1,54 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
-using Epsilon.Abstractions.Service;
+using Epsilon.Abstractions.Services;
 
 namespace Epsilon.Services;
 
 public class CompetenceDocumentService : ICompetenceDocumentService
 {
-    private readonly ICompetenceComponentService _competenceComponentService;
+    private readonly IPageComponentManager _pageComponent;
 
-    public CompetenceDocumentService(ICompetenceComponentService competenceComponentService)
+    public CompetenceDocumentService(IPageComponentManager pageComponent)
     {
-        _competenceComponentService = competenceComponentService;
+        _pageComponent = pageComponent;
     }
 
-    public async Task<Stream> WriteDocument(Stream stream, DateTime startDate, DateTime endDate)
+    public async Task<CompetenceDocument> GetDocument(int courseId, DateTime from, DateTime to)
+    {
+        var components = await FetchComponents(courseId).ToListAsync();
+
+        return new CompetenceDocument(components);
+    }
+
+    public async Task<Stream> WriteDocument(Stream stream, CompetenceDocument document)
     {
         var startPosition = stream.Position;
 
-        var components = await _competenceComponentService.GetComponents<IWordCompetenceComponent>(startDate, endDate).ToListAsync();
-        using var document = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
+        using var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
-        document.AddMainDocumentPart();
-        document.MainDocumentPart!.Document = new Document();
+        wordDocument.AddMainDocumentPart();
+        wordDocument.MainDocumentPart!.Document = new Document();
 
-        foreach (var competenceWordComponent in components)
+        foreach (var competenceWordComponent in document.Components)
         {
-            competenceWordComponent.AddToWordDocument(document.MainDocumentPart);
+            competenceWordComponent.AddToWordDocument(wordDocument.MainDocumentPart);
         }
 
-        document.Save();
-        document.Close();
+        wordDocument.Save();
+        wordDocument.Close();
 
         // Reset stream position to start position
         stream.Position = startPosition;
 
         return stream;
+    }
+
+    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(int courseId)
+    {
+        yield return await _pageComponent.Fetch(courseId, "homepage");
+        yield return await _pageComponent.Fetch(courseId, "projects");
     }
 }

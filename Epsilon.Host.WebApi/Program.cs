@@ -1,12 +1,15 @@
 using System.Net.Http.Headers;
+using Epsilon.Abstractions.Components;
+using Epsilon.Abstractions.Services;
 using Epsilon.Canvas.Abstractions;
 using Epsilon.Canvas.Abstractions.GraphQl;
 using Epsilon.Canvas.Abstractions.Rest;
 using Epsilon.Canvas.GraphQl;
 using Epsilon.Canvas.Rest;
+using Epsilon.Components;
 using Epsilon.Host.WebApi.Options;
+using Epsilon.Services;
 using Microsoft.Extensions.Options;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +47,9 @@ builder.Services.AddScoped<CanvasUserSession>(static services =>
     var options = services.GetRequiredService<IOptions<CanvasMockOptions>>().Value;
     return new CanvasUserSession(options.CourseId, options.StudentId, options.AccessToken);
 });
+
+builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
+builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();
