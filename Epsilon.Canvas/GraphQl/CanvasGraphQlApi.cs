@@ -12,20 +12,16 @@ public class CanvasGraphQlApi : ICanvasGraphQlApi
         _client = client;
     }
 
-    public async Task<T?> Query<T>(string query)
+    public async Task<GraphQlSchema?> Query(string query, IDictionary<string, object>? variables = null)
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, "/api/graphql")
         {
-            Content = new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                {
-                    "query", query
-                },
-            }),
+            Content = JsonContent.Create(new GraphQlQuery(query, variables)),
         };
 
         var response = await _client.SendAsync(request);
+        var queryResponse = await response.Content.ReadFromJsonAsync<GraphQlQueryResponse>();
 
-        return await response.Content.ReadFromJsonAsync<T>();
+        return queryResponse?.Data;
     }
 }
