@@ -50,6 +50,7 @@ builder.Services.AddScoped<CanvasUserSession>(static services =>
 
 builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
+builder.Services.AddScoped<IFilterService, FilterService>();
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();
