@@ -1,4 +1,6 @@
-namespace Epsilon.Abstractions.Data;
+using Epsilon.Abstractions.Data;
+
+namespace Epsilon.Data;
 
 public class MemoryBasedRepository<TEntity> : MemoryBasedReadOnlyRepository<TEntity>, IRepository<TEntity>
     where TEntity : class, IEntity

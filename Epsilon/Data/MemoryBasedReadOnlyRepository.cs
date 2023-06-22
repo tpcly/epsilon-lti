@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
+using Epsilon.Abstractions.Data;
 
-namespace Epsilon.Abstractions.Data;
+namespace Epsilon.Data;
 
 public class MemoryBasedReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : class, IEntity
 {
