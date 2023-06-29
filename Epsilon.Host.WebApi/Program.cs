@@ -1,5 +1,7 @@
 using System.Net.Http.Headers;
+using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
+using Epsilon.Abstractions.Data;
 using Epsilon.Abstractions.Services;
 using Epsilon.Canvas.Abstractions;
 using Epsilon.Canvas.Abstractions.GraphQl;
@@ -7,8 +9,11 @@ using Epsilon.Canvas.Abstractions.Rest;
 using Epsilon.Canvas.GraphQl;
 using Epsilon.Canvas.Rest;
 using Epsilon.Components;
+using Epsilon.Data;
+using Epsilon.Host.WebApi.Data;
 using Epsilon.Host.WebApi.Options;
 using Epsilon.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,12 +40,24 @@ builder.Services.AddHttpClient(
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", settings.AccessToken);
     });
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Default");
+
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
+    );
+});
+
 builder.Services.AddScoped<ICanvasRestApi, CanvasRestApi>();
 builder.Services.AddHttpClient<ICanvasGraphQlApi, CanvasGraphQlApi>(canvasHttpClient);
-
 builder.Services.AddHttpClient<IPageEndpoint, PageEndpoint>(canvasHttpClient);
 builder.Services.AddHttpClient<IFileEndpoint, FileEndpoint>(canvasHttpClient);
 builder.Services.AddHttpClient<IAccountEndpoint, AccountEndpoint>(canvasHttpClient);
+
+builder.Services.AddScoped<IReadOnlyRepository<LearningDomain>, EntityFrameworkReadOnlyRepository<ApplicationDbContext, LearningDomain>>();
+builder.Services.AddScoped<IReadOnlyRepository<LearningDomainOutcome>, EntityFrameworkReadOnlyRepository<ApplicationDbContext, LearningDomainOutcome>>();
 
 builder.Services.AddScoped<CanvasUserSession>(static services =>
 {
@@ -51,6 +68,7 @@ builder.Services.AddScoped<CanvasUserSession>(static services =>
 builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
 builder.Services.AddScoped<IFilterService, FilterService>();
+builder.Services.AddScoped<ILearningDomainService, LearningDomainService>();
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();
