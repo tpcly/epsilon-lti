@@ -19,6 +19,8 @@
     "vue3-apexcharts": "^1.4.1"
   },
   "devDependencies": {
+    "@headlessui/vue": "1.7.2",
+    "@heroicons/vue": "^2.0.18",
     "@types/node": "^18.15.3",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
