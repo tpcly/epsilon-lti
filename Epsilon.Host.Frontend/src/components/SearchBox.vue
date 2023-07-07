@@ -52,8 +52,8 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid"
 
 const props = defineProps<{
     items: Array<{ name: string }>
-    modelValue: { name: string }
-    placeholder: string
+    modelValue?: { name: string }
+    placeholder?: string
 }>()
 
 const query = ref("")
