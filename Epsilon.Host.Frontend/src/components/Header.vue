@@ -5,17 +5,15 @@
             <Col :cols="9">
                 <div class="d-flex">
                     <img :src="DefaultAvatar" class="avatar-image" alt="test" />
-                    <SearchBox
-                        v-model="undefined"
-                        :items="[]"
-                        placeholder="Student" />
+                    <SearchBox v-model="undefined" :items="[]" :limit="5" />
                 </div>
             </Col>
             <Col :cols="3">
                 <SearchBox
                     v-model="selectedTerm"
                     :items="terms"
-                    placeholder="Term" />
+                    placeholder="Term"
+                    :limit="10" />
             </Col>
         </Row>
     </div>

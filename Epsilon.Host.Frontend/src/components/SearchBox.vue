@@ -54,6 +54,7 @@ const props = defineProps<{
     items: Array<{ name?: string | null }>
     modelValue: { name: string }
     placeholder?: string
+    limit: number
 }>()
 
 const query = ref("")
@@ -62,19 +63,21 @@ defineEmits(["update:modelValue"])
 
 const filteredItems = computed(() => {
     if (query.value === "") {
-        return props.items
+        return props.items.slice(0, props.limit)
     }
 
-    return props.items.filter((item) => {
-        if (!item.name) {
-            return false
-        }
+    return props.items
+        .filter((item) => {
+            if (!item.name) {
+                return false
+            }
 
-        return item.name
-            .toLowerCase()
-            .replace(/\s+/g, "")
-            .includes(query.value.toLowerCase().replace(/\s+/g, ""))
-    })
+            return item.name
+                .toLowerCase()
+                .replace(/\s+/g, "")
+                .includes(query.value.toLowerCase().replace(/\s+/g, ""))
+        })
+        .slice(0, props.limit)
 })
 
 function displayValue(item: { name: string }): string {
