@@ -1,4 +1,5 @@
 using Epsilon.Abstractions.Services;
+using Epsilon.Canvas.Abstractions.GraphQl;
 using Epsilon.Canvas.Abstractions.Rest;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,5 +20,11 @@ public class FilterController : Controller
     public async Task<IEnumerable<EnrollmentTerm>> GetParticipatedTerms(string studentId)
     {
         return await _filterService.GetParticipatedTerms(studentId);
+    }
+    
+    [HttpGet("accessible-students")]
+    public async Task<IEnumerable<User>> GetAccessibleStudents()
+    {
+        return await _filterService.GetAccessibleStudents();
     }
 }

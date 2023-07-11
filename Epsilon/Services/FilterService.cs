@@ -1,3 +1,4 @@
+using System.Globalization;
 using Epsilon.Abstractions.Services;
 using Epsilon.Canvas.Abstractions;
 using Epsilon.Canvas.Abstractions.GraphQl;
@@ -13,6 +14,23 @@ public class FilterService : IFilterService
             submissionsConnection(studentIds: $studentIds) {
               nodes {
                 submittedAt
+              }
+            }
+          }
+        }
+    ";
+
+    private const string AccessibleEnrollmentsQuery = @"
+        query AccessibleEnrollments {
+          allCourses {
+            enrollmentsConnection(filter: {types: [TeacherEnrollment, StudentEnrollment]}) {
+              nodes {
+                type
+                user {
+                  name
+                  avatarUrl
+                  _id
+                }
               }
             }
           }
@@ -51,5 +69,24 @@ public class FilterService : IFilterService
                                 .OrderByDescending(static term => term.StartAt);
 
         return participatedTerms;
+    }
+
+    // TODO: Has some issues due to the fact that it does not know whether the selected student has submissions or not
+    public async Task<IEnumerable<User>> GetAccessibleStudents()
+    {
+        var response = await _canvasGraphQl.Query(AccessibleEnrollmentsQuery);
+
+        return response?.Courses!
+                       .Where(c => c.Enrollments != null && c.Enrollments.Nodes.Any(e =>
+                               e.User.LegacyId == _canvasUser.StudentId.ToString(CultureInfo.InvariantCulture)
+                               && e.Type == "TeacherEnrollment"
+                           )
+                       )
+                       .SelectMany(static c =>
+                           c.Enrollments!.Nodes.Where(static e => e.Type == "StudentEnrollment")
+                            .Select(static s => s.User)
+                       )
+                       .Distinct()
+               ?? Array.Empty<User>();
     }
 }
