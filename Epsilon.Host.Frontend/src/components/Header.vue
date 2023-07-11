@@ -12,7 +12,10 @@
                 </div>
             </Col>
             <Col :cols="3">
-                <SearchBox v-model="undefined" :items="[]" placeholder="Term" />
+                <SearchBox
+                    v-model="selectedTerm"
+                    :items="terms"
+                    placeholder="Term" />
             </Col>
         </Row>
     </div>
@@ -23,6 +26,23 @@ import DefaultAvatar from "@/assets/default_avatar.png"
 import SearchBox from "@/components/SearchBox.vue"
 import Row from "@/components/Row.vue"
 import Col from "@/components/Col.vue"
+
+import { inject, onMounted, Ref, ref } from "vue"
+import { Api, EnrollmentTerm, HttpResponse } from "@/api"
+
+const api = inject<Api<unknown>>("api")
+
+const terms: Ref<EnrollmentTerm[]> = ref([])
+const selectedTerm: Ref<EnrollmentTerm | undefined> = ref(undefined)
+
+onMounted(() => {
+    api?.filter
+        .participatedTermsList()
+        .then((r: HttpResponse<EnrollmentTerm[]>) => {
+            terms.value = r.data
+            selectedTerm.value = terms.value[0]
+        })
+})
 </script>
 
 <style scoped lang="scss">
