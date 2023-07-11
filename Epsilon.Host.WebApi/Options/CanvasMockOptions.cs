@@ -15,7 +15,7 @@ public class CanvasMockOptions
     public int CourseId { get; set; }
 
     [Required]
-    public int StudentId { get; set; }
+    public int UserId { get; set; }
 
     [Required(AllowEmptyStrings = false)]
     public string AccessToken { get; set; } = string.Empty;

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Epsilon.Abstractions.Services;
 using Epsilon.Canvas.Abstractions;
 using Epsilon.Canvas.Abstractions.GraphQl;
@@ -19,6 +20,23 @@ public class FilterService : IFilterService
         }
     ";
 
+    private const string AccessibleEnrollmentsQuery = @"
+        query AccessibleEnrollments {
+          allCourses {
+            enrollmentsConnection(filter: {types: [TeacherEnrollment, StudentEnrollment]}) {
+              nodes {
+                type
+                user {
+                  name
+                  avatarUrl
+                  _id
+                }
+              }
+            }
+          }
+        }
+    ";
+
     private readonly CanvasUserSession _canvasUser;
     private readonly ICanvasGraphQlApi _canvasGraphQl;
     private readonly ICanvasRestApi _canvasRest;
@@ -30,11 +48,11 @@ public class FilterService : IFilterService
         _canvasRest = canvasRest;
     }
 
-    public async Task<IEnumerable<EnrollmentTerm>> GetParticipatedTerms()
+    public async Task<IEnumerable<EnrollmentTerm>> GetParticipatedTerms(string studentId)
     {
         var allTerms = await _canvasRest.Accounts.GetTerms(1);
 
-        var variables = new Dictionary<string, object> { { "$studentIds", _canvasUser.StudentId }, };
+        var variables = new Dictionary<string, object> { { "studentIds", studentId }, };
         var response = await _canvasGraphQl.Query(ParticipatedTermQuery, variables);
 
         if (response == null)
@@ -51,5 +69,24 @@ public class FilterService : IFilterService
                                 .OrderByDescending(static term => term.StartAt);
 
         return participatedTerms;
+    }
+
+    // TODO: Has some issues due to the fact that it does not know whether the selected student has submissions or not
+    public async Task<IEnumerable<User>> GetAccessibleStudents()
+    {
+        var response = await _canvasGraphQl.Query(AccessibleEnrollmentsQuery);
+
+        return response?.Courses!
+                       .Where(c => c.Enrollments != null && c.Enrollments.Nodes.Any(e =>
+                               e.User.LegacyId == _canvasUser.UserId.ToString(CultureInfo.InvariantCulture)
+                               && e.Type == "TeacherEnrollment"
+                           )
+                       )
+                       .SelectMany(static c =>
+                           c.Enrollments!.Nodes.Where(static e => e.Type == "StudentEnrollment")
+                            .Select(static s => s.User)
+                       )
+                       .Distinct()
+               ?? Array.Empty<User>();
     }
 }

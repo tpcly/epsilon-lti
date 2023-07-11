@@ -45,6 +45,13 @@ export interface PageUpdateRequest {
     body: string
 }
 
+export interface User {
+    _id?: string | null
+    name?: string | null
+    /** @format uri */
+    avatarUrl?: string | null
+}
+
 export type QueryParamsType = Record<string | number, any>
 export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">
 
@@ -347,9 +354,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          * @name ParticipatedTermsList
          * @request GET:/Filter/participated-terms
          */
-        participatedTermsList: (params: RequestParams = {}) =>
+        participatedTermsList: (
+            query?: {
+                studentId?: string
+            },
+            params: RequestParams = {}
+        ) =>
             this.request<EnrollmentTerm[], any>({
                 path: `/Filter/participated-terms`,
+                method: "GET",
+                query: query,
+                format: "json",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Filter
+         * @name AccessibleStudentsList
+         * @request GET:/Filter/accessible-students
+         */
+        accessibleStudentsList: (params: RequestParams = {}) =>
+            this.request<User[], any>({
+                path: `/Filter/accessible-students`,
                 method: "GET",
                 format: "json",
                 ...params,
