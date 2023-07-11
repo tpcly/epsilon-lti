@@ -30,11 +30,11 @@ public class FilterService : IFilterService
         _canvasRest = canvasRest;
     }
 
-    public async Task<IEnumerable<EnrollmentTerm>> GetParticipatedTerms()
+    public async Task<IEnumerable<EnrollmentTerm>> GetParticipatedTerms(string studentId)
     {
         var allTerms = await _canvasRest.Accounts.GetTerms(1);
 
-        var variables = new Dictionary<string, object> { { "$studentIds", _canvasUser.StudentId }, };
+        var variables = new Dictionary<string, object> { { "studentIds", studentId }, };
         var response = await _canvasGraphQl.Query(ParticipatedTermQuery, variables);
 
         if (response == null)

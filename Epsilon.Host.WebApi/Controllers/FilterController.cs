@@ -16,8 +16,8 @@ public class FilterController : Controller
     }
 
     [HttpGet("participated-terms")]
-    public async Task<IEnumerable<EnrollmentTerm>> GetParticipatedTerms()
+    public async Task<IEnumerable<EnrollmentTerm>> GetParticipatedTerms(string studentId)
     {
-        return await _filterService.GetParticipatedTerms();
+        return await _filterService.GetParticipatedTerms(studentId);
     }
 }
