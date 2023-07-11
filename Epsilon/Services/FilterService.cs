@@ -78,7 +78,7 @@ public class FilterService : IFilterService
 
         return response?.Courses!
                        .Where(c => c.Enrollments != null && c.Enrollments.Nodes.Any(e =>
-                               e.User.LegacyId == _canvasUser.StudentId.ToString(CultureInfo.InvariantCulture)
+                               e.User.LegacyId == _canvasUser.UserId.ToString(CultureInfo.InvariantCulture)
                                && e.Type == "TeacherEnrollment"
                            )
                        )
