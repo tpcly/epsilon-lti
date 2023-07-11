@@ -1,7 +1,7 @@
 <template>
     <div class="searchbox">
         <Combobox
-            :model-value="props.modelValue"
+            :model-value="modelValue"
             @update:model-value="$emit('update:modelValue', $event)">
             <div class="searchbox-input">
                 <ComboboxInput
@@ -51,8 +51,8 @@ import {
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid"
 
 const props = defineProps<{
-    items: Array<{ name: string }>
-    modelValue?: { name: string }
+    items: Array<{ name?: string | null }>
+    modelValue: { name: string }
     placeholder?: string
 }>()
 
@@ -65,12 +65,16 @@ const filteredItems = computed(() => {
         return props.items
     }
 
-    return props.items.filter((item) =>
-        item.name
+    return props.items.filter((item) => {
+        if (!item.name) {
+            return false
+        }
+
+        return item.name
             .toLowerCase()
             .replace(/\s+/g, "")
             .includes(query.value.toLowerCase().replace(/\s+/g, ""))
-    )
+    })
 })
 
 function displayValue(item: { name: string }): string {
