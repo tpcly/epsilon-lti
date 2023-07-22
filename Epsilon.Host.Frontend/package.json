@@ -7,6 +7,7 @@
     "setup-ssl": "node aspnetcore-https && node aspnetcore-vite",
     "dev": "vite",
     "build": "vite build",
+    "host": "vite --host",
     "preview": "vite preview",
     "lint": "eslint --ext .ts,vue --ignore-path .gitignore .",
     "generate-api-schema": "NODE_TLS_REJECT_UNAUTHORIZED=0 pnpm dlx swagger-typescript-api -p https://localhost:7084/swagger/v1/swagger.json  -o src/ -n api.ts"

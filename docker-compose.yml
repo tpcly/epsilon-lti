@@ -9,14 +9,14 @@
       - 5001:443
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80;https://+:443;
+      - ASPNETCORE_URLS=http://+:80;
   frontend:
     container_name: Epsilon-Frontend
     build:
       context: ./Epsilon.Host.Frontend
       dockerfile: ./Dockerfile
     ports:
-      - 5003:773
+      - 8000:8000
   db:
     container_name: Epsilon-DB
     image: mariadb:10
