@@ -74,4 +74,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the containers
-        run: docker-compose up
+        run: docker-compose up -d
