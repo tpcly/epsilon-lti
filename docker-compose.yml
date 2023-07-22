@@ -1,4 +1,4 @@
-﻿services: 
+﻿services:
   API:
     container_name: Epsilon-API
     build:
@@ -13,6 +13,13 @@
       - ASPNETCORE_HTTPS_PORT=5001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Jv84vLfS6eSpBzi
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/dev-cert.pfx
+  Frontend:
+    container_name: Epsilon-Frontend
+    build:
+      context: ./Epsilon.Host.Frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - 5003:773
   DB:
     container_name: Epsilon-DB
     image: mariadb:10
