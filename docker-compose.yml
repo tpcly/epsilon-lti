@@ -10,9 +10,6 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80;https://+:443;
-      - ASPNETCORE_HTTPS_PORT=5001
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Jv84vLfS6eSpBzi
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/dev-cert.pfx
   frontend:
     container_name: Epsilon-Frontend
     build:

@@ -10,9 +10,6 @@ RUN dotnet restore "Epsilon.Host.WebApi/Epsilon.Host.WebApi.csproj"
 COPY . .
 WORKDIR "/src/Epsilon.Host.WebApi"
 
-RUN dotnet dev-certs https --clean
-RUN dotnet dev-certs https -ep ./dev-cert.pfx -p Jv84vLfS6eSpBzi
-
 RUN dotnet build "Epsilon.Host.WebApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
@@ -21,5 +18,4 @@ RUN dotnet publish "Epsilon.Host.WebApi.csproj" -c Release -o /app/publish /p:Us
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY --from=build /src/API/dev-cert.pfx .
 ENTRYPOINT ["dotnet", "Epsilon.Host.WebApi.dll"]
