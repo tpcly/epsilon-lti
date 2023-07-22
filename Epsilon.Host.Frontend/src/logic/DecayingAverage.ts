@@ -1,9 +1,3 @@
-import {
-    IHboIDomain,
-    ProfessionalSkillResult,
-    ProfessionalTaskResult,
-} from "/@/logic/Api"
-
 export interface DecayingAveragePerActivity {
     outcome: number
     activity: number
