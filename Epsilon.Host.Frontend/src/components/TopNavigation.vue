@@ -26,8 +26,8 @@
 <script setup lang="ts">
 import DefaultAvatar from "@/assets/default_avatar.png"
 import SearchBox from "@/components/SearchBox.vue"
-import Row from "@/components/LearningRow.vue"
-import Col from "@/components/LearningCol.vue"
+import Row from "@/components/LayoutRow.vue"
+import Col from "@/components/LayoutCol.vue"
 
 import { computed, inject, onMounted, Ref, ref, watch } from "vue"
 import { Api, EnrollmentTerm, HttpResponse, User } from "@/api"

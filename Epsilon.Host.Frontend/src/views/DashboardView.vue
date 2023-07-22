@@ -28,7 +28,7 @@
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue"
 import PerformanceDashboard from "@/views/PerformanceDashboard.vue"
 import CompetenceDocument from "@/views/CompetenceDocument.vue"
-import Header from "@/components/LearningHeader.vue"
+import Header from "@/components/TopNavigation.vue"
 </script>
 
 <style scoped lang="scss">
