@@ -6,16 +6,16 @@ namespace Epsilon.Host.WebApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ComponentController : ControllerBase
+public class PageController : ControllerBase
 {
     private readonly IPageComponentManager _pageComponentManager;
 
-    public ComponentController(IPageComponentManager pageComponentManager)
+    public PageController(IPageComponentManager pageComponentManager)
     {
         _pageComponentManager = pageComponentManager;
     }
 
-    [HttpGet("page/{pageName}")]
+    [HttpGet("{pageName}")]
     public async Task<ActionResult<PageComponent>> GetPage(int courseId, string pageName)
     {
         var pageComponent = await _pageComponentManager.Fetch(courseId, pageName);
@@ -23,7 +23,7 @@ public class ComponentController : ControllerBase
         return Ok(pageComponent);
     }
 
-    [HttpPost("page/{pageName}")]
+    [HttpPost("{pageName}")]
     public async Task<ActionResult<PageComponent>> UpdateOrCreatePage(int courseId, string pageName, [FromBody] PageUpdateRequest updateRequest)
     {
         var createdPageComponent = await _pageComponentManager.CreateOrUpdate(courseId, pageName, updateRequest.Body);
