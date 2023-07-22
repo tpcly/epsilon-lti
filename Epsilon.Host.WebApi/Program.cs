@@ -69,6 +69,7 @@ builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
 builder.Services.AddScoped<IFilterService, FilterService>();
 builder.Services.AddScoped<ILearningDomainService, LearningDomainService>();
+builder.Services.AddScoped<ILearningOutcomeCanvasResultService, LearningOutcomeCanvasResultService>();
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();
