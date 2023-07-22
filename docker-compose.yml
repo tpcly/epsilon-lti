@@ -1,19 +1,18 @@
 ﻿services: 
-#  API:
-#    container_name: Keeva-API
-#    build:
-#      context: .
-#      dockerfile: ./Keeva.WebApi/Dockerfile
-#    ports:
-#      - 5000:80
-#      - 5001:443
-#    environment:
-#      - ConnectionString=Server=DB,1433;Database=Keeva;User=root;Password=f4KxZH1ltWJdpov
-#      - ASPNETCORE_ENVIRONMENT=Development
-#      - ASPNETCORE_URLS=http://+:80;https://+:443;
-#      - ASPNETCORE_HTTPS_PORT=5001
-#      - ASPNETCORE_Kestrel__Certificates__Default__Password=Jv84vLfS6eSpBzi
-#      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/dev-cert.pfx
+  API:
+    container_name: Epsilon-API
+    build:
+      context: .
+      dockerfile: ./Epsilon.Host.WebApi/Dockerfile
+    ports:
+      - 5000:80
+      - 5001:443
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80;https://+:443;
+      - ASPNETCORE_HTTPS_PORT=5001
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Jv84vLfS6eSpBzi
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/dev-cert.pfx
   DB:
     container_name: Epsilon-DB
     image: mariadb:10
