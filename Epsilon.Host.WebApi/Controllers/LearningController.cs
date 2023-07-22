@@ -27,7 +27,7 @@ public class LearningController : ControllerBase
     }
 
     [HttpGet("domain/{name}")]
-    public async Task<ActionResult<LearningDomain>> GetName(string name)
+    public async Task<ActionResult<LearningDomain>> GetDomain(string name)
     {
         var domain = await _learningDomainService.GetDomain(name);
         if (domain == null)
