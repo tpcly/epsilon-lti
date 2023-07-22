@@ -19,9 +19,9 @@ public class LearningController : ControllerBase
     }
 
     [HttpGet("outcomes")]
-    public async Task<ActionResult<IAsyncEnumerable<LearningDomainOutcomeResult>>> GetResults(string studentId)
+    public async Task<ActionResult<IAsyncEnumerable<LearningDomainOutcomeResult>>> GetResults(string studentId, DateTime startDate, DateTime endDate)
     {
-        var outcomes = _learningOutcomeCanvasResultService.GetOutcomeResults(studentId);
+        var outcomes = _learningOutcomeCanvasResultService.GetOutcomeResults(studentId, startDate, endDate);
 
         return Ok(outcomes);
     }

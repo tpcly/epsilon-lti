@@ -53,7 +53,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         _learningDomainService = learningDomainService;
     }
 
-    public async IAsyncEnumerable<LearningDomainOutcomeResult> GetOutcomeResults(string studentId)
+    public async IAsyncEnumerable<LearningDomainOutcomeResult> GetOutcomeResults(string studentId, DateTime startDate, DateTime endDate)
     {
         var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
@@ -63,6 +63,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         foreach (var submission in submissionsTask.Result.Courses.SelectMany(static c => c.Submissions.Nodes))
         {
             var recentSubmission = submission.SubmissionHistories?.Nodes
+                                             .Where(sub => sub.SubmittedAt > startDate && sub.SubmittedAt < endDate)
                                              .Where(static h => h.RubricAssessments != null && h.RubricAssessments.Nodes.Any())
                                              .MaxBy(static h => h.Attempt);
 
