@@ -62,7 +62,7 @@ builder.Services.AddScoped<IReadOnlyRepository<LearningDomainOutcome>, EntityFra
 builder.Services.AddScoped<CanvasUserSession>(static services =>
 {
     var options = services.GetRequiredService<IOptions<CanvasMockOptions>>().Value;
-    return new CanvasUserSession(options.CourseId, options.StudentId, options.AccessToken);
+    return new CanvasUserSession(options.CourseId, options.UserId, options.AccessToken);
 });
 
 builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
