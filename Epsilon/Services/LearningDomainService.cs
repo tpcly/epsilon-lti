@@ -1,6 +1,6 @@
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
-using NetCore.Persistence.Abstractions;
+using Tpcly.Persistence.Abstractions;
 
 namespace Epsilon.Services;
 

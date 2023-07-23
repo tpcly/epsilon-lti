@@ -13,8 +13,8 @@ using Epsilon.Host.WebApi.Options;
 using Epsilon.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using NetCore.Persistence.Abstractions;
-using NetCore.Persistence.EntityFrameworkCore;
+using Tpcly.Persistence.Abstractions;
+using Tpcly.Persistence.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
