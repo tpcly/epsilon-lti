@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Epsilon.Abstractions.Data;
+using NetCore.Persistence;
 
 namespace Epsilon.Abstractions;
 

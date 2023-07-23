@@ -1,4 +1,4 @@
-using Epsilon.Abstractions.Data;
+using NetCore.Persistence;
 
 namespace Epsilon.Abstractions;
 
