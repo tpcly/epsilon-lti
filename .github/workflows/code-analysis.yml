@@ -22,7 +22,6 @@ jobs:
       actions: read
       contents: read
       security-events: write
-      packages: read
 
     strategy:
       fail-fast: false
@@ -39,10 +38,6 @@ jobs:
           languages: ${{ matrix.language }}
           queries: security-extended,security-and-quality
           
-      - if: matrix.language == 'csharp'
-        name: Add source(s)
-        run: dotnet nuget add source "https://nuget.pkg.github.com/Typiqally/index.json" --username Typiqally --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github
-
       - name: Autobuild
         uses: github/codeql-action/autobuild@v2
 
