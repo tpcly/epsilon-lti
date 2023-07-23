@@ -76,6 +76,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+          cache-dependency-path: 'Epsilon.Host.Frontend/pnpm-lock.yaml'
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@main
         env:
