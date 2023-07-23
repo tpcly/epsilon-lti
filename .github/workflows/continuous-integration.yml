@@ -73,7 +73,10 @@ jobs:
     name: Code analysis
     runs-on: ubuntu-20.04
     needs: [ build-backend, build-frontend ]
-
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
     steps:
       - uses: actions/checkout@v2
       - uses: pnpm/action-setup@v2
