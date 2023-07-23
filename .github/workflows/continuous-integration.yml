@@ -68,3 +68,15 @@ jobs:
         run: pnpm install
       - name: Perform linting
         run: pnpm lint
+        
+  code-analysis:
+    name: Code analysis
+    runs-on: ubuntu-20.04
+    needs: [ build-backend, build-frontend ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Qodana Scan'
+        uses: JetBrains/qodana-action@main
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
