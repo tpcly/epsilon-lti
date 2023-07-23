@@ -78,16 +78,15 @@ jobs:
       pull-requests: write
       checks: write
     steps:
-      - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v3
         with:
-          version: 8
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'pnpm'
-          cache-dependency-path: 'Epsilon.Host.Frontend/pnpm-lock.yaml'
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
       - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@main
+        uses: JetBrains/qodana-action@v2023.2
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+        with:
+          args: --user,root,--apply-fixes
+          use-annotations: true
+          push-fixes: pull-request

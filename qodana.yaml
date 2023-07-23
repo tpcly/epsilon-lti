@@ -5,7 +5,9 @@ profile:
 include:
   - name: VulnerableLibrariesGlobal
 bootstrap: |+
-  cd Epsilon.Host.Frontend && pnpm install
+  set -eu
+  npm install -g pnpm
+  (cd Epsilon.Host.Frontend && pnpm install --frozen-lockfile)
 dotnet:
   solution: Epsilon.sln
   configuration: Release
