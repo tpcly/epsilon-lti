@@ -27,6 +27,8 @@ export interface LearningDomain {
 export interface LearningDomainCriteria {
     /** @format int32 */
     id?: number
+    /** @format double */
+    masteryPoints?: number | null
 }
 
 export interface LearningDomainOutcome {
@@ -41,8 +43,7 @@ export interface LearningDomainOutcome {
 export interface LearningDomainOutcomeResult {
     outcome?: LearningDomainOutcome
     /** @format double */
-    grade?: number
-    gradeStatus?: OutcomeGradeStatus
+    grade?: number | null
 }
 
 export interface LearningDomainSubmission {
@@ -66,14 +67,6 @@ export interface LearningDomainTypeSet {
     /** @format uuid */
     id?: string
     types?: LearningDomainType[] | null
-}
-
-/** @format int32 */
-export enum OutcomeGradeStatus {
-    Value0 = 0,
-    Value1 = 1,
-    Value2 = 2,
-    Value3 = 3,
 }
 
 export interface PageComponent {

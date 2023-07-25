@@ -10,26 +10,26 @@ import {
 
 interface StoreState {
     domain: LearningDomain | null
-    submissions: LearningDomainSubmission[]
-    filterdSubmissions: LearningDomainSubmission[]
-    outcomes: LearningDomainOutcome[]
-    userTerms: EnrollmentTerm[]
-    currentTerm: EnrollmentTerm | null
-    users: User[]
-    currentUser: User | null
+    submissions: LearningDomainSubmission[] | null
+    filterdSubmissions: LearningDomainSubmission[] | null
+    outcomes: LearningDomainOutcome[] | null
+    userTerms: EnrollmentTerm[] | null
+    currentTerm: EnrollmentTerm
+    users: User[] | null
+    currentUser: User
 }
 
 const store = createStore({
     state(): StoreState {
         return {
-            currentTerm: null,
-            currentUser: null,
+            currentTerm: {},
+            currentUser: {},
             domain: null,
-            filterdSubmissions: [],
-            outcomes: [],
-            submissions: [],
-            userTerms: [],
-            users: [],
+            filterdSubmissions: null,
+            outcomes: null,
+            submissions: null,
+            userTerms: null,
+            users: null,
         }
     },
     mutations: {
@@ -54,11 +54,15 @@ const store = createStore({
             state.domain = domain
         },
         filterSubmissions(state) {
-            state.filterdSubmissions = state.submissions.filter(
-                (submission) =>
-                    submission.submittedAt > state.currentTerm.start_at &&
-                    submission.submittedAt < state.currentTerm.end_at
-            )
+            state.filterdSubmissions = state.submissions
+                ?.filter(
+                    (submission) =>
+                        submission.submittedAt > state.currentTerm.start_at &&
+                        submission.submittedAt < state.currentTerm.end_at
+                )
+                .sort((a, b) =>
+                    a.assignment > b.assignment ? -1 : 1
+                ) as unknown as LearningDomainSubmission[]
         },
         setOutcomes(state, outcomes: LearningDomainOutcome[]) {
             state.outcomes = outcomes

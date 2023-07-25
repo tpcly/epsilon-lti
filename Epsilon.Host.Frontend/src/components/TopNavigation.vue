@@ -1,80 +1,78 @@
 <template>
     <div class="header">
-        <img src="../assets/logo.png" alt="logo" class="header-logo" />
+        <img alt="logo" class="header-logo" src="../assets/logo.png" />
         <Row>
             <Col :cols="9">
                 <div class="d-flex">
-                    <img :src="avatarImage" class="avatar-image" alt="test" />
                     <SearchBox
-                        v-model="selectedStudent"
-                        :items="students"
-                        placeholder="Student"
-                        :limit="5" />
+                        v-model="store.state.currentUser"
+                        :items="store.state.users"
+                        :limit="5"
+                        placeholder="Student" />
                 </div>
             </Col>
             <Col :cols="3">
                 <SearchBox
                     v-model="selectedTerm"
-                    :items="terms"
-                    placeholder="Term"
-                    :limit="10" />
+                    :items="store.state.userTerms"
+                    :limit="10"
+                    placeholder="Term" />
             </Col>
         </Row>
     </div>
 </template>
 
-<script setup lang="ts">
-import DefaultAvatar from "@/assets/default_avatar.png"
+<script lang="ts" setup>
 import SearchBox from "@/components/SearchBox.vue"
 import Row from "@/components/LayoutRow.vue"
 import Col from "@/components/LayoutCol.vue"
 
-import { computed, inject, onMounted, Ref, ref, watch } from "vue"
-import { Api, EnrollmentTerm, HttpResponse, User } from "@/api"
+import { inject, ref, Ref, watch } from "vue"
+import { Api, EnrollmentTerm, HttpResponse } from "@/api"
+import { useStore } from "vuex"
 
 const api = inject<Api<unknown>>("api")
-
-const students: Ref<User[]> = ref([])
-const selectedStudent: Ref<User | undefined> = ref(undefined)
-
-const terms: Ref<EnrollmentTerm[]> = ref([])
+const store = useStore()
 const selectedTerm: Ref<EnrollmentTerm | undefined> = ref(undefined)
 
-onMounted(() => {
-    api?.filter.accessibleStudentsList().then((r: HttpResponse<User[]>) => {
-        students.value = r.data
-        selectedStudent.value = students.value[0]
-    })
+watch(selectedTerm, () => {
+    console.log("Term selection")
+    store.commit("setCurrentTerm", selectedTerm.value)
+    store.commit("filterSubmissions")
 })
 
-watch(selectedStudent, () => {
-    if (!selectedStudent.value?._id) {
+watch(store.state.currentUser, () => {
+    if (!store.state.currentUser?._id) {
         return
     }
 
     // Reset current term list
-    terms.value = []
+    store.commit("setUserTerms", [])
 
     api?.filter
         .participatedTermsList({
-            studentId: selectedStudent.value?._id,
+            studentId: store.state.currentUser?._id,
         })
         .then((r: HttpResponse<EnrollmentTerm[]>) => {
-            terms.value = r.data
-            selectedTerm.value = terms.value[0]
+            store.commit("setUserTerms", r.data)
+            selectedTerm.value = store.state.currentTerm
+            store.commit("setCurrentTerm", store.state.userTerms[0])
         })
 })
 
-const avatarImage = computed(() => {
-    if (!selectedStudent.value?.avatarUrl) {
-        return DefaultAvatar
-    }
-
-    return selectedStudent.value?.avatarUrl
-})
+api?.filter
+    .participatedTermsList({
+        studentId: store.state.currentUser?._id,
+    })
+    .then((r: HttpResponse<EnrollmentTerm[]>) => {
+        store.commit("setUserTerms", r.data)
+        store.commit("setCurrentTerm", store.state.userTerms[0])
+        selectedTerm.value = store.state.currentTerm
+        store.commit("filterSubmissions")
+    })
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .header {
     display: flex;
     justify-content: space-between;
@@ -90,18 +88,18 @@ const avatarImage = computed(() => {
     }
 }
 
-.avatar {
-    &-image {
-        min-width: 3rem;
-        min-height: 3rem;
-        max-width: 3rem;
-        max-height: 3rem;
-        aspect-ratio: 1/1;
-        border: none;
-        border-radius: 3rem;
-        margin-right: 1rem;
-        overflow: hidden;
-        background-color: #fff;
-    }
-}
+//.avatar {
+//    &-image {
+//        min-width: 3rem;
+//        min-height: 3rem;
+//        max-width: 3rem;
+//        max-height: 3rem;
+//        aspect-ratio: 1/1;
+//        border: none;
+//        border-radius: 3rem;
+//        margin-right: 1rem;
+//        overflow: hidden;
+//        background-color: #fff;
+//    }
+//}
 </style>

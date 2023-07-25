@@ -1,3 +1,7 @@
 <template>
-    <div>Competence document</div>
+    <KpiMatrix></KpiMatrix>
 </template>
+
+<script lang="ts" setup>
+import KpiMatrix from "@/components/Competence/KpiMatrix.vue"
+</script>

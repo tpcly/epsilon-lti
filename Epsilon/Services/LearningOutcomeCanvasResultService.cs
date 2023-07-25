@@ -37,6 +37,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                     criteria {
                       outcome {
                         _id
+                        masteryPoints
                       }
                     }
                   }
@@ -67,16 +68,11 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
         await Task.WhenAll(submissionsTask, domainOutcomesTask);
 
-        foreach (var submission in submissionsTask.Result.Courses.SelectMany(static c => c.Submissions.Nodes))
+        foreach (var submission in submissionsTask?.Result?.Courses?.SelectMany(static c => c.Submissions.Nodes))
         {
             var recentSubmission = submission.SubmissionHistories?.Nodes
-                                             .Where(static h => h.RubricAssessments != null && h.RubricAssessments.Nodes.Any())
                                              .MaxBy(static h => h.Attempt);
-
-            if (recentSubmission?.RubricAssessments?.Nodes == null)
-            {
-                continue;
-            }
+            
 
             var rubricAssessments = recentSubmission.RubricAssessments.Nodes.SelectMany(static rubricAssessment =>
                 rubricAssessment.AssessmentRatings.Where(static ar =>
@@ -87,6 +83,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                         Criterion.Outcome: not null,
                     })
             );
+ 
             yield return new LearningDomainSubmission(
                 submission.Assignment.Name,
                 submission.Assignment.HtmlUrl,
@@ -97,50 +94,40 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         }
     }
 
-    private static IEnumerable<LearningDomainCriteria> GetSubmissionCriteria(Submission submission)
+    private static IEnumerable<LearningDomainCriteria> GetSubmissionCriteria(Submission? submission)
     {
-        foreach (var criteria in submission?.Assignment?.Rubric?.Criteria!)
+        if (submission!.Assignment?.Rubric?.Criteria != null)
         {
-            if (criteria.Outcome != null)
+            foreach (var criteria in submission.Assignment.Rubric.Criteria)
             {
-                yield return new LearningDomainCriteria(
-                    criteria.Outcome.Id
-                );
+                if (criteria.Outcome != null)
+                {
+                    yield return new LearningDomainCriteria(
+                        criteria.Outcome.Id,
+                        criteria.Outcome.MasteryPoints
+                    );
+                }
             }
         }
     }
-
+    
     private static IEnumerable<LearningDomainOutcomeResult> GetOutcomeResults(
-        IEnumerable<AssessmentRating> rubricAssessments,
-        Task<IEnumerable<LearningDomainOutcome?>> domainOutcomesTask
+        IEnumerable<AssessmentRating>? rubricAssessments,
+        Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
     {
-        foreach (var assessmentRating in rubricAssessments)
+        if (rubricAssessments != null)
         {
-            var outcome = domainOutcomesTask.Result.SingleOrDefault(o => o.Id == assessmentRating.Criterion.Outcome.Id);
-            if (outcome == null)
+            foreach (var assessmentRating in rubricAssessments)
             {
-                continue;
+                var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessmentRating?.Criterion?.Outcome?.Id);
+                if (outcome == null)
+                {
+                    continue;
+                }
+    
+                yield return new LearningDomainOutcomeResult(outcome, assessmentRating.Points);
             }
-
-            yield return new LearningDomainOutcomeResult(outcome, assessmentRating.Points!.Value, GetGradeStatus(assessmentRating));
         }
-    }
-
-    private static OutcomeGradeStatus GetGradeStatus(AssessmentRating? rating)
-    {
-        if (rating != null)
-        {
-            if (rating.Points != null)
-            {
-                return rating.IsMastery
-                    ? OutcomeGradeStatus.Mastered
-                    : OutcomeGradeStatus.NotMastered;
-            }
-
-            return OutcomeGradeStatus.NotGraded;
-        }
-
-        return OutcomeGradeStatus.NotAssessed;
     }
 }

@@ -179,7 +179,7 @@ export class DecayingAverageLogic {
         return totalGradeScore
     }
 
-    private static groupBy<T>(
+    public static groupBy<T>(
         arr: T[],
         fn: (item: T) => number | string
     ): Record<string, T[]> {
