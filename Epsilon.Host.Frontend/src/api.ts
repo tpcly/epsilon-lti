@@ -24,6 +24,37 @@ export interface LearningDomain {
     valuesSet?: LearningDomainTypeSet
 }
 
+export interface LearningDomainCriteria {
+    /** @format int32 */
+    id?: number
+}
+
+export interface LearningDomainOutcome {
+    /** @format int32 */
+    id?: number
+    row?: LearningDomainType
+    column?: LearningDomainType
+    value?: LearningDomainType
+    name?: string | null
+}
+
+export interface LearningDomainOutcomeResult {
+    outcome?: LearningDomainOutcome
+    /** @format double */
+    grade?: number
+    gradeStatus?: OutcomeGradeStatus
+}
+
+export interface LearningDomainSubmission {
+    assignment?: string | null
+    /** @format uri */
+    assignmentUrl?: string | null
+    /** @format date-time */
+    submittedAt?: string | null
+    criteria?: LearningDomainCriteria[] | null
+    results?: LearningDomainOutcomeResult[] | null
+}
+
 export interface LearningDomainType {
     id?: string | null
     name?: string | null
@@ -35,6 +66,14 @@ export interface LearningDomainTypeSet {
     /** @format uuid */
     id?: string
     types?: LearningDomainType[] | null
+}
+
+/** @format int32 */
+export enum OutcomeGradeStatus {
+    Value0 = 0,
+    Value1 = 1,
+    Value2 = 2,
+    Value3 = 3,
 }
 
 export interface PageComponent {
@@ -396,7 +435,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
             },
             params: RequestParams = {}
         ) =>
-            this.request<LearningDomain, any>({
+            this.request<LearningDomainSubmission[], any>({
                 path: `/Learning/outcomes`,
                 method: "GET",
                 query: query,
@@ -414,6 +453,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         domainDetail: (name: string, params: RequestParams = {}) =>
             this.request<LearningDomain, any>({
                 path: `/Learning/domain/${name}`,
+                method: "GET",
+                format: "json",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Learning
+         * @name DomainOutcomesDetail
+         * @request GET:/Learning/domain/{tenetId}/outcomes
+         */
+        domainOutcomesDetail: (tenetId: string, params: RequestParams = {}) =>
+            this.request<LearningDomainOutcome, any>({
+                path: `/Learning/domain/${tenetId}/outcomes`,
                 method: "GET",
                 format: "json",
                 ...params,
