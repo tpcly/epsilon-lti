@@ -90,7 +90,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
             yield return new LearningDomainSubmission(
                 submission.Assignment.Name,
                 submission.Assignment.HtmlUrl,
-                submission.SubmittedAt,
+                recentSubmission.SubmittedAt,
                 GetSubmissionCriteria(submission),
                 GetOutcomeResults(rubricAssessments, domainOutcomesTask)
             );
