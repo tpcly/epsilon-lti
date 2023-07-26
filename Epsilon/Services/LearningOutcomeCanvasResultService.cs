@@ -112,22 +112,19 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
     }
     
     private static IEnumerable<LearningDomainOutcomeResult> GetOutcomeResults(
-        IEnumerable<AssessmentRating>? rubricAssessments,
+        IEnumerable<AssessmentRating> rubricAssessments,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
     {
-        if (rubricAssessments != null)
+        foreach (var assessmentRating in rubricAssessments)
         {
-            foreach (var assessmentRating in rubricAssessments)
+            var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o.Id == assessmentRating.Criterion.Outcome.Id);
+            if (outcome == null)
             {
-                var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessmentRating?.Criterion?.Outcome?.Id);
-                if (outcome == null)
-                {
-                    continue;
-                }
-    
-                yield return new LearningDomainOutcomeResult(outcome, assessmentRating.Points);
+                continue;
             }
+    
+            yield return new LearningDomainOutcomeResult(outcome, assessmentRating.Points);
         }
     }
 }

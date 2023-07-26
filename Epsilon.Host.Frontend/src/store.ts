@@ -22,14 +22,14 @@ interface StoreState {
 const store = createStore({
     state(): StoreState {
         return {
-            currentTerm: {},
-            currentUser: {},
-            domain: null,
-            filterdSubmissions: null,
-            outcomes: null,
-            submissions: null,
-            userTerms: null,
-            users: null,
+            currentTerm: {} as EnrollmentTerm,
+            currentUser: {} as User,
+            domain: null as unknown as LearningDomain,
+            filterdSubmissions: null as unknown as LearningDomainSubmission[],
+            outcomes: null as unknown as LearningDomainOutcome[],
+            submissions: null as unknown as LearningDomainSubmission[],
+            userTerms: null as unknown as EnrollmentTerm[],
+            users: null as unknown as User[],
         }
     },
     mutations: {

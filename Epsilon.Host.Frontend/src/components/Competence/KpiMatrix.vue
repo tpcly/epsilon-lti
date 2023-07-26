@@ -41,37 +41,6 @@ const allOutcomes = computed(
             .filter((value, index, self) => self.indexOf(value) === index)
     // .map((uniqueOutcome) => props.domain.)
 )
-
-console.log(allOutcomes)
-
-// const assignments = computed(() =>
-//     DecayingAverageLogic.groupBy(
-//         props.results,
-//         (r) => r.assignment as unknown as string
-//     )
-// )
-//
-// const resultsByOutcome = computed(() =>
-//     DecayingAverageLogic.groupBy(
-//         props.results,
-//         (r) => r.outcome?.id as unknown as string
-//     )
-// )
-
-// function getColor(status?: OutcomeGradeStatus): string {
-//     switch (status) {
-//         case OutcomeGradeStatus.Value0:
-//             return "44F656"
-//         case OutcomeGradeStatus.Value1:
-//             return "FA1818"
-//         case OutcomeGradeStatus.Value2:
-//             return "FAFF00"
-//         case OutcomeGradeStatus.Value3:
-//             return "9F2B68"
-//         default:
-//             return ""
-//     }
-// }
 </script>
 <style lang="scss" scoped>
 tr {

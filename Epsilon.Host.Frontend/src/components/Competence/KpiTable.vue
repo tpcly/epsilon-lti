@@ -1,43 +1,54 @@
 <template>
     <h2>KPI-Table</h2>
     <table>
-        <tr
-            v-for="outcomeResults of DecayingAverageLogic.groupBy(
-                results,
-                (r) => r.outcome?.id
-            )"
-            :key="outcomeResults.at(0).outcome.id">
-            <th>{{ outcomeResults.at(0).outcome.name }}</th>
+        <tr v-for="outcome of allOutcomes.sort()" :key="outcome">
+            <th>
+                {{ store.state.outcomes.find((o) => o.id === outcome).name }}
+            </th>
             <td>
                 <div
-                    v-for="assignment of outcomeResults"
-                    :key="assignment.assignment + assignment.outcome?.id">
-                    <a :href="assignment.assignmentUrl" target="_blank">{{
-                        assignment.assignment
+                    v-for="submission of store.state.filterdSubmissions.filter(
+                        (s) =>
+                            s.results.filter((r) => r.outcome.id === outcome)
+                                .length > 0
+                    )"
+                    :key="submission.submittedAt">
+                    <a :href="submission.assignmentUrl" target="_blank">{{
+                        submission.assignment
                     }}</a>
-                    <br />
                 </div>
             </td>
             <td>
                 <div
-                    v-for="grade of outcomeResults"
-                    :key="grade.assignment + grade.outcome?.id">
-                    {{ grade.grade }}
-                    <br />
+                    v-for="submission of store.state.filterdSubmissions.filter(
+                        (s) =>
+                            s.results.filter((r) => r.outcome.id === outcome)
+                                .length > 0
+                    )"
+                    :key="submission.submittedAt">
+                    {{
+                        submission.results.find((r) => r.outcome.id === outcome)
+                            ?.grade
+                    }}
                 </div>
             </td>
         </tr>
     </table>
 </template>
 <script setup lang="ts">
-import { defineProps } from "vue"
-import { LearningDomain, LearningDomainOutcomeResult } from "@/api"
-import { DecayingAverageLogic } from "@/logic/DecayingAverage"
+import { useStore } from "vuex"
+import { computed } from "vue"
 
-const props = defineProps<{
-    domain: LearningDomain
-    results: LearningDomainOutcomeResult[]
-}>()
+const store = useStore()
+
+const allOutcomes = computed(
+    () =>
+        store.state.filterdSubmissions
+            .flatMap((sub) => sub.results?.map((r) => r.outcome?.id))
+            .filter((value, index, self) => self.indexOf(value) === index)
+    // .map((uniqueOutcome) => props.domain.)
+) as unknown as number[]
+console.log(allOutcomes)
 </script>
 <style scoped lang="scss">
 tr {
