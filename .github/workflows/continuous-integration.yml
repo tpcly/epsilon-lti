@@ -68,7 +68,7 @@ jobs:
         run: pnpm install
       - name: Perform linting
         run: pnpm lint
-        
+  
   code-analysis:
     name: Code analysis
     runs-on: ubuntu-20.04
@@ -83,10 +83,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@v2023.2
+        uses: JetBrains/qodana-action@v2023.2.1
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
           args: --user,root
           use-annotations: true
-          push-fixes: pull-request
+          push-fixes: false
