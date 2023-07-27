@@ -87,6 +87,6 @@ jobs:
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
-          args: --user,root,--apply-fixes
+          args: --user,root
           use-annotations: true
           push-fixes: pull-request
