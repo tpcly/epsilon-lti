@@ -4,5 +4,5 @@ public interface ICompetenceDocumentService
 {
     Task<CompetenceDocument> GetDocument(int courseId, DateTime from, DateTime to);
 
-    Task<Stream> WriteDocument(Stream stream, CompetenceDocument document);
+    void WriteDocument(Stream stream, CompetenceDocument document);
 }

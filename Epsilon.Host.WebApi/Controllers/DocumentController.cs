@@ -33,15 +33,15 @@ public class DocumentController : ControllerBase
 
         return Ok(createdPageComponent);
     }
-    
-    
+
+
     [HttpGet("download/word")]
     public async Task<IActionResult> DownloadWord(int courseId, DateTime from, DateTime to)
     {
         var document = await _competenceDocumentService.GetDocument(courseId, from, to);
 
         var stream = new MemoryStream();
-        await _competenceDocumentService.WriteDocument(stream, document);
+        _competenceDocumentService.WriteDocument(stream, document);
 
         return File(
             stream,

@@ -12,3 +12,11 @@ dotnet:
   solution: Epsilon.sln
   configuration: Release
 linter: jetbrains/qodana-dotnet:2023.2-eap
+exclude:
+  - name: AutoPropertyCanBeMadeGetOnly.Global
+  - name: UnusedAutoPropertyAccessor.Global
+  - name: UsingStatementResourceInitialization
+  - name: NotAccessedPositionalProperty.Global
+  - name: UnusedMember.Global
+  - name: ClassNeverInstantiated.Global
+
