@@ -1,0 +1,14 @@
+version: 1.0
+failThreshold: 64
+profile:
+  name: qodana.recommended
+include:
+  - name: VulnerableLibrariesGlobal
+bootstrap: |+
+  set -eu
+  npm install -g pnpm
+  (cd Epsilon.Host.Frontend && pnpm install --frozen-lockfile)
+dotnet:
+  solution: Epsilon.sln
+  configuration: Release
+linter: jetbrains/qodana-dotnet:2023.2-eap
