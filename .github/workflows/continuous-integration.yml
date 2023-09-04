@@ -90,3 +90,4 @@ jobs:
           args: --user,root
           use-annotations: true
           push-fixes: false
+          pr-mode: false
