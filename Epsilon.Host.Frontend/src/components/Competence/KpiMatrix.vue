@@ -15,7 +15,7 @@
             <tr
                 v-for="outcome of allOutcomes.sort() as string[]"
                 :key="outcome">
-                <th>
+                <th :key="outcome">
                     {{ store.state.outcomes.find((o) => o.id == outcome).name }}
                 </th>
                 <KpiMatrixCell
