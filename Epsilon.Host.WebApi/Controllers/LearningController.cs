@@ -38,9 +38,7 @@ public class LearningController : ControllerBase
         return Ok(domain);
     }
     
-    
-    //TODO filter on tenetID and DomainID
-    [HttpGet("domain/{tenetId}/outcomes")]
+    [HttpGet("domain/{tenantId}/outcomes")]
     public async Task<ActionResult<LearningDomainOutcome>> GetDomainOutcomes(string tenetId)
     {
         var domainOutcomes = await _learningDomainService.GetOutcomes();

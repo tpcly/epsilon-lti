@@ -1,3 +1,30 @@
+<template>
+    Competence profile
+
+    <table>
+        <thead>
+            <tr>
+                <td></td>
+                <th
+                    v-for="col of store.state.domain.columnsSet?.types"
+                    :key="col.id">
+                    {{ col.name }}
+                </th>
+            </tr>
+            <tr v-for="row of store.state.domain.rowsSet?.types" :key="row.id">
+                <th>
+                    {{ row.name }}
+                </th>
+                <CompetenceProfileCell
+                    v-for="col of store.state.domain.columnsSet?.types"
+                    :key="col.id"
+                    :result="getFilterd(row, col, allOutcomes)">
+                </CompetenceProfileCell>
+            </tr>
+        </thead>
+    </table>
+</template>
+
 <script setup lang="ts">
 import { useStore } from "vuex"
 
@@ -32,33 +59,6 @@ function getFilterd(
         }, null)
 }
 </script>
-
-<template>
-    Competence profile
-
-    <table>
-        <thead>
-            <tr>
-                <td></td>
-                <th
-                    v-for="col of store.state.domain.columnsSet?.types"
-                    :key="col.id">
-                    {{ col.name }}
-                </th>
-            </tr>
-            <tr v-for="row of store.state.domain.rowsSet?.types" :key="row.id">
-                <th>
-                    {{ row.name }}
-                </th>
-                <CompetenceProfileCell
-                    v-for="col of store.state.domain.columnsSet?.types"
-                    :key="col.id"
-                    :result="getFilterd(row, col, allOutcomes)">
-                </CompetenceProfileCell>
-            </tr>
-        </thead>
-    </table>
-</template>
 
 <style scoped lang="scss">
 tr {

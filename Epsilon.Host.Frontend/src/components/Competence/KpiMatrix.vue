@@ -40,12 +40,10 @@ import KpiMatrixCell from "@/components/Competence/KpiMatrixCell.vue"
 
 const store = useStore()
 
-const allOutcomes = computed(
-    () =>
-        store.state.filterdSubmissions
-            .flatMap((sub) => sub.criteria?.map((cr) => cr.id as string))
-            .filter((value, index, self) => self.indexOf(value) === index)
-    // .map((uniqueOutcome) => props.domain.)
+const allOutcomes = computed(() =>
+    store.state.filterdSubmissions
+        .flatMap((sub) => sub.criteria?.map((cr) => cr.id as string))
+        .filter((value, index, self) => self.indexOf(value) === index)
 )
 </script>
 <style lang="scss" scoped>

@@ -41,14 +41,11 @@ import { computed } from "vue"
 
 const store = useStore()
 
-const allOutcomes = computed(
-    () =>
-        store.state.filterdSubmissions
-            .flatMap((sub) => sub.results?.map((r) => r.outcome?.id))
-            .filter((value, index, self) => self.indexOf(value) === index)
-    // .map((uniqueOutcome) => props.domain.)
+const allOutcomes = computed(() =>
+    store.state.filterdSubmissions
+        .flatMap((sub) => sub.results?.map((r) => r.outcome?.id))
+        .filter((value, index, self) => self.indexOf(value) === index)
 ) as unknown as number[]
-console.log(allOutcomes)
 </script>
 <style scoped lang="scss">
 tr {

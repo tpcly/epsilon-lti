@@ -36,7 +36,6 @@ const store = useStore()
 const selectedTerm: Ref<EnrollmentTerm | undefined> = ref(undefined)
 
 watch(selectedTerm, () => {
-    console.log("Term selection")
     store.commit("setCurrentTerm", selectedTerm.value)
     store.commit("filterSubmissions")
 })
@@ -87,19 +86,4 @@ api?.filter
         object-fit: contain;
     }
 }
-
-//.avatar {
-//    &-image {
-//        min-width: 3rem;
-//        min-height: 3rem;
-//        max-width: 3rem;
-//        max-height: 3rem;
-//        aspect-ratio: 1/1;
-//        border: none;
-//        border-radius: 3rem;
-//        margin-right: 1rem;
-//        overflow: hidden;
-//        background-color: #fff;
-//    }
-//}
 </style>
