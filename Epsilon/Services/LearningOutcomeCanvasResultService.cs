@@ -111,7 +111,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         }
     }
     
-    private static IEnumerable<LearningDomainOutcomeResult> GetOutcomeResults(
+    private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
         IEnumerable<AssessmentRating> rubricAssessments,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
@@ -124,7 +124,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 continue;
             }
     
-            yield return new LearningDomainOutcomeResult(outcome, assessmentRating.Points);
+            yield return new LearningDomainOutcomeRecord(outcome, assessmentRating.Points);
         }
     }
 }

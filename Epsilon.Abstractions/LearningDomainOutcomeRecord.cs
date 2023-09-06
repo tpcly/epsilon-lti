@@ -1,6 +1,6 @@
 namespace Epsilon.Abstractions;
 
-public record LearningDomainOutcomeResult(
+public record LearningDomainOutcomeRecord(
     LearningDomainOutcome Outcome,
     double? Grade
 );
