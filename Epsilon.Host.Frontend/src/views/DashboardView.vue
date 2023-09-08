@@ -1,5 +1,5 @@
 <template>
-    <Header />
+    <Header v-if="store.state.users" />
     <TabGroup as="template">
         <div class="toolbar mb-lg mt-lg">
             <div class="toolbar-slider">
@@ -12,7 +12,7 @@
             </div>
         </div>
         <hr class="divider mb-lg" />
-        <main>
+        <main v-if="store.state.domain && store.state.currentTerm">
             <TabPanels>
                 <TabPanel>
                     <PerformanceDashboard />
@@ -24,14 +24,40 @@
         </main>
     </TabGroup>
 </template>
-<script setup lang="ts">
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue"
+<script lang="ts" setup>
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/vue"
 import PerformanceDashboard from "@/views/PerformanceDashboard.vue"
 import CompetenceDocument from "@/views/CompetenceDocument.vue"
 import Header from "@/components/TopNavigation.vue"
+import { Api, HttpResponse, User } from "@/api"
+import { inject, onMounted } from "vue"
+import { useStore } from "vuex"
+
+const api = inject<Api<unknown>>("api")
+const store = useStore()
+
+onMounted(() => {
+    api?.filter.accessibleStudentsList().then((r: HttpResponse<User[]>) => {
+        store.commit("setUsers", r.data)
+        store.commit("setCurrentUser", store.state.users[0])
+    })
+    api?.learning
+        .domainDetail("hbo-i-2018")
+        .then((r) => store.commit("setDomain", r.data))
+
+    api?.learning
+        .outcomesList({
+            studentId: "20592",
+        })
+        .then((r) => store.commit("setSubmissions", r.data))
+
+    api?.learning
+        .domainOutcomesDetail("wajdgawlhdawhdgawjkd")
+        .then((r) => store.commit("setOutcomes", r.data))
+})
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .toolbar {
     display: flex;
     justify-content: space-between;

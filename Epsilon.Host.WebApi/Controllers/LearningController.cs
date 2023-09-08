@@ -19,9 +19,9 @@ public class LearningController : ControllerBase
     }
 
     [HttpGet("outcomes")]
-    public async Task<ActionResult<LearningDomain>> GetResults(string studentId)
+    public async Task<ActionResult<IAsyncEnumerable<LearningDomainSubmission>>> GetResults(string studentId)
     {
-        var outcomes = await _learningOutcomeCanvasResultService.GetOutcomeResults(studentId).ToListAsync();
+        var outcomes = _learningOutcomeCanvasResultService.GetSubmissions(studentId);
 
         return Ok(outcomes);
     }
@@ -36,5 +36,17 @@ public class LearningController : ControllerBase
         }
 
         return Ok(domain);
+    }
+    
+    [HttpGet("domain/{tenantId}/outcomes")]
+    public async Task<ActionResult<LearningDomainOutcome>> GetDomainOutcomes(string tenetId)
+    {
+        var domainOutcomes = await _learningDomainService.GetOutcomes();
+        if (domainOutcomes == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(domainOutcomes);
     }
 }
