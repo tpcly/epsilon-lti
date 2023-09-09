@@ -12,9 +12,9 @@
                     <ChevronUpDownIcon aria-hidden="true" />
                 </ComboboxButton>
             </div>
-            <ComboboxOptions v-if="items.length > 0" class="searchbox-options">
+            <ComboboxOptions v-if="items?.length > 0" class="searchbox-options">
                 <div
-                    v-if="filteredItems.length === 0 && query !== ''"
+                    v-if="filteredItems?.length === 0 && query !== ''"
                     class="searchbox-options-item">
                     No results found
                 </div>
@@ -51,7 +51,7 @@ import {
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid"
 
 const props = defineProps<{
-    items: Array<{ name?: string | null }>
+    items: Array<{ name?: string | null }> | null
     modelValue: { name: string }
     placeholder?: string
     limit: number
@@ -62,6 +62,9 @@ const query = ref("")
 defineEmits(["update:modelValue"])
 
 const filteredItems = computed(() => {
+    if (props.items === null) {
+        return null
+    }
     if (query.value === "") {
         return props.items.slice(0, props.limit)
     }

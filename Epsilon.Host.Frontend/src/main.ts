@@ -3,6 +3,7 @@ import router from "./router"
 import App from "./App.vue"
 
 import { Api } from "@/api"
+import store from "@/store"
 
 const app = createApp(App)
 app.provide(
@@ -12,4 +13,4 @@ app.provide(
     })
 )
 
-app.use(router).mount("#app")
+app.use(router).use(store).mount("#app")

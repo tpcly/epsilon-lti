@@ -33,6 +33,14 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 assignment {
                   name
                   htmlUrl
+                  rubric {
+                    criteria {
+                      outcome {
+                        _id
+                        masteryPoints
+                      }
+                    }
+                  }
                 }
                 postedAt
               }
@@ -53,23 +61,18 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         _learningDomainService = learningDomainService;
     }
 
-    public async IAsyncEnumerable<LearningDomainOutcomeResult> GetOutcomeResults(string studentId)
+    public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId)
     {
         var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
 
         await Task.WhenAll(submissionsTask, domainOutcomesTask);
 
-        foreach (var submission in submissionsTask.Result.Courses.SelectMany(static c => c.Submissions.Nodes))
+        foreach (var submission in submissionsTask?.Result?.Courses?.SelectMany(static c => c.Submissions.Nodes))
         {
             var recentSubmission = submission.SubmissionHistories?.Nodes
-                                             .Where(static h => h.RubricAssessments != null && h.RubricAssessments.Nodes.Any())
                                              .MaxBy(static h => h.Attempt);
-
-            if (recentSubmission?.RubricAssessments?.Nodes == null)
-            {
-                continue;
-            }
+            
 
             var rubricAssessments = recentSubmission.RubricAssessments.Nodes.SelectMany(static rubricAssessment =>
                 rubricAssessment.AssessmentRatings.Where(static ar =>
@@ -78,26 +81,50 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                         Points: not null,
                         Criterion.MasteryPoints: not null,
                         Criterion.Outcome: not null,
-                    } &&
-                    ar.Points >= ar.Criterion.MasteryPoints)
+                    })
             );
+ 
+            yield return new LearningDomainSubmission(
+                submission.Assignment.Name,
+                submission.Assignment.HtmlUrl,
+                recentSubmission.SubmittedAt,
+                GetSubmissionCriteria(submission),
+                GetOutcomeResults(rubricAssessments, domainOutcomesTask)
+            );
+        }
+    }
 
-            foreach (var assessmentRating in rubricAssessments)
+    private static IEnumerable<LearningDomainCriteria> GetSubmissionCriteria(Submission? submission)
+    {
+        if (submission!.Assignment?.Rubric?.Criteria != null)
+        {
+            foreach (var criteria in submission.Assignment.Rubric.Criteria)
             {
-                var outcome = domainOutcomesTask.Result.SingleOrDefault(o => o.Id == assessmentRating.Criterion.Outcome.Id);
-                if (outcome == null)
+                if (criteria.Outcome != null)
                 {
-                    continue;
+                    yield return new LearningDomainCriteria(
+                        criteria.Outcome.Id,
+                        criteria.Outcome.MasteryPoints
+                    );
                 }
-
-                yield return new LearningDomainOutcomeResult(
-                    outcome,
-                    assessmentRating.Points!.Value,
-                    recentSubmission.SubmittedAt!.Value,
-                    submission.Assignment.Name,
-                    submission.Assignment.HtmlUrl
-                );
             }
+        }
+    }
+    
+    private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
+        IEnumerable<AssessmentRating> rubricAssessments,
+        Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
+    )
+    {
+        foreach (var assessmentRating in rubricAssessments)
+        {
+            var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o.Id == assessmentRating.Criterion.Outcome.Id);
+            if (outcome == null)
+            {
+                continue;
+            }
+    
+            yield return new LearningDomainOutcomeRecord(outcome, assessmentRating.Points);
         }
     }
 }
