@@ -39,7 +39,7 @@ public class LearningController : ControllerBase
     }
     
     [HttpGet("domain/{tenantId}/outcomes")]
-    public async Task<ActionResult<LearningDomainOutcome>> GetDomainOutcomes(string tenetId)
+    public async Task<ActionResult<LearningDomainOutcome>> GetDomainOutcomes(string tenantId)
     {
         var domainOutcomes = await _learningDomainService.GetOutcomes();
         if (domainOutcomes == null)
