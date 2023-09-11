@@ -1,11 +1,17 @@
+import {
+    LearningDomain,
+    LearningDomainOutcomeRecord,
+    LearningDomainSubmission,
+} from "@/api"
+
 export interface DecayingAveragePerActivity {
     outcome: number
-    activity: number
+    activity: string
     decayingAverage: number
 }
 
 export interface DecayingAveragePerLayer {
-    architectureLayer: number
+    architectureLayer: string
     layerActivities: DecayingAveragePerActivity[]
 }
 
@@ -16,64 +22,62 @@ export interface DecayingAveragePerSkill {
 }
 
 export class DecayingAverageLogic {
+    private static getAllOutcomes(
+        submissions: LearningDomainSubmission[]
+    ): LearningDomainOutcomeRecord[] {
+        const list: LearningDomainOutcomeRecord[] = []
+        submissions.map((s) => {
+            if (s.results) {
+                Object.entries(s.results).map(([, outcome]) =>
+                    list.push(outcome)
+                )
+            }
+        })
+        console.log(
+            list.filter((r) => r.outcome?.row?.id == "organisational_processes")
+                .length
+        )
+        return list
+    }
+
     /**
      * Calculate the averages for each skill type
      * @param taskResults
      * @param domain
      * @constructor
      */
-    public static getAverageSkillOutcomeScores(
-        taskResults: ProfessionalSkillResult[],
-        domain: IHboIDomain
-    ): DecayingAveragePerSkill[] {
-        const listOfResults = Object.entries(
-            this.groupBy(taskResults, (r) => r.outcomeId as unknown as string)
-        ).map(([, j]) => {
-            return {
-                skill: j.at(0)?.skill as number,
-                masteryLevel: j
-                    .sort((a) => a.masteryLevel as never as number)
-                    .at(0)?.masteryLevel as number,
-                decayingAverage: this.getDecayingAverageFromOneOutcomeType(j),
-            } as DecayingAveragePerSkill
-        })
-
-        return domain.professionalSkills?.map((s) => {
-            let score = 0.0
-            const filteredResults = listOfResults.filter(
-                (r) => r.skill === s.id
-            )
-            filteredResults.map((result) => {
-                score += result.decayingAverage
-            })
-            return {
-                skill: s.id,
-                masteryLevel: filteredResults
-                    .sort((a) => a.masteryLevel as never as number)
-                    .at(filteredResults.length - 1)?.masteryLevel,
-                decayingAverage: score / filteredResults.length,
-            } as DecayingAveragePerSkill
-        }) as DecayingAveragePerSkill[]
-    }
+    // public static getAverageSkillOutcomeScores(
+    //     submissions: LearningDomainSubmission[],
+    //     domain: LearningDomain
+    // ): DecayingAveragePerSkill[] {
+    //     Object.entries(
+    //         this.groupBy(
+    //             this.getAllOutcomes(submissions),
+    //             (r) => r.outcome?.id as unknown as string
+    //         )
+    //     )
+    //
+    //     domain.columnsSet?.types
+    // }
 
     /**
      * Calculate the averages for each task type divided in architecture layers.
-     * @param taskResults
+     * @param submissions
      * @param domain
      * @constructor
      */
     public static getAverageTaskOutcomeScores(
-        taskResults: ProfessionalTaskResult[],
-        domain: IHboIDomain
+        submissions: LearningDomainSubmission[],
+        domain: LearningDomain
     ): DecayingAveragePerLayer[] {
         const canvasDecaying = this.getDecayingAverageForAllOutcomes(
-            taskResults,
+            submissions,
             domain
         )
-        return domain.architectureLayers?.map((layer) => {
+        return domain.rowsSet?.types?.map((layer) => {
             return {
                 architectureLayer: layer.id,
-                layerActivities: domain.activities?.map((activity) => {
+                layerActivities: domain.columnsSet?.types?.map((activity) => {
                     let totalScoreActivity = 0
                     let totalScoreArchitectureActivity = 0
                     let amountOfActivities = 0
@@ -96,58 +100,57 @@ export class DecayingAverageLogic {
                         .map((l) =>
                             l.layerActivities
                                 ?.filter((la) => la.activity === activity.id)
-                                .map(
-                                    (la) =>
-                                        (totalScoreArchitectureActivity +=
-                                            la.decayingAverage)
-                                )
+                                .map((la) => {
+                                    totalScoreArchitectureActivity +=
+                                        la.decayingAverage
+                                })
                         )
-
                     return {
                         activity: activity.id,
                         decayingAverage:
                             ((totalScoreActivity / amountOfActivities) *
                                 totalScoreArchitectureActivity) /
                             totalScoreActivity,
-                    } as DecayingAveragePerActivity
+                    } as unknown as DecayingAveragePerActivity
                 }),
             }
-        }) as DecayingAveragePerLayer[]
+        }) as unknown as DecayingAveragePerLayer[]
     }
 
     /**
      * Calculate average of given tasks divided in architectural layers
-     * @param taskResults
+     * @param submissions
      * @param domain
      * @constructor
      * @private
      */
     private static getDecayingAverageForAllOutcomes(
-        taskResults: ProfessionalTaskResult[],
-        domain: IHboIDomain
+        submissions: LearningDomainSubmission[],
+        domain: LearningDomain
     ): DecayingAveragePerLayer[] {
-        return domain.architectureLayers?.map((l) => {
+        const results = this.getAllOutcomes(submissions)
+        return domain.rowsSet?.types?.map((l) => {
             return {
                 architectureLayer: l.id,
                 layerActivities: Object.entries(
                     this.groupBy(
                         //Ensure that given results are only relined on the architecture that is currently being used.
-                        taskResults.filter(
-                            (layer) => layer.architectureLayer === l.id
+                        results.filter(
+                            (layer) => layer.outcome?.row?.id === l.id
                         ),
-                        (r) => r.outcomeId as unknown as string
+                        (r) => r.outcome?.id as unknown as string
                     )
                 ).map(([i, j]) => {
                     //From all selected outcomes calculate the decaying average, Give outcome id and activity layer.
                     return {
                         outcome: i,
-                        activity: j.at(0)?.activity,
+                        activity: j.at(0)?.outcome?.column?.id,
                         decayingAverage:
                             this.getDecayingAverageFromOneOutcomeType(j),
                     }
                 }) as unknown as DecayingAveragePerActivity[],
             }
-        }) as DecayingAveragePerLayer[]
+        }) as unknown as DecayingAveragePerLayer[]
     }
 
     /**
@@ -158,7 +161,7 @@ export class DecayingAverageLogic {
      * @private
      */
     private static getDecayingAverageFromOneOutcomeType(
-        results: ProfessionalTaskResult[] | ProfessionalSkillResult[]
+        results: LearningDomainOutcomeRecord[]
     ): number {
         let totalGradeScore = 0.0
 
@@ -168,6 +171,7 @@ export class DecayingAverageLogic {
                 results.forEach(
                     (r) => (totalGradeScore += r.grade ? r.grade : 0)
                 )
+
                 totalGradeScore =
                     (totalGradeScore / results.length) * 0.35 +
                     recentResult.grade * 0.65

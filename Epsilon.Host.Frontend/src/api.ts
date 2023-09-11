@@ -53,7 +53,7 @@ export interface LearningDomainSubmission {
     /** @format date-time */
     submittedAt?: string | null
     criteria?: LearningDomainCriteria[] | null
-    results?: LearningDomainOutcomeRecord[] | null
+    results?: Record<string, LearningDomainOutcomeRecord>
 }
 
 export interface LearningDomainType {
@@ -458,17 +458,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          * @name DomainOutcomesDetail
          * @request GET:/Learning/domain/{tenantId}/outcomes
          */
-        domainOutcomesDetail: (
-            tenantId: string,
-            query?: {
-                tenetId?: string
-            },
-            params: RequestParams = {}
-        ) =>
+        domainOutcomesDetail: (tenantId: string, params: RequestParams = {}) =>
             this.request<LearningDomainOutcome, any>({
                 path: `/Learning/domain/${tenantId}/outcomes`,
                 method: "GET",
-                query: query,
                 format: "json",
                 ...params,
             }),
