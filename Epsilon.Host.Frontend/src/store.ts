@@ -10,6 +10,7 @@ import {
 
 interface StoreState {
     domain: LearningDomain | null
+    personalDevelopment: LearningDomain | null
     submissions: LearningDomainSubmission[] | null
     filterdSubmissions: LearningDomainSubmission[] | null
     outcomes: LearningDomainOutcome[] | null
@@ -25,6 +26,7 @@ const store = createStore({
             currentTerm: {} as EnrollmentTerm,
             currentUser: {} as User,
             domain: null as unknown as LearningDomain,
+            personalDevelopment: null as unknown as LearningDomain,
             filterdSubmissions: null as unknown as LearningDomainSubmission[],
             outcomes: null as unknown as LearningDomainOutcome[],
             submissions: null as unknown as LearningDomainSubmission[],
@@ -52,6 +54,9 @@ const store = createStore({
         },
         setDomain(state, domain: LearningDomain) {
             state.domain = domain
+        },
+        setPersonalDevelopment(state, domain: LearningDomain) {
+            state.personalDevelopment = domain
         },
         filterSubmissions(state) {
             state.filterdSubmissions = state.submissions

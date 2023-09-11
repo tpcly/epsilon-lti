@@ -46,6 +46,10 @@ onMounted(() => {
         .then((r) => store.commit("setDomain", r.data))
 
     api?.learning
+        .domainDetail("pd-2020-bsc")
+        .then((r) => store.commit("setPersonalDevelopment", r.data))
+
+    api?.learning
         .outcomesList({
             studentId: "20592",
         })

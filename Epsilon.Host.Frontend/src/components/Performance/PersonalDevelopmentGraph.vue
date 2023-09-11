@@ -9,19 +9,11 @@
 
 <script lang="ts" setup>
 import ApexChart from "vue3-apexcharts"
-import {
-    IHboIDomain,
-    MasteryLevel,
-    ProfessionalSkillResult,
-} from "../logic/Api"
 import { onMounted, watchEffect } from "vue"
-import { DecayingAverageLogic } from "../logic/DecayingAverageLogic"
-
-const props = defineProps<{
-    domain: IHboIDomain
-    data: ProfessionalSkillResult[]
-}>()
-
+import { DecayingAverageLogic } from "@/DecayingAverageLogic"
+import { useStore } from "vuex"
+import { LearningDomainType } from "@/api"
+const store = useStore()
 let series: Array<{ name: string; data: Array<number | string> }> = []
 const chartOptions = {
     annotations: {
@@ -88,35 +80,39 @@ watchEffect(() => loadChartData())
 function loadChartData(): void {
     series = []
     chartOptions.xaxis.categories = []
-    if (props.domain.professionalSkills != null) {
-        props.domain.professionalSkills.forEach((s) => {
-            chartOptions.xaxis.categories.push(s.shortName as never)
-        })
+    if (store.state.personalDevelopment.rowsSet?.types != null) {
+        store.state.personalDevelopment.rowsSet?.types.forEach(
+            (s: LearningDomainType) => {
+                chartOptions.xaxis.categories.push(s.shortName as never)
+            }
+        )
     }
-
     // Add data
     series.push({
         name: "Score",
         data: DecayingAverageLogic.getAverageSkillOutcomeScores(
-            props.data,
-            props.domain
+            store.state.submissions,
+            store.state.personalDevelopment
         )?.map((d) => {
             return {
-                y: d.decayingAverage.toFixed(3),
-                x: props.domain.professionalSkills?.at(d.skill)?.name,
-                fillColor: getMastery(d.masteryLevel)?.color,
+                y: d.decayingAverage?.toFixed(3),
+                x: store.state.personalDevelopment.rowsSet?.types?.find(
+                    (s: LearningDomainType) => s.id == d.skill
+                ).name,
+                fillColor: "#" + getMastery(d.masteryLevel)?.hexColor,
             }
         }),
     })
 }
 
-function getMastery(masteryId: number): MasteryLevel | undefined {
-    if (props.domain.masteryLevels == null) {
+function getMastery(masteryId: number | null): LearningDomainType | undefined {
+    if (store.state.domain.valuesSet?.types == null || masteryId == null) {
         return undefined
     }
 
-    return props.domain.masteryLevels.find(
-        (masteryLevel) => masteryLevel.id == masteryId
+    return store.state.domain.valuesSet?.types.find(
+        (masteryLevel: LearningDomainType) =>
+            (masteryLevel.shortName as unknown as number) == masteryId
     )
 }
 </script>

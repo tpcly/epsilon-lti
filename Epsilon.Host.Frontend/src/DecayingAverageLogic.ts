@@ -16,9 +16,9 @@ export interface DecayingAveragePerLayer {
 }
 
 export interface DecayingAveragePerSkill {
-    skill: number
-    decayingAverage: number
-    masteryLevel: number
+    skill: string | null
+    decayingAverage: number | null
+    masteryLevel: number | null
 }
 
 export class DecayingAverageLogic {
@@ -33,32 +33,54 @@ export class DecayingAverageLogic {
                 )
             }
         })
-        console.log(
-            list.filter((r) => r.outcome?.row?.id == "organisational_processes")
-                .length
-        )
         return list
     }
 
     /**
      * Calculate the averages for each skill type
-     * @param taskResults
+     * @param submissions
      * @param domain
      * @constructor
      */
-    // public static getAverageSkillOutcomeScores(
-    //     submissions: LearningDomainSubmission[],
-    //     domain: LearningDomain
-    // ): DecayingAveragePerSkill[] {
-    //     Object.entries(
-    //         this.groupBy(
-    //             this.getAllOutcomes(submissions),
-    //             (r) => r.outcome?.id as unknown as string
-    //         )
-    //     )
-    //
-    //     domain.columnsSet?.types
-    // }
+    public static getAverageSkillOutcomeScores(
+        submissions: LearningDomainSubmission[],
+        domain: LearningDomain
+    ): DecayingAveragePerSkill[] {
+        const listOfResults = Object.entries(
+            this.groupBy(
+                this.getAllOutcomes(submissions),
+                (r) => r.outcome?.id as unknown as string
+            )
+        ).map(([, j]) => {
+            return {
+                skill: j.at(0)?.outcome?.row?.id,
+                masteryLevel: j
+                    ?.sort(
+                        (a) => a.outcome?.value?.shortName as never as number
+                    )
+                    ?.at(0)?.outcome?.value?.shortName as unknown as number,
+                decayingAverage: this.getDecayingAverageFromOneOutcomeType(j),
+            } as unknown as DecayingAveragePerSkill
+        })
+        return domain.rowsSet?.types?.map((s) => {
+            let score = 0.0
+            const filteredResults = listOfResults.filter(
+                (r) => r.skill === s.id
+            )
+            filteredResults.map((result) => {
+                if (result.decayingAverage) {
+                    score += result.decayingAverage
+                }
+            })
+            return {
+                skill: s.id,
+                masteryLevel: filteredResults
+                    .sort((a) => a.masteryLevel as never as number)
+                    .at(filteredResults.length - 1)?.masteryLevel,
+                decayingAverage: score / filteredResults.length,
+            } as DecayingAveragePerSkill
+        }) as DecayingAveragePerSkill[]
+    }
 
     /**
      * Calculate the averages for each task type divided in architecture layers.
