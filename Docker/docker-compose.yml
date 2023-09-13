@@ -1,0 +1,12 @@
+version: '3'
+services:
+  mariadb:
+    image: mariadb:10.11
+    container_name: epsilon-mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: not_toor
+      MYSQL_DATABASE: epsilon
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sql-scripts:/docker-entrypoint-initdb.d  # Mount the directory with initialization scripts
