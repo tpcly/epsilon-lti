@@ -62,8 +62,8 @@ const store = createStore({
             state.filterdSubmissions = state.submissions
                 ?.filter(
                     (submission) =>
-                        submission.submittedAt > state.currentTerm.start_at &&
-                        submission.submittedAt < state.currentTerm.end_at
+                        submission.submittedAt < state.currentTerm.end_at &&
+                        submission.criteria?.length > 0
                 )
                 .sort((a, b) =>
                     a.assignment > b.assignment ? -1 : 1
