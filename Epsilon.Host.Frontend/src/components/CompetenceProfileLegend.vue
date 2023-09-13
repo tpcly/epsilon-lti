@@ -1,21 +1,20 @@
 <template>
     <table class="competence-profile-legend">
         <tr
-            v-for="level of props.domain.masteryLevels as MasteryLevel[]"
-            :key="level.id"
+            v-for="level of store.state.domain.valuesSet?.types as LearningDomainType[]"
+            :key="level"
             class="competence-profile-legend-row">
-            <td class="kpi-color" :style="{ backgroundColor: level.color }" />
-            <th class="kpi-text">Level {{ level.level }}</th>
+            <td
+                class="kpi-color"
+                :style="{ backgroundColor: '#' + level.hexColor }" />
+            <th class="kpi-text">{{ level.name }}</th>
         </tr>
     </table>
 </template>
 
 <script lang="ts" setup>
-import { IHboIDomain, MasteryLevel } from "../logic/Api"
-
-const props = defineProps<{
-    domain: IHboIDomain
-}>()
+import store from "@/store"
+import { LearningDomainType } from "@/api"
 </script>
 
 <style>
