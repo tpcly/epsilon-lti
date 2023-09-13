@@ -23,7 +23,6 @@
 <script lang="ts" setup>
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/vue"
 import PerformanceDashboard from "@/views/PerformanceDashboard.vue"
-import CompetenceDocument from "@/views/CompetenceDocument.vue"
 import Header from "@/components/TopNavigation.vue"
 import { Api, HttpResponse, User } from "@/api"
 import { inject, onMounted } from "vue"
