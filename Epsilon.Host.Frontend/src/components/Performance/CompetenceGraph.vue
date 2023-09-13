@@ -90,7 +90,7 @@ function loadChartData(): void {
     }
 
     DecayingAverageLogic.getAverageTaskOutcomeScores(
-        store.state.submissions as LearningDomainSubmission[],
+        store.state.filterdSubmissions as LearningDomainSubmission[],
         store.state.domain as LearningDomain
     ).map((layer: DecayingAveragePerLayer) => {
         const ar = store.state.domain?.rowsSet?.types?.find(

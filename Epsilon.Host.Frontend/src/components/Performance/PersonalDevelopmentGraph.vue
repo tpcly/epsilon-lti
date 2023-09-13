@@ -91,7 +91,7 @@ function loadChartData(): void {
     series.push({
         name: "Score",
         data: DecayingAverageLogic.getAverageSkillOutcomeScores(
-            store.state.submissions,
+            store.state.filterdSubmissions,
             store.state.personalDevelopment
         )?.map((d) => {
             return {
