@@ -98,12 +98,12 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
     }
 
     
-    private static Dictionary<int, LearningDomainOutcomeRecord> GetOutcomeResults(
+    private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
         Submission submission,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
     {
-        var outcomeRecords = new Dictionary<int, LearningDomainOutcomeRecord>();
+        var outcomeRecords = new List<LearningDomainOutcomeRecord>();
         //Loop trough all submissions of assignment to look for outcomes that have been graded. 
         foreach (var submissionHistory in submission.SubmissionHistories.Nodes.OrderByDescending(static s => s.SubmittedAt))
         {
@@ -121,9 +121,8 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
                 if (outcome != null)
                 {
-                    //The latest graded outcome will be remaining. 
-                    outcomeRecords.Remove(outcome.Id);
-                    outcomeRecords.Add(outcome.Id, new LearningDomainOutcomeRecord(outcome, assessment?.Points));
+                    outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
+                    outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
                 }
             }
         }

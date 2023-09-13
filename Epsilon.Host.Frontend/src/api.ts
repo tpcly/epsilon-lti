@@ -53,7 +53,7 @@ export interface LearningDomainSubmission {
     /** @format date-time */
     submittedAt?: string | null
     criteria?: LearningDomainCriteria[] | null
-    results?: Record<string, LearningDomainOutcomeRecord>
+    results?: LearningDomainOutcomeRecord[] | null
 }
 
 export interface LearningDomainType {

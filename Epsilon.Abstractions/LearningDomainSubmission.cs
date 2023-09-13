@@ -5,5 +5,5 @@ public record LearningDomainSubmission(
     Uri? AssignmentUrl,
     DateTime? SubmittedAt,
     IEnumerable<LearningDomainCriteria>? Criteria,
-    Dictionary<int, LearningDomainOutcomeRecord>? Results
+    IEnumerable<LearningDomainOutcomeRecord>? Results
 );
