@@ -42,10 +42,6 @@ public class LearningController : ControllerBase
     public async Task<ActionResult<LearningDomainOutcome>> GetDomainOutcomes(string tenantId)
     {
         var domainOutcomes = await _learningDomainService.GetOutcomes();
-        if (domainOutcomes == null)
-        {
-            return NotFound();
-        }
 
         return Ok(domainOutcomes);
     }
