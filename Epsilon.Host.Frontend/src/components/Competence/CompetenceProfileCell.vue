@@ -1,11 +1,36 @@
 <script setup lang="ts">
-import { defineProps } from "vue"
-import { LearningDomainOutcome } from "@/api"
+import { computed, defineProps } from "vue"
+import {
+    LearningDomainOutcome,
+    LearningDomainSubmission,
+    LearningDomainType,
+} from "@/api"
 
-defineProps<{
+const props = defineProps<{
+    submissions: LearningDomainSubmission[]
     result: LearningDomainOutcome | null
-    count: number
+    row: LearningDomainType
+    col: LearningDomainType
 }>()
+
+const count = computed(() => {
+    return props.submissions
+        .map(
+            (s) =>
+                s.results?.filter(
+                    (r) =>
+                        r.outcome?.row?.id == props.row.id &&
+                        r.outcome?.column?.id == props.col.id &&
+                        (r.grade as number) >= 3
+                ).length
+        )
+        .reduce((sum, current) => {
+            if (typeof current === "number") {
+                return (sum as number) + current
+            }
+            return sum
+        }, 0)
+})
 </script>
 
 <template>
