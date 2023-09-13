@@ -37,6 +37,7 @@ const selectedTerm: Ref<EnrollmentTerm | undefined> = ref(undefined)
 
 watch(selectedTerm, () => {
     store.commit("setCurrentTerm", selectedTerm.value)
+    store.commit("correctCurrentTerm")
     store.commit("filterSubmissions")
 })
 
@@ -56,6 +57,7 @@ watch(store.state.currentUser, () => {
             store.commit("setUserTerms", r.data)
             selectedTerm.value = store.state.currentTerm
             store.commit("setCurrentTerm", store.state.userTerms[0])
+            store.commit("correctCurrentTerm")
         })
 })
 
@@ -67,7 +69,6 @@ api?.filter
         store.commit("setUserTerms", r.data)
         store.commit("setCurrentTerm", store.state.userTerms[0])
         selectedTerm.value = store.state.currentTerm
-        store.commit("filterSubmissions")
     })
 </script>
 
