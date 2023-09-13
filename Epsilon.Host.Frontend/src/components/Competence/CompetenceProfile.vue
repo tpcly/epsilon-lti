@@ -16,6 +16,24 @@
                 <CompetenceProfileCell
                     v-for="col of store.state.domain.columnsSet?.types"
                     :key="col.id"
+                    :count="
+                        props.submissions
+                            .map(
+                                (s) =>
+                                    s.results?.filter(
+                                        (r) =>
+                                            r.outcome?.row?.id == row.id &&
+                                            r.outcome?.column?.id == col.id &&
+                                            r.grade >= 3
+                                    ).length
+                            )
+                            .reduce((sum, current) => {
+                                if (typeof current === 'number') {
+                                    return sum + current
+                                }
+                                return sum
+                            }, 0)
+                    "
                     :result="getFilterd(row, col, allOutcomes)">
                 </CompetenceProfileCell>
             </tr>

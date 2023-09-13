@@ -4,12 +4,15 @@ import { LearningDomainOutcome } from "@/api"
 
 defineProps<{
     result: LearningDomainOutcome | null
+    count: number
 }>()
 </script>
 
 <template>
-    <td v-if="result == null"></td>
-    <td v-else :style="{ background: '#' + result?.value?.hexColor }"></td>
+    <td v-if="result == null || count == 0"></td>
+    <td v-else :style="{ background: '#' + result?.value?.hexColor }">
+        {{ count }}
+    </td>
 </template>
 
 <style scoped lang="scss">
