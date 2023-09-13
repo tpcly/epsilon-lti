@@ -1,6 +1,4 @@
 <template>
-    Competence profile
-
     <table>
         <thead>
             <tr>
@@ -30,11 +28,19 @@ import { useStore } from "vuex"
 
 const store = useStore()
 import { computed } from "vue"
-import { LearningDomainOutcome, LearningDomainType } from "@/api"
+import {
+    LearningDomainOutcome,
+    LearningDomainSubmission,
+    LearningDomainType,
+} from "@/api"
 import CompetenceProfileCell from "@/components/Competence/CompetenceProfileCell.vue"
 
+const props = defineProps<{
+    submissions: LearningDomainSubmission[]
+}>()
+
 const allOutcomes = computed(() =>
-    store.state.submissions
+    props.submissions
         .flatMap((sub) => sub.criteria?.map((cr) => cr.id))
         .filter((value, index, self) => self.indexOf(value) === index)
 ) as unknown as number[]

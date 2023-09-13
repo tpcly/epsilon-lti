@@ -8,7 +8,8 @@ defineProps<{
 </script>
 
 <template>
-    <td :style="{ background: '#' + result?.value?.hexColor }"></td>
+    <td v-if="result == null"></td>
+    <td v-else :style="{ background: '#' + result?.value?.hexColor }"></td>
 </template>
 
 <style scoped lang="scss">
