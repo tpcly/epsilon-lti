@@ -1,8 +1,12 @@
+<template>
+    <td :style="{ backgroundColor: getColor() }"></td>
+</template>
 <script setup lang="ts">
 import { defineProps } from "vue/dist/vue"
-import { LearningDomainCriteria, LearningDomainOutcomeResult } from "@/api"
+import { LearningDomainCriteria, LearningDomainOutcomeRecord } from "@/api"
+
 const props = defineProps<{
-    result: LearningDomainOutcomeResult | undefined
+    result: LearningDomainOutcomeRecord | undefined
     criteria: LearningDomainCriteria | undefined
 }>()
 
@@ -21,10 +25,6 @@ function getColor(): string {
     return ""
 }
 </script>
-
-<template>
-    <td :style="{ backgroundColor: getColor() }"></td>
-</template>
 
 <style scoped lang="scss">
 td {

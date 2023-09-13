@@ -1,3 +1,10 @@
+<template>
+    <td v-if="result == null || count == 0"></td>
+    <td v-else :style="{ background: '#' + result?.value?.hexColor }">
+        {{ count }}
+    </td>
+</template>
+
 <script setup lang="ts">
 import { computed, defineProps } from "vue"
 import {
@@ -32,13 +39,6 @@ const count = computed(() => {
         }, 0)
 })
 </script>
-
-<template>
-    <td v-if="result == null || count == 0"></td>
-    <td v-else :style="{ background: '#' + result?.value?.hexColor }">
-        {{ count }}
-    </td>
-</template>
 
 <style scoped lang="scss">
 td {
