@@ -9,7 +9,7 @@
                 <div
                     v-for="submission of store.state.filterdSubmissions.filter(
                         (s) =>
-                            s.results.filter((r) => r.outcome.id === outcome)
+                            s.results?.filter((r) => r?.outcome?.id == outcome)
                                 .length > 0
                     )"
                     :key="submission.submittedAt">
@@ -22,7 +22,7 @@
                 <div
                     v-for="submission of store.state.filterdSubmissions.filter(
                         (s) =>
-                            s.results.filter((r) => r.outcome.id === outcome)
+                            s.results?.filter((r) => r.outcome.id == outcome)
                                 .length > 0
                     )"
                     :key="submission.submittedAt">
@@ -43,7 +43,7 @@ const store = useStore()
 
 const allOutcomes = computed(() =>
     store.state.filterdSubmissions
-        .flatMap((sub) => sub.results?.map((r) => r.outcome?.id))
+        .flatMap((sub) => sub.results?.map((r) => parseInt(r.outcome?.id)))
         .filter((value, index, self) => self.indexOf(value) === index)
 ) as unknown as number[]
 </script>
