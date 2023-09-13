@@ -9,12 +9,11 @@
 
 <script lang="ts" setup>
 import ApexChart from "vue3-apexcharts"
-import { onMounted, watchEffect } from "vue"
+import { computed, onMounted } from "vue"
 import { DecayingAverageLogic } from "@/DecayingAverageLogic"
 import { useStore } from "vuex"
 import { LearningDomainType } from "@/api"
 const store = useStore()
-let series: Array<{ name: string; data: Array<number | string> }> = []
 const chartOptions = {
     annotations: {
         yaxis: [
@@ -73,13 +72,6 @@ const chartOptions = {
 }
 
 onMounted(() => {
-    loadChartData()
-})
-watchEffect(() => loadChartData())
-
-function loadChartData(): void {
-    series = []
-    chartOptions.xaxis.categories = []
     if (store.state.personalDevelopment.rowsSet?.types != null) {
         store.state.personalDevelopment.rowsSet?.types.forEach(
             (s: LearningDomainType) => {
@@ -87,8 +79,10 @@ function loadChartData(): void {
             }
         )
     }
-    // Add data
-    series.push({
+})
+
+const series = computed(() => [
+    {
         name: "Score",
         data: DecayingAverageLogic.getAverageSkillOutcomeScores(
             store.state.filterdSubmissions,
@@ -102,8 +96,9 @@ function loadChartData(): void {
                 fillColor: "#" + getMastery(d.masteryLevel)?.hexColor,
             }
         }),
-    })
-}
+    },
+])
+console.log(series)
 
 function getMastery(masteryId: number | null): LearningDomainType | undefined {
     if (store.state.domain.valuesSet?.types == null || masteryId == null) {

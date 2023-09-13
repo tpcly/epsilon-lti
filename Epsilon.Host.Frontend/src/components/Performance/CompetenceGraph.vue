@@ -15,13 +15,9 @@ import {
     DecayingAveragePerLayer,
 } from "@/DecayingAverageLogic"
 import store from "@/store"
-import { onMounted, watchEffect } from "vue"
+import { computed, onMounted } from "vue"
 import { LearningDomain, LearningDomainSubmission } from "@/api"
-let series: Array<{
-    name: string
-    color: string
-    data: Array<string | number> | undefined
-}> = []
+
 const chartOptions = {
     annotations: {
         yaxis: [
@@ -80,36 +76,30 @@ const chartOptions = {
     },
 }
 
-function loadChartData(): void {
-    series = []
-    chartOptions.xaxis.categories = []
+onMounted(() => {
     if (store.state.domain?.columnsSet?.types != null) {
         store.state.domain?.columnsSet?.types.forEach((s) => {
             chartOptions.xaxis.categories.push(s.name as never)
         })
     }
-
-    DecayingAverageLogic.getAverageTaskOutcomeScores(
+})
+const series = computed(() => {
+    return DecayingAverageLogic.getAverageTaskOutcomeScores(
         store.state.filterdSubmissions as LearningDomainSubmission[],
         store.state.domain as LearningDomain
     ).map((layer: DecayingAveragePerLayer) => {
         const ar = store.state.domain?.rowsSet?.types?.find(
             (l) => l.id === layer.architectureLayer
         )
-        series.push({
+        return {
             name: ar?.name as string,
             color: "#" + ar?.hexColor,
             data: layer.layerActivities.map((ac) =>
                 ac.decayingAverage.toFixed(3)
             ),
-        })
+        }
     })
-}
-
-onMounted(() => {
-    loadChartData()
 })
-watchEffect(() => loadChartData())
 </script>
 
 <style scoped>
