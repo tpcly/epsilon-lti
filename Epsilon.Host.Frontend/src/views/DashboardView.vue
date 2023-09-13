@@ -7,7 +7,6 @@
                     <Tab class="toolbar-slider-item">
                         Performance dashboard
                     </Tab>
-                    <Tab class="toolbar-slider-item">Competence document</Tab>
                 </TabList>
             </div>
         </div>
@@ -16,9 +15,6 @@
             <TabPanels>
                 <TabPanel>
                     <PerformanceDashboard />
-                </TabPanel>
-                <TabPanel>
-                    <CompetenceDocument />
                 </TabPanel>
             </TabPanels>
         </main>
