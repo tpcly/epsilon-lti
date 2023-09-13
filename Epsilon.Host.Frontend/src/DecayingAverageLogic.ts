@@ -156,7 +156,6 @@ export class DecayingAverageLogic {
                 architectureLayer: l.id,
                 layerActivities: Object.entries(
                     this.groupBy(
-                        //Ensure that given results are only relined on the architecture that is currently being used.
                         results.filter(
                             (layer) => layer.outcome?.row?.id === l.id
                         ),
@@ -177,7 +176,6 @@ export class DecayingAverageLogic {
 
     /**
      * Calculate decaying average described by Canvas: https://community.canvaslms.com/t5/Canvas-Basics-Guide/What-are-Outcomes/ta-p/75#decaying_average
-     * !IMPORTANT, The list of results will always have to be a list of the same outcome id. Not a list of equal activity and architecture layer.
      * @param results
      * @constructor
      * @private
@@ -186,14 +184,12 @@ export class DecayingAverageLogic {
         results: LearningDomainOutcomeRecord[]
     ): number {
         let totalGradeScore = 0.0
-
         const recentResult = results.reverse().pop()
         if (recentResult && recentResult.grade) {
             if (results.length > 0) {
                 results.forEach(
                     (r) => (totalGradeScore += r.grade ? r.grade : 0)
                 )
-
                 totalGradeScore =
                     (totalGradeScore / results.length) * 0.35 +
                     recentResult.grade * 0.65
@@ -201,7 +197,6 @@ export class DecayingAverageLogic {
                 totalGradeScore = recentResult.grade
             }
         }
-
         return totalGradeScore
     }
 

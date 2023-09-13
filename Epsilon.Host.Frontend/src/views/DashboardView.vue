@@ -39,7 +39,12 @@ const store = useStore()
 onMounted(() => {
     api?.filter.accessibleStudentsList().then((r: HttpResponse<User[]>) => {
         store.commit("setUsers", r.data)
-        store.commit("setCurrentUser", store.state.users[0])
+        store.commit(
+            "setCurrentUser",
+            store.state.users.find(
+                (u: User) => u._id === import.meta.env.VITE_STUDENT_ID
+            )
+        )
     })
     api?.learning
         .domainDetail("hbo-i-2018")
@@ -51,7 +56,7 @@ onMounted(() => {
 
     api?.learning
         .outcomesList({
-            studentId: "20592",
+            studentId: import.meta.env.VITE_STUDENT_ID ?? "00000",
         })
         .then((r) => store.commit("setSubmissions", r.data))
 
