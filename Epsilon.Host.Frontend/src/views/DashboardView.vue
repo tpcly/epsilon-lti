@@ -51,7 +51,7 @@ onMounted(() => {
 
     api?.learning
         .outcomesList({
-            studentId: import.meta.env.VITE_STUDENT_ID ?? "00000",
+            studentId: import.meta.env.VITE_USER_ID ?? "00000",
         })
         .then((r) => store.commit("setSubmissions", r.data))
 
