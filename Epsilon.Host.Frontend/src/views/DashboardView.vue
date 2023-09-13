@@ -37,7 +37,7 @@ onMounted(() => {
         store.commit(
             "setCurrentUser",
             store.state.users.find(
-                (u: User) => u._id === import.meta.env.VITE_STUDENT_ID
+                (u: User) => u._id === import.meta.env.VITE_USER_ID
             )
         )
     })
