@@ -28,9 +28,7 @@ export class DecayingAverageLogic {
         const list: LearningDomainOutcomeRecord[] = []
         submissions.map((s) => {
             if (s.results) {
-                Object.entries(s.results).map(([, outcome]) =>
-                    list.push(outcome)
-                )
+                s.results.map((outcome) => list.push(outcome))
             }
         })
         return list
