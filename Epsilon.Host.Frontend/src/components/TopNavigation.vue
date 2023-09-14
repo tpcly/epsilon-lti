@@ -3,13 +3,13 @@
         <img alt="logo" class="header-logo" src="../assets/logo.png" />
         <Row>
             <Col :cols="9">
-                <div class="d-flex">
-                    <SearchBox
-                        v-model="store.state.currentUser"
-                        :items="store.state.users"
-                        :limit="5"
-                        placeholder="Student" />
-                </div>
+                <!--                <div class="d-flex">-->
+                <!--                    <SearchBox-->
+                <!--                        v-model="store.state.currentUser"-->
+                <!--                        :items="store.state.users"-->
+                <!--                        :limit="5"-->
+                <!--                        placeholder="Student" />-->
+                <!--                </div>-->
             </Col>
             <Col :cols="3">
                 <SearchBox
