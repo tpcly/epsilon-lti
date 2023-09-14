@@ -57,13 +57,12 @@ watch(store.state.currentUser, () => {
             store.commit("setUserTerms", r.data)
             selectedTerm.value = store.state.currentTerm
             store.commit("setCurrentTerm", store.state.userTerms[0])
-            store.commit("correctCurrentTerm")
         })
 })
 
 api?.filter
     .participatedTermsList({
-        studentId: store.state.currentUser?._id,
+        studentId: import.meta.env.VITE_USER_ID,
     })
     .then((r: HttpResponse<EnrollmentTerm[]>) => {
         store.commit("setUserTerms", r.data)

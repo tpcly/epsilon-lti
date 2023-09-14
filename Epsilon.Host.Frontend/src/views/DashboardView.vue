@@ -1,5 +1,5 @@
 <template>
-    <Header v-if="store.state.users" />
+    <Header />
     <TabGroup as="template">
         <div class="toolbar mb-lg mt-lg">
             <div class="toolbar-slider">
@@ -11,7 +11,7 @@
             </div>
         </div>
         <hr class="divider mb-lg" />
-        <main v-if="store.state.domain && store.state.currentTerm">
+        <main>
             <TabPanels>
                 <TabPanel>
                     <PerformanceDashboard />
@@ -53,7 +53,10 @@ onMounted(() => {
         .outcomesList({
             studentId: import.meta.env.VITE_USER_ID ?? "00000",
         })
-        .then((r) => store.commit("setSubmissions", r.data))
+        .then((r) => {
+            store.commit("setSubmissions", r.data)
+            store.commit("filterSubmissions")
+        })
 
     api?.learning
         .domainOutcomesDetail("wajdgawlhdawhdgawjkd")
