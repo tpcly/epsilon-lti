@@ -98,7 +98,6 @@ const series = computed(() => [
         }),
     },
 ])
-console.log(series)
 
 function getMastery(masteryId: number | null): LearningDomainType | undefined {
     if (store.state.domain.valuesSet?.types == null || masteryId == null) {
