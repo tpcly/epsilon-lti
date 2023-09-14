@@ -19,7 +19,9 @@ const props = defineProps<{
     row: LearningDomainType
     col: LearningDomainType
 }>()
-
+/*
+Count all the outcomes that have been graded to mastery within a row and column 
+ */
 const count = computed(() => {
     return props.submissions
         .map(
