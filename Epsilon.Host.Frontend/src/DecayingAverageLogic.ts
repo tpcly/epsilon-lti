@@ -21,7 +21,15 @@ export interface DecayingAveragePerSkill {
     masteryLevel: number | null
 }
 
+/**
+ *
+ */
 export class DecayingAverageLogic {
+    /**
+     * Get a list of all outcomes that have been submitted with a submission
+     * @param submissions
+     * @private
+     */
     private static getAllOutcomes(
         submissions: LearningDomainSubmission[]
     ): LearningDomainOutcomeRecord[] {
@@ -198,6 +206,12 @@ export class DecayingAverageLogic {
         return totalGradeScore
     }
 
+    /**
+     * Group a given array with object to a record with a key and an array with values.
+     * @param arr
+     * @param fn
+     * @private
+     */
     private static groupBy<T>(
         arr: T[],
         fn: (item: T) => number | string
