@@ -1,21 +1,12 @@
 <template>
-    <LayoutRow v-if="store.state.filterdSubmissions">
-        <layout-col cols="8">
-            <CompetenceProfile
-                :submissions="
-                    store.state.filterdSubmissions
-                "></CompetenceProfile>
-        </layout-col>
-        <layout-col cols="4"
-            ><CompetenceProfileLegend></CompetenceProfileLegend>
-        </layout-col>
-        <layout-col cols="8">
-            <CompetenceGraph></CompetenceGraph>
-        </layout-col>
-        <layout-col cols="4">
-            <PersonalDevelopmentGraph></PersonalDevelopmentGraph>
-        </layout-col>
-    </LayoutRow>
+    <div v-if="store.state.filterdSubmissions" class="performance-dashboard">
+        <CompetenceProfile
+            :submissions="store.state.filterdSubmissions"></CompetenceProfile>
+        <CompetenceProfileLegend></CompetenceProfileLegend>
+        <div></div>
+        <CompetenceGraph></CompetenceGraph>
+        <PersonalDevelopmentGraph></PersonalDevelopmentGraph>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -24,8 +15,20 @@ import store from "@/store"
 import PersonalDevelopmentGraph from "@/components/Performance/PersonalDevelopmentGraph.vue"
 import CompetenceProfileLegend from "@/components/CompetenceProfileLegend.vue"
 import CompetenceProfile from "@/components/Competence/CompetenceProfile.vue"
-import LayoutRow from "@/components/LayoutRow.vue"
-import LayoutCol from "@/components/LayoutCol.vue"
 </script>
 
-<style scoped></style>
+<style scoped>
+.performance-dashboard {
+    grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: 580px) {
+    .performance-dashboard {
+        display: grid;
+        grid-template-columns: 1fr 5fr 1fr;
+        gap: 2rem 0;
+        align-items: center;
+        justify-items: center;
+    }
+}
+</style>
