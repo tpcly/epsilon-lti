@@ -28,7 +28,7 @@
                     :col="col"
                     :row="row"
                     :submissions="submissions"
-                    :result="getFilterd(row, col, allOutcomes)">
+                    :result="getFiltered(row, col, allOutcomes)">
                 </CompetenceProfileCell>
             </tr>
         </tbody>
@@ -57,7 +57,7 @@ const allOutcomes = computed(() =>
         .filter((value, index, self) => self.indexOf(value) === index)
 ) as unknown as number[]
 
-function getFilterd(
+function getFiltered(
     row: LearningDomainType,
     col: LearningDomainType,
     outcomes: number[]
@@ -110,13 +110,13 @@ function getFilterd(
     &-data:last-child {
         border-right: 1px solid #e6e6e6;
     }
-}
 
-.profile-header-color {
-    margin: 3px 10px 0;
-    width: 15px;
-    height: 15px;
-    font-size: 0.9rem;
-    border: 1px solid #e6e6e6;
+    .profile-header-color {
+        margin: 3px 10px 0;
+        width: 15px;
+        height: 15px;
+        font-size: 0.9rem;
+        border: 1px solid #e6e6e6;
+    }
 }
 </style>

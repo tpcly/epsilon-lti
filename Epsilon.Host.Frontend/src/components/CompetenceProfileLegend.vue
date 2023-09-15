@@ -5,9 +5,9 @@
             :key="level"
             class="competence-profile-legend-row">
             <td
-                class="kpi-color"
+                class="value-color"
                 :style="{ backgroundColor: '#' + level.hexColor }" />
-            <th class="kpi-text">{{ level.name }}</th>
+            <th class="value-text">{{ level.name }}</th>
         </tr>
     </table>
 </template>
@@ -26,11 +26,11 @@ import { LearningDomainType } from "@/api"
     padding: 2rem;
 }
 
-.kpi-text {
+.value-text {
     font-weight: 400;
 }
 
-.kpi-color {
+.value-color {
     width: 3rem;
 }
 

@@ -93,20 +93,20 @@ const series = computed(() => [
                 x: store.state.personalDevelopment.rowsSet?.types?.find(
                     (s: LearningDomainType) => s.id == d.skill
                 ).name,
-                fillColor: "#" + getMastery(d.masteryLevel)?.hexColor,
+                fillColor: "#" + getValue(d.masteryLevel)?.hexColor,
             }
         }),
     },
 ])
 
-function getMastery(masteryId: number | null): LearningDomainType | undefined {
-    if (store.state.domain.valuesSet?.types == null || masteryId == null) {
+function getValue(valueId: number | null): LearningDomainType | undefined {
+    if (store.state.domain.valuesSet?.types == null || valueId == null) {
         return undefined
     }
 
     return store.state.domain.valuesSet?.types.find(
         (masteryLevel: LearningDomainType) =>
-            (masteryLevel.shortName as unknown as number) == masteryId
+            (masteryLevel.shortName as unknown as number) == valueId
     )
 }
 </script>

@@ -21,9 +21,6 @@ export interface DecayingAveragePerSkill {
     masteryLevel: number | null
 }
 
-/**
- *
- */
 export class DecayingAverageLogic {
     /**
      * Get a list of all outcomes that have been submitted with a submission

@@ -3,6 +3,7 @@
         <img alt="logo" class="header-logo" src="../assets/logo.png" />
         <Row>
             <Col :cols="9">
+                <!--TODO Component is used to selected users for upcoming feature-->
                 <!--                <div class="d-flex">-->
                 <!--                    <SearchBox-->
                 <!--                        v-model="store.state.currentUser"-->

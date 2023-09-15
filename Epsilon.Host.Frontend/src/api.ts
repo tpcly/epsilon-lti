@@ -455,12 +455,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          * No description
          *
          * @tags Learning
-         * @name DomainOutcomesDetail
-         * @request GET:/Learning/domain/{tenantId}/outcomes
+         * @name DomainOutcomesList
+         * @request GET:/Learning/domain/outcomes
          */
-        domainOutcomesDetail: (tenantId: string, params: RequestParams = {}) =>
+        domainOutcomesList: (params: RequestParams = {}) =>
             this.request<LearningDomainOutcome, any>({
-                path: `/Learning/domain/${tenantId}/outcomes`,
+                path: `/Learning/domain/outcomes`,
                 method: "GET",
                 format: "json",
                 ...params,

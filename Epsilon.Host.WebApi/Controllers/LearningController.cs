@@ -38,8 +38,8 @@ public class LearningController : ControllerBase
         return Ok(domain);
     }
     
-    [HttpGet("domain/{tenantId}/outcomes")]
-    public async Task<ActionResult<LearningDomainOutcome>> GetDomainOutcomes(string tenantId)
+    [HttpGet("domain/outcomes")]
+    public async Task<ActionResult<LearningDomainOutcome>> GetDomainOutcomes()
     {
         var domainOutcomes = await _learningDomainService.GetOutcomes();
 

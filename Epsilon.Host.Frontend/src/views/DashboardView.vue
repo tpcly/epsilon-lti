@@ -27,18 +27,22 @@ import Header from "@/components/TopNavigation.vue"
 import { Api, HttpResponse, User } from "@/api"
 import { inject, onMounted } from "vue"
 import { useStore } from "vuex"
+import { types } from "sass"
+import Error = types.Error
 
 const api = inject<Api<unknown>>("api")
 const store = useStore()
 
 onMounted(() => {
+    const userId = import.meta.env.VITE_USER_ID
+    if (!userId) {
+        throw new Error("User ID is not defined")
+    }
     api?.filter.accessibleStudentsList().then((r: HttpResponse<User[]>) => {
         store.commit("setUsers", r.data)
         store.commit(
             "setCurrentUser",
-            store.state.users.find(
-                (u: User) => u._id === import.meta.env.VITE_USER_ID
-            )
+            store.state.users.find((u: User) => u._id === userId)
         )
     })
     api?.learning
@@ -51,7 +55,7 @@ onMounted(() => {
 
     api?.learning
         .outcomesList({
-            studentId: import.meta.env.VITE_USER_ID ?? "00000",
+            studentId: userId,
         })
         .then((r) => {
             store.commit("setSubmissions", r.data)
@@ -59,7 +63,7 @@ onMounted(() => {
         })
 
     api?.learning
-        .domainOutcomesDetail("wajdgawlhdawhdgawjkd")
+        .domainOutcomesList()
         .then((r) => store.commit("setOutcomes", r.data))
 })
 </script>

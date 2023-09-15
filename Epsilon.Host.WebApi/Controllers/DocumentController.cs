@@ -29,7 +29,7 @@ public class DocumentController : ControllerBase
     [HttpPost("page/{pageName}")]
     public async Task<ActionResult<PageComponent>> UpdateOrCreatePage(int courseId, string pageName, [FromBody] PageUpdateRequest updateRequest)
     {
-        var createdPageComponent = await _pageComponentManager.CreateOrUpdate(courseId, pageName, updateRequest.Body ?? "");
+        var createdPageComponent = await _pageComponentManager.CreateOrUpdate(courseId, pageName, updateRequest.Body);
 
         return Ok(createdPageComponent);
     }
