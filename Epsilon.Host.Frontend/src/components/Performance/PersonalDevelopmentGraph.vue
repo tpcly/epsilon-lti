@@ -72,12 +72,11 @@ const chartOptions = {
 }
 
 onMounted(() => {
-    if (store.state.personalDevelopment.rowsSet?.types != null) {
-        store.state.personalDevelopment.rowsSet?.types.forEach(
-            (s: LearningDomainType) => {
-                chartOptions.xaxis.categories.push(s.shortName as never)
-            }
-        )
+    const rowTypes = store.state.personalDevelopment.rowsSet?.types
+    if (rowTypes != null) {
+        rowTypes.forEach((s: LearningDomainType) => {
+            chartOptions.xaxis.categories.push(s.shortName as never)
+        })
     }
 })
 
