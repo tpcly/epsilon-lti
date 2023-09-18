@@ -1,5 +1,5 @@
 <template>
-    <Header v-if="store.state.users" />
+    <Header />
     <TabGroup as="template">
         <div class="toolbar mb-lg mt-lg">
             <div class="toolbar-slider">
@@ -7,18 +7,14 @@
                     <Tab class="toolbar-slider-item">
                         Performance dashboard
                     </Tab>
-                    <Tab class="toolbar-slider-item">Competence document</Tab>
                 </TabList>
             </div>
         </div>
         <hr class="divider mb-lg" />
-        <main v-if="store.state.domain && store.state.currentTerm">
+        <main>
             <TabPanels>
                 <TabPanel>
                     <PerformanceDashboard />
-                </TabPanel>
-                <TabPanel>
-                    <CompetenceDocument />
                 </TabPanel>
             </TabPanels>
         </main>
@@ -27,32 +23,47 @@
 <script lang="ts" setup>
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/vue"
 import PerformanceDashboard from "@/views/PerformanceDashboard.vue"
-import CompetenceDocument from "@/views/CompetenceDocument.vue"
 import Header from "@/components/TopNavigation.vue"
 import { Api, HttpResponse, User } from "@/api"
 import { inject, onMounted } from "vue"
 import { useStore } from "vuex"
+import { types } from "sass"
+import Error = types.Error
 
 const api = inject<Api<unknown>>("api")
 const store = useStore()
 
 onMounted(() => {
+    const userId = import.meta.env.VITE_USER_ID
+    if (!userId) {
+        throw new Error("User ID is not defined")
+    }
     api?.filter.accessibleStudentsList().then((r: HttpResponse<User[]>) => {
         store.commit("setUsers", r.data)
-        store.commit("setCurrentUser", store.state.users[0])
+        store.commit(
+            "setCurrentUser",
+            store.state.users.find((u: User) => u._id === userId)
+        )
     })
     api?.learning
         .domainDetail("hbo-i-2018")
         .then((r) => store.commit("setDomain", r.data))
 
     api?.learning
-        .outcomesList({
-            studentId: "20592",
-        })
-        .then((r) => store.commit("setSubmissions", r.data))
+        .domainDetail("pd-2020-bsc")
+        .then((r) => store.commit("setPersonalDevelopment", r.data))
 
     api?.learning
-        .domainOutcomesDetail("wajdgawlhdawhdgawjkd")
+        .outcomesList({
+            studentId: userId,
+        })
+        .then((r) => {
+            store.commit("setSubmissions", r.data)
+            store.commit("filterSubmissions")
+        })
+
+    api?.learning
+        .domainOutcomesList()
         .then((r) => store.commit("setOutcomes", r.data))
 })
 </script>

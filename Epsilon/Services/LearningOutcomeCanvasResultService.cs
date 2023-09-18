@@ -70,26 +70,12 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
         foreach (var submission in submissionsTask?.Result?.Courses?.SelectMany(static c => c.Submissions.Nodes))
         {
-            var recentSubmission = submission.SubmissionHistories?.Nodes
-                                             .MaxBy(static h => h.Attempt);
-            
-
-            var rubricAssessments = recentSubmission.RubricAssessments.Nodes.SelectMany(static rubricAssessment =>
-                rubricAssessment.AssessmentRatings.Where(static ar =>
-                    ar is
-                    {
-                        Points: not null,
-                        Criterion.MasteryPoints: not null,
-                        Criterion.Outcome: not null,
-                    })
-            );
- 
             yield return new LearningDomainSubmission(
                 submission.Assignment.Name,
                 submission.Assignment.HtmlUrl,
-                recentSubmission.SubmittedAt,
+                submission.SubmissionHistories.Nodes.OrderBy(static h => h.Attempt).First().SubmittedAt,
                 GetSubmissionCriteria(submission),
-                GetOutcomeResults(rubricAssessments, domainOutcomesTask)
+                GetOutcomeResults(submission, domainOutcomesTask)
             );
         }
     }
@@ -110,21 +96,37 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
             }
         }
     }
+
     
     private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
-        IEnumerable<AssessmentRating> rubricAssessments,
+        Submission submission,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
     {
-        foreach (var assessmentRating in rubricAssessments)
+        var outcomeRecords = new List<LearningDomainOutcomeRecord>();
+        //Loop trough all submissions of assignment to look for outcomes that have been graded. 
+        foreach (var submissionHistory in submission.SubmissionHistories.Nodes.OrderByDescending(static s => s.SubmittedAt))
         {
-            var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o.Id == assessmentRating.Criterion.Outcome.Id);
-            if (outcome == null)
+            var rubricAssessments = submissionHistory.RubricAssessments.Nodes.SelectMany(static rubricAssessment =>
+                rubricAssessment.AssessmentRatings.Where(static ar =>
+                    ar is
+                    {
+                        Points: not null,
+                        Criterion.MasteryPoints: not null,
+                        Criterion.Outcome: not null,
+                    }));
+
+            foreach (var assessment in rubricAssessments)
             {
-                continue;
+                var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
+                if (outcome != null)
+                {
+                    outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
+                    outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
+                }
             }
-    
-            yield return new LearningDomainOutcomeRecord(outcome, assessmentRating.Points);
         }
+
+        return outcomeRecords;
     }
 }

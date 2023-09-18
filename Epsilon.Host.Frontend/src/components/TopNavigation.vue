@@ -3,13 +3,14 @@
         <img alt="logo" class="header-logo" src="../assets/logo.png" />
         <Row>
             <Col :cols="9">
-                <div class="d-flex">
-                    <SearchBox
-                        v-model="store.state.currentUser"
-                        :items="store.state.users"
-                        :limit="5"
-                        placeholder="Student" />
-                </div>
+                <!--TODO Component is used to selected users for upcoming feature-->
+                <!--                <div class="d-flex">-->
+                <!--                    <SearchBox-->
+                <!--                        v-model="store.state.currentUser"-->
+                <!--                        :items="store.state.users"-->
+                <!--                        :limit="5"-->
+                <!--                        placeholder="Student" />-->
+                <!--                </div>-->
             </Col>
             <Col :cols="3">
                 <SearchBox
@@ -37,6 +38,7 @@ const selectedTerm: Ref<EnrollmentTerm | undefined> = ref(undefined)
 
 watch(selectedTerm, () => {
     store.commit("setCurrentTerm", selectedTerm.value)
+    store.commit("correctCurrentTerm")
     store.commit("filterSubmissions")
 })
 
@@ -61,13 +63,12 @@ watch(store.state.currentUser, () => {
 
 api?.filter
     .participatedTermsList({
-        studentId: store.state.currentUser?._id,
+        studentId: import.meta.env.VITE_USER_ID,
     })
     .then((r: HttpResponse<EnrollmentTerm[]>) => {
         store.commit("setUserTerms", r.data)
         store.commit("setCurrentTerm", store.state.userTerms[0])
         selectedTerm.value = store.state.currentTerm
-        store.commit("filterSubmissions")
     })
 </script>
 
