@@ -7,7 +7,6 @@
                     <Tab class="toolbar-slider-item">
                         Performance dashboard
                     </Tab>
-                    <Tab class="toolbar-slider-item">Competence document</Tab>
                 </TabList>
             </div>
         </div>
@@ -17,21 +16,59 @@
                 <TabPanel>
                     <PerformanceDashboard />
                 </TabPanel>
-                <TabPanel>
-                    <CompetenceDocument />
-                </TabPanel>
             </TabPanels>
         </main>
     </TabGroup>
 </template>
-<script setup lang="ts">
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue"
+<script lang="ts" setup>
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/vue"
 import PerformanceDashboard from "@/views/PerformanceDashboard.vue"
-import CompetenceDocument from "@/views/CompetenceDocument.vue"
 import Header from "@/components/TopNavigation.vue"
+import { Api, HttpResponse, User } from "@/api"
+import { inject, onMounted } from "vue"
+import { useStore } from "vuex"
+import { types } from "sass"
+import Error = types.Error
+
+const api = inject<Api<unknown>>("api")
+const store = useStore()
+
+onMounted(() => {
+    const userId = import.meta.env.VITE_USER_ID
+    if (!userId) {
+        throw new Error("User ID is not defined")
+    }
+    api?.filter.accessibleStudentsList().then((r: HttpResponse<User[]>) => {
+        store.commit("setUsers", r.data)
+        store.commit(
+            "setCurrentUser",
+            store.state.users.find((u: User) => u._id === userId)
+        )
+    })
+    api?.learning
+        .domainDetail("hbo-i-2018")
+        .then((r) => store.commit("setDomain", r.data))
+
+    api?.learning
+        .domainDetail("pd-2020-bsc")
+        .then((r) => store.commit("setPersonalDevelopment", r.data))
+
+    api?.learning
+        .outcomesList({
+            studentId: userId,
+        })
+        .then((r) => {
+            store.commit("setSubmissions", r.data)
+            store.commit("filterSubmissions")
+        })
+
+    api?.learning
+        .domainOutcomesList()
+        .then((r) => store.commit("setOutcomes", r.data))
+})
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .toolbar {
     display: flex;
     justify-content: space-between;

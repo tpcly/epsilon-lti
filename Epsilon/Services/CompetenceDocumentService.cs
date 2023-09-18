@@ -23,7 +23,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         return new CompetenceDocument(components);
     }
 
-    public async Task<Stream> WriteDocument(Stream stream, CompetenceDocument document)
+    public void WriteDocument(Stream stream, CompetenceDocument document)
     {
         var startPosition = stream.Position;
 
@@ -42,8 +42,6 @@ public class CompetenceDocumentService : ICompetenceDocumentService
 
         // Reset stream position to start position
         stream.Position = startPosition;
-
-        return stream;
     }
 
     private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(int courseId)

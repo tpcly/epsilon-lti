@@ -1,7 +1,6 @@
 using System.Net.Http.Headers;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
-using Epsilon.Abstractions.Data;
 using Epsilon.Abstractions.Services;
 using Epsilon.Canvas.Abstractions;
 using Epsilon.Canvas.Abstractions.GraphQl;
@@ -9,12 +8,13 @@ using Epsilon.Canvas.Abstractions.Rest;
 using Epsilon.Canvas.GraphQl;
 using Epsilon.Canvas.Rest;
 using Epsilon.Components;
-using Epsilon.Data;
 using Epsilon.Host.WebApi.Data;
 using Epsilon.Host.WebApi.Options;
 using Epsilon.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Tpcly.Persistence.Abstractions;
+using Tpcly.Persistence.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +69,7 @@ builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
 builder.Services.AddScoped<IFilterService, FilterService>();
 builder.Services.AddScoped<ILearningDomainService, LearningDomainService>();
+builder.Services.AddScoped<ILearningOutcomeCanvasResultService, LearningOutcomeCanvasResultService>();
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();

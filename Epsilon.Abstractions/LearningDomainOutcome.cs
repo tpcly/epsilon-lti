@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Epsilon.Abstractions.Data;
+using Tpcly.Persistence;
 
 namespace Epsilon.Abstractions;
 
@@ -11,4 +11,5 @@ public record LearningDomainOutcome : Entity<int>
     public LearningDomainType Row { get; set; } = null!;
     public LearningDomainType? Column { get; set; }
     public LearningDomainType Value { get; set; } = null!;
+    public string Name { get; set; } = null!;
 }
