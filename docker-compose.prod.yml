@@ -6,16 +6,23 @@
             - 5001:443
         environment:
             - ASPNETCORE_URLS=http://+:80;
+            - LIT__TargetUri="";
+            - LIT__RedirectUri="";
+            - LIT__Jwk="";
+            - LIT__Canvas__ClientId="";
+            - LIT__Canvas__ApiUrl="";
+            - LIT__Canvas__ClientSecret="";
+            - LIT__Canvas__AuthorizationEndpoint="";
+            - LIT__Canvas__TokenEndpoint="";
+            - ConnectionStrings__Default="";
     frontend:
         container_name: Epsilon-Frontend
-        build:
-            context: ./Epsilon.Host.Frontend
-            dockerfile: ./Dockerfile
+        image: typiqally/epsilon:main-frontend
         ports:
             - 8000:8000
     db:
         container_name: Epsilon-DB
-        image: typiqally/epsilon:main-frontend
+        image: mariadb:10
         environment:
             MARIADB_ROOT_PASSWORD: not_toor
             MARIADB_DATABASE: epsilon
