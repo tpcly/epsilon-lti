@@ -78,7 +78,7 @@ jobs:
       strategy:
           matrix:
               version: [ dev, prod, stage ]
-      needs: [ build-frontend, build-backend, lint-frontend ]
+      needs: [ build-frontend, build-backend, lint-frontend, code-analysis ]
       steps:
           - uses: actions/checkout@v2
           - name: Build the containers
