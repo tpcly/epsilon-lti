@@ -94,4 +94,3 @@ jobs:
           use-annotations: true
           push-fixes: false
           pr-mode: false
-          fail-threshold: 0
