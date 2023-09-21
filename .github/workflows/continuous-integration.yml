@@ -77,7 +77,7 @@ jobs:
       runs-on: ubuntu-20.04
       strategy:
           matrix:
-              version: [ dev, prod, stage ]
+              version: [ development, production, staging ]
       needs: [ build-frontend, build-backend, lint-frontend, code-analysis ]
       steps:
           - uses: actions/checkout@v2
