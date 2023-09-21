@@ -75,11 +75,14 @@ jobs:
   build-docker:
       name: Build Docker
       runs-on: ubuntu-20.04
+      strategy:
+          matrix:
+              version: [ dev, prod, stage ]
       needs: [ build-frontend, build-backend, lint-frontend ]
       steps:
           - uses: actions/checkout@v2
           - name: Build the containers
-            run: docker-compose build
+            run: docker-compose -f docker-compose.${{ matrix.version }}.yml build
   
   code-analysis:
     name: Code analysis
