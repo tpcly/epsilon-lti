@@ -71,6 +71,15 @@ jobs:
         run: pnpm install
       - name: Perform linting
         run: pnpm lint
+        
+  build-docker:
+      name: Build Docker
+      runs-on: ubuntu-20.04
+      needs: [ build-frontend, build-backend, lint-frontend, code-analysis ]
+      steps:
+          - uses: actions/checkout@v2
+          - name: Build the containers
+            run: docker-compose -f docker-compose.development.yml build
   
   code-analysis:
     name: Code analysis
