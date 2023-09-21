@@ -1,0 +1,24 @@
+﻿services:
+  api:
+    container_name: Epsilon-API
+    image: typiqally/epsilon:develop-api
+    ports:
+      - 5001:443
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80;
+  frontend:
+    container_name: Epsilon-Frontend
+    build:
+      context: ./Epsilon.Host.Frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000
+  db:
+    container_name: Epsilon-DB
+    image: typiqally/epsilon:develop-frontend
+    environment:
+        MARIADB_ROOT_PASSWORD: not_toor
+        MARIADB_DATABASE: epsilon
+    volumes:
+      - /var/lib/mysql:/data
