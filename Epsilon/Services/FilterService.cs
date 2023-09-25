@@ -70,17 +70,14 @@ public class FilterService : IFilterService
         
         // Get the corrected term based on a new end date:
         var correctedParticipatedTerms = participatedTerms
-            .Select((currentTerm, index) => new EnrollmentTerm(
-                currentTerm.Name,
-                currentTerm.StartAt,
-                index > 0
-                    ? participatedTerms[index - 1].StartAt
-                    : currentTerm.EndAt
-            ));
+             .Select((currentTerm, index) => currentTerm with
+             {
+                 EndAt = index > 0 ? participatedTerms[index - 1].StartAt : currentTerm.EndAt,
+             })
+             .ToList();
         
         return correctedParticipatedTerms;
     }
-
 
     
     // TODO: Has some issues due to the fact that it does not know whether the selected student has submissions or not
