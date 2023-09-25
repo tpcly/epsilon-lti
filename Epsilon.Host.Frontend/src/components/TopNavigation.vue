@@ -38,7 +38,6 @@ const selectedTerm: Ref<EnrollmentTerm | undefined> = ref(undefined)
 
 watch(selectedTerm, () => {
     store.commit("setCurrentTerm", selectedTerm.value)
-    store.commit("correctCurrentTerm")
     store.commit("filterSubmissions")
 })
 
