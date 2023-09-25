@@ -47,7 +47,7 @@ public class FilterService : IFilterService
         _canvasGraphQl = canvasGraphQl;
         _canvasRest = canvasRest;
     }
-
+    
     public async Task<IEnumerable<EnrollmentTerm>> GetParticipatedTerms(string studentId)
     {
         var allTerms = await _canvasRest.Accounts.GetTerms(1);
@@ -59,18 +59,30 @@ public class FilterService : IFilterService
         {
             return Enumerable.Empty<EnrollmentTerm>();
         }
-
+        
         var submissions = response.Courses!.SelectMany(static c => c.Submissions!.Nodes);
 
         var participatedTerms = allTerms!
-                                .Where(static term => term is { StartAt: not null, EndAt: not null, })
-                                .Where(term => submissions.Any(submission => submission.SubmittedAt >= term.StartAt && submission.SubmittedAt <= term.EndAt))
-                                .Distinct()
-                                .OrderByDescending(static term => term.StartAt);
-
-        return participatedTerms;
+            .Where(static term => term is { StartAt: not null, EndAt: not null, })
+            .Where(term => submissions.Any(submission => submission.SubmittedAt >= term.StartAt && submission.SubmittedAt <= term.EndAt))
+            .Distinct()
+            .OrderByDescending(static term => term.StartAt).ToList();
+        
+        // Get the corrected term based on a new end date:
+        var correctedParticipatedTerms = participatedTerms
+            .Select((currentTerm, index) => new EnrollmentTerm(
+                currentTerm.Name,
+                currentTerm.StartAt,
+                index > 0
+                    ? participatedTerms[index - 1].StartAt
+                    : currentTerm.EndAt
+            ));
+        
+        return correctedParticipatedTerms;
     }
 
+
+    
     // TODO: Has some issues due to the fact that it does not know whether the selected student has submissions or not
     public async Task<IEnumerable<User>> GetAccessibleStudents()
     {

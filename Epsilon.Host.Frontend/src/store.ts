@@ -38,17 +38,6 @@ const store = createStore({
         setCurrentTerm(state, currentTerm: EnrollmentTerm) {
             state.currentTerm = currentTerm
         },
-        correctCurrentTerm(state) {
-            if (state.currentTerm) {
-                const index = state.userTerms?.indexOf(
-                    state.currentTerm
-                ) as number
-                state.currentTerm.end_at =
-                    index > 0
-                        ? state.userTerms?.at(index - 1)?.start_at
-                        : state.userTerms?.at(index)?.end_at
-            }
-        },
         setCurrentUser(state, currentUser: User) {
             state.currentUser = currentUser
         },
