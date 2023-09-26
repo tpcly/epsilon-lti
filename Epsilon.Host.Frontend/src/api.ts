@@ -10,7 +10,7 @@
  */
 
 export interface EnrollmentTerm {
-    name?: string | null
+    name: string
     /** @format date-time */
     start_at?: string | null
     /** @format date-time */
@@ -19,9 +19,9 @@ export interface EnrollmentTerm {
 
 export interface LearningDomain {
     id?: string | null
-    rowsSet?: LearningDomainTypeSet
+    rowsSet: LearningDomainTypeSet
     columnsSet?: LearningDomainTypeSet
-    valuesSet?: LearningDomainTypeSet
+    valuesSet: LearningDomainTypeSet
 }
 
 export interface LearningDomainCriteria {
@@ -34,10 +34,10 @@ export interface LearningDomainCriteria {
 export interface LearningDomainOutcome {
     /** @format int32 */
     id?: number
-    row?: LearningDomainType
+    row: LearningDomainType
     column?: LearningDomainType
-    value?: LearningDomainType
-    name?: string | null
+    value: LearningDomainType
+    name: string
 }
 
 export interface LearningDomainOutcomeRecord {
@@ -58,15 +58,15 @@ export interface LearningDomainSubmission {
 
 export interface LearningDomainType {
     id?: string | null
-    name?: string | null
-    shortName?: string | null
+    name: string
+    shortName: string
     hexColor?: string | null
 }
 
 export interface LearningDomainTypeSet {
     /** @format uuid */
     id?: string
-    types?: LearningDomainType[] | null
+    types: LearningDomainType[]
 }
 
 export interface PageComponent {

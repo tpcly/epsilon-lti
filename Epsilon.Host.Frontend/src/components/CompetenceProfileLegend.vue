@@ -1,7 +1,7 @@
 <template>
     <table class="competence-profile-legend">
         <tr
-            v-for="level of store.state.domain.valuesSet?.types?.sort((a,b) => a.shortName - b.shortName) as LearningDomainType[]"
+            v-for="level of store.state.domain.valuesSet.types.sort((a,b) => a.shortName - b.shortName) as LearningDomainType[]"
             :key="level"
             class="competence-profile-legend-row">
             <td
