@@ -15,8 +15,8 @@ import {
 
 const props = defineProps<{
     submissions: LearningDomainSubmission[]
-    result: LearningDomainOutcome | null
-    row: LearningDomainType | null
+    result: LearningDomainOutcome
+    row: LearningDomainType
     col: LearningDomainType | null
 }>()
 /*
@@ -28,9 +28,7 @@ const count = computed(() => {
             (s) =>
                 s.results?.filter((r) => {
                     if (
-                        r.outcome?.row?.id != null &&
                         r.outcome?.column?.id != null &&
-                        props.row?.id != null &&
                         props.col?.id != null
                     ) {
                         return (

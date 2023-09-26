@@ -61,7 +61,7 @@ function getFiltered(
     row: LearningDomainType,
     col: LearningDomainType,
     outcomes: number[]
-): LearningDomainOutcome | null {
+): LearningDomainOutcome {
     return store.state.outcomes
         .filter(
             (o: LearningDomainOutcome) =>
