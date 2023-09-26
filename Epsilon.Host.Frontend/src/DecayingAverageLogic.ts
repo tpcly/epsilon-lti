@@ -56,12 +56,10 @@ export class DecayingAverageLogic {
             )
         ).map(([, j]) => {
             return {
-                skill: j.at(0)?.outcome?.row?.id,
+                skill: j.at(0)?.outcome?.row.id,
                 masteryLevel: j
-                    ?.sort(
-                        (a) => a.outcome?.value?.shortName as never as number
-                    )
-                    ?.at(0)?.outcome?.value?.shortName as unknown as number,
+                    .sort((a) => a.outcome?.value.shortName as never as number)
+                    .at(0)?.outcome?.value?.shortName as unknown as number,
                 decayingAverage: this.getDecayingAverageFromOneOutcomeType(j),
             } as unknown as DecayingAveragePerSkill
         })
@@ -102,7 +100,7 @@ export class DecayingAverageLogic {
         return domain.rowsSet?.types?.map((layer) => {
             return {
                 architectureLayer: layer.id,
-                layerActivities: domain.columnsSet?.types?.map((activity) => {
+                layerActivities: domain.columnsSet?.types.map((activity) => {
                     let totalScoreActivity = 0
                     let totalScoreArchitectureActivity = 0
                     let amountOfActivities = 0
@@ -110,7 +108,7 @@ export class DecayingAverageLogic {
                     //Calculate the total score from activity
                     canvasDecaying.map((l) =>
                         l.layerActivities
-                            ?.filter((la) => la.activity === activity.id)
+                            .filter((la) => la.activity === activity.id)
                             .map(
                                 (la) =>
                                     (totalScoreActivity +=
@@ -124,7 +122,7 @@ export class DecayingAverageLogic {
                         .filter((l) => l.architectureLayer === layer.id)
                         .map((l) =>
                             l.layerActivities
-                                ?.filter((la) => la.activity === activity.id)
+                                .filter((la) => la.activity === activity.id)
                                 .map((la) => {
                                     totalScoreArchitectureActivity +=
                                         la.decayingAverage
@@ -154,13 +152,13 @@ export class DecayingAverageLogic {
         domain: LearningDomain
     ): DecayingAveragePerLayer[] {
         const results = this.getAllOutcomes(submissions)
-        return domain.rowsSet?.types?.map((l) => {
+        return domain.rowsSet.types.map((l) => {
             return {
                 architectureLayer: l.id,
                 layerActivities: Object.entries(
                     this.groupBy(
                         results.filter(
-                            (layer) => layer.outcome?.row?.id === l.id
+                            (layer) => layer.outcome?.row.id === l.id
                         ),
                         (r) => r.outcome?.id as unknown as string
                     )

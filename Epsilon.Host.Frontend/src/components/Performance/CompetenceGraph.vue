@@ -78,7 +78,7 @@ const chartOptions = {
 
 onMounted(() => {
     const columnTypes = store.state.domain?.columnsSet?.types
-    if (columnTypes != null) {
+    if (columnTypes != undefined) {
         columnTypes.forEach((s) => {
             chartOptions.xaxis.categories.push(s.name as never)
         })
