@@ -66,6 +66,7 @@ builder.Services.AddScoped<CanvasUserSession>(static services =>
 });
 
 builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
+builder.Services.AddScoped<IComponentManager, LearningDomainComponentManager>();
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
 builder.Services.AddScoped<IFilterService, FilterService>();
 builder.Services.AddScoped<ILearningDomainService, LearningDomainService>();

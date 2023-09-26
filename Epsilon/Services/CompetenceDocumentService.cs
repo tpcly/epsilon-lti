@@ -10,15 +10,17 @@ namespace Epsilon.Services;
 public class CompetenceDocumentService : ICompetenceDocumentService
 {
     private readonly IPageComponentManager _pageComponent;
+    private readonly IComponentManager _domainComponent;
 
-    public CompetenceDocumentService(IPageComponentManager pageComponent)
+    public CompetenceDocumentService(IPageComponentManager pageComponent, IComponentManager domainComponent)
     {
         _pageComponent = pageComponent;
+        _domainComponent = domainComponent;
     }
 
-    public async Task<CompetenceDocument> GetDocument(int courseId, DateTime from, DateTime to)
+    public async Task<CompetenceDocument> GetDocument(int courseId, string userId, DateTime from, DateTime to)
     {
-        var components = await FetchComponents(courseId).ToListAsync();
+        var components = await FetchComponents(courseId, userId).ToListAsync();
 
         return new CompetenceDocument(components);
     }
@@ -44,9 +46,10 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         stream.Position = startPosition;
     }
 
-    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(int courseId)
+    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(int courseId, string userId)
     {
-        yield return await _pageComponent.Fetch(courseId, "homepage");
-        yield return await _pageComponent.Fetch(courseId, "projects");
+        yield return await _pageComponent.Fetch(courseId, "homepage", userId, "hbo-i-2018");
+        yield return await _pageComponent.Fetch(courseId, "projects", userId, "hbo-i-2018");
+        yield return await _domainComponent.Fetch(courseId, "domain", userId, "hbo-i-2018");
     }
 }

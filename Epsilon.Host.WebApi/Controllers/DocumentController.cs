@@ -19,9 +19,9 @@ public class DocumentController : ControllerBase
     }
 
     [HttpGet("page/{pageName}")]
-    public async Task<ActionResult<PageComponent>> GetPage(int courseId, string pageName)
+    public async Task<ActionResult<PageComponent>> GetPage(int courseId, string pageName, string userId, string name)
     {
-        var pageComponent = await _pageComponentManager.Fetch(courseId, pageName);
+        var pageComponent = await _pageComponentManager.Fetch(courseId, pageName, userId, name);
 
         return Ok(pageComponent);
     }
@@ -36,9 +36,9 @@ public class DocumentController : ControllerBase
 
 
     [HttpGet("download/word")]
-    public async Task<IActionResult> DownloadWord(int courseId, DateTime from, DateTime to)
+    public async Task<IActionResult> DownloadWord(int courseId, string userId, DateTime from, DateTime to)
     {
-        var document = await _competenceDocumentService.GetDocument(courseId, from, to);
+        var document = await _competenceDocumentService.GetDocument(courseId, userId, from, to);
 
         var stream = new MemoryStream();
         _competenceDocumentService.WriteDocument(stream, document);
