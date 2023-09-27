@@ -19,9 +19,9 @@ public class DocumentController : ControllerBase
     }
 
     [HttpGet("page/{pageName}")]
-    public async Task<ActionResult<PageComponent>> GetPage(int courseId, string pageName, string userId, string name)
+    public async Task<ActionResult<PageComponent>> GetPage(int courseId, string pageName)
     {
-        var pageComponent = await _pageComponentManager.Fetch(courseId, pageName, userId, name);
+        var pageComponent = await _pageComponentManager.Fetch(courseId, pageName);
 
         return Ok(pageComponent);
     }

@@ -4,18 +4,24 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
+using Epsilon.Components;
 
 namespace Epsilon.Services;
 
 public class CompetenceDocumentService : ICompetenceDocumentService
 {
     private readonly IPageComponentManager _pageComponent;
-    private readonly IComponentManager _domainComponent;
+    private readonly ILearningDomainService _domainService;
+    private readonly ILearningOutcomeCanvasResultService _canvasResultService;
 
-    public CompetenceDocumentService(IPageComponentManager pageComponent, IComponentManager domainComponent)
+    public CompetenceDocumentService(
+        IPageComponentManager pageComponent, 
+        ILearningDomainService domainService, 
+        ILearningOutcomeCanvasResultService canvasResultService)
     {
         _pageComponent = pageComponent;
-        _domainComponent = domainComponent;
+        _domainService = domainService;
+        _canvasResultService = canvasResultService;
     }
 
     public async Task<CompetenceDocument> GetDocument(int courseId, string userId, DateTime from, DateTime to)
@@ -48,8 +54,11 @@ public class CompetenceDocumentService : ICompetenceDocumentService
 
     private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(int courseId, string userId)
     {
-        yield return await _pageComponent.Fetch(courseId, "homepage", userId, "hbo-i-2018");
-        yield return await _pageComponent.Fetch(courseId, "projects", userId, "hbo-i-2018");
-        yield return await _domainComponent.Fetch(courseId, "domain", userId, "hbo-i-2018");
+        var domain = await _domainService.GetDomain("hboi-1028");
+        var domainOutcome = await _domainService.GetOutcomes();
+        var submissions = _canvasResultService.GetSubmissions(userId);
+        yield return await _pageComponent.Fetch(courseId, "homepage");
+        yield return await _pageComponent.Fetch(courseId, "projects");
+        yield return new CompetenceProfileComponent(domain, domainOutcome, submissions);
     }
 }

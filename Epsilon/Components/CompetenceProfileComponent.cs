@@ -5,9 +5,9 @@ using Epsilon.Abstractions.Components;
 
 namespace Epsilon.Components;
 
-public record LearningDomainComponent(
-    IEnumerable<LearningDomainOutcome> DomainOutcomes,
+public record CompetenceProfileComponent(
     LearningDomain Domain,
+    IEnumerable<LearningDomainOutcome> DomainOutcomes,
     IAsyncEnumerable<LearningDomainSubmission> Submissions
 ): IWordCompetenceComponent
 {

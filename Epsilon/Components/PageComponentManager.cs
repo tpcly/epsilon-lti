@@ -13,7 +13,7 @@ public class PageComponentManager : IPageComponentManager
         _canvasRestApi = canvasRestApi;
     }
 
-    public async Task<IWordCompetenceComponent> Fetch(int courseId, string pageName, string userId, string domainName)
+    public async Task<PageComponent> Fetch(int courseId, string pageName)
     {
         var page = await _canvasRestApi.Pages.GetPage(courseId, pageName);
 
