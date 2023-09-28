@@ -72,12 +72,11 @@ const chartOptions = {
 }
 
 onMounted(() => {
-    const rowTypes = store.state.personalDevelopment.rowsSet?.types
-    if (rowTypes != null) {
-        rowTypes.forEach((s: LearningDomainType) => {
-            chartOptions.xaxis.categories.push(s.shortName as never)
-        })
-    }
+    const rowTypes = store.state.personalDevelopment.rowsSet.types
+
+    rowTypes.forEach((s: LearningDomainType) => {
+        chartOptions.xaxis.categories.push(s.shortName as never)
+    })
 })
 
 const series = computed(() => [
@@ -89,7 +88,7 @@ const series = computed(() => [
         )?.map((d) => {
             return {
                 y: d.decayingAverage?.toFixed(3),
-                x: store.state.personalDevelopment.rowsSet?.types?.find(
+                x: store.state.personalDevelopment.rowsSet.types.find(
                     (s: LearningDomainType) => s.id == d.skill
                 ).name,
                 fillColor: "#" + getValue(d.masteryLevel)?.hexColor,
@@ -99,11 +98,7 @@ const series = computed(() => [
 ])
 
 function getValue(valueId: number | null): LearningDomainType | undefined {
-    if (store.state.domain.valuesSet?.types == null || valueId == null) {
-        return undefined
-    }
-
-    return store.state.domain.valuesSet?.types.find(
+    return store.state.domain.valuesSet.types.find(
         (masteryLevel: LearningDomainType) =>
             (masteryLevel.shortName as unknown as number) == valueId
     )
