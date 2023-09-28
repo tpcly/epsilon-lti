@@ -21,7 +21,7 @@ public class LearningController : ControllerBase
     [HttpGet("outcomes")]
     public async Task<ActionResult<IAsyncEnumerable<LearningDomainSubmission>>> GetResults(string studentId)
     {
-        var outcomes = _learningOutcomeCanvasResultService.GetSubmissions(studentId);
+        var outcomes = await _learningOutcomeCanvasResultService.GetSubmissions(studentId).ToListAsync();
 
         return Ok(outcomes);
     }
