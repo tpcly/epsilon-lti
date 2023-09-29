@@ -29,9 +29,10 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
-            - "traefik.http.routers.frontend.entrypoints=web"
+            # - "traefik.http.routers.frontend.entrypoints=web"
             - "traefik.http.routers.frontend.rule=Host(`epsilon.deltafhict.nl`)"
             - "traefik.http.routers.frontend.entrypoints=websecure"
+            - "traefik.http.routers.frontend.tls=true"
             - "traefik.http.routers.frontend.tls.certresolver=epsiloncertresolver"
 
     whoami:
@@ -50,9 +51,10 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.api.rule=PathPrefix(`/api`)"
-            - "traefik.http.routers.api.entrypoints=web"
+            # - "traefik.http.routers.api.entrypoints=web"
             - "traefik.http.routers.api.entrypoints=websecure"
             - "traefik.http.routers.api.rule=Host(`epsilon.deltafhict.nl`)"
+            - "traefik.http.routers.api.tls=true"
             - "traefik.http.routers.api.tls.certresolver=epsiloncertresolver"
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
