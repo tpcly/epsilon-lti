@@ -1,5 +1,4 @@
-﻿name: GitlabSync
-
+﻿name: Repository Synchronization
 on:
     - push
     - delete
@@ -7,7 +6,7 @@ on:
 jobs:
     sync:
         runs-on: ubuntu-latest
-        name: Git Repo Sync
+        name: Repository Synchronization
         steps:
             -   uses: actions/checkout@v2
                 with:
