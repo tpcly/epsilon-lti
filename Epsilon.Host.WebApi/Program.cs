@@ -81,6 +81,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI();
+    app.UseCors(static x => x
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .SetIsOriginAllowed(static origin => true) // allow any origin
+                            .AllowCredentials()); // allow credentials
 }
 
 app.UseSwagger();
