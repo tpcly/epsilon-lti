@@ -84,8 +84,8 @@ if (app.Environment.IsDevelopment())
     app.UseCors(static x => x
                             .AllowAnyMethod()
                             .AllowAnyHeader()
-                            .SetIsOriginAllowed(static origin => true) // allow any origin
-                            .AllowCredentials()); // allow credentials
+                            .SetIsOriginAllowed(static origin => true)
+                            .AllowCredentials());
 }
 
 app.UseSwagger();
