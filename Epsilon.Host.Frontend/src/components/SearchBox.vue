@@ -95,9 +95,10 @@ function displayValue(item: { name: string }): string {
 <style scoped lang="scss">
 .searchbox {
     position: relative;
-    width: 100%;
+    width: 480%;
     background-color: #fff;
     border-radius: 7px;
+    margin-left: -100px;
 
     &-input {
         position: relative;
