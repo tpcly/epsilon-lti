@@ -31,13 +31,13 @@ public record Page
     public string? CreatedAt { get; init; }
 
     [JsonPropertyName("url")]
-    private string? Url { get; init; }
+    private string? Url { get; }
 
     [JsonPropertyName("editing_roles")]
     public string? EditingRoles { get; init; }
 
     [JsonPropertyName("page_id")]
-    private int? PageId { get; init; }
+    private int? PageId { get;}
 
     [JsonPropertyName("published")]
     public bool? Published { get; init; }
