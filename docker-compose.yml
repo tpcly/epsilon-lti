@@ -28,7 +28,7 @@ services:
             context: ./Epsilon.Host.Frontend
             dockerfile: ./Dockerfile
         labels:
-            # - "traefik.enable=true"
+            - "traefik.enable=true"
             - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
             - "traefik.http.routers.frontend.entrypoints=web"
             #- "traefik.http.routers.frontend.entrypoints=websecure"
@@ -40,6 +40,7 @@ services:
         image: "traefik/whoami"
         container_name: "simple-service"
         labels:
+            - "traefik.enable=true"
             - "traefik.http.routers.whoami.rule=PathPrefix(`/whoami`)"
             - "traefik.http.routers.whoami.entrypoints=web"
 
@@ -49,7 +50,7 @@ services:
             context: .
             dockerfile: ./Epsilon.Host.WebApi/Dockerfile
         labels:
-            #- "traefik.enable=true"
+            - "traefik.enable=true"
             - "traefik.http.routers.api.rule=PathPrefix(`/backend`)"
             - "traefik.http.routers.api.entrypoints=web"
             # - "traefik.http.routers.api.rule=Host(`epsilon.deltafhict.nl`)"
