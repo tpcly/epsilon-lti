@@ -3,7 +3,7 @@
 public record LearningDomainSubmission(
     string? Assignment,
     Uri? AssignmentUrl,
-    DateTime? SubmittedAt,
-    IEnumerable<LearningDomainCriteria>? Criteria,
-    IEnumerable<LearningDomainOutcomeRecord>? Results
+    DateTime SubmittedAt,
+    IEnumerable<LearningDomainCriteria> Criteria,
+    IEnumerable<LearningDomainOutcomeRecord> Results
 );

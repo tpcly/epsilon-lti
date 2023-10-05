@@ -68,15 +68,18 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
         await Task.WhenAll(submissionsTask, domainOutcomesTask);
 
-        foreach (var submission in submissionsTask?.Result?.Courses?.SelectMany(static c => c.Submissions.Nodes))
+        if (submissionsTask.Result?.Courses != null)
         {
-            yield return new LearningDomainSubmission(
-                submission.Assignment.Name,
-                submission.Assignment.HtmlUrl,
-                submission.SubmissionHistories.Nodes.OrderBy(static h => h.Attempt).First().SubmittedAt,
-                GetSubmissionCriteria(submission),
-                GetOutcomeResults(submission, domainOutcomesTask)
-            );
+            foreach (var submission in submissionsTask.Result.Courses.Where(static c => c.Submissions != null).SelectMany(static c => c.Submissions!.Nodes))
+            {
+                yield return new LearningDomainSubmission(
+                    submission.Assignment?.Name,
+                    submission.Assignment?.HtmlUrl,
+                    submission.SubmissionHistories?.Nodes.OrderBy(static h => h.Attempt).First().SubmittedAt ?? DateTime.Now,
+                    GetSubmissionCriteria(submission),
+                    GetOutcomeResults(submission, domainOutcomesTask)
+                );
+            }
         }
     }
 
@@ -97,35 +100,42 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         }
     }
 
-    
+
     private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
         Submission submission,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
     {
         var outcomeRecords = new List<LearningDomainOutcomeRecord>();
-        //Loop trough all submissions of assignment to look for outcomes that have been graded. 
-        foreach (var submissionHistory in submission.SubmissionHistories.Nodes.OrderByDescending(static s => s.SubmittedAt))
+        if (submission.SubmissionHistories?.Nodes != null)
         {
-            var rubricAssessments = submissionHistory.RubricAssessments.Nodes.SelectMany(static rubricAssessment =>
-                rubricAssessment.AssessmentRatings.Where(static ar =>
-                    ar is
-                    {
-                        Points: not null,
-                        Criterion.MasteryPoints: not null,
-                        Criterion.Outcome: not null,
-                    }));
-
-            foreach (var assessment in rubricAssessments)
+            foreach (var submissionHistory in submission.SubmissionHistories.Nodes.OrderByDescending(static s => s.SubmittedAt))
             {
-                var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
-                if (outcome != null)
+                var rubricAssessments = submissionHistory.RubricAssessments?.Nodes.SelectMany(static rubricAssessment =>
+                    rubricAssessment.AssessmentRatings?.Where(static ar =>
+                        ar is
+                        {
+                            Points: not null,
+                            Criterion.MasteryPoints: not null,
+                            Criterion.Outcome: not null,
+                        }) ?? throw new InvalidOperationException());
+
+
+                if (rubricAssessments != null)
                 {
-                    outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
-                    outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
+                    foreach (var assessment in rubricAssessments)
+                    {
+                        var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
+                        if (outcome != null)
+                        {
+                            outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
+                            outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
+                        }
+                    }
                 }
             }
         }
+
 
         return outcomeRecords;
     }
