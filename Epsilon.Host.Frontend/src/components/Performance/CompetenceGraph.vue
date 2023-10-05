@@ -31,7 +31,6 @@ const chartOptions = {
                         color: "#fff",
                         background: "red",
                     },
-                    text: "Mastery",
                 },
             },
         ],
@@ -61,6 +60,13 @@ const chartOptions = {
     xaxis: {
         type: "string",
         categories: [],
+        labels: {
+            show: true,
+            rotate: 0,
+            style: {
+                fontSize: "10px", 
+            },
+        },
     },
     yaxis: {
         show: false,
@@ -76,10 +82,20 @@ const chartOptions = {
     },
 }
 
+/* Set abbreviations for graph labels
+    const labelAbbreviations = {
+    "Advise": "A",
+    "Analysis": "A",
+    "Design": "D",
+    "Manage & Control": "M & C",
+    "Realisation": "R",
+}*/
+
 onMounted(() => {
     const columnTypes = store.state.domain?.columnsSet?.types
     if (columnTypes != null) {
         columnTypes.forEach((s) => {
+         //   s.name = labelAbbreviations[s.name];
             chartOptions.xaxis.categories.push(s.name as never)
         })
     }
@@ -108,6 +124,7 @@ const series = computed(() => {
         }
     })
 })
+console.log("Data for the chart:", series.value);
 </script>
 
 <style scoped>

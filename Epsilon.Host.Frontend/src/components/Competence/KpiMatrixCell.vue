@@ -28,6 +28,6 @@ function getColor(): string {
 
 <style scoped lang="scss">
 td {
-    border: lightgray 0.5px solid;
+    border: 2px solid #bfbebb;
 }
 </style>
