@@ -1,4 +1,7 @@
 ﻿name: Continuous integration
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
 on:
   pull_request:
     paths:
@@ -67,12 +70,36 @@ jobs:
       - name: Install modules
         run: pnpm install
       - name: Perform linting
-        run: pnpm lint 
+        run: pnpm lint
+        
   build-docker:
-    name: Build Docker
+      name: Build Docker
+      runs-on: ubuntu-20.04
+      needs: [ build-frontend, build-backend, lint-frontend, code-analysis ]
+      steps:
+          - uses: actions/checkout@v2
+          - name: Build the containers
+            run: docker-compose -f docker-compose.development.yml build
+  
+  code-analysis:
+    name: Code analysis
     runs-on: ubuntu-20.04
-    needs: [ build-frontend, build-backend, lint-frontend ]
+    needs: [ build-backend, build-frontend ]
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
     steps:
-      - uses: actions/checkout@v2
-      - name: Build the containers
-        run: docker-compose build
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: 'Qodana Scan'
+        uses: JetBrains/qodana-action@v2023.2.1
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+        with:
+          args: --user,root
+          use-annotations: true
+          push-fixes: false
+          pr-mode: false

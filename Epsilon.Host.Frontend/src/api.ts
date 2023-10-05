@@ -10,7 +10,7 @@
  */
 
 export interface EnrollmentTerm {
-    name?: string | null
+    name: string
     /** @format date-time */
     start_at?: string | null
     /** @format date-time */
@@ -19,22 +19,54 @@ export interface EnrollmentTerm {
 
 export interface LearningDomain {
     id?: string | null
-    rowsSet?: LearningDomainTypeSet
+    rowsSet: LearningDomainTypeSet
     columnsSet?: LearningDomainTypeSet
-    valuesSet?: LearningDomainTypeSet
+    valuesSet: LearningDomainTypeSet
+}
+
+export interface LearningDomainCriteria {
+    /** @format int32 */
+    id?: number
+    /** @format double */
+    masteryPoints?: number | null
+}
+
+export interface LearningDomainOutcome {
+    /** @format int32 */
+    id?: number
+    row: LearningDomainType
+    column?: LearningDomainType
+    value: LearningDomainType
+    name: string
+}
+
+export interface LearningDomainOutcomeRecord {
+    outcome?: LearningDomainOutcome
+    /** @format double */
+    grade?: number | null
+}
+
+export interface LearningDomainSubmission {
+    assignment?: string | null
+    /** @format uri */
+    assignmentUrl?: string | null
+    /** @format date-time */
+    submittedAt?: string | null
+    criteria?: LearningDomainCriteria[] | null
+    results?: LearningDomainOutcomeRecord[] | null
 }
 
 export interface LearningDomainType {
     id?: string | null
-    name?: string | null
-    shortName?: string | null
+    name: string
+    shortName: string
     hexColor?: string | null
 }
 
 export interface LearningDomainTypeSet {
     /** @format uuid */
     id?: string
-    types?: LearningDomainType[] | null
+    types: LearningDomainType[]
 }
 
 export interface PageComponent {
@@ -232,7 +264,7 @@ export class HttpClient<SecurityDataType = unknown> {
                 ...(requestParams.headers || {}),
                 ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
             },
-            signal: cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal,
+            signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
             body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
         }).then(async (response) => {
             const r = response as HttpResponse<T, E>
@@ -270,13 +302,13 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version 1.0
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
-    component = {
+    document = {
         /**
          * No description
          *
-         * @tags Component
+         * @tags Document
          * @name PageDetail
-         * @request GET:/Component/page/{pageName}
+         * @request GET:/Document/page/{pageName}
          */
         pageDetail: (
             pageName: string,
@@ -287,7 +319,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
             params: RequestParams = {}
         ) =>
             this.request<PageComponent, any>({
-                path: `/Component/page/${pageName}`,
+                path: `/Document/page/${pageName}`,
                 method: "GET",
                 query: query,
                 format: "json",
@@ -297,9 +329,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /**
          * No description
          *
-         * @tags Component
+         * @tags Document
          * @name PageCreate
-         * @request POST:/Component/page/{pageName}
+         * @request POST:/Document/page/{pageName}
          */
         pageCreate: (
             pageName: string,
@@ -311,7 +343,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
             params: RequestParams = {}
         ) =>
             this.request<PageComponent, any>({
-                path: `/Component/page/${pageName}`,
+                path: `/Document/page/${pageName}`,
                 method: "POST",
                 query: query,
                 body: data,
@@ -319,16 +351,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
                 format: "json",
                 ...params,
             }),
-    }
-    document = {
+
         /**
          * No description
          *
          * @tags Document
-         * @name WordList
-         * @request GET:/Document/word
+         * @name DownloadWordList
+         * @request GET:/Document/download/word
          */
-        wordList: (
+        downloadWordList: (
             query?: {
                 /** @format int32 */
                 courseId?: number
@@ -340,7 +371,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
             params: RequestParams = {}
         ) =>
             this.request<void, any>({
-                path: `/Document/word`,
+                path: `/Document/download/word`,
                 method: "GET",
                 query: query,
                 ...params,
@@ -383,17 +414,53 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
                 ...params,
             }),
     }
-    learningDomain = {
+    learning = {
         /**
          * No description
          *
-         * @tags LearningDomain
-         * @name LearningDomainDetail
-         * @request GET:/learning-domain/{name}
+         * @tags Learning
+         * @name OutcomesList
+         * @request GET:/Learning/outcomes
          */
-        learningDomainDetail: (name: string, params: RequestParams = {}) =>
+        outcomesList: (
+            query?: {
+                studentId?: string
+            },
+            params: RequestParams = {}
+        ) =>
+            this.request<LearningDomainSubmission[], any>({
+                path: `/Learning/outcomes`,
+                method: "GET",
+                query: query,
+                format: "json",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Learning
+         * @name DomainDetail
+         * @request GET:/Learning/domain/{name}
+         */
+        domainDetail: (name: string, params: RequestParams = {}) =>
             this.request<LearningDomain, any>({
-                path: `/learning-domain/${name}`,
+                path: `/Learning/domain/${name}`,
+                method: "GET",
+                format: "json",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Learning
+         * @name DomainOutcomesList
+         * @request GET:/Learning/domain/outcomes
+         */
+        domainOutcomesList: (params: RequestParams = {}) =>
+            this.request<LearningDomainOutcome, any>({
+                path: `/Learning/domain/outcomes`,
                 method: "GET",
                 format: "json",
                 ...params,

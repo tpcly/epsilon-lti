@@ -57,6 +57,10 @@ namespace Epsilon.Host.WebApi.Data.Migrations
                     b.Property<string>("ColumnId")
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("RowId")
                         .HasColumnType("varchar(255)");
 

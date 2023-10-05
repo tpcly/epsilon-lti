@@ -14,10 +14,8 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
+        <PackageReference Include="Tpcly.Persistence" Version="1.0.0-alpha.1" />
+        <PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
     </ItemGroup>
 
     <ItemGroup>
