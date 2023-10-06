@@ -27,7 +27,6 @@ const chartOptions = {
                         color: "#fff",
                         background: "red",
                     },
-                    text: "Mastery",
                 },
             },
         ],
