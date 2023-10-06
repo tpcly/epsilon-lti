@@ -38,14 +38,6 @@
 <script setup lang="ts">
 import { useStore } from "vuex"
 
-const tableLabels = {
-    "Advise": "Advise",
-    "Analysis": "Analysis",
-    "Design": "Design",
-    "Manage & Control": "Manage & Control",
-    "Realisation": "Realisation",
-}
-
 const store = useStore()
 import { computed } from "vue"
 import {
@@ -93,7 +85,7 @@ function getFiltered(
 
     tr:last-of-type .competence-profile-header-row,
     tr:last-of-type .competence-profile-data {
-        border-bottom: 1px solid #bfbebb;
+        border-bottom: 2px solid #bfbebb;
     }
 
     &-header {
