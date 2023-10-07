@@ -12,12 +12,19 @@
                 <!--                        placeholder="Student" />-->
                 <!--                </div>-->
             </Col>
-            <Col :cols="3">
+        </Row>
+        <Row class="header-row2">
+            <Col xs="12" sm="6" md="6" lg="6" id="dateRangeCol">
+                <TermDateFilter
+                :items="store.state.userTerms"
+                />
+            </Col>
+            <Col xs="12" sm="6" md="6" lg="6">
                 <SearchBox
                     v-model="selectedTerm"
                     :items="store.state.userTerms"
-                    :limit="10"
-                    placeholder="Term" />
+                    placeholder="Term"
+                />
             </Col>
         </Row>
     </div>
@@ -25,6 +32,7 @@
 
 <script lang="ts" setup>
 import SearchBox from "@/components/SearchBox.vue"
+import TermDateFilter from "@/components/TermDateFilter.vue"
 import Row from "@/components/LayoutRow.vue"
 import Col from "@/components/LayoutCol.vue"
 
@@ -86,5 +94,13 @@ api?.filter
         height: 5rem;
         object-fit: contain;
     }
+    
+    &-row2{
+        margin-right: -120px;
+    }
 }
+#dateRangeCol{
+    margin-right: 30px;
+}
+
 </style>

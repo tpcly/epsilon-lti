@@ -124,7 +124,6 @@ const series = computed(() => {
         }
     })
 })
-console.log("Data for the chart:", series.value);
 </script>
 
 <style scoped>
