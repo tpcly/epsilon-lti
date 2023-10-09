@@ -2,13 +2,13 @@ import { createApp } from "vue"
 import router from "./router"
 import App from "./App.vue"
 
-import { Api } from "@/api"
+import { ApiGenerated } from "@/api.generated"
 import store from "@/store"
 
 const app = createApp(App)
 app.provide(
 	"api",
-	new Api({
+	new ApiGenerated({
 		baseUrl: import.meta.env.VITE_EPSILON_API_ENDPOINT ?? "api",
 	})
 )

@@ -6,7 +6,7 @@ import {
 	LearningDomainOutcome,
 	LearningDomainSubmission,
 	User,
-} from "@/api"
+} from "@/api.generated"
 
 interface StoreState {
 	domain: LearningDomain | null

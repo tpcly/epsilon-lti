@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import store from "@/store"
-import { LearningDomainType } from "@/api"
+import { LearningDomainType } from "@/api.generated"
 </script>
 
 <style>

@@ -12,7 +12,7 @@ import ApexChart from "vue3-apexcharts"
 import { computed, onMounted } from "vue"
 import { DecayingAverageLogic } from "@/DecayingAverageLogic"
 import { useStore } from "vuex"
-import { LearningDomainType } from "@/api"
+import { LearningDomainType } from "@/api.generated"
 const store = useStore()
 const chartOptions = {
 	annotations: {

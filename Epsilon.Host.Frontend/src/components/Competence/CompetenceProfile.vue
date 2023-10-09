@@ -44,7 +44,7 @@ import {
 	LearningDomainOutcome,
 	LearningDomainSubmission,
 	LearningDomainType,
-} from "@/api"
+} from "@/api.generated"
 import CompetenceProfileCell from "@/components/Competence/CompetenceProfileCell.vue"
 
 const props = defineProps<{

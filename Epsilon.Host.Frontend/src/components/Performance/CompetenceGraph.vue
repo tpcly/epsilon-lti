@@ -16,7 +16,7 @@ import {
 } from "@/DecayingAverageLogic"
 import store from "@/store"
 import { computed, onMounted } from "vue"
-import { LearningDomain, LearningDomainSubmission } from "@/api"
+import { LearningDomain, LearningDomainSubmission } from "@/api.generated"
 
 const chartOptions = {
 	annotations: {

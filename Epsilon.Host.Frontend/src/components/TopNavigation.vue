@@ -29,10 +29,10 @@ import Row from "@/components/LayoutRow.vue"
 import Col from "@/components/LayoutCol.vue"
 
 import { inject, ref, Ref, watch } from "vue"
-import { Api, EnrollmentTerm, HttpResponse } from "@/api"
+import { ApiGenerated, EnrollmentTerm, HttpResponse } from "@/api.generated"
 import { useStore } from "vuex"
 
-const api = inject<Api<unknown>>("api")
+const api = inject<ApiGenerated<unknown>>("api")
 const store = useStore()
 const selectedTerm: Ref<EnrollmentTerm | undefined> = ref(undefined)
 

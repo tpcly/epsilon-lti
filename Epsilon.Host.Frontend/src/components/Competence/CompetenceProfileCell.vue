@@ -11,7 +11,7 @@ import {
 	LearningDomainOutcome,
 	LearningDomainSubmission,
 	LearningDomainType,
-} from "@/api"
+} from "@/api.generated"
 
 const props = defineProps<{
 	submissions: LearningDomainSubmission[]

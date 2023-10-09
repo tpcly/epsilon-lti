@@ -2,7 +2,7 @@ import {
 	LearningDomain,
 	LearningDomainOutcomeRecord,
 	LearningDomainSubmission,
-} from "@/api"
+} from "@/api.generated"
 
 export interface DecayingAveragePerActivity {
 	outcome: number
