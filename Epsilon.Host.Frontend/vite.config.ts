@@ -15,17 +15,11 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
             },
         },
         server: {
-            // https: {
-            //     cert: certificate ? readFileSync(certificate) : undefined,
-            //     key: key ? readFileSync(key) : undefined,
-            // },
-            // port: 8000,
-            // https: {
-            //     cert: certificate ? readFileSync(certificate) : undefined,
-            //     key: key ? readFileSync(key) : undefined,
-            // },
-            http: {},
-            port: 80,
+            https: {
+                cert: certificate ? readFileSync(certificate) : undefined,
+                key: key ? readFileSync(key) : undefined,
+            },
+            port: 8000,
         },
         plugins: [vue()],
     })
