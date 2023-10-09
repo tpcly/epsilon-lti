@@ -27,7 +27,7 @@ public class PageEndpoint : IPageEndpoint
             : null;
     }
 
-    public async Task<IEnumerable<Page>?> GetAll(int courseId, IEnumerable<string> include)
+    public async Task<IEnumerable<Page>?> GetAll(int courseId)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, $"v1/courses/{courseId}/pages");
         using var response = await _client.SendAsync(request);

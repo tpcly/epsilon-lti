@@ -15,7 +15,7 @@ import {
 
 const props = defineProps<{
     submissions: LearningDomainSubmission[]
-    result: LearningDomainOutcome
+    result: LearningDomainOutcome | null
     row: LearningDomainType
     col: LearningDomainType | null
 }>()
