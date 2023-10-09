@@ -20,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Add CORS rules
-builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy.WithOrigins(builder.Configuration["Lti:TargetUri"]).AllowCredentials()));
+builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy.WithOrigins(builder.Configuration["Lti:TargetUri"]).AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
 
 // Add controllers
 builder.Services.AddControllers();
@@ -81,11 +81,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI();
-    app.UseCors(static x => x
-                            .WithOrigins("https://localhost:8000")
-                            .AllowAnyHeader()
-                            .AllowCredentials()
-                            .AllowAnyMethod());
 }
 
 app.UseSwagger();
