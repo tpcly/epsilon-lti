@@ -71,7 +71,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
         if (submissionsTask.Result?.Courses == null)
         {
-            throw new NoNullAllowedException();
+            throw new HttpRequestException("No Courses are given");
         }
         
         foreach (var submission in submissionsTask.Result.Courses.Where(static c => c.Submissions != null).SelectMany(static c => c.Submissions!.Nodes))
@@ -112,7 +112,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         var outcomeRecords = new List<LearningDomainOutcomeRecord>();
         if (submission.SubmissionHistories?.Nodes == null)
         {
-            throw new NoNullAllowedException();
+            throw new HttpRequestException("No SubmissionHistories are given");
         }
         
         foreach (var submissionHistory in submission.SubmissionHistories.Nodes.OrderByDescending(static s => s.SubmittedAt))
@@ -124,12 +124,12 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                         Points: not null,
                         Criterion.MasteryPoints: not null,
                         Criterion.Outcome: not null,
-                    }) ?? throw new NoNullAllowedException());
+                    }) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
 
 
             if (rubricAssessments == null)
             {
-                throw new NoNullAllowedException();
+                throw new HttpRequestException("No RubricAssessments are found");
             }
                 
             foreach (var assessment in rubricAssessments)
