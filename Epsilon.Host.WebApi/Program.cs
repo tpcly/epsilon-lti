@@ -84,7 +84,7 @@ if (app.Environment.IsDevelopment())
     app.UseCors(static x => x
                             .AllowAnyMethod()
                             .AllowAnyHeader()
-                            .SetIsOriginAllowed(static origin => origin.Length > 0)
+                            .SetIsOriginAllowed(static _ => true)
                             .AllowCredentials());
 }
 

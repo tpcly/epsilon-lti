@@ -1,3 +1,4 @@
+using System.Data;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
 using Epsilon.Canvas.Abstractions.GraphQl;
@@ -68,18 +69,20 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
         await Task.WhenAll(submissionsTask, domainOutcomesTask);
 
-        if (submissionsTask.Result?.Courses != null)
+        if (submissionsTask.Result?.Courses == null)
         {
-            foreach (var submission in submissionsTask.Result.Courses.Where(static c => c.Submissions != null).SelectMany(static c => c.Submissions!.Nodes))
-            {
-                yield return new LearningDomainSubmission(
-                    submission.Assignment?.Name,
-                    submission.Assignment?.HtmlUrl,
-                    submission.SubmissionHistories?.Nodes.OrderBy(static h => h.Attempt).First().SubmittedAt ?? DateTime.Now,
-                    GetSubmissionCriteria(submission),
-                    GetOutcomeResults(submission, domainOutcomesTask)
-                );
-            }
+            throw new NoNullAllowedException();
+        }
+        
+        foreach (var submission in submissionsTask.Result.Courses.Where(static c => c.Submissions != null).SelectMany(static c => c.Submissions!.Nodes))
+        {
+            yield return new LearningDomainSubmission(
+                submission.Assignment?.Name,
+                submission.Assignment?.HtmlUrl,
+                submission.SubmissionHistories?.Nodes.OrderBy(static h => h.Attempt).First().SubmittedAt ?? DateTime.Now,
+                GetSubmissionCriteria(submission),
+                GetOutcomeResults(submission, domainOutcomesTask)
+            );
         }
     }
 
@@ -107,31 +110,35 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
     )
     {
         var outcomeRecords = new List<LearningDomainOutcomeRecord>();
-        if (submission.SubmissionHistories?.Nodes != null)
+        if (submission.SubmissionHistories?.Nodes == null)
         {
-            foreach (var submissionHistory in submission.SubmissionHistories.Nodes.OrderByDescending(static s => s.SubmittedAt))
-            {
-                var rubricAssessments = submissionHistory.RubricAssessments?.Nodes.SelectMany(static rubricAssessment =>
-                    rubricAssessment.AssessmentRatings?.Where(static ar =>
-                        ar is
-                        {
-                            Points: not null,
-                            Criterion.MasteryPoints: not null,
-                            Criterion.Outcome: not null,
-                        }) ?? throw new InvalidOperationException());
-
-
-                if (rubricAssessments != null)
-                {
-                    foreach (var assessment in rubricAssessments)
+            throw new NoNullAllowedException();
+        }
+        
+        foreach (var submissionHistory in submission.SubmissionHistories.Nodes.OrderByDescending(static s => s.SubmittedAt))
+        {
+            var rubricAssessments = submissionHistory.RubricAssessments?.Nodes.SelectMany(static rubricAssessment =>
+                rubricAssessment.AssessmentRatings?.Where(static ar =>
+                    ar is
                     {
-                        var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
-                        if (outcome != null)
-                        {
-                            outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
-                            outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
-                        }
-                    }
+                        Points: not null,
+                        Criterion.MasteryPoints: not null,
+                        Criterion.Outcome: not null,
+                    }) ?? throw new NoNullAllowedException());
+
+
+            if (rubricAssessments == null)
+            {
+                throw new NoNullAllowedException();
+            }
+                
+            foreach (var assessment in rubricAssessments)
+            {
+                var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
+                if (outcome != null)
+                {
+                    outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
+                    outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
                 }
             }
         }
