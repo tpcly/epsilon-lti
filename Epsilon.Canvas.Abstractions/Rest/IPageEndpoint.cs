@@ -8,18 +8,15 @@ public interface IPageEndpoint
 
     Task<IEnumerable<Page>?> GetAll(int courseId);
 
-    //Suppressed for later implementation. Remove when implemented  
-    [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
+    [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global", Justification = "Suppressed for later implementation. Remove when implemented ")]
     Task<Page?> CreatePage(int courseId, Page page);
-
-    //Suppressed for later implementation. Remove when implemented  
-    [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
+    
+    [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global", Justification = "Suppressed for later implementation. Remove when implemented ")]
     Task<Page?> UpdatePage(int courseId, Page page);
 
     Task<Page?> UpdateOrCreatePage(int courseId, Page page);
-
-    //Suppressed for later implementation. Remove when implemented  
-    [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
+    
+    [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global", Justification = "Suppressed for later implementation. Remove when implemented ")]
     Task<IEnumerable<PageRevision>?> GetAllRevisions(int courseId, string pageId);
 
     Task<PageRevision?> GetRevision(int courseId, string pageId, int revisionId);

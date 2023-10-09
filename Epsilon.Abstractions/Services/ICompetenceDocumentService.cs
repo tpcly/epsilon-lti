@@ -4,8 +4,7 @@ namespace Epsilon.Abstractions.Services;
 
 public interface ICompetenceDocumentService
 {
-    //Suppressed for later implementation. Remove when implemented  
-    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+    [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Suppressed for later implementation. Remove when implemented ")]
     Task<CompetenceDocument> GetDocument(int courseId, DateTime from, DateTime to);
 
     void WriteDocument(Stream stream, CompetenceDocument document);
