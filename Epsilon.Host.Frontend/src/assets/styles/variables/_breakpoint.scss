@@ -1,6 +1,18 @@
 $breakpoint-map: (
-        small:(label: "sm", min-width: 576px),
-        medium:(label: "md", min-width: 768px),
-        large: (label: "lg", min-width: 992px),
-        extra-large: (label: "xl", min-width: 1200px),
+    small: (
+        label: "sm",
+        min-width: 576px,
+    ),
+    medium: (
+        label: "md",
+        min-width: 768px,
+    ),
+    large: (
+        label: "lg",
+        min-width: 992px,
+    ),
+    extra-large: (
+        label: "xl",
+        min-width: 1200px,
+    ),
 );

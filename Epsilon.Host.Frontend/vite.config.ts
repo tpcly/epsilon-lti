@@ -9,8 +9,7 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
     const key = process.env.VITE_SSL_KEY_FILE
     const inDevelopment = process.env.VITE_IN_DEVELOPMENT
     let serverConfig = {}
-    if(inDevelopment == 'true')
-    {
+    if (inDevelopment == "true") {
         serverConfig = {
             https: {
                 cert: certificate ? readFileSync(certificate) : undefined,
@@ -19,8 +18,8 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
             port: 8000,
         }
         console.log("https")
-    }else{
-        serverConfig =  {
+    } else {
+        serverConfig = {
             http: {},
             port: 8000,
         }
