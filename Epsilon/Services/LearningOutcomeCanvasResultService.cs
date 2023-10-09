@@ -1,4 +1,3 @@
-using System.Data;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
 using Epsilon.Canvas.Abstractions.GraphQl;
