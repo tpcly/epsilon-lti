@@ -82,10 +82,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI();
     app.UseCors(static x => x
-                            .AllowAnyMethod()
+                            .WithOrigins("https://localhost:8000")
                             .AllowAnyHeader()
-                            .SetIsOriginAllowed(static _ => true)
-                            .AllowCredentials());
+                            .AllowCredentials()
+                            .AllowAnyMethod());
 }
 
 app.UseSwagger();
