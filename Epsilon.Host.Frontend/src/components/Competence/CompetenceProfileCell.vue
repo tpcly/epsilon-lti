@@ -14,10 +14,10 @@ import {
 } from "@/api.generated"
 
 const props = defineProps<{
-    submissions: LearningDomainSubmission[]
-    result: LearningDomainOutcome | null
-    row: LearningDomainType
-    col: LearningDomainType | null
+	submissions: LearningDomainSubmission[]
+	result: LearningDomainOutcome | null
+	row: LearningDomainType
+	col: LearningDomainType | null
 }>()
 /*
  * Count all the outcomes that have been graded to mastery within a row and column
