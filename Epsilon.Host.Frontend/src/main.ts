@@ -7,10 +7,10 @@ import store from "@/store"
 
 const app = createApp(App)
 app.provide(
-    "api",
-    new Api({
-        baseUrl: import.meta.env.VITE_EPSILON_API_ENDPOINT ?? "api",
-    })
+	"api",
+	new Api({
+		baseUrl: import.meta.env.VITE_EPSILON_API_ENDPOINT ?? "api",
+	})
 )
 
 app.use(router).use(store).mount("#app")
