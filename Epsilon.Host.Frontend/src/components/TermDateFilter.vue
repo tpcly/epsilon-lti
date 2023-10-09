@@ -141,5 +141,6 @@ export default {
     background-color: #fff;
     margin-right: 5px;
     vertical-align: middle;
+    cursor: pointer;
 }
 </style>

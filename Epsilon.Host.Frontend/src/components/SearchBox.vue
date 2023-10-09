@@ -117,6 +117,7 @@ function displayValue(item: { name: string }): string {
             font-size: 1rem;
             border-radius: 6px;
             width: 100%;
+            font-family: inherit;
         }
     }
 
