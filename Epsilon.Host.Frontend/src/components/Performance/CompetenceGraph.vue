@@ -15,8 +15,8 @@ import {
     DecayingAveragePerLayer,
 } from "@/DecayingAverageLogic"
 import store from "@/store"
-import { computed, onMounted } from "vue"
-import { LearningDomain, LearningDomainSubmission } from "@/api"
+import {computed, onMounted} from "vue"
+import {LearningDomain, LearningDomainSubmission} from "@/api"
 
 const chartOptions = {
     annotations: {
@@ -53,7 +53,7 @@ const chartOptions = {
     plotOptions: {
         bar: {
             horizontal: false,
-            borderRadius: 4,
+            borderRadius: 0,
             dataLabels: {},
         },
     },
@@ -95,7 +95,7 @@ onMounted(() => {
     const columnTypes = store.state.domain?.columnsSet?.types
     if (columnTypes != null) {
         columnTypes.forEach((s) => {
-         //   s.name = labelAbbreviations[s.name];
+            //   s.name = labelAbbreviations[s.name];
             chartOptions.xaxis.categories.push(s.name as never)
         })
     }

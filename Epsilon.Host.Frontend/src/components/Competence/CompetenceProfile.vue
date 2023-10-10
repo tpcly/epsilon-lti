@@ -85,7 +85,7 @@ function getFiltered(
 
     tr:last-of-type .competence-profile-header-row,
     tr:last-of-type .competence-profile-data {
-        border-bottom: 2px solid #bfbebb;
+        border-bottom: 1px solid black;
     }
 
     &-header {
@@ -94,12 +94,14 @@ function getFiltered(
         font-size: 0.9rem;
 
         &-col {
-            border: 2px solid #bfbebb;
+            border-bottom: 1px solid black;
+            border-right: 1px solid black;
+            border-left: 1px solid black;
             width: 6rem;
         }
 
         &-row {
-            border: 2px solid #bfbebb;
+            border: 1px solid black;
             border-bottom: none;
             border-left: none;
             display: flex;
@@ -107,7 +109,7 @@ function getFiltered(
     }
 
     &-data:last-child {
-        border-right: 2px solid #bfbebb;
+        border-right: 1px solid black;
     }
 
     .profile-header-color {
@@ -115,7 +117,7 @@ function getFiltered(
         width: 15px;
         height: 15px;
         font-size: 0.9rem;
-        border: 2px solid #bfbebb;
+        border-bottom: 1px solid black;
     }
 }
 </style>
