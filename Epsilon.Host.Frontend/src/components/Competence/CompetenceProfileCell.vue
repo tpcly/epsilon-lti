@@ -49,7 +49,7 @@ const count = computed(() => {
 <style scoped lang="scss">
 td {
     text-align: center;
-    border-bottom: 2px solid #bfbebb;
-    border-right: 2px solid #bfbebb;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
 }
 </style>

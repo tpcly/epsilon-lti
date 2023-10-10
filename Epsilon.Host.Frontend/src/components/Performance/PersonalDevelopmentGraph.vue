@@ -48,7 +48,7 @@ const chartOptions = {
     plotOptions: {
         bar: {
             horizontal: false,
-            borderRadius: 4,
+            borderRadius: 0,
             dataLabels: {},
         },
     },
