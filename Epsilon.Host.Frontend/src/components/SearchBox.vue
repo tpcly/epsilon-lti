@@ -94,42 +94,42 @@ function displayValue(item: { name: string }): string {
 
 <style scoped lang="scss">
 .searchbox {
-    height: 45px;
-    position: relative;
-    background-color: #fff;
-    border-radius: 7px;
-    width: 48%;
+	height: 45px;
+	position: relative;
+	background-color: #fff;
+	border-radius: 7px;
+	width: 48%;
 
-    &-input {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border: none;
-        font-weight: 400;
-        text-align: left;
-        padding: 0.75rem;
-        width: 100%;
+	&-input {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border: none;
+		font-weight: 400;
+		text-align: left;
+		padding: 0.75rem;
+		width: 100%;
 
-        input {
-            border: none;
-            outline: none;
-            font-size: 1rem;
-            border-radius: 6px;
-            width: 100%;
-            font-family: inherit;
-        }
-    }
+		input {
+			border: none;
+			outline: none;
+			font-size: 1rem;
+			border-radius: 6px;
+			width: 100%;
+			font-family: inherit;
+		}
+	}
 
-    &-options {
-        position: absolute;
-        background-color: #fff;
-        list-style-type: none;
-        border-radius: 6px;
-        border: 1px solid #d8d8d8;
-        text-align: left;
-        z-index: 40;
-        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+	&-options {
+		position: absolute;
+		background-color: #fff;
+		list-style-type: none;
+		border-radius: 6px;
+		border: 1px solid #d8d8d8;
+		text-align: left;
+		z-index: 40;
+		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 
 		&-item {
 			padding: 1rem 1.5rem;

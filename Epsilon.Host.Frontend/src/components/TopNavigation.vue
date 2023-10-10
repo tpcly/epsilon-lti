@@ -1,33 +1,30 @@
 <template>
-    <div class="header">
-        <img alt="logo" class="header-logo" src="../assets/logo.png" />
-        <Row>
-            <Col :cols="9">
-                <!--TODO Component is used to selected users for upcoming feature-->
-                <!--                <div class="d-flex">-->
-                <!--                    <SearchBox-->
-                <!--                        v-model="store.state.currentUser"-->
-                <!--                        :items="store.state.users"-->
-                <!--                        :limit="5"-->
-                <!--                        placeholder="Student" />-->
-                <!--                </div>-->
-            </Col>
-        </Row>
-        <Row class="header-row2">
-            <Col xs="12" sm="6" md="6" lg="6" id="dateRangeCol">
-                <TermDateFilter
-                :items="store.state.userTerms"
-                />
-            </Col>
-            <Col xs="12" sm="6" md="6" lg="6">
-                <SearchBox
-                    v-model="selectedTerm"
-                    :items="store.state.userTerms"
-                    placeholder="Term"
-                />
-            </Col>
-        </Row>
-    </div>
+	<div class="header">
+		<img alt="logo" class="header-logo" src="../assets/logo.png" />
+		<Row>
+			<Col :cols="9">
+				<!--TODO Component is used to selected users for upcoming feature-->
+				<!--                <div class="d-flex">-->
+				<!--                    <SearchBox-->
+				<!--                        v-model="store.state.currentUser"-->
+				<!--                        :items="store.state.users"-->
+				<!--                        :limit="5"-->
+				<!--                        placeholder="Student" />-->
+				<!--                </div>-->
+			</Col>
+		</Row>
+		<Row class="header-row2">
+			<Col id="dateRangeCol" xs="12" sm="6" md="6" lg="6">
+				<TermDateFilter :items="store.state.userTerms" />
+			</Col>
+			<Col xs="12" sm="6" md="6" lg="6">
+				<SearchBox
+					v-model="selectedTerm"
+					:items="store.state.userTerms"
+					placeholder="Term" />
+			</Col>
+		</Row>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -89,17 +86,16 @@ api?.filter
 	width: 100%;
 	border-radius: 0.5rem;
 
-    &-logo {
-        height: 5rem;
-        object-fit: contain;
-    }
-    
-    &-row2{
-        margin-right: -120px;
-    }
-}
-#dateRangeCol{
-    margin-right: 30px;
-}
+	&-logo {
+		height: 5rem;
+		object-fit: contain;
+	}
 
+	&-row2 {
+		margin-right: -120px;
+	}
+}
+#dateRangeCol {
+	margin-right: 30px;
+}
 </style>

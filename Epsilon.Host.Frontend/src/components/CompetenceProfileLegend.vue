@@ -9,11 +9,12 @@
 				:style="{ backgroundColor: '#' + level.hexColor }" />
 			<th class="value-text">{{ level.name }}</th>
 		</tr>
-        <tr class="masteryLegend mastery-line-legend">
-            <td class="masteryLegend-icon"
-                :style="{ backgroundColor: masteryLineColor }" />
-            <th class="masteryLegend-text">Mastery Line</th>
-        </tr>
+		<tr class="masteryLegend mastery-line-legend">
+			<td
+				class="masteryLegend-icon"
+				:style="{ backgroundColor: masteryLineColor }" />
+			<th class="masteryLegend-text">Mastery Line</th>
+		</tr>
 	</table>
 </template>
 
@@ -47,21 +48,20 @@ const masteryLineColor = "red"
 }
 
 .masteryLegend {
-    display: flex;
-    align-items: center;
-    margin-top: 10px; 
+	display: flex;
+	align-items: center;
+	margin-top: 10px;
 }
 
 .masteryLegend-text {
-    margin-left: 51px;
-    font-weight: 400;
+	margin-left: 51px;
+	font-weight: 400;
 }
 
 .masteryLegend-icon {
-    width: 45px; 
-    height: 2px; 
-    margin-left: 8px;
-    background-color: red;
+	width: 45px;
+	height: 2px;
+	margin-left: 8px;
+	background-color: red;
 }
-
 </style>

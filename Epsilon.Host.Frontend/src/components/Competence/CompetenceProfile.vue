@@ -83,41 +83,41 @@ function getFiltered(
 	border-collapse: collapse;
 	width: 750px;
 
-    tr:last-of-type .competence-profile-header-row,
-    tr:last-of-type .competence-profile-data {
-        border-bottom: 1px solid black;
-    }
+	tr:last-of-type .competence-profile-header-row,
+	tr:last-of-type .competence-profile-data {
+		border-bottom: 1px solid black;
+	}
 
-    &-header {
-        padding: 0.5rem;
-        font-weight: 400;
-        font-size: 0.9rem;
+	&-header {
+		padding: 0.5rem;
+		font-weight: 400;
+		font-size: 0.9rem;
 
-        &-col {
-            border-bottom: 1px solid black;
-            border-right: 1px solid black;
-            border-left: 1px solid black;
-            width: 6rem;
-        }
+		&-col {
+			border-bottom: 1px solid black;
+			border-right: 1px solid black;
+			border-left: 1px solid black;
+			width: 6rem;
+		}
 
-        &-row {
-            border: 1px solid black;
-            border-bottom: none;
-            border-left: none;
-            display: flex;
-        }
-    }
+		&-row {
+			border: 1px solid black;
+			border-bottom: none;
+			border-left: none;
+			display: flex;
+		}
+	}
 
-    &-data:last-child {
-        border-right: 1px solid black;
-    }
+	&-data:last-child {
+		border-right: 1px solid black;
+	}
 
-    .profile-header-color {
-        margin: 3px 10px 0;
-        width: 15px;
-        height: 15px;
-        font-size: 0.9rem;
-        border-bottom: 1px solid black;
-    }
+	.profile-header-color {
+		margin: 3px 10px 0;
+		width: 15px;
+		height: 15px;
+		font-size: 0.9rem;
+		border-bottom: 1px solid black;
+	}
 }
 </style>

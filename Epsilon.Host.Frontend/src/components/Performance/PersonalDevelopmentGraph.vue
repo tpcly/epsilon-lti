@@ -15,59 +15,59 @@ import { useStore } from "vuex"
 import { LearningDomainType } from "@/api.generated"
 const store = useStore()
 const chartOptions = {
-    annotations: {
-        yaxis: [
-            {
-                y: 3,
-                borderColor: "red",
-                strokeDashArray: 0,
-                label: {
-                    borderColor: "red",
-                    style: {
-                        color: "#fff",
-                        background: "red",
-                    },
-                },
-            },
-        ],
-    },
-    colors: ["#FFFFFF"],
-    chart: {
-        type: "bar",
-        stacked: true,
-        toolbar: {
-            show: true,
-        },
-        zoom: {
-            enabled: false,
-        },
-    },
-    dataLabels: {
-        enabled: false,
-    },
-    plotOptions: {
-        bar: {
-            horizontal: false,
-            borderRadius: 0,
-            dataLabels: {},
-        },
-    },
-    xaxis: {
-        type: "string",
-        categories: [],
-    },
-    yaxis: {
-        show: false,
-    },
-    legend: {
-        position: "bottom",
-    },
-    fill: {
-        opacity: 1,
-    },
-    tooltip: {
-        enabled: true,
-    },
+	annotations: {
+		yaxis: [
+			{
+				y: 3,
+				borderColor: "red",
+				strokeDashArray: 0,
+				label: {
+					borderColor: "red",
+					style: {
+						color: "#fff",
+						background: "red",
+					},
+				},
+			},
+		],
+	},
+	colors: ["#FFFFFF"],
+	chart: {
+		type: "bar",
+		stacked: true,
+		toolbar: {
+			show: true,
+		},
+		zoom: {
+			enabled: false,
+		},
+	},
+	dataLabels: {
+		enabled: false,
+	},
+	plotOptions: {
+		bar: {
+			horizontal: false,
+			borderRadius: 0,
+			dataLabels: {},
+		},
+	},
+	xaxis: {
+		type: "string",
+		categories: [],
+	},
+	yaxis: {
+		show: false,
+	},
+	legend: {
+		position: "bottom",
+	},
+	fill: {
+		opacity: 1,
+	},
+	tooltip: {
+		enabled: true,
+	},
 }
 
 onMounted(() => {
