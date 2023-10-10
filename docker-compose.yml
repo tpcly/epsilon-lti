@@ -11,7 +11,7 @@ services:
             - "--entrypoints.web.address=:80"
             - "--entrypoints.websecure.address=:443"
             # HTTPS / Certificates
-            - "--certificatesresolvers.letsencrypt.acme.email=k.janssen-ab@student.fontys.nl"
+            - "--certificatesresolvers.letsencrypt.acme.email=typiqally@gmail.com"
             - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
             - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
         ports:
