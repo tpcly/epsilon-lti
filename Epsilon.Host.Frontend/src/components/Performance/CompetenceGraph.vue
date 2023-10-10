@@ -9,14 +9,14 @@
 </template>
 
 <script lang="ts" setup>
-import ApexChart from "vue3-apexcharts"
+import ApexChart from "vue3-apexcharts";
 import {
     DecayingAverageLogic,
-    DecayingAveragePerLayer,
-} from "@/DecayingAverageLogic"
-import store from "@/store"
-import { computed, onMounted } from "vue"
-import { LearningDomain, LearningDomainSubmission } from "@/api"
+    DecayingAveragePerLayer
+} from "@/DecayingAverageLogic";
+import store from "@/store";
+import { computed, onMounted } from "vue";
+import { LearningDomain, LearningDomainSubmission } from "@/api.generated";
 
 const chartOptions = {
     annotations: {
@@ -29,11 +29,11 @@ const chartOptions = {
                     borderColor: "red",
                     style: {
                         color: "#fff",
-                        background: "red",
-                    },
-                },
-            },
-        ],
+                        background: "red"
+                    }
+                }
+            }
+        ]
     },
     colors: [],
     chart: {
@@ -41,21 +41,21 @@ const chartOptions = {
         height: 300,
         stacked: true,
         toolbar: {
-            show: true,
+            show: true
         },
         zoom: {
-            enabled: false,
-        },
+            enabled: false
+        }
     },
     dataLabels: {
-        enabled: false,
+        enabled: false
     },
     plotOptions: {
         bar: {
             horizontal: false,
             borderRadius: 4,
-            dataLabels: {},
-        },
+            dataLabels: {}
+        }
     },
     xaxis: {
         type: "string",
@@ -64,23 +64,23 @@ const chartOptions = {
             show: true,
             rotate: 0,
             style: {
-                fontSize: "10px", 
-            },
-        },
+                fontSize: "10px"
+            }
+        }
     },
     yaxis: {
-        show: false,
+        show: false
     },
     legend: {
-        show: false,
+        show: false
     },
     fill: {
-        opacity: 1,
+        opacity: 1
     },
     tooltip: {
-        enabled: true,
-    },
-}
+        enabled: true
+    }
+};
 
 /* Set abbreviations for graph labels
     const labelAbbreviations = {
@@ -92,13 +92,12 @@ const chartOptions = {
 }*/
 
 onMounted(() => {
-    const columnTypes = store.state.domain?.columnsSet?.types
-    if (columnTypes != null) {
-        columnTypes.forEach((s) => {
-         //   s.name = labelAbbreviations[s.name];
-            chartOptions.xaxis.categories.push(s.name as never)
-        })
-    }
+	const columnTypes = store.state.domain?.columnsSet?.types
+	if (columnTypes != undefined) {
+		columnTypes.forEach((s) => {
+			chartOptions.xaxis.categories.push(s.name as never)
+		})
+	}
 })
 
 /**
@@ -114,16 +113,16 @@ const series = computed(() => {
     ).map((layer: DecayingAveragePerLayer) => {
         const row = store.state.domain?.rowsSet?.types?.find(
             (l) => l.id === layer.architectureLayer
-        )
+        );
         return {
             name: row?.name as string,
             color: "#" + row?.hexColor,
             data: layer.layerActivities.map((column) =>
                 column.decayingAverage.toFixed(3)
-            ),
-        }
-    })
-})
+            )
+        };
+    });
+});
 </script>
 
 <style scoped>

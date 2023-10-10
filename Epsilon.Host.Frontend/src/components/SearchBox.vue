@@ -1,60 +1,60 @@
 <template>
-    <div class="searchbox">
-        <Combobox
-            :model-value="modelValue"
-            @update:model-value="$emit('update:modelValue', $event)">
-            <div class="searchbox-input">
-                <ComboboxInput
-                    :display-value="displayValue"
-                    :placeholder="placeholder"
-                    @change="query = $event.target.value" />
-                <ComboboxButton class="searchbox-list-arrow">
-                    <ChevronUpDownIcon aria-hidden="true" />
-                </ComboboxButton>
-            </div>
-            <ComboboxOptions v-if="items?.length > 0" class="searchbox-options">
-                <div
-                    v-if="filteredItems?.length === 0 && query !== ''"
-                    class="searchbox-options-item">
-                    No results found
-                </div>
+	<div class="searchbox">
+		<Combobox
+			:model-value="modelValue"
+			@update:model-value="$emit('update:modelValue', $event)">
+			<div class="searchbox-input">
+				<ComboboxInput
+					:display-value="displayValue"
+					:placeholder="placeholder"
+					@change="query = $event.target.value" />
+				<ComboboxButton class="searchbox-list-arrow">
+					<ChevronUpDownIcon aria-hidden="true" />
+				</ComboboxButton>
+			</div>
+			<ComboboxOptions v-if="items?.length > 0" class="searchbox-options">
+				<div
+					v-if="filteredItems?.length === 0 && query !== ''"
+					class="searchbox-options-item">
+					No results found
+				</div>
 
-                <ComboboxOption
-                    v-for="(item, id) in filteredItems"
-                    :key="id"
-                    v-slot="{ selected, active }"
-                    as="template"
-                    :value="item"
-                    class="searchbox-options-item">
-                    <li :class="{ 'searchbox-options-item-active': active }">
-                        {{ item.name }}
-                        <CheckIcon
-                            v-if="selected"
-                            class="searchbox-options-item-select-icon"
-                            aria-hidden="true" />
-                    </li>
-                </ComboboxOption>
-            </ComboboxOptions>
-        </Combobox>
-    </div>
+				<ComboboxOption
+					v-for="(item, id) in filteredItems"
+					:key="id"
+					v-slot="{ selected, active }"
+					as="template"
+					:value="item"
+					class="searchbox-options-item">
+					<li :class="{ 'searchbox-options-item-active': active }">
+						{{ item.name }}
+						<CheckIcon
+							v-if="selected"
+							class="searchbox-options-item-select-icon"
+							aria-hidden="true" />
+					</li>
+				</ComboboxOption>
+			</ComboboxOptions>
+		</Combobox>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import { computed, defineProps, ref } from "vue"
 import {
-    Combobox,
-    ComboboxButton,
-    ComboboxInput,
-    ComboboxOptions,
-    ComboboxOption,
+	Combobox,
+	ComboboxButton,
+	ComboboxInput,
+	ComboboxOptions,
+	ComboboxOption,
 } from "@headlessui/vue"
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid"
 
 const props = defineProps<{
-    items: Array<{ name?: string | null }> | null
-    modelValue: { name: string }
-    placeholder?: string
-    limit: number
+	items: Array<{ name?: string | null }> | null
+	modelValue: { name: string }
+	placeholder?: string
+	limit: number
 }>()
 
 const query = ref("")
@@ -62,33 +62,33 @@ const query = ref("")
 defineEmits(["update:modelValue"])
 
 const filteredItems = computed(() => {
-    if (props.items === null) {
-        return null
-    }
-    if (query.value === "") {
-        return props.items.slice(0, props.limit)
-    }
+	if (props.items === null) {
+		return null
+	}
+	if (query.value === "") {
+		return props.items.slice(0, props.limit)
+	}
 
-    return props.items
-        .filter((item) => {
-            if (!item.name) {
-                return false
-            }
+	return props.items
+		.filter((item) => {
+			if (!item.name) {
+				return false
+			}
 
-            return item.name
-                .toLowerCase()
-                .replace(/\s+/g, "")
-                .includes(query.value.toLowerCase().replace(/\s+/g, ""))
-        })
-        .slice(0, props.limit)
+			return item.name
+				.toLowerCase()
+				.replace(/\s+/g, "")
+				.includes(query.value.toLowerCase().replace(/\s+/g, ""))
+		})
+		.slice(0, props.limit)
 })
 
 function displayValue(item: { name: string }): string {
-    if (item) {
-        return item.name
-    }
+	if (item) {
+		return item.name
+	}
 
-    return ""
+	return ""
 }
 </script>
 
@@ -131,41 +131,41 @@ function displayValue(item: { name: string }): string {
         z-index: 40;
         box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 
-        &-item {
-            padding: 1rem 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+		&-item {
+			padding: 1rem 1.5rem;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
 
-            &-active {
-                background-color: #f2f3f8;
-            }
+			&-active {
+				background-color: #f2f3f8;
+			}
 
-            &-select-icon {
-                padding-left: 4px;
-                width: 20px;
-                height: 20px;
-            }
-        }
-    }
+			&-select-icon {
+				padding-left: 4px;
+				width: 20px;
+				height: 20px;
+			}
+		}
+	}
 
-    &-list-arrow {
-        background-color: transparent;
-        border: none;
-        border-radius: 0;
+	&-list-arrow {
+		background-color: transparent;
+		border: none;
+		border-radius: 0;
 
-        &:hover,
-        &:focus,
-        &:active {
-            border: none;
-            outline: none;
-        }
+		&:hover,
+		&:focus,
+		&:active {
+			border: none;
+			outline: none;
+		}
 
-        svg {
-            height: 20px;
-            max-height: 30px;
-        }
-    }
+		svg {
+			height: 20px;
+			max-height: 30px;
+		}
+	}
 }
 </style>
