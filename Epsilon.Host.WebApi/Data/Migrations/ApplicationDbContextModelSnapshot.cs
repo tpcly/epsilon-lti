@@ -93,7 +93,7 @@ namespace Epsilon.Host.WebApi.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("Order")
+                    b.Property<int>("Order")
                         .HasColumnType("int");
 
                     b.Property<string>("ShortName")

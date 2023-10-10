@@ -11,8 +11,13 @@ public record LearningDomainType : Entity<string>
     [Required]
     public string ShortName { get; set; } = null!;
     public string? HexColor { get; set; }
-    public int? Order { get; set; }
+    public int Order { get; set; }
     
     [JsonIgnore]
     public IEnumerable<LearningDomainTypeSet>? Sets { get; set; }
+
+    public LearningDomainType()
+    {
+        Order = 0;
+    }
 }

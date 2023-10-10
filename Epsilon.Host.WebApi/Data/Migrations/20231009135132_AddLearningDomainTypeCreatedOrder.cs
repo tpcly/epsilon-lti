@@ -20,7 +20,8 @@ namespace Epsilon.Host.WebApi.Data.Migrations
                 name: "Order",
                 table: "LearningDomainTypes",
                 type: "int",
-                nullable: true);
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.UpdateData(
                 table: "LearningDomainOutcomes",
