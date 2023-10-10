@@ -7,9 +7,9 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
     const certificate = process.env.VITE_SSL_CRT_FILE
     const key = process.env.VITE_SSL_KEY_FILE
-    const inDevelopment = process.env.VITE_IN_DEVELOPMENT
+    const nodeEnv = process.env.NODE_ENV
     let serverConfig = {}
-    if (inDevelopment == "true") {
+    if (nodeEnv == "development") {
         serverConfig = {
             https: {
                 cert: certificate ? readFileSync(certificate) : undefined,
@@ -17,14 +17,11 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
             },
             port: 8000,
         }
-        console.log("https")
     } else {
         serverConfig = {
             http: {},
             port: 8000,
         }
-        console.log("http")
-        console.log(inDevelopment)
     }
 
     return defineConfig({
