@@ -15,9 +15,4 @@ public record LearningDomainType : Entity<string>
     
     [JsonIgnore]
     public IEnumerable<LearningDomainTypeSet>? Sets { get; set; }
-
-    public LearningDomainType()
-    {
-        Order = 0;
-    }
 }
