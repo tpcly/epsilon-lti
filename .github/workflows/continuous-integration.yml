@@ -51,7 +51,7 @@ jobs:
         run: pnpm build
   
   lint-frontend:
-    name: Lint frontend
+    name: Lint & prettier frontend
     runs-on: ubuntu-20.04
     needs: [ build-frontend ]
     defaults:
@@ -71,6 +71,8 @@ jobs:
         run: pnpm install
       - name: Perform linting
         run: pnpm lint
+      - name: Perform prettier
+        run: pnpm prettier
         
   build-docker:
       name: Build Docker
