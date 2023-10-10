@@ -25,74 +25,87 @@
 	</div>
 </template>
 
-<script>
-export default {
-	props: {
-		items: Array,
-	},
-	data() {
-		return {
-			startDate: null,
-			endDate: null,
-			menuVisible: false,
-			originalItems: [],
-			hasSetInitialItems: false,
-		}
-	},
-	beforeUpdate() {
-		if (this.items && this.items.length > 0 && !this.hasSetInitialItems) {
-			this.setInitialItems()
-			this.hasSetInitialItems = true
-		}
-	},
-	methods: {
-		setInitialItems() {
-			this.originalItems = this.items
-		},
-		filterItems() {
-			if (this.startDate && this.endDate) {
-				const selectedStartDate = new Date(this.startDate)
-				const selectedEndDate = new Date(this.endDate)
+<script lang="ts" setup>
+import { ref, onMounted, defineProps } from "vue"
+import { useStore } from "vuex"
+const store = useStore()
 
-				const filteredTerms = this.items.filter((term) => {
-					const termStartDate = new Date(term.start_at)
-					const termEndDate = new Date(term.end_at)
-					return (
-						termStartDate >= selectedStartDate &&
-						termEndDate <= selectedEndDate
-					)
-				})
-				this.$store.commit("setUserTerms", filteredTerms)
-			}
-		},
-		resetDates() {
-			this.$store.commit("setUserTerms", this.originalItems)
-		},
-		toggleMenu() {
-			this.menuVisible = !this.menuVisible
-			if (this.menuVisible) {
-				document.addEventListener("click", this.closeMenuOnClickOutside)
-			} else {
-				document.removeEventListener(
-					"click",
-					this.closeMenuOnClickOutside
-				)
-			}
-		},
-		closeMenuOnClickOutside(event) {
-			if (
-				this.$refs.dateRangeMenu &&
-				!this.$refs.dateRangeMenu.contains(event.target)
-			) {
-				this.menuVisible = false
-				document.removeEventListener(
-					"click",
-					this.closeMenuOnClickOutside
-				)
-			}
-		},
-	},
+const props = defineProps<{
+	items: Array<{ start_at: string; end_at: string }> | null
+	modelValue: { name: string }
+	placeholder?: string
+	limit: number
+}>()
+
+const startDate = ref<string | null>(null)
+const endDate = ref<string | null>(null)
+const menuVisible = ref(false)
+const originalItems = ref<Array<{ start_at: string; end_at: string }> | null>(
+	null
+)
+const hasSetInitialItems = ref(false)
+const dateRangeMenuRef = ref<HTMLElement | null>(null)
+
+const setInitialItems = (): void => {
+	if (props.items !== null) {
+		originalItems.value = props.items
+	}
 }
+
+const filterItems = (): void => {
+	if (
+		props.items !== null &&
+		startDate.value !== null &&
+		endDate.value !== null
+	) {
+		const selectedStartDate = new Date(startDate.value)
+		const selectedEndDate = new Date(endDate.value)
+
+		const filteredItems = props.items.filter((term) => {
+			const termStartDate = new Date(term.start_at)
+			const termEndDate = new Date(term.end_at)
+			return (
+				termStartDate >= selectedStartDate &&
+				termEndDate <= selectedEndDate
+			)
+		})
+
+		store.commit("setUserTerms", filteredItems)
+	}
+}
+
+const resetDates = (): void => {
+	if (originalItems.value !== null) {
+		store.commit("setUserTerms", originalItems)
+	}
+}
+
+const toggleMenu = (): void => {
+	menuVisible.value = !menuVisible.value
+	if (menuVisible.value) {
+		document.addEventListener("click", closeMenuOnClickOutside)
+	} else {
+		document.removeEventListener("click", closeMenuOnClickOutside)
+	}
+}
+
+const closeMenuOnClickOutside = (event: MouseEvent): void => {
+	if (
+		menuVisible.value &&
+		dateRangeMenuRef.value &&
+		!dateRangeMenuRef.value.contains(event.target as Node)
+	) {
+		menuVisible.value = false
+		document.removeEventListener("click", closeMenuOnClickOutside)
+	}
+}
+
+onMounted(() => {
+	if (props.items && props.items.length > 0 && !hasSetInitialItems.value) {
+		setInitialItems()
+		hasSetInitialItems.value = true
+	}
+})
 </script>
 
 <style scoped>
@@ -108,7 +121,7 @@ export default {
 	display: none;
 	background-color: #fff;
 	padding: 0.75rem;
-	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 	border-radius: 6px;
 	border: 1px solid #d8d8d8;
 }
