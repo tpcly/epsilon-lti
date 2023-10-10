@@ -61,6 +61,7 @@ export interface LearningDomainType {
 	name: string
 	shortName: string
 	hexColor?: string | null
+	order?: string | null
 }
 
 export interface LearningDomainTypeSet {
