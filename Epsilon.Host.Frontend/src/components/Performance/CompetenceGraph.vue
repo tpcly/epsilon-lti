@@ -16,7 +16,7 @@ import {
 } from "@/DecayingAverageLogic"
 import store from "@/store"
 import { computed, onMounted } from "vue"
-import { LearningDomain, LearningDomainSubmission } from "@/api.generated"
+import { LearningDomain, LearningDomainSubmission, LearningDomainType } from "@/api.generated"
 
 const chartOptions = {
 	annotations: {
@@ -77,7 +77,7 @@ const chartOptions = {
 }
 
 onMounted(() => {
-	const columnTypes = store.state.domain?.columnsSet?.types
+	const columnTypes = store.state.domain?.columnsSet?.types.sort((a: LearningDomainType, b: LearningDomainType) => (a.order || 0) - (b.order || 0))
 	if (columnTypes != undefined) {
 		columnTypes.forEach((s) => {
 			chartOptions.xaxis.categories.push(s.name as never)
@@ -96,7 +96,7 @@ const series = computed(() => {
 		store.state.filterdSubmissions as LearningDomainSubmission[],
 		store.state.domain as LearningDomain
 	).map((layer: DecayingAveragePerLayer) => {
-		const row = store.state.domain?.rowsSet?.types?.find(
+		const row = store.state.domain?.rowsSet?.types?.sort((a: LearningDomainType, b: LearningDomainType) => (a.order || 0) - (b.order || 0)).find(
 			(l) => l.id === layer.architectureLayer
 		)
 		return {
