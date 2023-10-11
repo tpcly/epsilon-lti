@@ -1,8 +1,8 @@
 using System.Globalization;
+using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
-using Epsilon.Canvas.Abstractions;
-using Epsilon.Canvas.Abstractions.GraphQl;
-using Epsilon.Canvas.Abstractions.Rest;
+using Tpcly.Canvas.Abstractions.GraphQl;
+using Tpcly.Canvas.Abstractions.Rest;
 
 namespace Epsilon.Services;
 

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Epsilon.Canvas.Abstractions;
+namespace Epsilon.Abstractions;
 
 /// <summary>
 /// Canvas user session model which holds necessary information to keep track of a Canvas user. Still prone to change.
