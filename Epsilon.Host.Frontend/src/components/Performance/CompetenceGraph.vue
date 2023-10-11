@@ -82,15 +82,6 @@ const chartOptions = {
 	},
 }
 
-/* Set abbreviations for graph labels
-    const labelAbbreviations = {
-    "Advise": "A",
-    "Analysis": "A",
-    "Design": "D",
-    "Manage & Control": "M & C",
-    "Realisation": "R",
-}*/
-
 onMounted(() => {
 	const columnTypes = store.state.domain?.columnsSet?.types
 	if (columnTypes != null) {

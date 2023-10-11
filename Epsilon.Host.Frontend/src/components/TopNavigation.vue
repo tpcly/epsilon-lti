@@ -15,7 +15,7 @@
 		</Row>
 		<Row class="header-row2">
 			<Col id="dateRangeCol" xs="12" sm="6" md="6" lg="6">
-				<TermDateFilter :items="store.state.userTerms" />
+				<TermDateFilter :items="store.state.currentTerm" />
 			</Col>
 			<Col xs="12" sm="6" md="6" lg="6">
 				<SearchBox

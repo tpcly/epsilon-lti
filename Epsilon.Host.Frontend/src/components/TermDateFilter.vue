@@ -10,7 +10,7 @@
 						id="startDate"
 						v-model="startDate"
 						type="date"
-						@input="filterItems" />
+						@input="filterDates" />
 				</div>
 				<div class="date-input">
 					<label for="endDate">End date:</label>
@@ -18,7 +18,7 @@
 						id="endDate"
 						v-model="endDate"
 						type="date"
-						@input="filterItems" />
+						@input="filterDates" />
 				</div>
 			</div>
 		</div>
@@ -28,10 +28,11 @@
 <script lang="ts" setup>
 import { ref, onMounted, defineProps } from "vue"
 import { useStore } from "vuex"
+import { EnrollmentTerm } from "@/api.generated"
 const store = useStore()
 
 const props = defineProps<{
-	items: Array<{ start_at: string; end_at: string }> | null
+	items: EnrollmentTerm | null
 	modelValue: { name: string }
 	placeholder?: string
 	limit: number
@@ -40,43 +41,35 @@ const props = defineProps<{
 const startDate = ref<string | null>(null)
 const endDate = ref<string | null>(null)
 const menuVisible = ref(false)
-const originalItems = ref<Array<{ start_at: string; end_at: string }> | null>(
-	null
-)
+const originalItem = ref<EnrollmentTerm | null>(null)
 const hasSetInitialItems = ref(false)
 const dateRangeMenuRef = ref<HTMLElement | null>(null)
 
 const setInitialItems = (): void => {
 	if (props.items !== null) {
-		originalItems.value = props.items
+		originalItem.value = props.items
 	}
 }
 
-const filterItems = (): void => {
+const filterDates = (): void => {
 	if (
 		props.items !== null &&
 		startDate.value !== null &&
 		endDate.value !== null
 	) {
-		const selectedStartDate = new Date(startDate.value)
-		const selectedEndDate = new Date(endDate.value)
+		const updatedTerm = {
+			...props.items,
+			start_at: startDate.value,
+			end_at: endDate.value,
+		}
 
-		const filteredItems = props.items.filter((term) => {
-			const termStartDate = new Date(term.start_at)
-			const termEndDate = new Date(term.end_at)
-			return (
-				termStartDate >= selectedStartDate &&
-				termEndDate <= selectedEndDate
-			)
-		})
-
-		store.commit("setUserTerms", filteredItems)
+		store.commit("setCurrentTerm", updatedTerm)
 	}
 }
 
 const resetDates = (): void => {
-	if (originalItems.value !== null) {
-		store.commit("setUserTerms", originalItems)
+	if (originalItem.value !== null) {
+		store.commit("setCurrentTerm", originalItem)
 	}
 }
 
@@ -101,7 +94,7 @@ const closeMenuOnClickOutside = (event: MouseEvent): void => {
 }
 
 onMounted(() => {
-	if (props.items && props.items.length > 0 && !hasSetInitialItems.value) {
+	if (props.items && !hasSetInitialItems.value) {
 		setInitialItems()
 		hasSetInitialItems.value = true
 	}
