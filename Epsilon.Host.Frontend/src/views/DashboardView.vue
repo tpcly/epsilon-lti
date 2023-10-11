@@ -24,13 +24,13 @@
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/vue"
 import PerformanceDashboard from "@/views/PerformanceDashboard.vue"
 import Header from "@/components/TopNavigation.vue"
-import { ApiGenerated, HttpResponse, User } from "@/api.generated"
+import { Api, HttpResponse, User } from "@/api.generated"
 import { inject, onMounted } from "vue"
 import { useStore } from "vuex"
 import { types } from "sass"
 import Error = types.Error
 
-const api = inject<ApiGenerated<unknown>>("api")
+const api = inject<Api<unknown>>("api")
 const store = useStore()
 
 onMounted(() => {

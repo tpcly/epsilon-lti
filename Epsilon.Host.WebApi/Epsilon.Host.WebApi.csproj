@@ -11,13 +11,13 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Tpcly.Canvas" Version="1.0.0-alpha.2" />
         <PackageReference Include="Tpcly.Persistence.EntityFrameworkCore" Version="1.0.0-alpha.1" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Epsilon.Canvas\Epsilon.Canvas.csproj" />
       <ProjectReference Include="..\Epsilon\Epsilon.csproj" />
     </ItemGroup>
 

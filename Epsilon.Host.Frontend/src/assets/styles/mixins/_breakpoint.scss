@@ -1,59 +1,59 @@
 @import "src/assets/styles/variables/breakpoint";
 
 @mixin breakpoints-default() {
-    @content;
+	@content;
 
-    @include breakpoints() {
-        @content;
-    }
+	@include breakpoints() {
+		@content;
+	}
 }
 
 @mixin breakpoints() {
-    @each $key in map-keys($breakpoint-map) {
-        @include breakpoint($key) {
-            @content;
-        }
-    }
+	@each $key in map-keys($breakpoint-map) {
+		@include breakpoint($key) {
+			@content;
+		}
+	}
 }
 
 @mixin breakpoint($key) {
-    @if not map-has-key($breakpoint-map, $key) {
-        @warn "Warning: `#{$key}` is not a valid breakpoint.";
-    } @else {
-        $attributes: map-get($breakpoint-map, $key);
+	@if not map-has-key($breakpoint-map, $key) {
+		@warn "Warning: `#{$key}` is not a valid breakpoint.";
+	} @else {
+		$attributes: map-get($breakpoint-map, $key);
 
-        $label: map-get($attributes, label);
-        $min-width: map-get($attributes, min-width);
+		$label: map-get($attributes, label);
+		$min-width: map-get($attributes, min-width);
 
-        @media screen and (min-width: map-get($attributes, min-width)) {
-            @content;
-        }
-    }
+		@media screen and (min-width: map-get($attributes, min-width)) {
+			@content;
+		}
+	}
 }
 
 @mixin breakpoints-labeled-default() {
-    @content;
+	@content;
 
-    @include breakpoints-labeled() {
-        @content;
-    }
+	@include breakpoints-labeled() {
+		@content;
+	}
 }
 
 @mixin breakpoints-labeled() {
-    @each $key in map-keys($breakpoint-map) {
-        @include breakpoint-labeled($key) {
-            @content;
-        }
-    }
+	@each $key in map-keys($breakpoint-map) {
+		@include breakpoint-labeled($key) {
+			@content;
+		}
+	}
 }
 
 @mixin breakpoint-labeled($key) {
-    $attributes: map-get($breakpoint-map, $key);
-    $label: map-get($attributes, label);
+	$attributes: map-get($breakpoint-map, $key);
+	$label: map-get($attributes, label);
 
-    @include breakpoint($key) {
-        &-#{$label} {
-            @content;
-        }
-    }
+	@include breakpoint($key) {
+		&-#{$label} {
+			@content;
+		}
+	}
 }
