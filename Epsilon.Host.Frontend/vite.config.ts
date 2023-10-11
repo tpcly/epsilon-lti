@@ -7,6 +7,22 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
 	process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
 	const certificate = process.env.VITE_SSL_CRT_FILE
 	const key = process.env.VITE_SSL_KEY_FILE
+	const nodeEnv = process.env.NODE_ENV
+	let serverConfig = {}
+	if (nodeEnv == "development") {
+		serverConfig = {
+			https: {
+				cert: certificate ? readFileSync(certificate) : undefined,
+				key: key ? readFileSync(key) : undefined,
+			},
+			port: 8000,
+		}
+	} else {
+		serverConfig = {
+			http: {},
+			port: 8000,
+		}
+	}
 
 	return defineConfig({
 		resolve: {
@@ -14,13 +30,7 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
 				"@": resolve(__dirname, "src"),
 			},
 		},
-		server: {
-			https: {
-				cert: certificate ? readFileSync(certificate) : undefined,
-				key: key ? readFileSync(key) : undefined,
-			},
-			port: 8000,
-		},
+		server: serverConfig,
 		plugins: [vue()],
 	})
 }
