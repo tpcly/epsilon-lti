@@ -52,7 +52,7 @@ export interface LearningDomainSubmission {
 	/** @format uri */
 	assignmentUrl?: string | null
 	/** @format date-time */
-	submittedAt?: string
+	submittedAt?: string | null
 	criteria?: LearningDomainCriteria[] | null
 	results?: LearningDomainOutcomeRecord[] | null
 }
@@ -62,8 +62,6 @@ export interface LearningDomainType {
 	name: string
 	shortName: string
 	hexColor?: string | null
-	/** @format int32 */
-	order?: number
 }
 
 export interface LearningDomainTypeSet {
