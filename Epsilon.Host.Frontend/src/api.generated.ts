@@ -1,5 +1,6 @@
 /* eslint-disable */
 /* tslint:disable */
+// prettier-ignore
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -340,7 +341,7 @@ export class HttpClient<SecurityDataType = unknown> {
  * @title Epsilon.Host.WebApi
  * @version 1.0
  */
-export class ApiGenerated<
+export class Api<
 	SecurityDataType extends unknown
 > extends HttpClient<SecurityDataType> {
 	document = {

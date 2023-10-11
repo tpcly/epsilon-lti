@@ -1,19 +1,19 @@
 .d {
-  @include breakpoints-labeled-default() {
-    & {
-      display: inherit !important;
-    }
+	@include breakpoints-labeled-default() {
+		& {
+			display: inherit !important;
+		}
 
-    &-none {
-      display: none !important;
-    }
+		&-none {
+			display: none !important;
+		}
 
-    &-block {
-      display: block !important;
-    }
+		&-block {
+			display: block !important;
+		}
 
-    &-flex {
-      display: flex !important;
-    }
-  }
+		&-flex {
+			display: flex !important;
+		}
+	}
 }
