@@ -653,3 +653,5 @@ fabric.properties
 appsettings.json
 appsettings.*.json
 !appsettings.example.json
+Epsilon.Host.Frontend/vite.config.ts
+Epsilon.Host.Frontend/package-lock.json

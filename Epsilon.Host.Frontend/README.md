@@ -2,8 +2,8 @@
 
 1. Install [PNPM](https://pnpm.io/)
 1. Run `pnpm run install` in the `\Epsilon.Host.Frontend` directory
-2. Run `pnpm run setup-ssl`, to install SSL certificates for development
-3. Run `pnpm run dev`, to start the project
+1. Run `pnpm run setup-ssl`, to install SSL certificates for development
+1. Run `pnpm run dev`, to start the project
 
 ## Regenerate API schema
 

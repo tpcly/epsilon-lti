@@ -1,6 +1,6 @@
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
-using Epsilon.Canvas.Abstractions.GraphQl;
+using Tpcly.Canvas.Abstractions.GraphQl;
 
 namespace Epsilon.Services;
 
