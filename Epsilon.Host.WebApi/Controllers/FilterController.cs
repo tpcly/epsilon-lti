@@ -1,7 +1,7 @@
 using Epsilon.Abstractions.Services;
-using Epsilon.Canvas.Abstractions.GraphQl;
-using Epsilon.Canvas.Abstractions.Rest;
 using Microsoft.AspNetCore.Mvc;
+using Tpcly.Canvas.Abstractions.GraphQl;
+using Tpcly.Canvas.Abstractions.Rest;
 
 namespace Epsilon.Host.WebApi.Controllers;
 

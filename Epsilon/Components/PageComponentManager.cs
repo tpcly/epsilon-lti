@@ -1,6 +1,6 @@
 using Epsilon.Abstractions.Components;
-using Epsilon.Canvas.Abstractions.Rest;
 using HtmlAgilityPack;
+using Tpcly.Canvas.Abstractions.Rest;
 
 namespace Epsilon.Components;
 
