@@ -23,7 +23,20 @@ public class LearningDomainService : ILearningDomainService
 
     public async Task<LearningDomain?> GetDomain(string name)
     {
-        return await _learningDomainRepository.SingleOrDefaultAsync(d => d.Id == name, includeProperties: s_learningDomainProperties);
+        var domain = await _learningDomainRepository.SingleOrDefaultAsync(d => d.Id == name, includeProperties: s_learningDomainProperties);
+
+        if (domain != null)
+        {
+            if (domain.ColumnsSet != null)
+            {
+                domain.ColumnsSet.Types = domain.ColumnsSet.Types.OrderBy(static t => t.Order).ToList();
+            }
+
+            domain.RowsSet.Types = domain.RowsSet.Types.OrderBy(static t => t.Order).ToList();
+            domain.ValuesSet.Types = domain.ValuesSet.Types.OrderBy(static t => t.Order).ToList();
+        }
+        
+        return domain;
     }
 
     public async Task<IEnumerable<LearningDomainOutcome?>> GetOutcomes()
