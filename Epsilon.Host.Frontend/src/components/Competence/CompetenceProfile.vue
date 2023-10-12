@@ -4,7 +4,7 @@
 			<tr>
 				<td />
 				<th
-					v-for="col of store.state.domain.columnsSet?.types.sort((a: LearningDomainType, b: LearningDomainType) => (a?.order || 0) - (b?.order || 0))"
+					v-for="col of store.state.domain.columnsSet?.types"
 					:key="col.id"
 					class="competence-profile-header competence-profile-header-col">
 					{{ col.name }}
@@ -12,9 +12,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr
-				v-for="row of store.state.domain.rowsSet?.types.sort((a: LearningDomainType, b: LearningDomainType) => (a?.order || 0) - (b?.order || 0))"
-				:key="row.id">
+			<tr v-for="row of store.state.domain.rowsSet?.types" :key="row.id">
 				<th
 					class="competence-profile-header competence-profile-header-row">
 					<div
@@ -25,7 +23,7 @@
 					{{ row.name }}
 				</th>
 				<CompetenceProfileCell
-					v-for="col of store.state.domain.columnsSet?.types.sort((a: LearningDomainType, b: LearningDomainType) => (a?.order || 0) - (b?.order || 0))"
+					v-for="col of store.state.domain.columnsSet?.types"
 					:key="col.id"
 					:col="col"
 					:row="row"
