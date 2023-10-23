@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net.Http.Headers;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
@@ -10,6 +11,7 @@ using Epsilon.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Tpcly.Canvas.Abstractions.GraphQl;
 using Tpcly.Canvas.Abstractions.Rest;
 using Tpcly.Canvas.GraphQl;
@@ -66,12 +68,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IReadOnlyRepository<LearningDomain>, EntityFrameworkReadOnlyRepository<ApplicationDbContext, LearningDomain>>();
 builder.Services.AddScoped<IReadOnlyRepository<LearningDomainOutcome>, EntityFrameworkReadOnlyRepository<ApplicationDbContext, LearningDomainOutcome>>();
 
-builder.Services.AddScoped<CanvasUserSession>(static services =>
-{
-    var options = services.GetRequiredService<IOptions<CanvasMockOptions>>().Value;
-    return new CanvasUserSession(options.CourseId, options.UserId, options.AccessToken);
-});
-
 // Add domain services
 builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
@@ -88,6 +84,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer();
 
 builder.Services.ConfigureOptions<LtiJwtBearerOptions>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CanvasUserSession>(static services =>
+{
+    var context = services.GetRequiredService<IHttpContextAccessor>().HttpContext;
+    var ltiMessage = context.GetLtiMessageAsync().Result;
+
+    return new CanvasUserSession(
+        int.Parse(ltiMessage.Custom["course_id"].ToString(), CultureInfo.InvariantCulture),
+        int.Parse(ltiMessage.Custom["user_id"].ToString(), CultureInfo.InvariantCulture)
+    );
+});
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();

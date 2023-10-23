@@ -1,16 +1,17 @@
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Epsilon.Host.WebApi.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class LearningController : ControllerBase
 {
     private readonly ILearningDomainService _learningDomainService;
     private readonly ILearningOutcomeCanvasResultService _learningOutcomeCanvasResultService;
-
 
     public LearningController(ILearningDomainService learningDomainService, ILearningOutcomeCanvasResultService learningOutcomeCanvasResultService)
     {

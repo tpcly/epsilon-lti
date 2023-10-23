@@ -1,11 +1,13 @@
 using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
 using Epsilon.Host.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Epsilon.Host.WebApi.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class DocumentController : ControllerBase
 {
