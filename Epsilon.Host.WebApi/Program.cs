@@ -21,7 +21,6 @@ using Tpcly.Persistence.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
-// Add services to the container.
 // Add CORS rules
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy => policy.WithOrigins(config["Lti:TargetUri"])
@@ -47,6 +46,13 @@ builder.Services.AddHttpClient(
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", settings.AccessToken);
     });
 
+builder.Services.AddScoped<ICanvasRestApi, CanvasRestApi>();
+builder.Services.AddHttpClient<ICanvasGraphQlApi, CanvasGraphQlApi>(canvasHttpClient);
+builder.Services.AddHttpClient<IPageEndpoint, PageEndpoint>(canvasHttpClient);
+builder.Services.AddHttpClient<IFileEndpoint, FileEndpoint>(canvasHttpClient);
+builder.Services.AddHttpClient<IAccountEndpoint, AccountEndpoint>(canvasHttpClient);
+
+// Add persistence services
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     var connectionString = config.GetConnectionString("Default");
@@ -57,12 +63,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     );
 });
 
-builder.Services.AddScoped<ICanvasRestApi, CanvasRestApi>();
-builder.Services.AddHttpClient<ICanvasGraphQlApi, CanvasGraphQlApi>(canvasHttpClient);
-builder.Services.AddHttpClient<IPageEndpoint, PageEndpoint>(canvasHttpClient);
-builder.Services.AddHttpClient<IFileEndpoint, FileEndpoint>(canvasHttpClient);
-builder.Services.AddHttpClient<IAccountEndpoint, AccountEndpoint>(canvasHttpClient);
-
 builder.Services.AddScoped<IReadOnlyRepository<LearningDomain>, EntityFrameworkReadOnlyRepository<ApplicationDbContext, LearningDomain>>();
 builder.Services.AddScoped<IReadOnlyRepository<LearningDomainOutcome>, EntityFrameworkReadOnlyRepository<ApplicationDbContext, LearningDomainOutcome>>();
 
@@ -72,12 +72,14 @@ builder.Services.AddScoped<CanvasUserSession>(static services =>
     return new CanvasUserSession(options.CourseId, options.UserId, options.AccessToken);
 });
 
+// Add domain services
 builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
 builder.Services.AddScoped<IFilterService, FilterService>();
 builder.Services.AddScoped<ILearningDomainService, LearningDomainService>();
 builder.Services.AddScoped<ILearningOutcomeCanvasResultService, LearningOutcomeCanvasResultService>();
 
+// Add authentication
 builder.Services.AddSingleton<LtiSecurityTokenValidator>();
 builder.Services.AddLti()
        .AddPlatforms(config.GetSection("Lti").GetSection("Platforms").Get<List<ToolPlatform>>());
