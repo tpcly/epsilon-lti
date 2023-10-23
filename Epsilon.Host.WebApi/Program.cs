@@ -16,11 +16,12 @@ using Tpcly.Persistence.Abstractions;
 using Tpcly.Persistence.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
 // Add services to the container.
 // Add CORS rules
 builder.Services.AddCors(options =>
-    options.AddDefaultPolicy(policy => policy.WithOrigins(builder.Configuration["Lti:TargetUri"])
+    options.AddDefaultPolicy(policy => policy.WithOrigins(config["Lti:TargetUri"])
                                              .AllowAnyHeader()
                                              .AllowAnyMethod()
                                              .AllowCredentials()));
@@ -30,7 +31,7 @@ builder.Services.AddControllers();
 
 // Add Canvas services
 const string canvasHttpClient = "CanvasHttpClient";
-var canvasConfiguration = builder.Configuration.GetSection("Canvas");
+var canvasConfiguration = config.GetSection("Canvas");
 
 builder.Services.Configure<CanvasMockOptions>(canvasConfiguration);
 builder.Services.AddHttpClient(
@@ -45,7 +46,7 @@ builder.Services.AddHttpClient(
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("Default");
+    var connectionString = config.GetConnectionString("Default");
 
     options.UseMySql(
         connectionString,
