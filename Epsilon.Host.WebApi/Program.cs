@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Net.Http.Headers;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
@@ -86,17 +85,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.ConfigureOptions<LtiJwtBearerOptions>();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<CanvasUserSession>(static services =>
-{
-    var context = services.GetRequiredService<IHttpContextAccessor>().HttpContext;
-    var ltiMessage = context.GetLtiMessageAsync().Result;
-
-    return new CanvasUserSession(
-        int.Parse(ltiMessage.Custom["course_id"].ToString(), CultureInfo.InvariantCulture),
-        int.Parse(ltiMessage.Custom["user_id"].ToString(), CultureInfo.InvariantCulture)
-    );
-});
-
+builder.Services.AddScoped<ICanvasUserSessionAccessor, CanvasUserSessionAccessor>();
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(static options =>
