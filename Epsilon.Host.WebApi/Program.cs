@@ -3,15 +3,18 @@ using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
 using Epsilon.Components;
+using Epsilon.Host.WebApi;
 using Epsilon.Host.WebApi.Data;
 using Epsilon.Host.WebApi.Options;
 using Epsilon.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Tpcly.Canvas.Abstractions.GraphQl;
 using Tpcly.Canvas.Abstractions.Rest;
 using Tpcly.Canvas.GraphQl;
 using Tpcly.Canvas.Rest;
+using Tpcly.Lti;
 using Tpcly.Persistence.Abstractions;
 using Tpcly.Persistence.EntityFrameworkCore;
 
@@ -75,6 +78,15 @@ builder.Services.AddScoped<IFilterService, FilterService>();
 builder.Services.AddScoped<ILearningDomainService, LearningDomainService>();
 builder.Services.AddScoped<ILearningOutcomeCanvasResultService, LearningOutcomeCanvasResultService>();
 
+builder.Services.AddSingleton<LtiSecurityTokenValidator>();
+builder.Services.AddLti()
+       .AddPlatforms(config.GetSection("Lti").GetSection("Platforms").Get<List<ToolPlatform>>());
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+       .AddJwtBearer();
+
+builder.Services.ConfigureOptions<LtiJwtBearerOptions>();
+
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -93,6 +105,7 @@ app.UseHttpsRedirection();
 
 app.UseCors();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
