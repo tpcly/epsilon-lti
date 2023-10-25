@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Epsilon.Abstractions;
 
-public record LearningDomainOutcomeRecord(
+public record LearningDomainOutcomeResult(
     [Required]
     LearningDomainOutcome Outcome,
     double? Grade

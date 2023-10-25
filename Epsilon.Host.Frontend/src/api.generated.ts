@@ -10,7 +10,7 @@
  */
 
 export interface EnrollmentTerm {
-	name: string
+	name?: string | null
 	/** @format date-time */
 	start_at?: string | null
 	/** @format date-time */
@@ -40,7 +40,7 @@ export interface LearningDomainOutcome {
 	name: string
 }
 
-export interface LearningDomainOutcomeRecord {
+export interface LearningDomainOutcomeResult {
 	outcome?: LearningDomainOutcome
 	/** @format double */
 	grade?: number | null
@@ -53,7 +53,7 @@ export interface LearningDomainSubmission {
 	/** @format date-time */
 	submittedAt?: string
 	criteria?: LearningDomainCriteria[] | null
-	results?: LearningDomainOutcomeRecord[] | null
+	results?: LearningDomainOutcomeResult[] | null
 }
 
 export interface LearningDomainType {
