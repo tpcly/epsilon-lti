@@ -1,9 +1,10 @@
 import { sendRedirect, defineEventHandler } from "h3";
-import useLti from "../../../composables/use-lti";
+import useLti from "~/composables/use-lti";
 
 export default defineEventHandler(async (event) => {
+    const runtimeConfig = useRuntimeConfig();
     const { startLaunch } = useLti();
-    const authorizeUrl = await startLaunch(event, "https://localhost:3000");
+    const authorizeUrl = await startLaunch(event, runtimeConfig.redirectUri);
 
     // Fix Safari not redirecting with request parameters
     if (event.headers.get("user-agent")?.includes("Safari")) {

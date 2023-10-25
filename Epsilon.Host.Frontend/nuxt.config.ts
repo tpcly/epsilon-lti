@@ -18,6 +18,7 @@ export default defineNuxtConfig({
 	ssr: true,
 	pages: true,
 	runtimeConfig: {
+        redirectUri: process.env.NUXT_REDIRECT_URI || "https://localhost:3000",
         overrideIdentityToken: process.env.NUXT_OVERRIDE_IDENTITY_TOKEN,
 		public: {
 			apiEndpoint: process.env.NUXT_API_ENDPOINT,
