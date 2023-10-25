@@ -1,89 +1,82 @@
 <template>
-	<div class="header">
-		<img alt="logo" class="header-logo" src="../assets/logo.png" />
-		<Row>
-			<Col :cols="9">
-				<!--TODO Component is used to selected users for upcoming feature-->
-				<!--                <div class="d-flex">-->
-				<!--                    <SearchBox-->
-				<!--                        v-model="store.state.currentUser"-->
-				<!--                        :items="store.state.users"-->
-				<!--                        :limit="5"-->
-				<!--                        placeholder="Student" />-->
-				<!--                </div>-->
-			</Col>
-			<Col :cols="3">
-				<SearchBox
-					v-model="selectedTerm"
-					:items="store.state.userTerms"
-					:limit="10"
-					placeholder="Term" />
-			</Col>
-		</Row>
-	</div>
+    <div class="top-navigation">
+        <img alt="logo" class="top-navigation-logo" src="../assets/logo.png" />
+        <Row>
+            <Col :cols="8">
+                <SearchBox
+                    v-model="selectedUser"
+                    :items="users"
+                    :limit="5"
+                    placeholder="Student" />
+            </Col>
+            <Col :cols="4">
+                <SearchBox
+                    v-model="selectedTerm"
+                    :items="terms"
+                    :limit="10"
+                    placeholder="Term" />
+            </Col>
+        </Row>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import SearchBox from "@/components/SearchBox.vue"
-import Row from "@/components/LayoutRow.vue"
-import Col from "@/components/LayoutCol.vue"
+import SearchBox from "~/components/SearchBox.vue"
+import Row from "~/components/LayoutRow.vue"
+import Col from "~/components/LayoutCol.vue"
+import { type EnrollmentTerm, type User } from "~/api.generated"
 
-import { inject, ref, Ref, watch } from "vue"
-import { Api, EnrollmentTerm, HttpResponse } from "@/api.generated"
-import { useStore } from "vuex"
+const emit = defineEmits(["userChange", "termChange"])
+const api = useApi()
 
-const api = inject<Api<unknown>>("api")
-const store = useStore()
-const selectedTerm: Ref<EnrollmentTerm | undefined> = ref(undefined)
+const users = ref<User[]>([])
+const terms = ref<EnrollmentTerm[]>([])
+const selectedUser = ref<User | null>(null)
+const selectedTerm = ref<EnrollmentTerm | null>(null)
+
+onMounted(async () => {
+    const response = await api.filter.accessibleStudentsList()
+
+    users.value = response.data
+    selectedUser.value = users.value[0]
+})
+
+// When the user is updated, we should request its terms
+watch(selectedUser, async () => {
+    if (!selectedUser?.value?._id) {
+        return
+    }
+
+    emit("userChange", selectedUser.value)
+    
+    terms.value = []
+
+    const response = await api.filter.participatedTermsList({
+        studentId: selectedUser.value._id,
+    })
+
+    terms.value = response.data
+    selectedTerm.value = terms.value[0]
+})
 
 watch(selectedTerm, () => {
-	store.commit("setCurrentTerm", selectedTerm.value)
-	store.commit("filterSubmissions")
+    emit("termChange", selectedTerm.value)
 })
-
-watch(store.state.currentUser, () => {
-	if (!store.state.currentUser?._id) {
-		return
-	}
-
-	// Reset current term list
-	store.commit("setUserTerms", [])
-
-	api?.filter
-		.participatedTermsList({
-			studentId: store.state.currentUser?._id,
-		})
-		.then((r: HttpResponse<EnrollmentTerm[]>) => {
-			store.commit("setUserTerms", r.data)
-			selectedTerm.value = store.state.currentTerm
-			store.commit("setCurrentTerm", store.state.userTerms[0])
-		})
-})
-
-api?.filter
-	.participatedTermsList({
-		studentId: import.meta.env.VITE_USER_ID,
-	})
-	.then((r: HttpResponse<EnrollmentTerm[]>) => {
-		store.commit("setUserTerms", r.data)
-		store.commit("setCurrentTerm", store.state.userTerms[0])
-		selectedTerm.value = store.state.currentTerm
-	})
 </script>
 
 <style lang="scss" scoped>
-.header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 2rem 3rem;
-	background-color: #f2f3f8;
-	width: 100%;
-	border-radius: 0.5rem;
+.top-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 3rem;
+    background-color: #f2f3f8;
+    width: 100%;
+    border-radius: 0.5rem;
 
-	&-logo {
-		height: 5rem;
-		object-fit: contain;
-	}
+    &-logo {
+        height: 5rem;
+        object-fit: contain;
+    }
 }
 </style>

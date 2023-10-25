@@ -4,9 +4,9 @@
 <script setup lang="ts">
 import { defineProps } from "vue/dist/vue"
 import {
-	LearningDomainCriteria,
-	LearningDomainOutcomeRecord,
-} from "@/api.generated"
+	type LearningDomainCriteria,
+	type LearningDomainOutcomeRecord,
+} from "~/api.generated"
 
 const props = defineProps<{
 	result: LearningDomainOutcomeRecord | undefined

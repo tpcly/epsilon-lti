@@ -1,0 +1,57 @@
+<template>
+    <div class="performance-dashboard">
+        <CompetenceProfile
+            v-if="hboIDomain"
+            :submissions="submissions"
+            :domain="hboIDomain"
+        />
+        <LearningDomainValues
+            v-if="hboIDomain"
+            :domain="hboIDomain" />
+        <div />
+        <CompetenceGraph
+            v-if="hboIDomain"
+            :domain="hboIDomain"
+            :submissions="submissions" />
+        <PersonalDevelopmentGraph
+            v-if="personalDevelopmentDomain"
+            :domain="personalDevelopmentDomain"
+            :submissions="submissions" />
+    </div>
+</template>
+
+<script lang="ts" setup>
+import { type LearningDomain, type LearningDomainSubmission } from "~/api.generated"
+import CompetenceGraph from "~/components/performance/CompetenceGraph.vue"
+import PersonalDevelopmentGraph from "~/components/performance/PersonalDevelopmentGraph.vue"
+
+const props = defineProps<{
+    submissions: LearningDomainSubmission[]
+}>()
+
+const api = useApi()
+
+const hboIDomain = ref<LearningDomain | null>(null)
+const personalDevelopmentDomain = ref<LearningDomain | null>(null)
+
+onMounted(async () => {
+    hboIDomain.value = (await api.learning.domainDetail("hbo-i-2018")).data
+    personalDevelopmentDomain.value = (await api.learning.domainDetail("pd-2020-bsc")).data
+})
+</script>
+
+<style scoped>
+.performance-dashboard {
+    grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: 580px) {
+    .performance-dashboard {
+        display: grid;
+        grid-template-columns: 1fr 5fr 1fr;
+        gap: 2rem 0;
+        align-items: center;
+        justify-items: center;
+    }
+}
+</style>
