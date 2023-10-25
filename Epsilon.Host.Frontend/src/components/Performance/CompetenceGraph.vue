@@ -5,7 +5,7 @@
 		height="300"
 		type="bar"
 		class="competence-graph"
-		width="490" />
+		width="520" />
 </template>
 
 <script lang="ts" setup>
@@ -41,7 +41,7 @@ const chartOptions = {
 		height: 300,
 		stacked: true,
 		toolbar: {
-			show: true,
+			show: false,
 		},
 		zoom: {
 			enabled: false,
@@ -53,7 +53,7 @@ const chartOptions = {
 	plotOptions: {
 		bar: {
 			horizontal: false,
-			borderRadius: 4,
+			borderRadius: 0,
 			dataLabels: {},
 		},
 	},
@@ -64,7 +64,7 @@ const chartOptions = {
 			show: true,
 			rotate: 0,
 			style: {
-				fontSize: "10px",
+				fontSize: "12.5px",
 			},
 		},
 	},
@@ -118,6 +118,6 @@ const series = computed(() => {
 
 <style scoped>
 .competence-graph {
-	margin-left: auto;
+	margin-left: 265px;
 }
 </style>

@@ -13,7 +13,7 @@
 			<td
 				class="masteryLegend-icon"
 				:style="{ backgroundColor: masteryLineColor }" />
-			<th class="masteryLegend-text">Mastery Line</th>
+			<th class="masteryLegend-text">Mastery</th>
 		</tr>
 	</table>
 </template>
