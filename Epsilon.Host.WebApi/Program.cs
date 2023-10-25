@@ -36,12 +36,12 @@ builder.Services.AddControllers();
 const string canvasHttpClient = "CanvasHttpClient";
 var canvasConfiguration = config.GetSection("Canvas");
 
-builder.Services.Configure<CanvasMockOptions>(canvasConfiguration);
+builder.Services.Configure<CanvasOptions>(canvasConfiguration);
 builder.Services.AddHttpClient(
     canvasHttpClient,
     static (provider, client) =>
     {
-        var settings = provider.GetRequiredService<IOptions<CanvasMockOptions>>().Value;
+        var settings = provider.GetRequiredService<IOptions<CanvasOptions>>().Value;
 
         client.BaseAddress = settings.ApiUrl;
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", settings.AccessToken);
@@ -86,6 +86,7 @@ builder.Services.ConfigureOptions<LtiJwtBearerOptions>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICanvasUserSessionAccessor, CanvasUserSessionAccessor>();
+
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(static options =>

@@ -1,5 +1,7 @@
 using System.Globalization;
 using Epsilon.Abstractions;
+using Epsilon.Host.WebApi.Options;
+using Microsoft.Extensions.Options;
 using Tpcly.Lti;
 
 namespace Epsilon.Host.WebApi;
@@ -7,10 +9,12 @@ namespace Epsilon.Host.WebApi;
 public class CanvasUserSessionAccessor : ICanvasUserSessionAccessor
 {
     private readonly IHttpContextAccessor _contextAccessor;
+    private readonly CanvasOptions _canvasOptions;
 
-    public CanvasUserSessionAccessor(IHttpContextAccessor contextAccessor)
+    public CanvasUserSessionAccessor(IHttpContextAccessor contextAccessor, IOptions<CanvasOptions> canvasOptions)
     {
         _contextAccessor = contextAccessor;
+        _canvasOptions = canvasOptions.Value;
     }
 
     public async Task<CanvasUserSession?> GetSessionAsync()
@@ -22,10 +26,12 @@ public class CanvasUserSessionAccessor : ICanvasUserSessionAccessor
         }
 
         var ltiMessage = await context.GetLtiMessageAsync();
+        var courseId = _canvasOptions.OverrideCourseId ?? int.Parse(ltiMessage.Custom["course_id"].ToString(), CultureInfo.InvariantCulture);
+        var userId = _canvasOptions.OverrideUserId ?? int.Parse(ltiMessage.Custom["user_id"].ToString(), CultureInfo.InvariantCulture);
 
         return new CanvasUserSession(
-            int.Parse(ltiMessage.Custom["course_id"].ToString(), CultureInfo.InvariantCulture),
-            int.Parse(ltiMessage.Custom["user_id"].ToString(), CultureInfo.InvariantCulture)
+            courseId,
+            userId
         );
     }
 }
