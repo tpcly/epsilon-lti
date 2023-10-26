@@ -30,6 +30,13 @@ public class LearningDomainService : ILearningDomainService
         return domain;
     }
 
+    public async Task<IEnumerable<LearningDomain?>> GetDomainsFromTenant()
+    {
+        var domains = await _learningDomainRepository.AllToListAsync(includeProperties: s_learningDomainProperties);
+        return domains;
+
+    }
+
     public async Task<IEnumerable<LearningDomainOutcome?>> GetOutcomes()
     {
         return await _learningDomainOutcomeRepository.AllToListAsync(includeProperties: s_learningDomainOutcomeProperties);

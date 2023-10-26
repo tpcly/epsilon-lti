@@ -10,23 +10,27 @@ namespace Epsilon.Services;
 
 public class CompetenceDocumentService : ICompetenceDocumentService
 {
-    private readonly IPageComponentManager _pageComponent;
     private readonly ILearningDomainService _domainService;
     private readonly ILearningOutcomeCanvasResultService _canvasResultService;
 
     public CompetenceDocumentService(
-        IPageComponentManager pageComponent, 
-        ILearningDomainService domainService, 
-        ILearningOutcomeCanvasResultService canvasResultService)
+        ILearningDomainService domainService,
+        ILearningOutcomeCanvasResultService canvasResultService
+    )
     {
-        _pageComponent = pageComponent;
         _domainService = domainService;
         _canvasResultService = canvasResultService;
     }
 
-    public async Task<CompetenceDocument> GetDocument(int courseId, string userId, DateTime from, DateTime to)
+    public async Task<CompetenceDocument> GetDocument(int courseId, string userId, DateTime? from = null, DateTime? to = null)
     {
-        var components = await FetchComponents(courseId, userId).ToListAsync();
+        var submissions = _canvasResultService.GetSubmissions(userId);
+        if (from != null && to != null)
+        {
+            submissions = submissions.Where(s => s.SubmittedAt <= from && s.SubmittedAt >= to);
+        }
+
+        var components = await FetchComponents(submissions).ToListAsync();
 
         return new CompetenceDocument(components);
     }
@@ -52,13 +56,8 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         stream.Position = startPosition;
     }
 
-    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(int courseId, string userId)
+    private async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions)
     {
-        var domain = await _domainService.GetDomain("hboi-1028");
-        var domainOutcome = await _domainService.GetOutcomes();
-        var submissions = _canvasResultService.GetSubmissions(userId);
-        yield return await _pageComponent.Fetch(courseId, "homepage");
-        yield return await _pageComponent.Fetch(courseId, "projects");
-        yield return new CompetenceProfileComponent(domain, domainOutcome, submissions);
+        yield return new CompetenceProfileComponent(submissions, await _domainService.GetDomainsFromTenant());
     }
 }

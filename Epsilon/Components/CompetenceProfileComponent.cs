@@ -5,13 +5,9 @@ using Epsilon.Abstractions.Components;
 
 namespace Epsilon.Components;
 
-public record CompetenceProfileComponent(
-    LearningDomain Domain,
-    IEnumerable<LearningDomainOutcome> DomainOutcomes,
-    IAsyncEnumerable<LearningDomainSubmission> Submissions
-): IWordCompetenceComponent
+public class CompetenceProfileComponent: AbstractCompetenceComponent
 {
-    public void AddToWordDocument(MainDocumentPart mainDocumentPart)
+    public override void AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
         var body = new Body();
         
@@ -19,5 +15,10 @@ public record CompetenceProfileComponent(
         // toDo: Add the table with realised outcomes, like the performance dashboard.
         
         mainDocumentPart.Document.AppendChild(body);
+    }
+
+    public CompetenceProfileComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
+        : base(submissions, domains)
+    {
     }
 }
