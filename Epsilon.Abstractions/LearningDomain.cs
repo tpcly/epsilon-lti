@@ -11,4 +11,11 @@ public record LearningDomain : Entity<string>
     public LearningDomainTypeSet? ColumnsSet { get; set; }
     [Required]
     public LearningDomainTypeSet ValuesSet { get; set; } = null!;
+    
+    public void Order()
+    {
+        RowsSet.Order();
+        ColumnsSet?.Order();
+        ValuesSet.Order();
+    }
 }
