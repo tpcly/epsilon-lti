@@ -1,12 +1,12 @@
 <template>
-    <div v-if="store.state.filterdSubmissions" class="performance-dashboard">
-        <CompetenceProfile
-            :submissions="store.state.filterdSubmissions"></CompetenceProfile>
-        <CompetenceProfileLegend></CompetenceProfileLegend>
-        <div></div>
-        <CompetenceGraph></CompetenceGraph>
-        <PersonalDevelopmentGraph></PersonalDevelopmentGraph>
-    </div>
+	<div v-if="store.state.filterdSubmissions" class="performance-dashboard">
+		<CompetenceProfile
+			:submissions="store.state.filterdSubmissions"></CompetenceProfile>
+		<CompetenceProfileLegend></CompetenceProfileLegend>
+		<div></div>
+		<CompetenceGraph></CompetenceGraph>
+		<PersonalDevelopmentGraph></PersonalDevelopmentGraph>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -19,16 +19,16 @@ import CompetenceProfile from "@/components/Competence/CompetenceProfile.vue"
 
 <style scoped>
 .performance-dashboard {
-    grid-template-columns: 1fr;
+	grid-template-columns: 1fr;
 }
 
 @media screen and (min-width: 580px) {
-    .performance-dashboard {
-        display: grid;
-        grid-template-columns: 1fr 5fr 1fr;
-        gap: 2rem 0;
-        align-items: center;
-        justify-items: center;
-    }
+	.performance-dashboard {
+		display: grid;
+		grid-template-columns: 1fr 5fr 1fr;
+		gap: 2rem 0;
+		align-items: center;
+		justify-items: center;
+	}
 }
 </style>

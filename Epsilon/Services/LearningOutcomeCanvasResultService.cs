@@ -1,6 +1,6 @@
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
-using Epsilon.Canvas.Abstractions.GraphQl;
+using Tpcly.Canvas.Abstractions.GraphQl;
 
 namespace Epsilon.Services;
 
@@ -68,12 +68,17 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
         await Task.WhenAll(submissionsTask, domainOutcomesTask);
 
-        foreach (var submission in submissionsTask?.Result?.Courses?.SelectMany(static c => c.Submissions.Nodes))
+        if (submissionsTask.Result?.Courses == null)
+        {
+            throw new HttpRequestException("No Courses are given");
+        }
+        
+        foreach (var submission in submissionsTask.Result.Courses.Where(static c => c.Submissions != null).SelectMany(static c => c.Submissions!.Nodes))
         {
             yield return new LearningDomainSubmission(
-                submission.Assignment.Name,
-                submission.Assignment.HtmlUrl,
-                submission.SubmissionHistories.Nodes.OrderBy(static h => h.Attempt).First().SubmittedAt,
+                submission.Assignment?.Name,
+                submission.Assignment?.HtmlUrl,
+                submission.SubmissionHistories?.Nodes.OrderBy(static h => h.Attempt).First().SubmittedAt ?? DateTime.Now,
                 GetSubmissionCriteria(submission),
                 GetOutcomeResults(submission, domainOutcomesTask)
             );
@@ -97,25 +102,35 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         }
     }
 
-    
+
     private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
         Submission submission,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
     {
         var outcomeRecords = new List<LearningDomainOutcomeRecord>();
-        //Loop trough all submissions of assignment to look for outcomes that have been graded. 
+        if (submission.SubmissionHistories?.Nodes == null)
+        {
+            throw new HttpRequestException("No SubmissionHistories are given");
+        }
+        
         foreach (var submissionHistory in submission.SubmissionHistories.Nodes.OrderByDescending(static s => s.SubmittedAt))
         {
-            var rubricAssessments = submissionHistory.RubricAssessments.Nodes.SelectMany(static rubricAssessment =>
-                rubricAssessment.AssessmentRatings.Where(static ar =>
+            var rubricAssessments = submissionHistory.RubricAssessments?.Nodes.SelectMany(static rubricAssessment =>
+                rubricAssessment.AssessmentRatings?.Where(static ar =>
                     ar is
                     {
                         Points: not null,
                         Criterion.MasteryPoints: not null,
                         Criterion.Outcome: not null,
-                    }));
+                    }) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
 
+
+            if (rubricAssessments == null)
+            {
+                throw new HttpRequestException("No RubricAssessments are found");
+            }
+                
             foreach (var assessment in rubricAssessments)
             {
                 var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
@@ -126,6 +141,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 }
             }
         }
+
 
         return outcomeRecords;
     }

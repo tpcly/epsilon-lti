@@ -1,7 +1,7 @@
 <template>
-    <CompetenceProfile></CompetenceProfile>
-    <KpiTable></KpiTable>
-    <KpiMatrix></KpiMatrix>
+	<CompetenceProfile></CompetenceProfile>
+	<KpiTable></KpiTable>
+	<KpiMatrix></KpiMatrix>
 </template>
 
 <script lang="ts" setup>

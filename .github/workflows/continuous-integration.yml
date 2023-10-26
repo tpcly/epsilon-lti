@@ -51,7 +51,7 @@ jobs:
         run: pnpm build
   
   lint-frontend:
-    name: Lint frontend
+    name: Lint and format frontend
     runs-on: ubuntu-20.04
     needs: [ build-frontend ]
     defaults:
@@ -69,8 +69,10 @@ jobs:
           cache-dependency-path: 'Epsilon.Host.Frontend/pnpm-lock.yaml'
       - name: Install modules
         run: pnpm install
-      - name: Perform linting
-        run: pnpm lint
+      - name: Perform linter
+        run: pnpm run lint
+      - name: Perform code formatter
+        run: pnpm run format-code
         
   build-docker:
       name: Build Docker
