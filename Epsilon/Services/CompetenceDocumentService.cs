@@ -22,7 +22,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         _canvasResultService = canvasResultService;
     }
 
-    public async Task<CompetenceDocument> GetDocument(int courseId, string userId, DateTime? from = null, DateTime? to = null)
+    public async Task<CompetenceDocument> GetDocument(string userId, DateTime? from = null, DateTime? to = null)
     {
         var submissions = _canvasResultService.GetSubmissions(userId);
         if (from != null && to != null)
