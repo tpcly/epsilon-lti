@@ -102,7 +102,7 @@ const series = computed(() => {
 		store.state.filterdSubmissions as LearningDomainSubmission[],
 		store.state.domain as LearningDomain
 	).map((layer: DecayingAveragePerLayer) => {
-		const row = store.state.domain?.rowsSet?.types?.find(
+		const row = store.state.domain?.rowsSet?.types.find(
 			(l) => l.id === layer.architectureLayer
 		)
 		return {
