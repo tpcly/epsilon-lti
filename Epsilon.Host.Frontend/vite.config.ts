@@ -2,7 +2,6 @@ import { defineConfig, loadEnv, UserConfigExport } from "vite"
 import vue from "@vitejs/plugin-vue"
 import { resolve } from "path"
 import { readFileSync } from "fs"
-import { Posthog } from "./posthog"
 
 export default ({ mode }: { mode: string }): UserConfigExport => {
 	process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
@@ -19,7 +18,6 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
 			port: 8000,
 		}
 	} else {
-		Posthog.init()
 		serverConfig = {
 			http: {},
 			port: 8000,

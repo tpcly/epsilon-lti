@@ -4,6 +4,7 @@ import App from "./App.vue"
 
 import { Api } from "@/api.generated"
 import store from "@/store"
+import { Posthog } from "../posthog"
 
 const app = createApp(App)
 app.provide(
@@ -12,5 +13,6 @@ app.provide(
 		baseUrl: import.meta.env.VITE_EPSILON_API_ENDPOINT ?? "api",
 	})
 )
+Posthog.init()
 
 app.use(router).use(store).mount("#app")
