@@ -6,19 +6,11 @@
 			<div class="date-range-filter">
 				<div class="date-input">
 					<label for="startDate">Start date:</label>
-					<input
-						id="startDate"
-						v-model="startDate"
-						type="date"
-						@input="filterDates" />
+					<input id="startDate" v-model="startDate" type="date" />
 				</div>
 				<div class="date-input">
 					<label for="endDate">End date:</label>
-					<input
-						id="endDate"
-						v-model="endDate"
-						type="date"
-						@input="filterDates" />
+					<input id="endDate" v-model="endDate" type="date" />
 				</div>
 			</div>
 		</div>
@@ -26,79 +18,43 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, defineProps } from "vue"
-import { useStore } from "vuex"
+import { ref, defineProps, watch } from "vue"
 import { EnrollmentTerm } from "@/api.generated"
-const store = useStore()
 
 const props = defineProps<{
-	items: EnrollmentTerm | null
-	modelValue: { name: string }
-	placeholder?: string
-	limit: number
+	currentTerm: EnrollmentTerm | undefined
 }>()
 
-const startDate = ref<string | null>(null)
-const endDate = ref<string | null>(null)
+const startDate = ref<string | undefined>(undefined)
+const endDate = ref<string | undefined>(undefined)
 const menuVisible = ref(false)
-const originalItem = ref<EnrollmentTerm | null>(null)
-const hasSetInitialItems = ref(false)
-const dateRangeMenuRef = ref<HTMLElement | null>(null)
 
-const setInitialItems = (): void => {
-	if (props.items !== null) {
-		originalItem.value = props.items
-	}
-}
-
-const filterDates = (): void => {
-	if (
-		props.items !== null &&
-		startDate.value !== null &&
-		endDate.value !== null
-	) {
-		const updatedTerm = {
-			...props.items,
-			start_at: startDate.value,
-			end_at: endDate.value,
+watch(
+	() => props.currentTerm,
+	(selection) => {
+		if (!selection?.start_at || !selection.end_at) {
+			return
 		}
 
-		store.commit("setCurrentTerm", updatedTerm)
+		startDate.value = selection.start_at.split("T")[0].replace(/\//g, "-")
+		endDate.value = selection.end_at.split("T")[0].replace(/\//g, "-")
 	}
-}
+)
 
 const resetDates = (): void => {
-	if (originalItem.value !== null) {
-		store.commit("setCurrentTerm", originalItem)
+	if (!props.currentTerm?.start_at || !props.currentTerm.end_at) {
+		return
 	}
+
+	startDate.value = props.currentTerm.start_at
+		.split("T")[0]
+		.replace(/\//g, "-")
+	endDate.value = props.currentTerm.end_at.split("T")[0].replace(/\//g, "-")
 }
 
 const toggleMenu = (): void => {
 	menuVisible.value = !menuVisible.value
-	if (menuVisible.value) {
-		document.addEventListener("click", closeMenuOnClickOutside)
-	} else {
-		document.removeEventListener("click", closeMenuOnClickOutside)
-	}
 }
-
-const closeMenuOnClickOutside = (event: MouseEvent): void => {
-	if (
-		menuVisible.value &&
-		dateRangeMenuRef.value &&
-		!dateRangeMenuRef.value.contains(event.target as Node)
-	) {
-		menuVisible.value = false
-		document.removeEventListener("click", closeMenuOnClickOutside)
-	}
-}
-
-onMounted(() => {
-	if (props.items && !hasSetInitialItems.value) {
-		setInitialItems()
-		hasSetInitialItems.value = true
-	}
-})
 </script>
 
 <style scoped>
