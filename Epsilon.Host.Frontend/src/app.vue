@@ -1,28 +1,6 @@
 <template>
-    <NuxtLayout :name="layout">
-        <NuxtPage />
-    </NuxtLayout>
+    <NuxtPage />
 </template>
-
-<script setup lang="ts">
-const layout = "default";
-
-// Process LTI launch
-if (process.server) {
-    const runtimeConfig = useRuntimeConfig()
-    const state = useState("id_token")
-    
-    if (runtimeConfig.overrideIdentityToken !== "") {
-        state.value = runtimeConfig.overrideIdentityToken
-    } else {
-        const { readCallback } = useLti()
-        const event = useRequestEvent()
-        const callback = await readCallback(event)
-
-        state.value = callback.idToken
-    }
-}
-</script>
 
 <style lang="scss">
 @import "assets/styles/resets";

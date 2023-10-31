@@ -33,6 +33,26 @@ import {
     type User,
 } from "~/api.generated"
 
+const { readCallback, validateCallback } = useLti()
+
+const { data } = await useAsyncData(async (ctx) => {
+    if (!process.server) {
+        return
+    }
+
+    const event = useRequestEvent()
+    return await readCallback(event)
+})
+
+if (process.client && data.value?.idToken) {
+    const callback = data.value
+    const validation = validateCallback(callback)
+
+    if (validation) {
+       useState("id_token", () => callback?.idToken)
+    }
+}
+
 const api = useApi()
 
 const submissions = ref<LearningDomainSubmission[]>([])
