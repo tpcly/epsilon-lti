@@ -21,9 +21,12 @@
 </template>
 
 <script lang="ts" setup>
-import { type LearningDomain, type LearningDomainSubmission } from "~/api.generated"
 import CompetenceGraph from "~/components/performance/CompetenceGraph.vue"
 import PersonalDevelopmentGraph from "~/components/performance/PersonalDevelopmentGraph.vue"
+import {
+    type LearningDomain,
+    type LearningDomainSubmission
+} from "~/api.generated"
 
 const props = defineProps<{
     submissions: LearningDomainSubmission[]

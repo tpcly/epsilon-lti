@@ -83,7 +83,7 @@ const outcomes = (row: LearningDomainType, column: LearningDomainType): Learning
             border-top-style: solid;
             display: flex;
         }
-        
+
         &-color {
             margin: 3px 10px 0;
             width: 15px;

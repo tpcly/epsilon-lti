@@ -48,7 +48,7 @@ watch(selectedUser, async () => {
     }
 
     emit("userChange", selectedUser.value)
-    
+
     terms.value = []
 
     const response = await api.filter.participatedTermsList({

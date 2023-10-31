@@ -67,7 +67,7 @@ const handleUserChange = async (user: User) => {
 const handleTermChange = async (term: EnrollmentTerm) => {
     filterRange.value = {
         start: Date.parse(term.start_at!),
-        end: Date.parse(term.end_at!)
+        end: Date.parse(term.end_at!),
     }
 }
 </script>
