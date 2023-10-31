@@ -28,7 +28,7 @@ onMounted(() => {
 	const rowTypes = props.domain.rowsSet.types
 
 	rowTypes.forEach((s: LearningDomainType) => {
-		chartOptions.xaxis.categories.push(s.shortName as never)
+		chartOptions.xaxis.categories.push(s.shortName)
 	})
 })
 
@@ -97,7 +97,7 @@ const chartOptions = {
 	},
 	xaxis: {
 		type: "string",
-		categories: [],
+		categories: [] as string[],
 	},
 	yaxis: {
 		show: false,
