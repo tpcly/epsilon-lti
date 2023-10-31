@@ -1,51 +1,59 @@
 <template>
-    <div class="search-box">
-        <Combobox
-            :model-value="modelValue"
-            @update:model-value="emit('update:modelValue', $event)">
-            <div class="search-box-input">
-                <ComboboxInput
-                    :display-value="displayValue"
-                    :placeholder="placeholder"
-                    @change="query = $event.target.value" />
-                <ComboboxButton class="search-box-list-arrow">
-                    <ChevronUpDownIcon aria-hidden="true" />
-                </ComboboxButton>
-            </div>
-            <ComboboxOptions v-if="items?.length > 0" class="search-box-options">
-                <div
-                    v-if="filteredItems?.length === 0 && query !== ''"
-                    class="search-box-options-item">
-                    No results found
-                </div>
+	<div class="search-box">
+		<Combobox
+			:model-value="modelValue"
+			@update:model-value="emit('update:modelValue', $event)"
+		>
+			<div class="search-box-input">
+				<ComboboxInput
+					:display-value="displayValue"
+					:placeholder="placeholder"
+					@change="query = $event.target.value"
+				/>
+				<ComboboxButton class="search-box-list-arrow">
+					<ChevronUpDownIcon aria-hidden="true" />
+				</ComboboxButton>
+			</div>
+			<ComboboxOptions
+				v-if="items?.length > 0"
+				class="search-box-options"
+			>
+				<div
+					v-if="filteredItems?.length === 0 && query !== ''"
+					class="search-box-options-item"
+				>
+					No results found
+				</div>
 
-                <ComboboxOption
-                    v-for="(item, id) in filteredItems"
-                    :key="id"
-                    v-slot="{ selected, active }"
-                    as="template"
-                    :value="item"
-                    class="search-box-options-item">
-                    <li :class="{ 'search-box-options-item-active': active }">
-                        {{ item.name }}
-                        <CheckIcon
-                            v-if="selected"
-                            class="search-box-options-item-select-icon"
-                            aria-hidden="true" />
-                    </li>
-                </ComboboxOption>
-            </ComboboxOptions>
-        </Combobox>
-    </div>
+				<ComboboxOption
+					v-for="(item, id) in filteredItems"
+					:key="id"
+					v-slot="{ selected, active }"
+					as="template"
+					:value="item"
+					class="search-box-options-item"
+				>
+					<li :class="{ 'search-box-options-item-active': active }">
+						{{ item.name }}
+						<CheckIcon
+							v-if="selected"
+							class="search-box-options-item-select-icon"
+							aria-hidden="true"
+						/>
+					</li>
+				</ComboboxOption>
+			</ComboboxOptions>
+		</Combobox>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import {
-    Combobox,
-    ComboboxButton,
-    ComboboxInput,
-    ComboboxOptions,
-    ComboboxOption,
+	Combobox,
+	ComboboxButton,
+	ComboboxInput,
+	ComboboxOptions,
+	ComboboxOption,
 } from "@headlessui/vue"
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid"
 
@@ -61,34 +69,34 @@ const query = ref("")
 const emit = defineEmits(["update:modelValue"])
 
 const filteredItems = computed(() => {
-    if (props.items === null) {
-        return null
-    }
+	if (props.items === null) {
+		return null
+	}
     
-    if (query.value === "") {
-        return props.items.slice(0, props.limit)
-    }
+	if (query.value === "") {
+		return props.items.slice(0, props.limit)
+	}
 
-    return props.items
-        .filter((item) => {
-            if (!item.name) {
-                return false
-            }
+	return props.items
+		.filter((item) => {
+			if (!item.name) {
+				return false
+			}
 
-            return item.name
-                .toLowerCase()
-                .replace(/\s+/g, "")
-                .includes(query.value.toLowerCase().replace(/\s+/g, ""))
-        })
-        .slice(0, props.limit)
+			return item.name
+				.toLowerCase()
+				.replace(/\s+/g, "")
+				.includes(query.value.toLowerCase().replace(/\s+/g, ""))
+		})
+		.slice(0, props.limit)
 })
 
 function displayValue(item: { name: string }): string {
-    if (item) {
-        return item.name
-    }
+	if (item) {
+		return item.name
+	}
 
-    return ""
+	return ""
 }
 </script>
 

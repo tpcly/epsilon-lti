@@ -1,22 +1,22 @@
 <template>
-    <div>Loading LTI...</div>
+	<div>Loading LTI...</div>
 </template>
 
 <script setup lang="ts">
 const { prepareLaunch, launch } = useLti()
 
-const { data } = await useAsyncData(async (ctx) => {
-    if (!process.server) {
-        return
-    }
+const { data } = await useAsyncData(async () => {
+	if (!process.server) {
+		return
+	}
 
-    const runtimeConfig = useRuntimeConfig()
-    const event = useRequestEvent()
+	const runtimeConfig = useRuntimeConfig()
+	const event = useRequestEvent()
 
-    return await prepareLaunch(event, runtimeConfig.redirectUri)
+	return await prepareLaunch(event, runtimeConfig.redirectUri)
 })
 
 if (process.client && data.value != null) {
-    launch(data.value)
+	launch(data.value)
 }
 </script>

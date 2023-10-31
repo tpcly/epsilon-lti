@@ -1,23 +1,29 @@
 <template>
-    <div class="top-navigation">
-        <img alt="logo" class="top-navigation-logo" src="../assets/logo.png" />
-        <Row>
-            <Col :cols="8">
-                <SearchBox
-                    v-model="selectedUser"
-                    :items="users"
-                    :limit="5"
-                    placeholder="Student" />
-            </Col>
-            <Col :cols="4">
-                <SearchBox
-                    v-model="selectedTerm"
-                    :items="terms"
-                    :limit="10"
-                    placeholder="Term" />
-            </Col>
-        </Row>
-    </div>
+	<div class="top-navigation">
+		<img
+			alt="logo"
+			class="top-navigation-logo"
+			src="../assets/logo.png"
+		>
+		<Row>
+			<Col :cols="8">
+				<SearchBox
+					v-model="selectedUser"
+					:items="users"
+					:limit="5"
+					placeholder="Student"
+				/>
+			</Col>
+			<Col :cols="4">
+				<SearchBox
+					v-model="selectedTerm"
+					:items="terms"
+					:limit="10"
+					placeholder="Term"
+				/>
+			</Col>
+		</Row>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -35,32 +41,32 @@ const selectedUser = ref<User | null>(null)
 const selectedTerm = ref<EnrollmentTerm | null>(null)
 
 onMounted(async () => {
-    const response = await api.filter.accessibleStudentsList()
+	const response = await api.filter.accessibleStudentsList()
 
-    users.value = response.data
-    selectedUser.value = users.value[0]
+	users.value = response.data
+	selectedUser.value = users.value[0]
 })
 
 // When the user is updated, we should request its terms
 watch(selectedUser, async () => {
-    if (!selectedUser?.value?._id) {
-        return
-    }
+	if (!selectedUser?.value?._id) {
+		return
+	}
 
-    emit("userChange", selectedUser.value)
+	emit("userChange", selectedUser.value)
 
-    terms.value = []
+	terms.value = []
 
-    const response = await api.filter.participatedTermsList({
-        studentId: selectedUser.value._id,
-    })
+	const response = await api.filter.participatedTermsList({
+		studentId: selectedUser.value._id,
+	})
 
-    terms.value = response.data
-    selectedTerm.value = terms.value[0]
+	terms.value = response.data
+	selectedTerm.value = terms.value[0]
 })
 
 watch(selectedTerm, () => {
-    emit("termChange", selectedTerm.value)
+	emit("termChange", selectedTerm.value)
 })
 </script>
 

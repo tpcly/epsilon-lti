@@ -1,20 +1,24 @@
 <template>
-    <table class="learning-domain-values">
-        <tr
-            v-for="type of types"
-            :key="type"
-            class="learning-domain-values-row">
-            <td
-                class="learning-domain-values-value-color"
-                :style="{ backgroundColor: '#' + type.hexColor }" />
-            <th class="learning-domain-values-value-text">{{ type.name }}</th>
-        </tr>
-    </table>
+	<table class="learning-domain-values">
+		<tr
+			v-for="type of types"
+			:key="type"
+			class="learning-domain-values-row"
+		>
+			<td
+				class="learning-domain-values-value-color"
+				:style="{ backgroundColor: '#' + type.hexColor }"
+			/>
+			<th class="learning-domain-values-value-text">
+				{{ type.name }}
+			</th>
+		</tr>
+	</table>
 </template>
 
 <script lang="ts" setup>
 import {
-    type LearningDomain,
+	type LearningDomain,
 } from "~/api.generated"
 
 const props = defineProps<{
@@ -23,8 +27,8 @@ const props = defineProps<{
 
 // TODO: Centralize this ugly sorting compare function, maybe possible with lodash?
 const types = computed(() => {
-    const types = props.domain.valuesSet.types
-    return types.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+	const types = props.domain.valuesSet.types
+	return types.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
 })
 </script>
 

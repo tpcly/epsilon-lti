@@ -1,38 +1,40 @@
 {
-    "root": true,
-    "env": {
-        "browser": true,
-        "es2021": true,
-        "node": true
-    },
-    "extends": [
-        "@nuxt/eslint-config",
-        "eslint:recommended",
-        "prettier"
-    ],
-    "parserOptions": {
-        "ecmaVersion": 2021
-    },
-    "plugins": [
-        "@typescript-eslint"
-    ],
-    "rules": {
-        "@typescript-eslint/no-unused-vars": "error",
-        "@typescript-eslint/explicit-function-return-type": "error",
-        "@typescript-eslint/explicit-module-boundary-types": "error",
-        "indent": [
-            "error",
-            "tab"
-        ],
-        "vue/component-tags-order": [
-            "error",
-            {
-                "order": [
-                    "template",
-                    "script",
-                    "style"
-                ]
-            }
-        ]
-    }
+  "root": true,
+  "env": {
+	"node": true
+  },
+  "extends": [
+	"eslint:recommended",
+	"prettier",
+	"@nuxt/eslint-config"
+  ],
+  "parserOptions": {
+	"ecmaVersion": 2021
+  },
+  "plugins": [
+	"@typescript-eslint"
+  ],
+  "rules": {
+	"@typescript-eslint/no-unused-vars": "error",
+	"@typescript-eslint/explicit-function-return-type": "error",
+	"@typescript-eslint/explicit-module-boundary-types": "error",
+	"indent": [
+	  "error",
+	  "tab"
+	],
+	"vue/component-tags-order": [
+	  "error",
+	  {
+		"order": [
+		  "template",
+		  "script",
+		  "style"
+		]
+	  }
+	],
+	"vue/html-indent": [
+	  "error",
+	  "tab"
+	]
+  }
 }

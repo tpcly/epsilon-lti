@@ -1,7 +1,7 @@
 <template>
-    <div :class="classes">
-        <slot />
-    </div>
+	<div :class="classes">
+		<slot />
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -13,23 +13,23 @@ const props = defineProps<{
 }>()
 
 const classes = computed(() => {
-    const classList: Array<string> = []
+	const classList: Array<string> = []
 
-    if (props.cols) {
-        const typeOfCols = typeof props.cols
+	if (props.cols) {
+		const typeOfCols = typeof props.cols
 
-        if (typeOfCols === "number" || typeOfCols === "string") {
-            classList.push(`col-${props.cols}`)
-        }
-    }
+		if (typeOfCols === "number" || typeOfCols === "string") {
+			classList.push(`col-${props.cols}`)
+		}
+	}
 
-    if (props.breakpoints) {
-        for (const [breakpoint, cols] of Object.entries(props.breakpoints)) {
-            classList.push(`col-${breakpoint}-${cols}`)
-        }
-    }
+	if (props.breakpoints) {
+		for (const [breakpoint, cols] of Object.entries(props.breakpoints)) {
+			classList.push(`col-${breakpoint}-${cols}`)
+		}
+	}
 
-    return classList
+	return classList
 })
 </script>
 

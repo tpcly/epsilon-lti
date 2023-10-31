@@ -1,5 +1,5 @@
 <template>
-    <NuxtPage />
+	<NuxtPage />
 </template>
 
 <style lang="scss">
@@ -8,26 +8,26 @@
 
 html,
 body {
-    width: 100%;
-    max-width: 1366px;
-    height: 100vh;
-    margin: 0 auto;
+	width: 100%;
+	max-width: 1366px;
+	height: 100vh;
+	margin: 0 auto;
 }
 
 body {
-    background: $color-body;
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
-    color: $color-text;
+	background: $color-body;
+	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+	color: $color-text;
 }
 
 b,
 strong {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 * {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 </style>

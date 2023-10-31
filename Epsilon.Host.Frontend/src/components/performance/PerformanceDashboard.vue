@@ -1,35 +1,38 @@
 <template>
-    <div class="performance-dashboard">
-        <CompetenceProfile
-            v-if="hboIDomain"
-            :submissions="submissions"
-            :domain="hboIDomain"
-        />
-        <LearningDomainValues
-            v-if="hboIDomain"
-            :domain="hboIDomain" />
-        <div />
-        <CompetenceGraph
-            v-if="hboIDomain"
-            :domain="hboIDomain"
-            :submissions="submissions" />
-        <PersonalDevelopmentGraph
-            v-if="personalDevelopmentDomain"
-            :domain="personalDevelopmentDomain"
-            :submissions="submissions" />
-    </div>
+	<div class="performance-dashboard">
+		<CompetenceProfile
+			v-if="hboIDomain"
+			:submissions="submissions"
+			:domain="hboIDomain"
+		/>
+		<LearningDomainValues
+			v-if="hboIDomain"
+			:domain="hboIDomain"
+		/>
+		<div />
+		<CompetenceGraph
+			v-if="hboIDomain"
+			:domain="hboIDomain"
+			:submissions="submissions"
+		/>
+		<PersonalDevelopmentGraph
+			v-if="personalDevelopmentDomain"
+			:domain="personalDevelopmentDomain"
+			:submissions="submissions"
+		/>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import CompetenceGraph from "~/components/performance/CompetenceGraph.vue"
 import PersonalDevelopmentGraph from "~/components/performance/PersonalDevelopmentGraph.vue"
 import {
-    type LearningDomain,
-    type LearningDomainSubmission
+	type LearningDomain,
+	type LearningDomainSubmission,
 } from "~/api.generated"
 
-const props = defineProps<{
-    submissions: LearningDomainSubmission[]
+defineProps<{
+	submissions: LearningDomainSubmission[]
 }>()
 
 const api = useApi()
@@ -38,23 +41,25 @@ const hboIDomain = ref<LearningDomain | null>(null)
 const personalDevelopmentDomain = ref<LearningDomain | null>(null)
 
 onMounted(async () => {
-    hboIDomain.value = (await api.learning.domainDetail("hbo-i-2018")).data
-    personalDevelopmentDomain.value = (await api.learning.domainDetail("pd-2020-bsc")).data
+	hboIDomain.value = (await api.learning.domainDetail("hbo-i-2018")).data
+	personalDevelopmentDomain.value = (
+		await api.learning.domainDetail("pd-2020-bsc")
+	).data
 })
 </script>
 
 <style scoped>
 .performance-dashboard {
-    grid-template-columns: 1fr;
+	grid-template-columns: 1fr;
 }
 
 @media screen and (min-width: 580px) {
-    .performance-dashboard {
-        display: grid;
-        grid-template-columns: 1fr 5fr 1fr;
-        gap: 2rem 0;
-        align-items: center;
-        justify-items: center;
-    }
+	.performance-dashboard {
+		display: grid;
+		grid-template-columns: 1fr 5fr 1fr;
+		gap: 2rem 0;
+		align-items: center;
+		justify-items: center;
+	}
 }
 </style>

@@ -1,8 +1,14 @@
 <template>
-    <td v-if="value" :style="{ background: '#' + value.hexColor}">
-        {{ outcomes.length }}
-    </td>
-    <td v-else class="border"></td>
+	<td
+		v-if="value"
+		:style="{ background: '#' + value.hexColor}"
+	>
+		{{ outcomes.length }}
+	</td>
+	<td
+		v-else
+		class="border"
+	/>
 </template>
 
 <script setup lang="ts">
@@ -13,10 +19,10 @@ const props = defineProps<{
 }>()
 
 const value = computed<LearningDomainType | null>(() => {
-    const types = props.outcomes.map(outcome => outcome.value)
-    types.sort((a, b) => (b.order ?? 0) - (a.order ?? 0))
+	const types = props.outcomes.map(outcome => outcome.value)
+	types.sort((a, b) => (b.order ?? 0) - (a.order ?? 0))
 
-    return types[0]
+	return types[0]
 })
 </script>
 
