@@ -13,6 +13,7 @@ export interface LtiMessage extends JwtPayload {
     role: string[],
     deepLinkingSettings: DeepLinkingSettings | undefined
     custom: { [key: string]: string }
+    nonce: string
 }
 
 type MessageType = "LtiResourceLinkRequest" | "LtiDeepLinkingRequest" | "LtiSubmissionReviewRequest"
