@@ -27,7 +27,6 @@ const chartOptions = {
 						color: "#fff",
 						background: "red",
 					},
-					text: "Mastery",
 				},
 			},
 		],
@@ -37,7 +36,7 @@ const chartOptions = {
 		type: "bar",
 		stacked: true,
 		toolbar: {
-			show: true,
+			show: false,
 		},
 		zoom: {
 			enabled: false,
@@ -49,7 +48,7 @@ const chartOptions = {
 	plotOptions: {
 		bar: {
 			horizontal: false,
-			borderRadius: 4,
+			borderRadius: 0,
 			dataLabels: {},
 		},
 	},

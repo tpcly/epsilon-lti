@@ -71,7 +71,7 @@ tr th {
 }
 
 td div {
-	border-bottom: 1px lightgray solid;
+	border-bottom: 2px lightgray solid;
 	width: 100%;
 }
 </style>
