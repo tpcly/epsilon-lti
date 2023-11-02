@@ -1,16 +1,16 @@
 ﻿version: 2
 updates:
-    -   package-ecosystem: nuget
+    -   package-ecosystem: "nuget"
         directory: "/"
         target-branch: "develop"
         schedule:
             interval: "weekly"
-    -   package-ecosystem: pnpm
+    -   package-ecosystem: "pnpm"
         directory: "/Epsilon.Host.Frontend"
         target-branch: "develop"
         schedule:
             interval: "weekly"
-    -   package-ecosystem: docker
+    -   package-ecosystem: "docker"
         directory: "/"
         target-branch: "develop"
         schedule:
