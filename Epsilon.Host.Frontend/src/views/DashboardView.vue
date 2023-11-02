@@ -7,6 +7,9 @@
 					<Tab class="toolbar-slider-item">
 						Performance dashboard
 					</Tab>
+					<Tab class="toolbar-slider-item">
+						Competence Document
+					</Tab>
 				</TabList>
 			</div>
 		</div>
@@ -15,6 +18,9 @@
 			<TabPanels>
 				<TabPanel>
 					<PerformanceDashboard />
+				</TabPanel>
+				<TabPanel>
+					<CompetenceDocument />
 				</TabPanel>
 			</TabPanels>
 		</main>
@@ -29,6 +35,7 @@ import { inject, onMounted } from "vue"
 import { useStore } from "vuex"
 import { types } from "sass"
 import Error = types.Error
+import CompetenceDocument from "@/views/CompetenceDocument.vue"
 
 const api = inject<Api<unknown>>("api")
 const store = useStore()
