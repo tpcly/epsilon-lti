@@ -32,10 +32,7 @@ if (!fs.existsSync(".env")) {
 NUXT_SSL_KEY_PATH=${keyFilePath}`
 	)
 } else {
-	const lines = fs
-		.readFileSync(".env")
-		.toString()
-		.split("\n")
+	const lines = fs.readFileSync(".env").toString().split("\n")
 
 	let hasCert,
 		hasCertKey = false
@@ -48,15 +45,9 @@ NUXT_SSL_KEY_PATH=${keyFilePath}`
 		}
 	}
 	if (!hasCert) {
-		fs.appendFileSync(
-			".env",
-			`\nNUXT_SSL_CRT_PATH=${certFilePath}`
-		)
+		fs.appendFileSync(".env", `\nNUXT_SSL_CRT_PATH=${certFilePath}`)
 	}
 	if (!hasCertKey) {
-		fs.appendFileSync(
-			".env",
-			`\nNUXT_SSL_KEY_PATH=${keyFilePath}`
-		)
+		fs.appendFileSync(".env", `\nNUXT_SSL_KEY_PATH=${keyFilePath}`)
 	}
 }

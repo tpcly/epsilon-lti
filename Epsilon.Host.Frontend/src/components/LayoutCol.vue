@@ -8,8 +8,8 @@
 import { defineProps, computed } from "vue"
 
 const props = defineProps<{
-    cols?: number | string
-    breakpoints?: { [key: string]: number | string }
+	cols?: number | string
+	breakpoints?: { [key: string]: number | string }
 }>()
 
 const classes = computed(() => {
@@ -39,32 +39,32 @@ const classes = computed(() => {
 $row-distribution: 12;
 
 @mixin distribute-column() {
-    @for $i from 1 through $row-distribution {
-        $percentage: calc(#{$i} / #{$row-distribution} * 100%);
+	@for $i from 1 through $row-distribution {
+		$percentage: calc(#{$i} / #{$row-distribution} * 100%);
 
-        &-#{$i} {
-            flex: 0 0 $percentage;
-            max-width: $percentage;
-        }
-    }
+		&-#{$i} {
+			flex: 0 0 $percentage;
+			max-width: $percentage;
+		}
+	}
 }
 
 .row > * {
-    max-width: 100%;
-    padding-right: calc(var(--bs-gutter-x) * 0.5);
-    padding-left: calc(var(--bs-gutter-x) * 0.5);
-    margin-top: var(--bs-gutter-y);
+	max-width: 100%;
+	padding-right: calc(var(--bs-gutter-x) * 0.5);
+	padding-left: calc(var(--bs-gutter-x) * 0.5);
+	margin-top: var(--bs-gutter-y);
 }
 
 .col {
-    @include breakpoints-labeled-default() {
-        @include distribute-column;
-    }
+	@include breakpoints-labeled-default() {
+		@include distribute-column;
+	}
 
-    &-auto {
-        flex: 0 0 auto;
-        width: auto;
-        max-width: none;
-    }
+	&-auto {
+		flex: 0 0 auto;
+		width: auto;
+		max-width: none;
+	}
 }
 </style>

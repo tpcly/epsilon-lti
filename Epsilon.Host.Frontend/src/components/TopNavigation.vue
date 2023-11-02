@@ -1,26 +1,20 @@
 <template>
 	<div class="top-navigation">
-		<img
-			alt="logo"
-			class="top-navigation-logo"
-			src="../assets/logo.png"
-		>
+		<img alt="logo" class="top-navigation-logo" src="../assets/logo.png" />
 		<Row>
 			<Col :cols="8">
 				<SearchBox
 					v-model="selectedUser"
 					:items="users"
 					:limit="5"
-					placeholder="Student"
-				/>
+					placeholder="Student" />
 			</Col>
 			<Col :cols="4">
 				<SearchBox
 					v-model="selectedTerm"
 					:items="terms"
 					:limit="10"
-					placeholder="Term"
-				/>
+					placeholder="Term" />
 			</Col>
 		</Row>
 	</div>
@@ -72,17 +66,17 @@ watch(selectedTerm, () => {
 
 <style lang="scss" scoped>
 .top-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem 3rem;
-    background-color: #f2f3f8;
-    width: 100%;
-    border-radius: 0.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 2rem 3rem;
+	background-color: #f2f3f8;
+	width: 100%;
+	border-radius: 0.5rem;
 
-    &-logo {
-        height: 5rem;
-        object-fit: contain;
-    }
+	&-logo {
+		height: 5rem;
+		object-fit: contain;
+	}
 }
 </style>

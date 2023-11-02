@@ -3,23 +3,17 @@
 		<CompetenceProfile
 			v-if="hboIDomain"
 			:submissions="submissions"
-			:domain="hboIDomain"
-		/>
-		<LearningDomainValues
-			v-if="hboIDomain"
-			:domain="hboIDomain"
-		/>
+			:domain="hboIDomain" />
+		<LearningDomainValues v-if="hboIDomain" :domain="hboIDomain" />
 		<div />
 		<CompetenceGraph
 			v-if="hboIDomain"
 			:domain="hboIDomain"
-			:submissions="submissions"
-		/>
+			:submissions="submissions" />
 		<PersonalDevelopmentGraph
 			v-if="personalDevelopmentDomain"
 			:domain="personalDevelopmentDomain"
-			:submissions="submissions"
-		/>
+			:submissions="submissions" />
 	</div>
 </template>
 

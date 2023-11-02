@@ -6,8 +6,7 @@
 			height="300"
 			type="bar"
 			class="competence-graph"
-			width="520"
-		/>
+			width="520" />
 	</ClientOnly>
 </template>
 

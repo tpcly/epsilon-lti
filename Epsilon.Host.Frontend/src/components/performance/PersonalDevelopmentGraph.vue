@@ -5,8 +5,7 @@
 			:series="series"
 			height="300"
 			type="bar"
-			width="200"
-		/>
+			width="200" />
 	</ClientOnly>
 </template>
 

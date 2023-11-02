@@ -2,8 +2,7 @@
 	<div>
 		<TopNavigation
 			@user-change="handleUserChange"
-			@term-change="handleTermChange"
-		/>
+			@term-change="handleTermChange" />
 		<TabGroup as="template">
 			<div class="toolbar mb-lg mt-lg">
 				<div class="toolbar-slider">
@@ -14,13 +13,12 @@
 					</TabList>
 				</div>
 			</div>
-			<hr class="divider mb-lg">
+			<hr class="divider mb-lg" />
 			<main>
 				<TabPanels>
 					<TabPanel>
 						<PerformanceDashboard
-							:submissions="filteredSubmissions"
-						/>
+							:submissions="filteredSubmissions" />
 					</TabPanel>
 				</TabPanels>
 			</main>

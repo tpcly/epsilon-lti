@@ -3,12 +3,10 @@
 		<tr
 			v-for="type of types"
 			:key="type"
-			class="learning-domain-values-row"
-		>
+			class="learning-domain-values-row">
 			<td
 				class="learning-domain-values-value-color"
-				:style="{ backgroundColor: '#' + type.hexColor }"
-			/>
+				:style="{ backgroundColor: '#' + type.hexColor }" />
 			<th class="learning-domain-values-value-text">
 				{{ type.name }}
 			</th>
@@ -17,12 +15,10 @@
 </template>
 
 <script lang="ts" setup>
-import {
-	type LearningDomain,
-} from "~/api.generated"
+import { type LearningDomain } from "~/api.generated"
 
 const props = defineProps<{
-    domain: LearningDomain
+	domain: LearningDomain
 }>()
 
 // TODO: Centralize this ugly sorting compare function, maybe possible with lodash?
@@ -34,26 +30,26 @@ const types = computed(() => {
 
 <style lang="scss">
 .learning-domain-values {
-    display: flex;
-    flex-direction: column;
-    width: fit-content;
-    height: fit-content;
-    padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	width: fit-content;
+	height: fit-content;
+	padding: 2rem;
 
-    &-row {
-        display: grid;
-        grid-template-columns: repeat(2, 5rem);
-        padding: 0.5rem;
-    }
+	&-row {
+		display: grid;
+		grid-template-columns: repeat(2, 5rem);
+		padding: 0.5rem;
+	}
 
-    &-value {
-        &-text {
-            font-weight: 400;
-        }
+	&-value {
+		&-text {
+			font-weight: 400;
+		}
 
-        &-color {
-            width: 3rem;
-        }
-    }
+		&-color {
+			width: 3rem;
+		}
+	}
 }
 </style>

@@ -1,25 +1,22 @@
 <template>
-	<td
-		v-if="value"
-		:style="{ background: '#' + value.hexColor}"
-	>
+	<td v-if="value" :style="{ background: '#' + value.hexColor }">
 		{{ outcomes.length }}
 	</td>
-	<td
-		v-else
-		class="border"
-	/>
+	<td v-else class="border" />
 </template>
 
 <script setup lang="ts">
-import { type LearningDomainOutcome, type LearningDomainType } from "~/api.generated"
+import {
+	type LearningDomainOutcome,
+	type LearningDomainType,
+} from "~/api.generated"
 
 const props = defineProps<{
-    outcomes: LearningDomainOutcome[]
+	outcomes: LearningDomainOutcome[]
 }>()
 
 const value = computed<LearningDomainType | null>(() => {
-	const types = props.outcomes.map(outcome => outcome.value)
+	const types = props.outcomes.map((outcome) => outcome.value)
 	types.sort((a, b) => (b.order ?? 0) - (a.order ?? 0))
 
 	return types[0]
@@ -28,10 +25,10 @@ const value = computed<LearningDomainType | null>(() => {
 
 <style scoped lang="scss">
 td {
-    text-align: center;
+	text-align: center;
 
-    &.border {
-        border: 1px solid #e6e6e6;
-    }
+	&.border {
+		border: 1px solid #e6e6e6;
+	}
 }
 </style>

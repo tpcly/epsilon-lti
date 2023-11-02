@@ -6,32 +6,25 @@
 				<th
 					v-for="col of domain.columnsSet?.types"
 					:key="col.id"
-					class="competence-profile-header competence-profile-header-col"
-				>
+					class="competence-profile-header competence-profile-header-col">
 					{{ col.name }}
 				</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr
-				v-for="row of domain.rowsSet.types"
-				:key="row.id"
-			>
+			<tr v-for="row of domain.rowsSet.types" :key="row.id">
 				<th
-					class="competence-profile-header competence-profile-header-row"
-				>
+					class="competence-profile-header competence-profile-header-row">
 					<div
 						class="competence-profile-header-color"
-						:style="{ backgroundColor: '#' + row.hexColor }"
-					/>
+						:style="{ backgroundColor: '#' + row.hexColor }" />
 					{{ row.name }}
 				</th>
 				<CompetenceProfileCell
 					v-for="col of domain.columnsSet?.types"
 					:key="col.id"
 					class="competence-profile-cell"
-					:outcomes="outcomes(row, col)"
-				/>
+					:outcomes="outcomes(row, col)" />
 			</tr>
 		</tbody>
 	</table>

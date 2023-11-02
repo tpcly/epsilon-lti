@@ -12,7 +12,9 @@ export default defineNuxtConfig({
 	devServer: {
 		https: {
 			key: key ? readFileSync(key).toString() : undefined,
-			cert: certificate ? readFileSync(certificate).toString() : undefined,
+			cert: certificate
+				? readFileSync(certificate).toString()
+				: undefined,
 		},
 	},
 	ssr: true,
