@@ -11,7 +11,6 @@ bootstrap: |+
 dotnet:
   solution: Epsilon.sln
   configuration: Release
-linter: jetbrains/qodana-dotnet:2023.2
 exclude:
   - name: AutoPropertyCanBeMadeGetOnly.Global
   - name: UnusedAutoPropertyAccessor.Global
