@@ -18,8 +18,10 @@ using Tpcly.Canvas.Rest;
 using Tpcly.Lti;
 using Tpcly.Persistence.Abstractions;
 using Tpcly.Persistence.EntityFrameworkCore;
-
+#pragma warning disable CA1812
 var builder = WebApplication.CreateBuilder(args);
+#pragma warning restore CA1812
+// Add services to the container.
 var config = builder.Configuration;
 
 // Add CORS rules

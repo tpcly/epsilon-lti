@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD:Epsilon.Host.Frontend/src/components/performance/CompetenceGraph.vue
 	<ClientOnly>
 		<ApexChart
 			:options="chartOptions"
@@ -8,6 +9,15 @@
 			class="competence-graph"
 			width="520" />
 	</ClientOnly>
+=======
+	<ApexChart
+		:options="chartOptions"
+		:series="series"
+		height="300"
+		type="bar"
+		class="competence-graph"
+		width="520" />
+>>>>>>> origin/develop:Epsilon.Host.Frontend/src/components/Performance/CompetenceGraph.vue
 </template>
 
 <script lang="ts" setup>
@@ -91,8 +101,13 @@ const chartOptions = {
 }
 
 onMounted(() => {
+<<<<<<< HEAD:Epsilon.Host.Frontend/src/components/performance/CompetenceGraph.vue
 	const columnTypes = props.domain?.columnsSet?.types
 	if (columnTypes != undefined) {
+=======
+	const columnTypes = store.state.domain?.columnsSet?.types
+	if (columnTypes != null) {
+>>>>>>> origin/develop:Epsilon.Host.Frontend/src/components/Performance/CompetenceGraph.vue
 		columnTypes.forEach((s) => {
 			chartOptions.xaxis.categories.push(s.name as never)
 		})

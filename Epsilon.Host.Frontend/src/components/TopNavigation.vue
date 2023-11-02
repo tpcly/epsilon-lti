@@ -2,18 +2,23 @@
 	<div class="top-navigation">
 		<img alt="logo" class="top-navigation-logo" src="../assets/logo.png" />
 		<Row>
-			<Col :cols="8">
+			<Col :cols="6">
 				<SearchBox
 					v-model="selectedUser"
 					:items="users"
 					:limit="5"
 					placeholder="Student" />
 			</Col>
-			<Col :cols="4">
+			<Col :cols="3">
 				<SearchBox
 					v-model="selectedTerm"
 					:items="terms"
 					:limit="10"
+					placeholder="Term" />
+			</Col>
+			<Col :cols="3">
+				<TermDateFilter
+					:current-term="selectedTerm"
 					placeholder="Term" />
 			</Col>
 		</Row>
@@ -22,6 +27,7 @@
 
 <script lang="ts" setup>
 import SearchBox from "~/components/SearchBox.vue"
+import TermDateFilter from "@/components/TermDateFilter.vue"
 import Row from "~/components/LayoutRow.vue"
 import Col from "~/components/LayoutCol.vue"
 import { type EnrollmentTerm, type User } from "~/api.generated"

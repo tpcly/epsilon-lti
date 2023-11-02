@@ -109,27 +109,28 @@ function displayValue(item: { name: string }): string {
 		border: none;
 		font-weight: 400;
 		text-align: left;
-		width: 100%;
 		padding: 0.75rem;
+		width: 100%;
 
 		input {
-			width: 100%;
 			border: none;
 			outline: none;
 			font-size: 1rem;
 			border-radius: 6px;
+			width: 100%;
+			font-family: inherit;
 		}
 	}
 
 	&-options {
 		position: absolute;
 		background-color: #fff;
-		width: 100%;
 		list-style-type: none;
 		border-radius: 6px;
 		border: 1px solid #d8d8d8;
 		text-align: left;
 		z-index: 40;
+		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 
 		&-item {
 			padding: 1rem 1.5rem;
