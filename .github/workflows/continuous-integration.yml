@@ -92,7 +92,7 @@ jobs:
                 
                 # Run NuGet restore for each project/solution to analyze
             -   name: Run NuGet restore
-                run: dotnet restore <%path_to_project_or_solution%>
+                run: dotnet restore Epsilon.sln
                 
                 # Run code analysis for all projects/solutions, such that code analysis violations break the build.
             -   name: Run .NET Code Analysis
