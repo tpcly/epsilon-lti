@@ -85,7 +85,7 @@ jobs:
   
   code-analysis:
     name: Code analysis
-    runs-on: ubuntu-20.04
+    runs-on: windows-latest
     needs: [ build-backend, build-frontend ]
     permissions:
       contents: write
@@ -96,12 +96,10 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-      - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@v2023.2.1
-        env:
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+      - name: Run .NET Code Analysis
+        uses: dotnet/code-analysis@v1
+        id: code-analysis
         with:
-          args: --user,root
-          use-annotations: true
-          push-fixes: false
-          pr-mode: false
+            solution: Epsilon.sln
+            build-breaking: true
+            all-categories: all
