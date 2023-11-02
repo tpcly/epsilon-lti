@@ -83,9 +83,26 @@ jobs:
             -   name: Build the containers
                 run: docker-compose -f docker-compose.development.yml build
     
+    code-analysis-C:
+        name: Code analysis
+        needs: [ build-backend, build-frontend, lint-frontend ]
+        runs-on: ubuntu-20.04
+        steps:
+            -   uses: actions/checkout@v2
+                
+                # Run NuGet restore for each project/solution to analyze
+            -   name: Run NuGet restore
+                run: dotnet restore <%path_to_project_or_solution%>
+                
+                # Run code analysis for all projects/solutions, such that code analysis violations break the build.
+            -   name: Run .NET Code Analysis
+                uses: dotnet/code-analysis@v1
+                id: code-analysis
+                with:
+                    build-breaking: true
     code-analysis:
         name: Code analysis
-        needs: [ build-backend, build-frontend ]
+        needs: [ build-backend, build-frontend, lint-frontend ]
         runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
         timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
         permissions:
@@ -96,7 +113,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                language: [ 'csharp', 'javascript-typescript' ]        
+                language: [ 'csharp', 'javascript-typescript' ]
         steps:
             -   name: Checkout repository
                 uses: actions/checkout@v3
