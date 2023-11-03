@@ -103,12 +103,12 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
     }
 
 
-    private static IEnumerable<LearningDomainOutcomeResult> GetOutcomeResults(
+    private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
         Submission submission,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
     {
-        var outcomeRecords = new List<LearningDomainOutcomeResult>();
+        var outcomeRecords = new List<LearningDomainOutcomeRecord>();
         if (submission.SubmissionHistories?.Nodes == null)
         {
             throw new HttpRequestException("No SubmissionHistories are given");
@@ -137,7 +137,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 if (outcome != null)
                 {
                     outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
-                    outcomeRecords.Add(new LearningDomainOutcomeResult(outcome, assessment?.Points));
+                    outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
                 }
             }
         }

@@ -40,7 +40,7 @@ export interface LearningDomainOutcome {
 	name: string
 }
 
-export interface LearningDomainOutcomeResult {
+export interface LearningDomainOutcomeRecord {
 	outcome?: LearningDomainOutcome
 	/** @format double */
 	grade?: number | null
@@ -53,7 +53,7 @@ export interface LearningDomainSubmission {
 	/** @format date-time */
 	submittedAt?: string
 	criteria?: LearningDomainCriteria[] | null
-	results?: LearningDomainOutcomeResult[] | null
+	results?: LearningDomainOutcomeRecord[] | null
 }
 
 export interface LearningDomainType {

@@ -1,6 +1,6 @@
 import {
 	type LearningDomain,
-	type LearningDomainOutcomeResult,
+	type LearningDomainOutcomeRecord,
 	type LearningDomainSubmission,
 } from "~/api.generated"
 
@@ -28,7 +28,7 @@ export interface DecayingAveragePerSkill {
  */
 export const getAllOutcomes = (
 	submissions: LearningDomainSubmission[]
-): LearningDomainOutcomeResult[] => submissions.flatMap((a) => a.results!)
+): LearningDomainOutcomeRecord[] => submissions.flatMap((a) => a.results!)
 
 /**
  * Calculate the averages for each skill type
@@ -185,7 +185,7 @@ export const calculateDecayingAverageForAllOutcomes = (
  * @private
  */
 export const calculateDecayingAverageForOutcomeType = (
-	results: LearningDomainOutcomeResult[]
+	results: LearningDomainOutcomeRecord[]
 ): number => {
 	if (results.length === 0) {
 		return 0.0
