@@ -40,7 +40,7 @@ public class DocumentController : ControllerBase
     {
         var document = await _competenceDocumentService.GetDocument(courseId, from, to);
 
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         _competenceDocumentService.WriteDocument(stream, document);
 
         return File(

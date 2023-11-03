@@ -5,7 +5,7 @@
 		height="300"
 		type="bar"
 		class="competence-graph"
-		width="490" />
+		width="520" />
 </template>
 
 <script lang="ts" setup>
@@ -31,7 +31,6 @@ const chartOptions = {
 						color: "#fff",
 						background: "red",
 					},
-					text: "Mastery",
 				},
 			},
 		],
@@ -42,7 +41,7 @@ const chartOptions = {
 		height: 300,
 		stacked: true,
 		toolbar: {
-			show: true,
+			show: false,
 		},
 		zoom: {
 			enabled: false,
@@ -54,13 +53,20 @@ const chartOptions = {
 	plotOptions: {
 		bar: {
 			horizontal: false,
-			borderRadius: 4,
+			borderRadius: 0,
 			dataLabels: {},
 		},
 	},
 	xaxis: {
 		type: "string",
 		categories: [],
+		labels: {
+			show: true,
+			rotate: 0,
+			style: {
+				fontSize: "12.5px",
+			},
+		},
 	},
 	yaxis: {
 		show: false,
@@ -78,7 +84,7 @@ const chartOptions = {
 
 onMounted(() => {
 	const columnTypes = store.state.domain?.columnsSet?.types
-	if (columnTypes != undefined) {
+	if (columnTypes != null) {
 		columnTypes.forEach((s) => {
 			chartOptions.xaxis.categories.push(s.name as never)
 		})
@@ -112,6 +118,6 @@ const series = computed(() => {
 
 <style scoped>
 .competence-graph {
-	margin-left: auto;
+	margin-left: 265px;
 }
 </style>

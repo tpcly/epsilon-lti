@@ -529,7 +529,8 @@ dotnet_diagnostic.ide0170.severity = error
 dotnet_diagnostic.ide0180.severity = error
 dotnet_diagnostic.ide1005.severity = error
 dotnet_diagnostic.ide1006.severity = error
-
+dotnet_diagnostic.CA2000.severity = error
+dotnet_diagnostic.CA1812.severity = error
 [*.{appxmanifest,asax,ascx,aspx,axaml,build,c,c++,cc,cginc,compute,cp,cpp,cs,cshtml,cu,cuh,cxx,dtd,fs,fsi,fsscript,fsx,fx,fxh,h,hh,hlsl,hlsli,hlslinc,hpp,hxx,inc,inl,ino,ipp,ixx,master,ml,mli,mpp,mq4,mq5,mqh,nuspec,paml,razor,resw,resx,shader,skin,tpp,usf,ush,vb,xaml,xamlx,xoml,xsd}]
 # A property with the same name was updated with a value 2 in a section [{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
 tab_width = 4
