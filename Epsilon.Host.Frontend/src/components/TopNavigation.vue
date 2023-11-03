@@ -10,15 +10,18 @@
 					placeholder="Student" />
 			</Col>
 			<Col :cols="3">
+				<TermDateFilter
+					:from-date="fromDate"
+					:to-date="toDate"
+					placeholder="Term"
+					@update:from-date="fromDate = $event"
+					@update:to-date="toDate = $event" />
+			</Col>
+			<Col :cols="3">
 				<SearchBox
 					v-model="selectedTerm"
 					:items="terms"
 					:limit="10"
-					placeholder="Term" />
-			</Col>
-			<Col :cols="3">
-				<TermDateFilter
-					:current-term="selectedTerm"
 					placeholder="Term" />
 			</Col>
 		</Row>
@@ -31,14 +34,18 @@ import TermDateFilter from "@/components/TermDateFilter.vue"
 import Row from "~/components/LayoutRow.vue"
 import Col from "~/components/LayoutCol.vue"
 import { type EnrollmentTerm, type User } from "~/api.generated"
+import { ref } from "vue"
 
-const emit = defineEmits(["userChange", "termChange"])
+const emit = defineEmits(["userChange", "rangeChange"])
 const api = useApi()
 
 const users = ref<User[]>([])
 const terms = ref<EnrollmentTerm[]>([])
 const selectedUser = ref<User | null>(null)
 const selectedTerm = ref<EnrollmentTerm | null>(null)
+
+const fromDate = ref<Date | null>(null)
+const toDate = ref<Date | null>(null)
 
 onMounted(async () => {
 	const response = await api.filter.accessibleStudentsList()
@@ -66,7 +73,27 @@ watch(selectedUser, async () => {
 })
 
 watch(selectedTerm, () => {
-	emit("termChange", selectedTerm.value)
+	const selectedTermUnwrapped = selectedTerm.value
+	if (!selectedTermUnwrapped?.start_at || !selectedTermUnwrapped.end_at) {
+		return
+	}
+
+	const termsUnwrapped = terms.value
+
+	fromDate.value = new Date(
+		termsUnwrapped[termsUnwrapped.length - 1]?.start_at!
+	)
+
+	toDate.value = new Date(selectedTermUnwrapped?.end_at)
+})
+
+watch([fromDate, toDate], () => {
+	console.log(fromDate.value, toDate.value)
+
+	emit("rangeChange", {
+		start: fromDate.value,
+		end: toDate.value,
+	})
 })
 </script>
 

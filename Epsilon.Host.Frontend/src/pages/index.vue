@@ -2,7 +2,7 @@
 	<div>
 		<TopNavigation
 			@user-change="handleUserChange"
-			@term-change="handleTermChange" />
+			@range-change="handleRangeChange" />
 		<TabGroup as="template">
 			<div class="toolbar mb-lg mt-lg">
 				<div class="toolbar-slider">
@@ -29,11 +29,7 @@
 <script lang="ts" setup>
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/vue"
 import TopNavigation from "~/components/TopNavigation.vue"
-import {
-	type EnrollmentTerm,
-	type LearningDomainSubmission,
-	type User,
-} from "~/api.generated"
+import { type LearningDomainSubmission, type User } from "~/api.generated"
 
 const { readCallback, validateCallback } = useLti()
 
@@ -58,7 +54,7 @@ if (process.client && data.value?.idToken) {
 const api = useApi()
 
 const submissions = ref<LearningDomainSubmission[]>([])
-const filterRange = ref<{ start: number; end: number } | null>(null)
+const filterRange = ref<{ start: Date; end: Date } | null>(null)
 
 const filteredSubmissions = computed(() => {
 	const unwrappedFilterRange = filterRange.value
@@ -68,9 +64,12 @@ const filteredSubmissions = computed(() => {
 	}
 
 	return submissions.value.filter((submission) => {
-		const submittedAt = Date.parse(submission.submittedAt!)
+		const submittedAt = new Date(submission.submittedAt!)
 
-		return submittedAt <= unwrappedFilterRange.end
+		return (
+			submittedAt >= unwrappedFilterRange.start &&
+			submittedAt <= unwrappedFilterRange.end
+		)
 	})
 })
 
@@ -86,11 +85,8 @@ const handleUserChange = async (user: User): Promise<void> => {
 	submissions.value = outcomesResponse.data
 }
 
-const handleTermChange = async (term: EnrollmentTerm): Promise<void> => {
-	filterRange.value = {
-		start: Date.parse(term.start_at!),
-		end: Date.parse(term.end_at!),
-	}
+const handleRangeChange = (range: { start: Date; end: Date }): void => {
+	filterRange.value = range
 }
 </script>
 
