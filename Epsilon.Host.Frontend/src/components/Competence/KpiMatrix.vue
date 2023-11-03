@@ -3,7 +3,7 @@
 	<table>
 		<thead>
 			<tr>
-				<th></th>
+				<th />
 				<th
 					v-for="submission of store.state.filterdSubmissions"
 					:key="submission.assignment">
@@ -28,7 +28,7 @@
 					"
 					:criteria="
 						submission.criteria?.find((c) => c?.id == outcome)
-					"></KpiMatrixCell>
+					" />
 			</tr>
 		</tbody>
 	</table>
