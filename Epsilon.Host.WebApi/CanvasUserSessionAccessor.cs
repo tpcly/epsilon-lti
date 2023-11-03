@@ -26,8 +26,15 @@ public class CanvasUserSessionAccessor : ICanvasUserSessionAccessor
         }
 
         var ltiMessage = await context.GetLtiMessageAsync();
-        var courseId = _canvasOptions.OverrideCourseId ?? int.Parse(ltiMessage.Custom["course_id"].ToString(), CultureInfo.InvariantCulture);
-        var userId = _canvasOptions.OverrideUserId ?? int.Parse(ltiMessage.Custom["user_id"].ToString(), CultureInfo.InvariantCulture);
+        if (ltiMessage?.Custom == null
+            || !ltiMessage.Custom.TryGetValue("course_id", out var courseIdRaw)
+            || !ltiMessage.Custom.TryGetValue("course_id", out var userIdRaw))
+        {
+            return null;
+        }
+        
+        var courseId = _canvasOptions.OverrideCourseId ?? int.Parse(courseIdRaw.ToString()!, CultureInfo.InvariantCulture);
+        var userId = _canvasOptions.OverrideUserId ?? int.Parse(userIdRaw.ToString()!, CultureInfo.InvariantCulture);
 
         return new CanvasUserSession(
             courseId,
