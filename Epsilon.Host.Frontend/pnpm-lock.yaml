@@ -52,6 +52,9 @@ devDependencies:
     eslint-config-prettier:
         specifier: ^9.0.0
         version: 9.0.0(eslint@8.52.0)
+    eslint-plugin-prettier:
+        specifier: ^5.0.1
+        version: 5.0.1(eslint-config-prettier@9.0.0)(eslint@8.52.0)(prettier@3.0.3)
     h3:
         specifier: ^1.8.2
         version: 1.8.2
@@ -1792,6 +1795,21 @@ packages:
         engines: { node: ">=14" }
         requiresBuild: true
         optional: true
+
+    /@pkgr/utils@2.4.2:
+        resolution:
+            {
+                integrity: sha512-POgTXhjrTfbTV63DiFXav4lBHiICLKKwDeaKn9Nphwj7WH6m0hMMCaJkMyRWjgtPFyRKRVoMXXjczsTQRDEhYw==,
+            }
+        engines: { node: ^12.20.0 || ^14.18.0 || >=16.0.0 }
+        dependencies:
+            cross-spawn: 7.0.3
+            fast-glob: 3.3.1
+            is-glob: 4.0.3
+            open: 9.1.0
+            picocolors: 1.0.0
+            tslib: 2.6.2
+        dev: true
 
     /@polka/url@1.0.0-next.23:
         resolution:
@@ -3895,6 +3913,30 @@ packages:
             eslint: 8.52.0
         dev: true
 
+    /eslint-plugin-prettier@5.0.1(eslint-config-prettier@9.0.0)(eslint@8.52.0)(prettier@3.0.3):
+        resolution:
+            {
+                integrity: sha512-m3u5RnR56asrwV/lDC4GHorlW75DsFfmUcjfCYylTUs85dBRnB7VM6xG8eCMJdeDRnppzmxZVf1GEPJvl1JmNg==,
+            }
+        engines: { node: ^14.18.0 || >=16.0.0 }
+        peerDependencies:
+            "@types/eslint": ">=8.0.0"
+            eslint: ">=8.0.0"
+            eslint-config-prettier: "*"
+            prettier: ">=3.0.0"
+        peerDependenciesMeta:
+            "@types/eslint":
+                optional: true
+            eslint-config-prettier:
+                optional: true
+        dependencies:
+            eslint: 8.52.0
+            eslint-config-prettier: 9.0.0(eslint@8.52.0)
+            prettier: 3.0.3
+            prettier-linter-helpers: 1.0.0
+            synckit: 0.8.5
+        dev: true
+
     /eslint-plugin-vue@9.18.0(eslint@8.52.0):
         resolution:
             {
@@ -4119,6 +4161,13 @@ packages:
             {
                 integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==,
             }
+
+    /fast-diff@1.3.0:
+        resolution:
+            {
+                integrity: sha512-VxPP4NqbUjj6MaAOafWeUn2cXWLcCtljklUtZf0Ind4XQ+QPtmA0b18zZy0jIQx+ExRVCR/ZQpBmik5lXshNsw==,
+            }
+        dev: true
 
     /fast-fifo@1.3.2:
         resolution:
@@ -6866,6 +6915,16 @@ packages:
             }
         engines: { node: ">= 0.8.0" }
 
+    /prettier-linter-helpers@1.0.0:
+        resolution:
+            {
+                integrity: sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==,
+            }
+        engines: { node: ">=6.0.0" }
+        dependencies:
+            fast-diff: 1.3.0
+        dev: true
+
     /prettier@3.0.3:
         resolution:
             {
@@ -7765,6 +7824,17 @@ packages:
             csso: 5.0.5
             picocolors: 1.0.0
 
+    /synckit@0.8.5:
+        resolution:
+            {
+                integrity: sha512-L1dapNV6vu2s/4Sputv8xGsCdAVlb5nRDMFU/E27D44l5U6cw1g0dGd45uLc+OXjNMmF4ntiMdCimzcjFKQI8Q==,
+            }
+        engines: { node: ^14.18.0 || >=16.0.0 }
+        dependencies:
+            "@pkgr/utils": 2.4.2
+            tslib: 2.6.2
+        dev: true
+
     /tapable@1.1.3:
         resolution:
             {
@@ -7881,6 +7951,13 @@ packages:
             typescript: ">=4.2.0"
         dependencies:
             typescript: 5.2.2
+        dev: true
+
+    /tslib@2.6.2:
+        resolution:
+            {
+                integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==,
+            }
         dev: true
 
     /tuf-js@2.1.0:
