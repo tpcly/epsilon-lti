@@ -36,7 +36,7 @@
 <script lang="ts" setup>
 import { computed } from "vue"
 import { useStore } from "vuex"
-import KpiMatrixCell from "@/components/Competence/KpiMatrixCell.vue"
+import KpiMatrixCell from "~/components/competence/KpiMatrixCell.vue"
 
 const store = useStore()
 
