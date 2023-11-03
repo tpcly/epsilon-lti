@@ -14,7 +14,7 @@ updates:
         schedule:
             interval: "weekly"
     # Maintain dependencies for javascript
-    -   package-ecosystem: "pnpm"
+    -   package-ecosystem: "npm"
         directory: "/Epsilon.Host.Frontend"
         target-branch: "develop"
         schedule:
