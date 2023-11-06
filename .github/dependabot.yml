@@ -1,0 +1,27 @@
+﻿# Dependabot basic setup for version control
+
+version: 2
+updates:
+    # Maintain dependencies for GitHub Actions
+    -   package-ecosystem: "github-actions"
+        directory: "/"
+        schedule:
+            interval: "weekly"
+    # Maintain dependencies of nuget packages
+    -   package-ecosystem: "nuget"
+        directory: "/"
+        target-branch: "develop"
+        schedule:
+            interval: "weekly"
+    # Maintain dependencies for javascript
+    -   package-ecosystem: "npm"
+        directory: "/Epsilon.Host.Frontend"
+        target-branch: "develop"
+        schedule:
+            interval: "daily"
+    # Maintain dependencies for docker images
+    -   package-ecosystem: "docker"
+        directory: "/"
+        target-branch: "develop"
+        schedule:
+            interval: "weekly"
