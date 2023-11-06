@@ -28,7 +28,7 @@ public class CanvasUserSessionAccessor : ICanvasUserSessionAccessor
         var ltiMessage = await context.GetLtiMessageAsync();
         if (ltiMessage?.Custom == null
             || !ltiMessage.Custom.TryGetValue("course_id", out var courseIdRaw)
-            || !ltiMessage.Custom.TryGetValue("course_id", out var userIdRaw))
+            || !ltiMessage.Custom.TryGetValue("user_id", out var userIdRaw))
         {
             return null;
         }
