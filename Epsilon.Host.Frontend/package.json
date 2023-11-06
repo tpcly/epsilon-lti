@@ -22,13 +22,13 @@
 		"vuex": "^4.1.0"
 	},
 	"devDependencies": {
-		"@headlessui/vue": "1.7.2",
+		"@headlessui/vue": "1.7.16",
 		"@heroicons/vue": "^2.0.18",
 		"@types/node": "^18.18.4",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
 		"@typescript-eslint/parser": "^5.62.0",
 		"@vitejs/plugin-vue": "^4.4.0",
-		"@vue/eslint-config-typescript": "^11.0.3",
+		"@vue/eslint-config-typescript": "^12.0.0",
 		"eslint": "^8.51.0",
 		"eslint-config-prettier": "^8.10.0",
 		"eslint-plugin-prettier": "^4.2.1",
