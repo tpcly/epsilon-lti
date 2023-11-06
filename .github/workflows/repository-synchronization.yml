@@ -1,7 +1,9 @@
 name: Repository Synchronization
 on:
-    - push
-    - delete
+    push:
+        branches-ignore: [ dependabot/** ]
+    delete:
+        branches-ignore: [ dependabot/** ]
 
 jobs:
     sync:
