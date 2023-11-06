@@ -1,4 +1,4 @@
-﻿name: Continuous integration
+name: Continuous integration
 concurrency:
     group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
     cancel-in-progress: true
@@ -20,7 +20,7 @@ jobs:
         runs-on: ubuntu-20.04
         
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v4
             -   uses: actions/setup-dotnet@v1.7.2
                 with:
                     dotnet-version: '6.0.x'
@@ -36,11 +36,11 @@ jobs:
             run:
                 working-directory: Epsilon.Host.Frontend
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v4
             -   uses: pnpm/action-setup@v2
                 with:
                     version: 8
-            -   uses: actions/setup-node@v3
+            -   uses: actions/setup-node@v4
                 with:
                     node-version: 18
                     cache: 'pnpm'
@@ -58,11 +58,11 @@ jobs:
             run:
                 working-directory: Epsilon.Host.Frontend
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v4
             -   uses: pnpm/action-setup@v2
                 with:
                     version: 8
-            -   uses: actions/setup-node@v3
+            -   uses: actions/setup-node@v4
                 with:
                     node-version: 18
                     cache: 'pnpm'
@@ -79,7 +79,7 @@ jobs:
         runs-on: ubuntu-20.04
         needs: [ build-frontend, build-backend, lint-frontend, code-analysis ]
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v4
             -   name: Build the containers
                 run: docker-compose -f docker-compose.development.yml build
     code-analysis:
@@ -98,7 +98,7 @@ jobs:
                 language: [ 'csharp', 'javascript-typescript' ]
         steps:
             -   name: Checkout repository
-                uses: actions/checkout@v3
+                uses: actions/checkout@v4
             -   name: Initialize CodeQL
                 uses: github/codeql-action/init@v2
                 with:
