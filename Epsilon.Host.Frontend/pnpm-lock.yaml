@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   apexcharts:
-    specifier: ^3.41.0
-    version: 3.41.0
+    specifier: ^3.44.0
+    version: 3.44.0
   typescript:
     specifier: ^4.9.5
     version: 4.9.5
@@ -15,7 +15,7 @@ dependencies:
     version: 4.2.4(vue@3.3.4)
   vue3-apexcharts:
     specifier: ^1.4.4
-    version: 1.4.4(apexcharts@3.41.0)(vue@3.3.4)
+    version: 1.4.4(apexcharts@3.44.0)(vue@3.3.4)
   vuex:
     specifier: ^4.1.0
     version: 4.1.0(vue@3.3.4)
@@ -985,6 +985,10 @@ packages:
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
     dev: true
 
+  /@yr/monotone-cubic-spline@1.0.3:
+    resolution: {integrity: sha512-FQXkOta0XBSUPHndIKON2Y9JeQz5ZeMqLYZVVK93FliNBFm7LNMIZmY6FrMEB9XPcDbE2bekMbZD6kzDkxwYjA==}
+    dev: false
+
   /acorn-import-assertions@1.9.0(acorn@8.10.0):
     resolution: {integrity: sha512-cmMwop9x+8KFhxvKrKfPYmN6/pKTYYHBqLa0DfvVZcKMJWNyWLnaqND7dx/qn66R7ewM1UX5XMaDVP5wlVTaVA==}
     peerDependencies:
@@ -1049,9 +1053,10 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /apexcharts@3.41.0:
-    resolution: {integrity: sha512-FJXA7NVjxs1q+ptR3b1I+pN8K/gWuXn+qLZjFz8EHvJOokdgcuwa/HSe5aC465HW/LWnrjWLSTsOQejQbQ42hQ==}
+  /apexcharts@3.44.0:
+    resolution: {integrity: sha512-u7Xzrbcxc2yWznN78Jh5NMCYVAsWDfBjRl5ea++rVzFAqjU2hLz4RgKIFwYOBDRQtW1e/Qz8azJTqIJ1+Vu9Qg==}
     dependencies:
+      '@yr/monotone-cubic-spline': 1.0.3
       svg.draggable.js: 2.2.2
       svg.easing.js: 2.0.0
       svg.filter.js: 2.0.2
@@ -2347,13 +2352,13 @@ packages:
       vue: 3.3.4
     dev: false
 
-  /vue3-apexcharts@1.4.4(apexcharts@3.41.0)(vue@3.3.4):
+  /vue3-apexcharts@1.4.4(apexcharts@3.44.0)(vue@3.3.4):
     resolution: {integrity: sha512-TH89uZrxGjaDvkaYAISvj8+k6Bf1rUKFillc8oJirs5XZEPiwM1ELKZQ786wz0rfPqkSHHny2lqqUCK7Rw+LcQ==}
     peerDependencies:
       apexcharts: '> 3.0.0'
       vue: '> 3.0.0'
     dependencies:
-      apexcharts: 3.41.0
+      apexcharts: 3.44.0
       vue: 3.3.4
     dev: false
 
