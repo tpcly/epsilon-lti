@@ -37,7 +37,7 @@
 		"sass": "^1.69.2",
 		"sass-loader": "^13.3.2",
 		"ts-node": "^10.9.1",
-		"vite": "^4.4.11",
+		"vite": "^4.5.0",
 		"vue-eslint-parser": "^9.3.2"
 	}
 }
