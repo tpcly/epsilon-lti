@@ -59,7 +59,7 @@ template {
 	overflow: auto;
 }
 tr {
-	border: 3px lightgray solid;
+	border: 3px #bfbebb solid;
 }
 
 tr td,
@@ -68,7 +68,7 @@ tr th {
 }
 
 td div {
-	border-bottom: 1px lightgray solid;
+	border-bottom: 1px #bfbebb solid;
 	width: 100%;
 }
 
