@@ -7,9 +7,7 @@
 					<Tab class="toolbar-slider-item">
 						Performance dashboard
 					</Tab>
-					<Tab class="toolbar-slider-item">
-						Competence Document
-					</Tab>
+					<Tab class="toolbar-slider-item"> Competence Document </Tab>
 				</TabList>
 			</div>
 		</div>

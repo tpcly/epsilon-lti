@@ -1,9 +1,9 @@
 <template>
 	<div v-if="store.state.filterdSubmissions" class="competence-document">
 		<KpiTable></KpiTable>
-		<KpiMatrix></KpiMatrix>
 		<CompetenceProfile
 			:submissions="store.state.filterdSubmissions"></CompetenceProfile>
+		<KpiMatrix></KpiMatrix>
 	</div>
 </template>
 
@@ -12,9 +12,6 @@ import store from "@/store"
 import KpiMatrix from "@/components/Competence/KpiMatrix.vue"
 import KpiTable from "@/components/Competence/KpiTable.vue"
 import CompetenceProfile from "@/components/Competence/CompetenceProfile.vue"
-import { LearningDomainSubmission } from "@/api.generated"
-
-const submissions: LearningDomainSubmission[] = [];
 </script>
 
 <style scoped>
@@ -24,11 +21,11 @@ const submissions: LearningDomainSubmission[] = [];
 
 @media screen and (min-width: 580px) {
 	.competence-document {
-		max-width: 100%;
-		grid-template-columns: 1fr 5fr 1fr;
-		gap: 2rem 0;
+		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		justify-items: center;
+		justify-content: space-between;
 	}
 }
 </style>

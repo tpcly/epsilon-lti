@@ -1,6 +1,5 @@
 <template>
-	<h2>KPI-Table</h2>
-	<table>
+	<table class="kpi-table">
 		<tr v-for="outcomeId of allOutcomes.sort()" :key="outcomeId">
 			<th>
 				{{ store.state.outcomes.find((o) => o.id === outcomeId).name }}
@@ -60,7 +59,19 @@ const allOutcomes = computed(() =>
 		.filter((value, index, self) => self.indexOf(value) === index)
 ) as unknown as number[]
 </script>
+
 <style scoped lang="scss">
+template {
+	display: flex;
+	flex-direction: column;
+}
+
+.kpi-table {
+	display: block;
+	width: 580px;
+	height: 500px;
+	overflow: auto;
+}
 tr {
 	border: 3px lightgray solid;
 }

@@ -1,6 +1,5 @@
 <template>
-	<h2>KPI-Matrix</h2>
-	<table>
+	<table class="kpi-matrix">
 		<thead>
 			<tr>
 				<th></th>
@@ -46,7 +45,19 @@ const allOutcomes = computed(() =>
 		.filter((value, index, self) => self.indexOf(value) === index)
 )
 </script>
+
 <style lang="scss" scoped>
+template {
+	display: flex;
+	flex-direction: column;
+}
+
+.kpi-matrix {
+	margin-top: 3%;
+	display: block;
+	height: 800px;
+	overflow: auto;
+}
 tr {
 	border: 3px lightgray solid;
 }
