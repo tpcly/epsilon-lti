@@ -1,21 +1,23 @@
 <template>
-	<div class="searchbox">
+	<div class="search-box">
 		<Combobox
 			:model-value="modelValue"
-			@update:model-value="$emit('update:modelValue', $event)">
-			<div class="searchbox-input">
+			@update:model-value="emit('update:modelValue', $event)">
+			<div class="search-box-input">
 				<ComboboxInput
 					:display-value="displayValue"
 					:placeholder="placeholder"
 					@change="query = $event.target.value" />
-				<ComboboxButton class="searchbox-list-arrow">
+				<ComboboxButton class="search-box-list-arrow">
 					<ChevronUpDownIcon aria-hidden="true" />
 				</ComboboxButton>
 			</div>
-			<ComboboxOptions v-if="items?.length > 0" class="searchbox-options">
+			<ComboboxOptions
+				v-if="items?.length > 0"
+				class="search-box-options">
 				<div
 					v-if="filteredItems?.length === 0 && query !== ''"
-					class="searchbox-options-item">
+					class="search-box-options-item">
 					No results found
 				</div>
 
@@ -25,12 +27,12 @@
 					v-slot="{ selected, active }"
 					as="template"
 					:value="item"
-					class="searchbox-options-item">
-					<li :class="{ 'searchbox-options-item-active': active }">
+					class="search-box-options-item">
+					<li :class="{ 'search-box-options-item-active': active }">
 						{{ item.name }}
 						<CheckIcon
 							v-if="selected"
-							class="searchbox-options-item-select-icon"
+							class="search-box-options-item-select-icon"
 							aria-hidden="true" />
 					</li>
 				</ComboboxOption>
@@ -40,7 +42,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineProps, ref } from "vue"
 import {
 	Combobox,
 	ComboboxButton,
@@ -52,19 +53,20 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid"
 
 const props = defineProps<{
 	items: Array<{ name?: string | null }> | null
-	modelValue: { name: string }
+	modelValue: { name: string } | null
 	placeholder?: string
 	limit: number
 }>()
 
 const query = ref("")
 
-defineEmits(["update:modelValue"])
+const emit = defineEmits(["update:modelValue"])
 
 const filteredItems = computed(() => {
 	if (props.items === null) {
 		return null
 	}
+
 	if (query.value === "") {
 		return props.items.slice(0, props.limit)
 	}
@@ -93,12 +95,11 @@ function displayValue(item: { name: string }): string {
 </script>
 
 <style scoped lang="scss">
-.searchbox {
-	height: 45px;
+.search-box {
 	position: relative;
+	width: 100%;
 	background-color: #fff;
 	border-radius: 7px;
-	width: 48%;
 
 	&-input {
 		position: relative;
