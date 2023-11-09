@@ -18,7 +18,8 @@
 		"nuxt": "^3.8.0",
 		"vue": "^3.3.8",
 		"vue-router": "^4.2.5",
-		"vue3-apexcharts": "^1.4.4"
+		"vue3-apexcharts": "^1.4.4",
+		"posthog-js": "^1.87.3"
 	},
 	"devDependencies": {
 		"@headlessui/vue": "1.7.16",

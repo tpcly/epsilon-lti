@@ -2,6 +2,11 @@
 	<NuxtPage />
 </template>
 
+<script lang="ts" setup>
+import { Posthog } from "~/utils/posthog.js"
+
+Posthog.init()
+</script>
 <style lang="scss">
 @import "assets/styles/resets";
 @import "assets/styles/main";
