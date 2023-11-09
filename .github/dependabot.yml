@@ -19,6 +19,9 @@ updates:
         target-branch: "develop"
         schedule:
             interval: "daily"
+        ignore:
+            -   update-types:
+                    - version-update:semver-patch
     # Maintain dependencies for docker images
     -   package-ecosystem: "docker"
         directory: "/"
