@@ -2,7 +2,7 @@
 	<NuxtPage />
 </template>
 
-<script>
+<script lang="ts" setup>
 import { Posthog } from "~/utils/posthog.js"
 
 Posthog.init()
