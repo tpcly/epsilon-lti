@@ -2,7 +2,7 @@ root = true
 
 # Don't use tabs for indentation.
 [*]
-indent_style = space
+indent_style = tab
 charset = utf-8
 end_of_line = lf
 trim_trailing_whitespace = false
@@ -116,7 +116,7 @@ dotnet_naming_symbols.private_static_readonly_symbols.applicable_accessibilities
 dotnet_naming_symbols.private_static_readonly_symbols.applicable_kinds = field
 dotnet_naming_symbols.private_static_readonly_symbols.required_modifiers = static, readonly
 dotnet_naming_symbols.unity_serialized_field_symbols.applicable_accessibilities = *
-dotnet_naming_symbols.unity_serialized_field_symbols.applicable_kinds = 
+dotnet_naming_symbols.unity_serialized_field_symbols.applicable_kinds =
 dotnet_naming_symbols.unity_serialized_field_symbols.resharper_applicable_kinds = unity_serialised_field
 dotnet_naming_symbols.unity_serialized_field_symbols.resharper_required_modifiers = instance
 dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:none
@@ -154,7 +154,7 @@ resharper_enforce_line_ending_style = true
 resharper_formatter_off_tag = @formatter:off
 resharper_formatter_on_tag = @formatter:on
 resharper_formatter_tags_enabled = true
-resharper_instance_members_qualify_declared_in = 
+resharper_instance_members_qualify_declared_in =
 resharper_keep_existing_initializer_arrangement = false
 resharper_keep_existing_list_patterns_arrangement = false
 resharper_max_attribute_length_for_same_line = 64
@@ -335,7 +335,7 @@ dotnet_naming_symbols.private_static_readonly_symbols.applicable_accessibilities
 dotnet_naming_symbols.private_static_readonly_symbols.applicable_kinds = field
 dotnet_naming_symbols.private_static_readonly_symbols.required_modifiers = static, readonly
 dotnet_naming_symbols.unity_serialized_field_symbols.applicable_accessibilities = *
-dotnet_naming_symbols.unity_serialized_field_symbols.applicable_kinds = 
+dotnet_naming_symbols.unity_serialized_field_symbols.applicable_kinds =
 dotnet_naming_symbols.private_fields.applicable_kinds = field
 dotnet_naming_symbols.private_fields.applicable_accessibilities = private
 dotnet_naming_style.require_underscore_prefix_and_camel_case.required_prefix = _
@@ -344,11 +344,11 @@ dotnet_naming_rule.private_fields_must_begin_with_underscore_and_be_in_camel_cas
 dotnet_naming_rule.private_fields_must_begin_with_underscore_and_be_in_camel_case.style = require_underscore_prefix_and_camel_case
 dotnet_naming_rule.private_fields_must_begin_with_underscore_and_be_in_camel_case.severity = error
 dotnet_naming_symbols.unity_serialized_field_symbols_1.applicable_accessibilities = *
-dotnet_naming_symbols.unity_serialized_field_symbols_1.applicable_kinds = 
+dotnet_naming_symbols.unity_serialized_field_symbols_1.applicable_kinds =
 dotnet_naming_symbols.unity_serialized_field_symbols_2.applicable_accessibilities = *
-dotnet_naming_symbols.unity_serialized_field_symbols_2.applicable_kinds = 
+dotnet_naming_symbols.unity_serialized_field_symbols_2.applicable_kinds =
 dotnet_naming_symbols.unity_serialized_field_symbols_3.applicable_accessibilities = *
-dotnet_naming_symbols.unity_serialized_field_symbols_3.applicable_kinds = 
+dotnet_naming_symbols.unity_serialized_field_symbols_3.applicable_kinds =
 dotnet_style_qualification_for_event = false
 dotnet_style_qualification_for_field = false
 dotnet_style_qualification_for_method = false
@@ -529,7 +529,16 @@ dotnet_diagnostic.ide0170.severity = error
 dotnet_diagnostic.ide0180.severity = error
 dotnet_diagnostic.ide1005.severity = error
 dotnet_diagnostic.ide1006.severity = error
+dotnet_diagnostic.CA2000.severity = error
+dotnet_diagnostic.CA1812.severity = error
 
+dotnet_analyzer_diagnostic.category-Reliability.severity = error
+dotnet_analyzer_diagnostic.category-Usage.severity = error
+dotnet_analyzer_diagnostic.category-Design.severity = error
+dotnet_analyzer_diagnostic.category-Documentation.severity = error
+dotnet_analyzer_diagnostic.category-Globalization.severity = error
+dotnet_analyzer_diagnostic.category-Interoperability.severity = error
+dotnet_analyzer_diagnostic.category-Maintainability.severit = error
 [*.{appxmanifest,asax,ascx,aspx,axaml,build,c,c++,cc,cginc,compute,cp,cpp,cs,cshtml,cu,cuh,cxx,dtd,fs,fsi,fsscript,fsx,fx,fxh,h,hh,hlsl,hlsli,hlslinc,hpp,hxx,inc,inl,ino,ipp,ixx,master,ml,mli,mpp,mq4,mq5,mqh,nuspec,paml,razor,resw,resx,shader,skin,tpp,usf,ush,vb,xaml,xamlx,xoml,xsd}]
 # A property with the same name was updated with a value 2 in a section [{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
 tab_width = 4

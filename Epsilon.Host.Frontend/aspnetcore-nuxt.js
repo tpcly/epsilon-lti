@@ -1,4 +1,4 @@
-// This script configures the .env.development.local file with additional environment variables to configure HTTPS using the ASP.NET Core
+// This script configures the .env file with additional environment variables to configure HTTPS using the ASP.NET Core
 // development certificate in the webpack development proxy.
 import fs from "fs"
 import path from "path"
@@ -25,38 +25,29 @@ if (!certificateName) {
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`)
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`)
 
-if (!fs.existsSync(".env.development.local")) {
+if (!fs.existsSync(".env")) {
 	fs.writeFileSync(
-		".env.development.local",
-		`VITE_SSL_CRT_FILE=${certFilePath}
-VITE_SSL_KEY_FILE=${keyFilePath}`
+		".env",
+		`NUXT_SSL_CRT_PATH=${certFilePath}
+NUXT_SSL_KEY_PATH=${keyFilePath}`
 	)
 } else {
-	const lines = fs
-		.readFileSync(".env.development.local")
-		.toString()
-		.split("\n")
+	const lines = fs.readFileSync(".env").toString().split("\n")
 
 	let hasCert,
 		hasCertKey = false
 	for (const line of lines) {
-		if (/VITE_SSL_CRT_FILE=.*/i.test(line)) {
+		if (/NUXT_SSL_CRT_PATH=.*/i.test(line)) {
 			hasCert = true
 		}
-		if (/VITE_SSL_KEY_FILE=.*/i.test(line)) {
+		if (/NUXT_SSL_KEY_PATH=.*/i.test(line)) {
 			hasCertKey = true
 		}
 	}
 	if (!hasCert) {
-		fs.appendFileSync(
-			".env.development.local",
-			`\nVITE_SSL_CRT_FILE=${certFilePath}`
-		)
+		fs.appendFileSync(".env", `\nNUXT_SSL_CRT_PATH=${certFilePath}`)
 	}
 	if (!hasCertKey) {
-		fs.appendFileSync(
-			".env.development.local",
-			`\nVITE_SSL_KEY_FILE=${keyFilePath}`
-		)
+		fs.appendFileSync(".env", `\nNUXT_SSL_KEY_PATH=${keyFilePath}`)
 	}
 }

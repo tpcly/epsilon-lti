@@ -1,5 +1,5 @@
 <template>
-	<td :style="{ backgroundColor: getColor() }"></td>
+	<td :style="{ backgroundColor: getColor() }" />
 </template>
 <script setup lang="ts">
 import { defineProps } from "vue/dist/vue"
@@ -31,6 +31,6 @@ function getColor(): string {
 
 <style scoped lang="scss">
 td {
-	border: lightgray 0.5px solid;
+	border: #bfbebb 0.5px solid;
 }
 </style>

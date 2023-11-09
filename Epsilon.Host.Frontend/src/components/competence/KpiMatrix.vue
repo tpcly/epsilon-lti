@@ -3,7 +3,7 @@
 	<table>
 		<thead>
 			<tr>
-				<th></th>
+				<th />
 				<th
 					v-for="submission of store.state.filterdSubmissions"
 					:key="submission.assignment">
@@ -28,7 +28,7 @@
 					"
 					:criteria="
 						submission.criteria?.find((c) => c?.id == outcome)
-					"></KpiMatrixCell>
+					" />
 			</tr>
 		</tbody>
 	</table>
@@ -36,7 +36,7 @@
 <script lang="ts" setup>
 import { computed } from "vue"
 import { useStore } from "vuex"
-import KpiMatrixCell from "@/components/Competence/KpiMatrixCell.vue"
+import KpiMatrixCell from "~/components/competence/KpiMatrixCell.vue"
 
 const store = useStore()
 
@@ -48,7 +48,7 @@ const allOutcomes = computed(() =>
 </script>
 <style lang="scss" scoped>
 tr {
-	border: 3px lightgray solid;
+	border: 3px #bfbebb solid;
 }
 
 tr td,
@@ -57,7 +57,7 @@ tr th {
 }
 
 td div {
-	border-bottom: 1px lightgray solid;
+	border-bottom: 1px #bfbebb solid;
 	width: 100%;
 }
 

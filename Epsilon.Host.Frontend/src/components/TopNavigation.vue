@@ -1,21 +1,26 @@
 <template>
-	<div class="header">
-		<img alt="logo" class="header-logo" src="../assets/logo.png" />
+	<div class="top-navigation">
+		<img alt="logo" class="top-navigation-logo" src="../assets/logo.png" />
 		<Row>
-			<Col :cols="9">
-				<!--TODO Component is used to selected users for upcoming feature-->
-				<!--                <div class="d-flex">-->
-				<!--                    <SearchBox-->
-				<!--                        v-model="store.state.currentUser"-->
-				<!--                        :items="store.state.users"-->
-				<!--                        :limit="5"-->
-				<!--                        placeholder="Student" />-->
-				<!--                </div>-->
+			<Col :cols="6">
+				<SearchBox
+					v-model="selectedUser"
+					:items="users"
+					:limit="5"
+					placeholder="Student" />
+			</Col>
+			<Col :cols="3">
+				<TermDateFilter
+					:from-date="fromDate"
+					:to-date="toDate"
+					placeholder="Term"
+					@update:from-date="fromDate = $event"
+					@update:to-date="toDate = $event" />
 			</Col>
 			<Col :cols="3">
 				<SearchBox
 					v-model="selectedTerm"
-					:items="store.state.userTerms"
+					:items="terms"
 					:limit="10"
 					placeholder="Term" />
 			</Col>
@@ -24,55 +29,76 @@
 </template>
 
 <script lang="ts" setup>
-import SearchBox from "@/components/SearchBox.vue"
-import Row from "@/components/LayoutRow.vue"
-import Col from "@/components/LayoutCol.vue"
+import SearchBox from "~/components/SearchBox.vue"
+import TermDateFilter from "@/components/TermDateFilter.vue"
+import Row from "~/components/LayoutRow.vue"
+import Col from "~/components/LayoutCol.vue"
+import { type EnrollmentTerm, type User } from "~/api.generated"
+import { ref } from "vue"
 
-import { inject, ref, Ref, watch } from "vue"
-import { Api, EnrollmentTerm, HttpResponse } from "@/api.generated"
-import { useStore } from "vuex"
+const emit = defineEmits(["userChange", "rangeChange"])
+const api = useApi()
 
-const api = inject<Api<unknown>>("api")
-const store = useStore()
-const selectedTerm: Ref<EnrollmentTerm | undefined> = ref(undefined)
+const users = ref<User[]>([])
+const terms = ref<EnrollmentTerm[]>([])
+const selectedUser = ref<User | null>(null)
+const selectedTerm = ref<EnrollmentTerm | null>(null)
 
-watch(selectedTerm, () => {
-	store.commit("setCurrentTerm", selectedTerm.value)
-	store.commit("filterSubmissions")
+const fromDate = ref<Date | null>(null)
+const toDate = ref<Date | null>(null)
+
+onMounted(async () => {
+	const response = await api.filter.accessibleStudentsList()
+
+	users.value = response.data
+	selectedUser.value = users.value[0]
 })
 
-watch(store.state.currentUser, () => {
-	if (!store.state.currentUser?._id) {
+// When the user is updated, we should request its terms
+watch(selectedUser, async () => {
+	if (!selectedUser?.value?._id) {
 		return
 	}
 
-	// Reset current term list
-	store.commit("setUserTerms", [])
+	emit("userChange", selectedUser.value)
 
-	api?.filter
-		.participatedTermsList({
-			studentId: store.state.currentUser?._id,
-		})
-		.then((r: HttpResponse<EnrollmentTerm[]>) => {
-			store.commit("setUserTerms", r.data)
-			selectedTerm.value = store.state.currentTerm
-			store.commit("setCurrentTerm", store.state.userTerms[0])
-		})
+	terms.value = []
+
+	const response = await api.filter.participatedTermsList({
+		studentId: selectedUser.value._id,
+	})
+
+	terms.value = response.data
+	selectedTerm.value = terms.value[0]
 })
 
-api?.filter
-	.participatedTermsList({
-		studentId: import.meta.env.VITE_USER_ID,
+watch(selectedTerm, () => {
+	const selectedTermUnwrapped = selectedTerm.value
+	if (!selectedTermUnwrapped?.start_at || !selectedTermUnwrapped.end_at) {
+		return
+	}
+
+	const termsUnwrapped = terms.value
+
+	fromDate.value = new Date(
+		termsUnwrapped[termsUnwrapped.length - 1]?.start_at!
+	)
+
+	toDate.value = new Date(selectedTermUnwrapped?.end_at)
+})
+
+watch([fromDate, toDate], () => {
+	console.log(fromDate.value, toDate.value)
+
+	emit("rangeChange", {
+		start: fromDate.value,
+		end: toDate.value,
 	})
-	.then((r: HttpResponse<EnrollmentTerm[]>) => {
-		store.commit("setUserTerms", r.data)
-		store.commit("setCurrentTerm", store.state.userTerms[0])
-		selectedTerm.value = store.state.currentTerm
-	})
+})
 </script>
 
 <style lang="scss" scoped>
-.header {
+.top-navigation {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;

@@ -1,4 +1,5 @@
 using Epsilon.Abstractions.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tpcly.Canvas.Abstractions.GraphQl;
 using Tpcly.Canvas.Abstractions.Rest;
@@ -6,6 +7,7 @@ using Tpcly.Canvas.Abstractions.Rest;
 namespace Epsilon.Host.WebApi.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class FilterController : Controller
 {
