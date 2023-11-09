@@ -37,13 +37,13 @@ public class FilterService : IFilterService
         }
     ";
 
-    private readonly CanvasUserSession _canvasUser;
+    private readonly ICanvasUserSessionAccessor _sessionAccessor;
     private readonly ICanvasGraphQlApi _canvasGraphQl;
     private readonly ICanvasRestApi _canvasRest;
 
-    public FilterService(CanvasUserSession canvasUser, ICanvasGraphQlApi canvasGraphQl, ICanvasRestApi canvasRest)
+    public FilterService(ICanvasUserSessionAccessor sessionAccessor, ICanvasGraphQlApi canvasGraphQl, ICanvasRestApi canvasRest)
     {
-        _canvasUser = canvasUser;
+        _sessionAccessor = sessionAccessor;
         _canvasGraphQl = canvasGraphQl;
         _canvasRest = canvasRest;
     }
@@ -84,10 +84,11 @@ public class FilterService : IFilterService
     public async Task<IEnumerable<User>> GetAccessibleStudents()
     {
         var response = await _canvasGraphQl.Query(AccessibleEnrollmentsQuery);
+        var canvasUser = await _sessionAccessor.GetSessionAsync();
 
         return response?.Courses!
                        .Where(c => c.Enrollments != null && c.Enrollments.Nodes.Any(e =>
-                               e.User.LegacyId == _canvasUser.UserId.ToString(CultureInfo.InvariantCulture)
+                               e.User.LegacyId == canvasUser.UserId.ToString(CultureInfo.InvariantCulture)
                                && e.Type == "TeacherEnrollment"
                            )
                        )

@@ -1,4 +1,4 @@
-﻿.gitignore
+.gitignore
 api.generated.ts
 pnpm-lock.yaml
 node_modules/

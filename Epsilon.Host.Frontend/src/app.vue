@@ -1,8 +1,7 @@
 <template>
-	<router-view />
+	<NuxtPage />
 </template>
 
-<script setup lang="ts"></script>
 <style lang="scss">
 @import "assets/styles/resets";
 @import "assets/styles/main";

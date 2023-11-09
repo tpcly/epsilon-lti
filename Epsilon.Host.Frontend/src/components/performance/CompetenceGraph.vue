@@ -1,22 +1,30 @@
 <template>
-	<ApexChart
-		:options="chartOptions"
-		:series="series"
-		height="300"
-		type="bar"
-		class="competence-graph"
-		width="520" />
+	<ClientOnly>
+		<ApexChart
+			:options="chartOptions"
+			:series="series"
+			height="300"
+			type="bar"
+			class="competence-graph"
+			width="520" />
+	</ClientOnly>
 </template>
 
 <script lang="ts" setup>
 import ApexChart from "vue3-apexcharts"
 import {
-	DecayingAverageLogic,
-	DecayingAveragePerLayer,
-} from "@/DecayingAverageLogic"
-import store from "@/store"
-import { computed, onMounted } from "vue"
-import { LearningDomain, LearningDomainSubmission } from "@/api.generated"
+	type DecayingAveragePerLayer,
+	calculateAverageTaskOutcomes,
+} from "~/utils/decaying-average"
+import {
+	type LearningDomain,
+	type LearningDomainSubmission,
+} from "~/api.generated"
+
+const props = defineProps<{
+	domain: LearningDomain
+	submissions: LearningDomainSubmission[]
+}>()
 
 const chartOptions = {
 	annotations: {
@@ -83,8 +91,8 @@ const chartOptions = {
 }
 
 onMounted(() => {
-	const columnTypes = store.state.domain?.columnsSet?.types
-	if (columnTypes != null) {
+	const columnTypes = props.domain?.columnsSet?.types
+	if (columnTypes != undefined) {
 		columnTypes.forEach((s) => {
 			chartOptions.xaxis.categories.push(s.name as never)
 		})
@@ -98,25 +106,25 @@ onMounted(() => {
  * an array with objects for each row: The name of the row, Corresponding color and an array with scores.
  */
 const series = computed(() => {
-	return DecayingAverageLogic.getAverageTaskOutcomeScores(
-		store.state.filterdSubmissions as LearningDomainSubmission[],
-		store.state.domain as LearningDomain
-	).map((layer: DecayingAveragePerLayer) => {
-		const row = store.state.domain?.rowsSet?.types.find(
-			(l) => l.id === layer.architectureLayer
-		)
-		return {
-			name: row?.name as string,
-			color: "#" + row?.hexColor,
-			data: layer.layerActivities.map((column) =>
-				column.decayingAverage.toFixed(3)
-			),
+	return calculateAverageTaskOutcomes(props.submissions, props.domain).map(
+		(layer: DecayingAveragePerLayer) => {
+			const row = props.domain?.rowsSet?.types.find(
+				(l) => l.id === layer.architectureLayer
+			)
+
+			return {
+				name: row?.name,
+				color: "#" + row?.hexColor,
+				data: layer.layerActivities.map((column) =>
+					column.decayingAverage.toFixed(3)
+				),
+			}
 		}
-	})
+	)
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .competence-graph {
 	margin-left: 265px;
 }

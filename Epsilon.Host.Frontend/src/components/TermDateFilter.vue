@@ -1,122 +1,125 @@
 <template>
-	<button class="refresh-button" @click="resetDates">↻</button>
-	<div ref="dateRangeMenu" class="date-range-menu">
-		<button @click="toggleMenu">Date range</button>
-		<div class="menu-content" :class="{ 'menu-visible': menuVisible }">
-			<div class="date-range-filter">
-				<div class="date-input">
-					<label for="startDate">Start date:</label>
-					<input id="startDate" v-model="startDate" type="date" />
-				</div>
-				<div class="date-input">
-					<label for="endDate">End date:</label>
-					<input id="endDate" v-model="endDate" type="date" />
-				</div>
+	<div class="term-date-filter">
+		<div class="term-date-filter-refresh">↻</div>
+		<div @click="toggleMenu">Date range</div>
+		<div class="term-date-filter-menu" :class="{ open: open }">
+			<div class="date-input">
+				<label for="from-date">Start date</label>
+				<input
+					id="from-date"
+					type="date"
+					:value="formatDate(fromDate)"
+					@change="updateFromDate" />
+			</div>
+			<div class="date-input">
+				<label for="to-date">End date</label>
+				<input
+					id="to-date"
+					type="date"
+					:value="formatDate(toDate)"
+					@change="updateToDate" />
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, watch } from "vue"
-import { EnrollmentTerm } from "@/api.generated"
+import { ref, defineProps } from "vue"
 
-const props = defineProps<{
-	currentTerm: EnrollmentTerm | undefined
+defineProps<{
+	fromDate: Date | null
+	toDate: Date | null
 }>()
 
-const startDate = ref<string | undefined>(undefined)
-const endDate = ref<string | undefined>(undefined)
-const menuVisible = ref(false)
+const open = ref(false)
+const emit = defineEmits(["update:fromDate", "update:toDate"])
 
-watch(
-	() => props.currentTerm,
-	(selection) => {
-		if (!selection?.start_at || !selection.end_at) {
-			return
-		}
-
-		startDate.value = selection.start_at.split("T")[0].replace(/\//g, "-")
-		endDate.value = selection.end_at.split("T")[0].replace(/\//g, "-")
-	}
-)
-
-const resetDates = (): void => {
-	if (!props.currentTerm?.start_at || !props.currentTerm.end_at) {
-		return
+const formatDate = (date: Date | null): string => {
+	if (!date) {
+		return ""
 	}
 
-	startDate.value = props.currentTerm.start_at
-		.split("T")[0]
-		.replace(/\//g, "-")
-	endDate.value = props.currentTerm.end_at.split("T")[0].replace(/\//g, "-")
+	return date.toISOString().substring(0, 10)
 }
 
+const updateFromDate = (event: Event): void => {
+	console.log(new Date(event.target.value))
+	emit("update:fromDate", new Date(event.target.value))
+}
+
+const updateToDate = (event: Event): void => {
+	emit("update:toDate", new Date(event.target.value))
+}
+
+// const updateDates = (term: EnrollmentTerm | null): void => {
+// 	if (!term) {
+// 		return
+// 	}
+//
+// 	fromDate.value = new Date(term.start_at!).toISOString().substring(0, 10)
+// 	toDate.value = new Date(term.end_at!).toISOString().substring(0, 10)
+// }
+//
+// const handleDateChange = (): void => {
+// 	emit("rangeChange", {
+// 		start: Date.parse(fromDate.value!),
+// 		end: Date.parse(toDate.value!),
+// 	})
+// }
+
 const toggleMenu = (): void => {
-	menuVisible.value = !menuVisible.value
+	open.value = !open.value
 }
 </script>
 
-<style scoped>
-.date-range-menu {
+<style lang="scss" scoped>
+.term-date-filter {
 	position: relative;
-	display: inline-block;
-}
-
-.menu-content {
-	position: absolute;
-	top: 100%;
-	left: 0;
-	display: none;
-	background-color: #fff;
-	padding: 0.75rem;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-	border-radius: 6px;
-	border: 1px solid #d8d8d8;
-}
-
-.menu-visible {
-	display: block;
-}
-
-.date-range-menu button {
-	border: none;
-	cursor: pointer;
-	height: 45px;
+	width: 100%;
 	background-color: #fff;
 	border-radius: 7px;
-	font-family: inherit;
-	font-size: 1rem;
-	font-weight: 400;
-	width: 135%;
-	vertical-align: middle;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	padding: 0 1rem;
+
+	&-menu {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		width: 100%;
+		display: none;
+		background-color: #fff;
+		padding: 0.75rem;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		border-radius: 6px;
+		border: 1px solid #d8d8d8;
+
+		&.open {
+			display: block;
+		}
+	}
+
+	&-refresh {
+		font-size: 1.3rem;
+		margin-right: 0.5rem;
+		cursor: pointer;
+	}
 }
 
 .date-input {
 	margin-bottom: 10px;
-}
 
-.date-input label {
-	display: block;
-	margin-bottom: 5px;
-}
+	label {
+		display: block;
+		margin-bottom: 5px;
+	}
 
-.date-input input[type="date"] {
-	font-family: inherit;
-	font-size: 1rem;
-	font-weight: 400;
-}
-
-.refresh-button {
-	border: none;
-	font-family: inherit;
-	font-size: 1.3rem;
-	font-weight: 400;
-	border-radius: 7px;
-	height: 45px;
-	background-color: #fff;
-	margin-right: 5px;
-	vertical-align: middle;
-	cursor: pointer;
+	input {
+		font-family: inherit;
+		font-size: 1rem;
+		font-weight: 400;
+		border: none;
+	}
 }
 </style>
