@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   apexcharts:
     specifier: ^3.44.0
@@ -8,8 +12,8 @@ dependencies:
     specifier: ^3.8.0
     version: 3.8.0(@types/node@18.18.4)(eslint@8.50.0)(sass@1.69.5)(typescript@5.2.2)(vite@4.5.0)
   posthog-js:
-    specifier: ^1.87.3
-    version: 1.87.3
+    specifier: ^1.88.4
+    version: 1.88.4
   vue:
     specifier: ^3.3.8
     version: 3.3.8(typescript@5.2.2)
@@ -1390,6 +1394,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     bundledDependencies:
       - napi-wasm
 
@@ -3459,6 +3464,7 @@ packages:
   /iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dependencies:
       safer-buffer: 2.1.2
     optional: true
@@ -4033,6 +4039,9 @@ packages:
     resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
     engines: {node: ^14 || ^16 || >=18}
     hasBin: true
+
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
 
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
@@ -4909,8 +4918,8 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /posthog-js@1.87.3:
-    resolution: {integrity: sha512-aHs7owrIgptnsTZjlPAJG0HRBLIHlThsCGhET0PaYKdcmg2g90pqIRv1Y9hiemEtATXDAHUmwbcCzx4AopaW7g==}
+  /posthog-js@1.88.4:
+    resolution: {integrity: sha512-ZKgC0q22Bv0WGsi/BJcamDIoBR3DPpF26kCq0eFxtV3gKDMpGIlhlODQCo28bSENziGVO4LSeGrUvo/6OsQ7xA==}
     dependencies:
       fflate: 0.4.8
     dev: false
@@ -5137,6 +5146,7 @@ packages:
 
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
+    requiresBuild: true
     optional: true
 
   /sass@1.69.5:
@@ -6217,7 +6227,3 @@ packages:
       archiver-utils: 4.0.1
       compress-commons: 5.0.1
       readable-stream: 3.6.2
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
