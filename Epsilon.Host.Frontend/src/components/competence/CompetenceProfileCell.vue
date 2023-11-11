@@ -30,7 +30,9 @@ const value = computed<LearningDomainType | null>(() => {
 <style scoped lang="scss">
 td {
 	text-align: center;
-
+	border-bottom: 2px solid RGB(218, 219, 223, 0.7);
+	border-right: 2px solid RGB(218, 219, 223, 0.7);
+	border-top: 2px solid RGB(218, 219, 223, 0.7);
 	&.border {
 		border: 1px solid #e6e6e6;
 	}
