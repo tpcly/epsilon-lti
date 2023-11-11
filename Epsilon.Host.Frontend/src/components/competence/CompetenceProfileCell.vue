@@ -17,7 +17,11 @@ const props = defineProps<{
 
 const value = computed<LearningDomainType | null>(() => {
 	const types = props.outcomes.map((outcome) => outcome.value)
-	types.sort((a, b) => (b.order ?? 0) - (a.order ?? 0))
+	types.sort(
+		(a, b) =>
+			((b.shortName as unknown as number) ?? 0) -
+			((a.shortName as unknown as number) ?? 0)
+	)
 
 	return types[0]
 })
