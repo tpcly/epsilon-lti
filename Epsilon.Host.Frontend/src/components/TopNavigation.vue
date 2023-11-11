@@ -88,8 +88,6 @@ watch(selectedTerm, () => {
 })
 
 watch([fromDate, toDate], () => {
-	console.log(fromDate.value, toDate.value)
-
 	emit("rangeChange", {
 		start: fromDate.value,
 		end: toDate.value,

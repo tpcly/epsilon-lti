@@ -3,9 +3,15 @@
 </template>
 
 <script lang="ts" setup>
-import { Posthog } from "~/utils/posthog.js"
+import { Posthog } from "~/utils/posthog"
 
-Posthog.init()
+if (
+	process.client &&
+	!window.location.host.includes("127.0.0.1") &&
+	!window.location.host.includes("localhost")
+) {
+	Posthog.init()
+}
 </script>
 <style lang="scss">
 @import "assets/styles/resets";

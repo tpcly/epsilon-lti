@@ -43,7 +43,6 @@ const formatDate = (date: Date | null): string => {
 }
 
 const updateFromDate = (event: Event): void => {
-	console.log(new Date(event.target.value))
 	emit("update:fromDate", new Date(event.target.value))
 }
 
