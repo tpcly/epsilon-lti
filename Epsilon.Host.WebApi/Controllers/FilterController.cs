@@ -25,7 +25,7 @@ public class FilterController : Controller
     }
     
     [HttpGet("accessible-students")]
-    public async Task<IEnumerable<User>> GetAccessibleStudents()
+    public async Task<IEnumerable<User>?> GetAccessibleStudents()
     {
         return await _filterService.GetAccessibleStudents();
     }

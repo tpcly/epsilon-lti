@@ -81,22 +81,27 @@ public class FilterService : IFilterService
 
     
     // TODO: Has some issues due to the fact that it does not know whether the selected student has submissions or not
-    public async Task<IEnumerable<User>> GetAccessibleStudents()
+    public async Task<IEnumerable<User>?> GetAccessibleStudents()
     {
         var response = await _canvasGraphQl.Query(AccessibleEnrollmentsQuery);
         var canvasUser = await _sessionAccessor.GetSessionAsync();
 
-        return response?.Courses!
-                       .Where(c => c.Enrollments != null && c.Enrollments.Nodes.Any(e =>
-                               e.User.LegacyId == canvasUser.UserId.ToString(CultureInfo.InvariantCulture)
-                               && e.Type == "TeacherEnrollment"
+        if (canvasUser?.IsTeacher ?? false)
+        {
+            return response?.Courses!
+                           .Where(c => c.Enrollments != null && c.Enrollments.Nodes.Any(e =>
+                                   e.User.LegacyId == canvasUser.UserId.ToString(CultureInfo.InvariantCulture)
+                                   && e.Type == "TeacherEnrollment"
+                               )
                            )
-                       )
-                       .SelectMany(static c =>
-                           c.Enrollments!.Nodes.Where(static e => e.Type == "StudentEnrollment")
-                            .Select(static s => s.User)
-                       )
-                       .Distinct()
-               ?? Array.Empty<User>();
+                           .SelectMany(static c =>
+                               c.Enrollments!.Nodes.Where(static e => e.Type == "StudentEnrollment")
+                                .Select(static s => s.User)
+                           )
+                           .Distinct()
+                   ?? Array.Empty<User>();
+        }
+
+        return null;
     }
 }
