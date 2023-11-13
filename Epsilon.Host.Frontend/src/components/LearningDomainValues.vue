@@ -11,12 +11,18 @@
 				{{ type.name }}
 			</th>
 		</tr>
+		<tr class="masteryLegend mastery-line-legend">
+			<td
+				class="masteryLegend-icon"
+				:style="{ backgroundColor: masteryLineColor }" />
+			<th class="masteryLegend-text">Mastery</th>
+		</tr>
 	</table>
 </template>
 
 <script lang="ts" setup>
 import { type LearningDomain } from "~/api.generated"
-
+const masteryLineColor = "red"
 const props = defineProps<{
 	domain: LearningDomain
 }>()
@@ -51,5 +57,20 @@ const types = computed(() => {
 			width: 3rem;
 		}
 	}
+}
+.masteryLegend {
+	display: flex;
+	align-items: center;
+	margin-top: 10px;
+}
+.masteryLegend-text {
+	margin-left: 51px;
+	font-weight: 400;
+}
+.masteryLegend-icon {
+	width: 45px;
+	height: 2px;
+	margin-left: 8px;
+	background-color: red;
 }
 </style>

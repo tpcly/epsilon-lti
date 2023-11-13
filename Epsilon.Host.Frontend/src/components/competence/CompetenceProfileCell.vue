@@ -17,7 +17,11 @@ const props = defineProps<{
 
 const value = computed<LearningDomainType | null>(() => {
 	const types = props.outcomes.map((outcome) => outcome.value)
-	types.sort((a, b) => (b.order ?? 0) - (a.order ?? 0))
+	types.sort(
+		(a, b) =>
+			((b.shortName as unknown as number) ?? 0) -
+			((a.shortName as unknown as number) ?? 0)
+	)
 
 	return types[0]
 })
@@ -26,7 +30,9 @@ const value = computed<LearningDomainType | null>(() => {
 <style scoped lang="scss">
 td {
 	text-align: center;
-
+	border-bottom: 2px solid RGB(218, 219, 223, 0.7);
+	border-right: 2px solid RGB(218, 219, 223, 0.7);
+	border-top: 2px solid RGB(218, 219, 223, 0.7);
 	&.border {
 		border: 1px solid #e6e6e6;
 	}
