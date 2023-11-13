@@ -5,17 +5,19 @@
 				<th></th>
 				<th
 					v-for="submission of store.state.filterdSubmissions"
-					:key="submission.assignment">
+					:key="submission.assignment"
+					class="kpi-matrix-header-assignment">
 					{{ submission.assignment }}
 				</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr
-				v-for="outcome of allOutcomes.sort() as string[]"
-				:key="outcome">
-				<th :key="outcome">
-					{{ store.state.outcomes.find((o) => o.id == outcome).name }}
+				v-for="outcome of allOutcomes.sort()" :key="outcome">
+				<th :key="outcome" class="kpi-matrix-header-outcome">
+					<div>
+						{{ store.state.outcomes.find((o) => o.id == outcome).name }}
+					</div>
 				</th>
 				<KpiMatrixCell
 					v-for="submission of store.state.filterdSubmissions"
@@ -25,9 +27,8 @@
 							(r) => r?.outcome?.id == outcome
 						)
 					"
-					:criteria="
-						submission.criteria?.find((c) => c?.id == outcome)
-					"></KpiMatrixCell>
+					:criteria="submission.criteria?.find((c) => c?.id == outcome)">
+				</KpiMatrixCell>
 			</tr>
 		</tbody>
 	</table>
@@ -47,33 +48,36 @@ const allOutcomes = computed(() =>
 </script>
 
 <style lang="scss" scoped>
-template {
-	display: flex;
-	flex-direction: column;
-}
-
 .kpi-matrix {
-	margin-top: 3%;
 	display: block;
 	max-width: -webkit-fill-available;
 	overflow: auto;
-	margin-bottom: 3em;
-}
-tr {
-	border: 2px solid RGB(218, 219, 223, 0.7);
-}
 
-tr td,
-tr th {
-	padding: 10px;
-}
+	tr:last-of-type .kpi-matrix-header-assignment {
+		border-bottom: 2px solid RGB(218, 219, 223, 0.7);
+	}
 
-td div {
-	border-bottom: 2px solid RGB(218, 219, 223, 0.7);
-	width: 100%;
-}
+	&-header {
+		padding: .5rem;
+		font-weight: 400;
+		font-size: 0.9rem;
 
-thead th {
-	writing-mode: vertical-lr;
+		&-assignment {
+			border-bottom: 2px solid RGB(218, 219, 223, 0.7);
+			border-right: 2px solid RGB(218, 219, 223, 0.7);
+			border-left: 2px solid RGB(218, 219, 223, 0.7);
+			writing-mode: vertical-rl;
+			transform: rotate(180deg);
+			padding: 10px;
+		}
+
+		&-outcome {
+			border: 2px solid RGB(218, 219, 223, 0.7);
+			border-bottom: none;
+			border-left: none;
+			display: flex;
+			padding: 10px;
+		}
+	}
 }
 </style>

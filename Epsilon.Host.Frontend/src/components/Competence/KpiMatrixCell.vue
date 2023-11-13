@@ -31,6 +31,9 @@ function getColor(): string {
 
 <style scoped lang="scss">
 td {
-	border: #bfbebb 0.5px solid;
+	text-align: center;
+	border-bottom: 2px solid RGB(218, 219, 223, 0.7);
+	border-right: 2px solid RGB(218, 219, 223, 0.7);
+	border-top: 2px solid RGB(218, 219, 223, 0.7);
 }
 </style>
