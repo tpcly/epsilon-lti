@@ -41,8 +41,8 @@ devDependencies:
     specifier: ^3.8.1
     version: 3.8.1
   '@types/jsonwebtoken':
-    specifier: ^9.0.3
-    version: 9.0.3
+    specifier: ^9.0.5
+    version: 9.0.5
   '@types/lodash':
     specifier: ^4.14.199
     version: 4.14.199
@@ -1677,18 +1677,14 @@ packages:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
     dev: true
 
-  /@types/jsonwebtoken@9.0.3:
-    resolution: {integrity: sha512-b0jGiOgHtZ2jqdPgPnP6WLCXZk1T8p06A/vPGzUvxpFGgKMbjXJDjC5m52ErqBnIuWZFgGoIJyRdeG5AyreJjA==}
+  /@types/jsonwebtoken@9.0.5:
+    resolution: {integrity: sha512-VRLSGzik+Unrup6BsouBeHsf4d1hOEgYWTm/7Nmw1sXoN1+tRly/Gy/po3yeahnP4jfnQWWAhQAqcNfH7ngOkA==}
     dependencies:
-      '@types/node': 18.18.4
+      '@types/node': 20.9.0
     dev: true
 
   /@types/lodash@4.14.199:
     resolution: {integrity: sha512-Vrjz5N5Ia4SEzWWgIVwnHNEnb1UE1XMkvY5DGXrAeOGE9imk0hgTHh5GyDjLDJi9OTCn9oo9dXH1uToK1VRfrg==}
-    dev: true
-
-  /@types/node@18.18.4:
-    resolution: {integrity: sha512-t3rNFBgJRugIhackit2mVcLfF6IRc0JE4oeizPQL8Zrm8n2WY/0wOdpOPhdtG0V9Q2TlW/axbF1MJ6z+Yj/kKQ==}
     dev: true
 
   /@types/node@20.9.0:
