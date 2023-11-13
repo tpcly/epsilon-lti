@@ -28,7 +28,7 @@ public class FilterService : IFilterService
                 _id
                 user {
                   _id
-                  email
+                  name
                 }
                 type
               }
@@ -85,9 +85,9 @@ public class FilterService : IFilterService
     public async Task<IEnumerable<User>?> GetAccessibleStudents()
     {
         var canvasUser = await _sessionAccessor.GetSessionAsync();
-        var variables = new Dictionary<string, object> { { "courseId", canvasUser?.CourseId ?? throw new HttpRequestException()}, };
+        var variables = new Dictionary<string, object> { { "courseId", canvasUser?.CourseId ?? throw new HttpRequestException() }, };
         var response = await _canvasGraphQl.Query(AccessibleEnrollmentsQuery, variables);
-        
+
 
         if (canvasUser?.IsTeacher ?? false)
         {
