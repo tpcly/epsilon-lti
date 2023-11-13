@@ -69,7 +69,7 @@ const outcomes = (
 
 	tr:last-of-type .competence-profile-header-row,
 	tr:last-of-type .competence-profile-data {
-		border-bottom: 1px solid #e0e0e0;
+		border-bottom: 2px solid RGB(218, 219, 223, 0.7);
 	}
 
 	&-header {
@@ -78,15 +78,20 @@ const outcomes = (
 		font-size: 0.9rem;
 
 		&-col {
-			border: 1px solid #e0e0e0;
+			border: 2px solid RGB(218, 219, 223, 0.7);
 			border-top: transparent;
 			width: 6rem;
 		}
 
 		&-row {
-			border: 1px none #e0e0e0;
-			border-top-style: solid;
+			border: 2px solid RGB(218, 219, 223, 0.7);
+			border-bottom-style: none;
+			border-left-style: none;
 			display: flex;
+		}
+
+		&-row:first-child {
+			border-right: 2px solid RGB(218, 219, 223, 0.7);
 		}
 
 		&-color {

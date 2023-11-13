@@ -44,13 +44,13 @@ const series = computed(() => [
 					(s: LearningDomainType) => s.id == d.skill
 				)!.name,
 				fillColor:
-					"#" + getValueType(d.masteryLevel!.toString())?.hexColor,
+					"#" + getValueType(d.masteryLevel?.toString())?.hexColor,
 			}
 		}),
 	},
 ])
 
-const getValueType = (id: string): LearningDomainType =>
+const getValueType = (id: string | undefined): LearningDomainType =>
 	props.domain.valuesSet.types.find(
 		(masteryLevel: LearningDomainType) => masteryLevel.shortName == id
 	)!
