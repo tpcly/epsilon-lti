@@ -25,8 +25,6 @@ public class AuthorizationUser: IAuthorizationUser
         {
             return acceptedStudentList?.Any(u => u.LegacyId == userId) ?? false;
         }
-        return true
-
-        ;
+        return true;
     }
 }

@@ -88,14 +88,15 @@ public class FilterService : IFilterService
         var variables = new Dictionary<string, object> { { "courseId", canvasUser?.CourseId ?? throw new HttpRequestException() }, };
         var response = await _canvasGraphQl.Query(AccessibleEnrollmentsQuery, variables);
 
+        return response?.Course?.Enrollments?.Nodes.Where(er =>
+            {
+                if (canvasUser?.IsTeacher ?? false)
+                {
+                    return er.Type == "StudentEnrollment";
+                }
 
-        if (canvasUser?.IsTeacher ?? false)
-        {
-            return response?.Course?.Enrollments?.Nodes.Where(static er =>
-                er.Type == "StudentEnrollment"
-            ).Select(static er => er.User) ?? Array.Empty<User>();
-        }
-
-        return null;
+                return er.User.LegacyId == canvasUser?.UserId.ToString(CultureInfo.InvariantCulture) && er.Type == "StudentEnrollment";
+            }
+        ).Select(static er => er.User) ?? Array.Empty<User>();
     }
 }
