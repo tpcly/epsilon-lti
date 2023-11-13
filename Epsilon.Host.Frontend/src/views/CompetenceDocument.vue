@@ -1,8 +1,12 @@
 <template>
 	<div v-if="store.state.filterdSubmissions" class="competence-document">
 		<KpiTable></KpiTable>
+		<div></div>
+		<div></div>
 		<CompetenceProfile
 			:submissions="store.state.filterdSubmissions"></CompetenceProfile>
+		<div></div>
+		<div></div>
 		<KpiMatrix></KpiMatrix>
 	</div>
 </template>
@@ -21,10 +25,9 @@ import CompetenceProfile from "@/components/Competence/CompetenceProfile.vue"
 
 @media screen and (min-width: 580px) {
 	.competence-document {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-items: center;
+		display: grid;
+		grid-template-columns: 1fr 5fr 1fr;
+		gap: 2rem 0;
 		justify-content: space-between;
 	}
 }

@@ -68,12 +68,10 @@ template {
 
 .kpi-table {
 	display: block;
-	width: 580px;
-	height: 500px;
 	overflow: auto;
 }
 tr {
-	border: 3px lightgray solid;
+	border: 2px solid RGB(218, 219, 223, 0.7);
 }
 
 tr td,
@@ -82,7 +80,7 @@ tr th {
 }
 
 td div {
-	border-bottom: 2px lightgray solid;
+	border-bottom: 2px solid RGB(218, 219, 223, 0.7);
 	width: 100%;
 }
 </style>

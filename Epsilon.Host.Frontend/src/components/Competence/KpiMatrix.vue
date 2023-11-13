@@ -55,11 +55,12 @@ template {
 .kpi-matrix {
 	margin-top: 3%;
 	display: block;
-	height: 800px;
+	max-width: -webkit-fill-available;
 	overflow: auto;
+	margin-bottom: 3em;
 }
 tr {
-	border: 3px #bfbebb solid;
+	border: 2px solid RGB(218, 219, 223, 0.7);
 }
 
 tr td,
@@ -68,7 +69,7 @@ tr th {
 }
 
 td div {
-	border-bottom: 1px #bfbebb solid;
+	border-bottom: 2px solid RGB(218, 219, 223, 0.7);
 	width: 100%;
 }
 
