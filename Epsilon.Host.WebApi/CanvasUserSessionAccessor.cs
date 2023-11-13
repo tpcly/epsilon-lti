@@ -38,7 +38,8 @@ public class CanvasUserSessionAccessor : ICanvasUserSessionAccessor
 
         return new CanvasUserSession(
             courseId,
-            userId
+            userId,
+            ltiMessage.Roles?.Contains("http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor") ?? false
         );
     }
 }

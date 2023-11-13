@@ -75,6 +75,7 @@ builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService
 builder.Services.AddScoped<IFilterService, FilterService>();
 builder.Services.AddScoped<ILearningDomainService, LearningDomainService>();
 builder.Services.AddScoped<ILearningOutcomeCanvasResultService, LearningOutcomeCanvasResultService>();
+builder.Services.AddScoped<IAuthorizationUser, AuthorizationUser>();
 
 // Add authentication
 builder.Services.AddSingleton<LtiSecurityTokenValidator>();
