@@ -83,8 +83,7 @@ function getFiltered(
 	border-collapse: collapse;
 	width: 750px;
 
-	tr:last-of-type .competence-profile-header-row,
-	tr:last-of-type .competence-profile-data {
+	tr:last-of-type .competence-profile-header-row {
 		border-bottom: 2px solid RGB(218, 219, 223, 0.7);
 	}
 

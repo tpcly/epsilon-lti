@@ -6,7 +6,7 @@
 				<th
 					v-for="submission of store.state.filterdSubmissions"
 					:key="submission.assignment"
-					class="kpi-matrix-header-assignment">
+					class="kpi-matrix-header kpi-matrix-header-assignment">
 					{{ submission.assignment }}
 				</th>
 			</tr>
@@ -14,7 +14,7 @@
 		<tbody>
 			<tr
 				v-for="outcome of allOutcomes.sort()" :key="outcome">
-				<th :key="outcome" class="kpi-matrix-header-outcome">
+				<th :key="outcome" class="kpi-matrix-header kpi-matrix-header-outcome">
 					<div>
 						{{ store.state.outcomes.find((o) => o.id == outcome).name }}
 					</div>
@@ -60,7 +60,6 @@ const allOutcomes = computed(() =>
 	&-header {
 		padding: .5rem;
 		font-weight: 400;
-		font-size: 0.9rem;
 
 		&-assignment {
 			border-bottom: 2px solid RGB(218, 219, 223, 0.7);
