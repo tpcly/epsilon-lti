@@ -21,33 +21,33 @@ public class FilterService : IFilterService
     ";
 
     private const string AccessibleEnrollmentsQuery = @"
-        query AccessibleEnrollments {
-          allCourses {
-            enrollmentsConnection(filter: {types: [TeacherEnrollment, StudentEnrollment]}) {
+        query AccessibleEnrollments($courseId: ID!) {
+          course(id: $courseId) {
+            enrollmentsConnection {
               nodes {
-                type
+                _id
                 user {
-                  name
-                  avatarUrl
                   _id
+                  name
                 }
+                type
               }
             }
           }
         }
     ";
 
-    private readonly CanvasUserSession _canvasUser;
+    private readonly ICanvasUserSessionAccessor _sessionAccessor;
     private readonly ICanvasGraphQlApi _canvasGraphQl;
     private readonly ICanvasRestApi _canvasRest;
 
-    public FilterService(CanvasUserSession canvasUser, ICanvasGraphQlApi canvasGraphQl, ICanvasRestApi canvasRest)
+    public FilterService(ICanvasUserSessionAccessor sessionAccessor, ICanvasGraphQlApi canvasGraphQl, ICanvasRestApi canvasRest)
     {
-        _canvasUser = canvasUser;
+        _sessionAccessor = sessionAccessor;
         _canvasGraphQl = canvasGraphQl;
         _canvasRest = canvasRest;
     }
-    
+
     public async Task<IEnumerable<EnrollmentTerm>> GetParticipatedTerms(string studentId)
     {
         var allTerms = await _canvasRest.Accounts.GetTerms(1);
@@ -59,43 +59,44 @@ public class FilterService : IFilterService
         {
             return Enumerable.Empty<EnrollmentTerm>();
         }
-        
+
         var submissions = response.Courses!.SelectMany(static c => c.Submissions!.Nodes);
 
         var participatedTerms = allTerms!
-            .Where(static term => term is { StartAt: not null, EndAt: not null, })
-            .Where(term => submissions.Any(submission => submission.SubmittedAt >= term.StartAt && submission.SubmittedAt <= term.EndAt))
-            .Distinct()
-            .OrderByDescending(static term => term.StartAt).ToList();
-        
+                                .Where(static term => term is { StartAt: not null, EndAt: not null, })
+                                .Where(term => submissions.Any(submission => submission.SubmittedAt >= term.StartAt && submission.SubmittedAt <= term.EndAt))
+                                .Distinct()
+                                .OrderByDescending(static term => term.StartAt).ToList();
+
         // Get the corrected term based on a new end date:
         var correctedParticipatedTerms = participatedTerms
-             .Select((currentTerm, index) => currentTerm with
-             {
-                 EndAt = index > 0 ? participatedTerms[index - 1].StartAt : currentTerm.EndAt,
-             })
-             .ToList();
-        
+                                         .Select((currentTerm, index) => currentTerm with
+                                         {
+                                             EndAt = index > 0
+                                                 ? participatedTerms[index - 1].StartAt
+                                                 : currentTerm.EndAt,
+                                         })
+                                         .ToList();
+
         return correctedParticipatedTerms;
     }
 
-    
-    // TODO: Has some issues due to the fact that it does not know whether the selected student has submissions or not
-    public async Task<IEnumerable<User>> GetAccessibleStudents()
-    {
-        var response = await _canvasGraphQl.Query(AccessibleEnrollmentsQuery);
 
-        return response?.Courses!
-                       .Where(c => c.Enrollments != null && c.Enrollments.Nodes.Any(e =>
-                               e.User.LegacyId == _canvasUser.UserId.ToString(CultureInfo.InvariantCulture)
-                               && e.Type == "TeacherEnrollment"
-                           )
-                       )
-                       .SelectMany(static c =>
-                           c.Enrollments!.Nodes.Where(static e => e.Type == "StudentEnrollment")
-                            .Select(static s => s.User)
-                       )
-                       .Distinct()
-               ?? Array.Empty<User>();
+    public async Task<IEnumerable<User>?> GetAccessibleStudents()
+    {
+        var canvasUser = await _sessionAccessor.GetSessionAsync();
+        var variables = new Dictionary<string, object> { { "courseId", canvasUser?.CourseId ?? throw new HttpRequestException() }, };
+        var response = await _canvasGraphQl.Query(AccessibleEnrollmentsQuery, variables);
+
+        return response?.Course?.Enrollments?.Nodes.Where(er =>
+            {
+                if (canvasUser?.IsTeacher ?? false)
+                {
+                    return er.Type == "StudentEnrollment";
+                }
+
+                return er.User.LegacyId == canvasUser?.UserId.ToString(CultureInfo.InvariantCulture) && er.Type == "StudentEnrollment";
+            }
+        ).Select(static er => er.User) ?? Array.Empty<User>();
     }
 }

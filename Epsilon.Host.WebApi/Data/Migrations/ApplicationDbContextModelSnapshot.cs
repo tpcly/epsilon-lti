@@ -16,7 +16,7 @@ namespace Epsilon.Host.WebApi.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.18")
+                .HasAnnotation("ProductVersion", "6.0.20")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Epsilon.Abstractions.LearningDomain", b =>
@@ -62,9 +62,11 @@ namespace Epsilon.Host.WebApi.Data.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("RowId")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("ValueId")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("Id", "TenantId");
@@ -90,6 +92,9 @@ namespace Epsilon.Host.WebApi.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
 
                     b.Property<string>("ShortName")
                         .IsRequired()
@@ -159,11 +164,15 @@ namespace Epsilon.Host.WebApi.Data.Migrations
 
                     b.HasOne("Epsilon.Abstractions.LearningDomainType", "Row")
                         .WithMany()
-                        .HasForeignKey("RowId");
+                        .HasForeignKey("RowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Epsilon.Abstractions.LearningDomainType", "Value")
                         .WithMany()
-                        .HasForeignKey("ValueId");
+                        .HasForeignKey("ValueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Column");
 

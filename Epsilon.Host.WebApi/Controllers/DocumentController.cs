@@ -1,11 +1,13 @@
 using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
 using Epsilon.Host.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Epsilon.Host.WebApi.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class DocumentController : ControllerBase
 {
@@ -40,7 +42,7 @@ public class DocumentController : ControllerBase
     {
         var document = await _competenceDocumentService.GetDocument(courseId, from, to);
 
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         _competenceDocumentService.WriteDocument(stream, document);
 
         return File(
