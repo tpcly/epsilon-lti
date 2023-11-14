@@ -9,5 +9,6 @@ namespace Epsilon.Abstractions;
 /// <param name="UserId">Canvas user id</param>
 public record CanvasUserSession(
     [Required] int CourseId,
-    [Required] int UserId
+    [Required] int UserId,
+    [Required] bool IsTeacher
 );

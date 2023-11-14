@@ -11,7 +11,7 @@
 		"setup-ssl": "node aspnetcore-https && node aspnetcore-nuxt",
 		"lint": "eslint --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore .",
 		"format-code": "prettier --check .",
-		"generate-api-schema": "NODE_TLS_REJECT_UNAUTHORIZED=0 pnpm dlx swagger-typescript-api -p https://localhost:7084/swagger/v1/swagger.json -o src/ -n api.generated.ts"
+		"generate-api-schema": "pnpm dlx swagger-typescript-api -p https://localhost:7084/swagger/v1/swagger.json -o src/ -n api.generated.ts"
 	},
 	"dependencies": {
 		"apexcharts": "^3.44.0",
@@ -19,7 +19,7 @@
 		"vue": "^3.3.8",
 		"vue-router": "^4.2.5",
 		"vue3-apexcharts": "^1.4.4",
-		"posthog-js": "^1.88.4"
+		"posthog-js": "^1.89.1"
 	},
 	"devDependencies": {
 		"@headlessui/vue": "1.7.16",
@@ -36,7 +36,7 @@
 		"h3": "^1.8.2",
 		"jwt-decode": "^4.0.0",
 		"lodash": "^4.17.21",
-		"prettier": "^3.0.3",
+		"prettier": "^3.1.0",
 		"sass": "^1.69.4"
 	}
 }
