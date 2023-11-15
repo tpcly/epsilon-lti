@@ -8,6 +8,7 @@
 		"dev": "nuxt dev",
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
+		"start": "node .output/server/index.mjs",
 		"setup-ssl": "node aspnetcore-https && node aspnetcore-nuxt",
 		"lint": "eslint --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore .",
 		"format-code": "prettier --check .",
