@@ -6,11 +6,8 @@ namespace Epsilon.UnitTest.Services.LearningDomainService;
 public class GetOutcomes
 {
     
-    private readonly Mock<ILearningDomainService> _learningDomainServiceMock;
-    public GetOutcomes()
-    {
-        _learningDomainServiceMock = new Mock<ILearningDomainService>();
-    }
+    private readonly Mock<ILearningDomainService> _learningDomainServiceMock = new Mock<ILearningDomainService>();
+
     [Fact]
     public void GetOutcomes_givenValidDataStructure_thenResultIsAValidDomainModel()
     {
