@@ -18,7 +18,9 @@
 					class="searchbox-options-item">
 					No results found
 				</div>
-
+				<li class="searchbox-options-item" @click="handleCustomClick">
+					Custom ﹥
+				</li>
 				<ComboboxOption
 					v-for="(item, id) in filteredItems"
 					:key="id"
@@ -37,10 +39,20 @@
 			</ComboboxOptions>
 		</Combobox>
 	</div>
+	<div v-if="customClick" class="custom-box">
+		<div class="date-input">
+			<label for="startDate">Start date:</label>
+			<input id="startDate" v-model="startDate" type="date" />
+		</div>
+		<div class="date-input">
+			<label for="endDate">End date:</label>
+			<input id="endDate" v-model="endDate" type="date" />
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>
-import { computed, defineProps, ref } from "vue"
+import { computed, defineProps, ref, watch } from "vue"
 import {
 	Combobox,
 	ComboboxButton,
@@ -49,15 +61,20 @@ import {
 	ComboboxOption,
 } from "@headlessui/vue"
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid"
+import { EnrollmentTerm } from "@/api.generated"
 
 const props = defineProps<{
 	items: Array<{ name?: string | null }> | null
 	modelValue: { name: string }
 	placeholder?: string
 	limit: number
+	currentTerm: EnrollmentTerm | undefined
 }>()
 
 const query = ref("")
+const customClick = ref(false)
+const startDate = ref<string | undefined>(undefined)
+const endDate = ref<string | undefined>(undefined)
 
 defineEmits(["update:modelValue"])
 
@@ -83,12 +100,28 @@ const filteredItems = computed(() => {
 		.slice(0, props.limit)
 })
 
+watch(
+	() => props.currentTerm,
+	(selection) => {
+		if (!selection?.start_at || !selection.end_at) {
+			return
+		}
+
+		startDate.value = selection.start_at.split("T")[0].replace(/\//g, "-")
+		endDate.value = selection.end_at.split("T")[0].replace(/\//g, "-")
+	}
+)
+
 function displayValue(item: { name: string }): string {
 	if (item) {
 		return item.name
 	}
 
 	return ""
+}
+
+function handleCustomClick(): void {
+	customClick.value = !customClick.value
 }
 </script>
 
@@ -98,7 +131,7 @@ function displayValue(item: { name: string }): string {
 	position: relative;
 	background-color: #fff;
 	border-radius: 7px;
-	width: 48%;
+	width: 52%;
 
 	&-input {
 		position: relative;
@@ -167,5 +200,15 @@ function displayValue(item: { name: string }): string {
 			max-height: 30px;
 		}
 	}
+}
+.custom-box {
+	position: fixed;
+	border: 1px solid #d8d8d8;
+	background-color: #fff;
+	border-radius: 7px;
+	padding: 10px;
+	width: 150px;
+	margin-top: 4px;
+	margin-left: 125px;
 }
 </style>
