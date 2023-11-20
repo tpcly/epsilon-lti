@@ -42,7 +42,7 @@
 	</div>
 	<div v-if="customClick" class="custom-box">
 		<div class="date-input">
-			<label for="startDate">Start date:</label>
+			<label id="dateLabel" for="startDate">Start date</label>
 			<input
 				id="startDate"
 				:value="startDate"
@@ -50,7 +50,7 @@
 				@input="updateStartDate" />
 		</div>
 		<div class="date-input">
-			<label for="endDate">End date:</label>
+			<label id="dateLabel" for="endDate">End date</label>
 			<input
 				id="endDate"
 				:value="endDate"
@@ -250,5 +250,18 @@ function handleCustomClick(): void {
 
 .custom-click-color {
 	background-color: #f2f3f8;
+}
+
+.date-input input[type="date"] {
+	font-family: inherit;
+	font-size: 0.9rem;
+	font-weight: 400;
+}
+
+#dateLabel {
+	color: #0f254a;
+}
+.date-input {
+	margin-bottom: 5px; /* Adjust the margin as needed */
 }
 </style>
