@@ -79,13 +79,13 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 submission.Assignment?.Name,
                 submission.Assignment?.HtmlUrl,
                 submission.SubmissionHistories?.Nodes.OrderBy(static h => h.Attempt).First().SubmittedAt ?? DateTime.Now,
-                GetSubmissionCriteria(submission),
+                GetSubmissionCriteria(submission, domainOutcomesTask),
                 GetOutcomeResults(submission, domainOutcomesTask)
             );
         }
     }
 
-    private static IEnumerable<LearningDomainCriteria> GetSubmissionCriteria(Submission? submission)
+    private static IEnumerable<LearningDomainCriteria> GetSubmissionCriteria(Submission? submission, Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask)
     {
         if (submission!.Assignment?.Rubric?.Criteria != null)
         {
@@ -93,10 +93,14 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
             {
                 if (criteria.Outcome != null)
                 {
-                    yield return new LearningDomainCriteria(
-                        criteria.Outcome.Id,
-                        criteria.Outcome.MasteryPoints
-                    );
+                    var existingDomainCriteria  = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == criteria.Outcome.Id) != null;
+                    if (existingDomainCriteria)
+                    {
+                        yield return new LearningDomainCriteria(
+                            criteria.Outcome.Id,
+                            criteria.Outcome.MasteryPoints
+                        );
+                    }
                 }
             }
         }
