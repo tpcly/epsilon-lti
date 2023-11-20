@@ -1,8 +1,6 @@
 <template>
 	<div class="searchbox">
-		<Combobox
-			:model-value="modelValue"
-			@update:model-value="$emit('update:modelValue', $event)">
+		<Combobox @update:model-value="$emit('update:modelValue', $event)">
 			<div class="searchbox-input">
 				<ComboboxInput
 					:display-value="displayValue"
@@ -18,7 +16,10 @@
 					class="searchbox-options-item">
 					No results found
 				</div>
-				<li class="searchbox-options-item" @click="handleCustomClick">
+				<li
+					class="searchbox-options-item"
+					:class="{ 'custom-click-color': customClick }"
+					@click="handleCustomClick">
 					Custom ﹥
 				</li>
 				<ComboboxOption
@@ -42,11 +43,19 @@
 	<div v-if="customClick" class="custom-box">
 		<div class="date-input">
 			<label for="startDate">Start date:</label>
-			<input id="startDate" v-model="startDate" type="date" />
+			<input
+				id="startDate"
+				:value="startDate"
+				type="date"
+				@input="updateStartDate" />
 		</div>
 		<div class="date-input">
 			<label for="endDate">End date:</label>
-			<input id="endDate" v-model="endDate" type="date" />
+			<input
+				id="endDate"
+				:value="endDate"
+				type="date"
+				@input="updateEndDate" />
 		</div>
 	</div>
 </template>
@@ -65,18 +74,19 @@ import { EnrollmentTerm } from "@/api.generated"
 
 const props = defineProps<{
 	items: Array<{ name?: string | null }> | null
-	modelValue: { name: string }
+	modelValue: EnrollmentTerm | undefined
 	placeholder?: string
 	limit: number
-	currentTerm: EnrollmentTerm | undefined
 }>()
 
 const query = ref("")
 const customClick = ref(false)
 const startDate = ref<string | undefined>(undefined)
 const endDate = ref<string | undefined>(undefined)
+const termName = ref<string | undefined>(undefined)
+let datesAdjusted = false
 
-defineEmits(["update:modelValue"])
+const emit = defineEmits(["update:modelValue"])
 
 const filteredItems = computed(() => {
 	if (props.items === null) {
@@ -100,21 +110,47 @@ const filteredItems = computed(() => {
 		.slice(0, props.limit)
 })
 
+const updateStartDate = (event: Event): void => {
+	const target = event.target as HTMLInputElement
+	startDate.value = target.value
+	emit("update:modelValue", {
+		...props.modelValue,
+		start_at: startDate.value,
+	})
+	datesAdjusted = true
+}
+
+const updateEndDate = (event: Event): void => {
+	const target = event.target as HTMLInputElement
+	endDate.value = target.value
+	emit("update:modelValue", {
+		...props.modelValue,
+		end_at: endDate.value,
+	})
+	datesAdjusted = true
+}
+
 watch(
-	() => props.currentTerm,
+	() => props.modelValue,
 	(selection) => {
 		if (!selection?.start_at || !selection.end_at) {
 			return
 		}
-
 		startDate.value = selection.start_at.split("T")[0].replace(/\//g, "-")
 		endDate.value = selection.end_at.split("T")[0].replace(/\//g, "-")
+		if (!customClick.value) {
+			termName.value = selection.name || undefined
+		}
+		datesAdjusted = false
 	}
 )
 
 function displayValue(item: { name: string }): string {
-	if (item) {
-		return item.name
+	if (datesAdjusted) {
+		termName.value = startDate.value + " - " + endDate.value
+	}
+	if (item && termName.value) {
+		return termName.value
 	}
 
 	return ""
@@ -210,5 +246,9 @@ function handleCustomClick(): void {
 	width: 150px;
 	margin-top: 4px;
 	margin-left: 125px;
+}
+
+.custom-click-color {
+	background-color: #f2f3f8;
 }
 </style>

@@ -13,11 +13,6 @@
 				<!--                </div>-->
 			</Col>
 		</Row>
-		<!--			<Col id="dateRangeCol" xs="12" sm="6" md="6" lg="6">-->
-		<!--				<TermDateFilter-->
-		<!--					:current-term="selectedTerm"-->
-		<!--					placeholder="Term" />-->
-		<!--			</Col>-->
 		<Col xs="12" sm="6" md="6" lg="6">
 			<SearchBox
 				v-model="selectedTerm"
