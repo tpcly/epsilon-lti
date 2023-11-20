@@ -198,7 +198,7 @@ function handleCustomClick(): void {
 		border: 1px solid #d8d8d8;
 		text-align: left;
 		z-index: 40;
-		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 
 		&-item {
 			padding: 1rem 1.5rem;
