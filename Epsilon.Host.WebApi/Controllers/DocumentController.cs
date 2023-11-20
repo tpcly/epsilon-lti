@@ -46,7 +46,7 @@ public class DocumentController : ControllerBase
         _competenceDocumentService.WriteDocument(stream, document);
 
         return File(
-            stream,
+            stream.ToArray(),
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "CompetenceDocument.docx"
         );

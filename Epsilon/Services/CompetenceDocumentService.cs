@@ -37,8 +37,6 @@ public class CompetenceDocumentService : ICompetenceDocumentService
 
     public void WriteDocument(Stream stream, CompetenceDocument document)
     {
-        var startPosition = stream.Position;
-
         using var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
         wordDocument.AddMainDocumentPart();
@@ -50,10 +48,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         }
 
         wordDocument.Save();
-        wordDocument.Close();
-
-        // Reset stream position to start position
-        stream.Position = startPosition;
+        wordDocument.Dispose();
     }
 
     private async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions)
