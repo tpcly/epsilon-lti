@@ -63,17 +63,15 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
     public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId)
     {
-        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
+        var submissionsTask = await _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
 
-        await Task.WhenAll(submissionsTask, domainOutcomesTask);
-
-        if (submissionsTask.Result?.Courses == null)
+        if (submissionsTask?.Courses == null)
         {
             throw new HttpRequestException("No Courses are given");
         }
         
-        foreach (var submission in submissionsTask.Result.Courses.Where(static c => c.Submissions != null).SelectMany(static c => c.Submissions!.Nodes))
+        foreach (var submission in submissionsTask.Courses.Where(static c => c.Submissions != null).SelectMany(static c => c.Submissions!.Nodes))
         {
             yield return new LearningDomainSubmission(
                 submission.Assignment?.Name,
@@ -107,7 +105,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
     }
 
 
-    private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
+    private static List<LearningDomainOutcomeRecord> GetOutcomeResults(
         Submission submission,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
@@ -130,19 +128,21 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                     }) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
 
 
-            if (rubricAssessments == null)
+            if (rubricAssessments != null)
+            {
+                foreach (var assessment in rubricAssessments)
+                {
+                    var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
+                    if (outcome != null)
+                    {
+                        outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
+                        outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
+                    }
+                }
+            }
+            else
             {
                 throw new HttpRequestException("No RubricAssessments are found");
-            }
-                
-            foreach (var assessment in rubricAssessments)
-            {
-                var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
-                if (outcome != null)
-                {
-                    outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
-                    outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
-                }
             }
         }
 
