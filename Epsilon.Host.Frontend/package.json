@@ -8,6 +8,7 @@
 		"dev": "nuxt dev",
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
+		"start": "node .output/server/index.mjs",
 		"setup-ssl": "node aspnetcore-https && node aspnetcore-nuxt",
 		"lint": "eslint --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore .",
 		"format-code": "prettier --check .",
@@ -19,7 +20,7 @@
 		"vue": "^3.3.8",
 		"vue-router": "^4.2.5",
 		"vue3-apexcharts": "^1.4.4",
-		"posthog-js": "^1.89.1"
+		"posthog-js": "^1.91.1"
 	},
 	"devDependencies": {
 		"@headlessui/vue": "1.7.16",
@@ -29,8 +30,8 @@
 		"@nuxt/schema": "^3.8.1",
 		"@types/jsonwebtoken": "^9.0.5",
 		"@types/lodash": "^4.14.201",
-		"@types/node": "^20.9.0",
-		"eslint": "^8.53.0",
+		"@types/node": "^20.9.2",
+		"eslint": "^8.54.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-prettier": "^5.0.1",
 		"h3": "^1.8.2",

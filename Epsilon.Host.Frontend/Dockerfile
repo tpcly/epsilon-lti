@@ -1,13 +1,19 @@
-FROM node:16 AS Build
+FROM node:18 AS Build
 
 WORKDIR /build
+
 EXPOSE 443
 EXPOSE 80
 
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+ENV NUXT_HOST=0.0.0.0
+ENV PORT=80
 
+RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 COPY pnpm-lock.yaml ./
 
 ADD . ./
 RUN pnpm install
-ENTRYPOINT ["pnpm", "run", "host"]
+
+RUN pnpm run build
+
+ENTRYPOINT ["pnpm", "run", "start"]
