@@ -20,7 +20,15 @@
 					class="search-box-options-item">
 					No results found
 				</div>
-
+				<div v-if="isTermSearch">
+					<li
+						id="isTermSearchBox"
+						class="search-box-options-item"
+						:class="{ 'custom-click-color': customClick }"
+						@click="handleCustomClick">
+						Custom﹥
+					</li>
+				</div>
 				<ComboboxOption
 					v-for="(item, id) in filteredItems"
 					:key="id"
@@ -39,6 +47,24 @@
 			</ComboboxOptions>
 		</Combobox>
 	</div>
+	<div v-if="customClick" class="custom-box">
+		<div class="date-input">
+			<label id="dateLabel" for="startDate">Start date</label>
+			<input
+				id="startDate"
+				:value="startDate"
+				type="date"
+				@input="updateStartDate" />
+		</div>
+		<div class="date-input">
+			<label id="dateLabel" for="endDate">End date</label>
+			<input
+				id="endDate"
+				:value="endDate"
+				type="date"
+				@input="updateEndDate" />
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -56,9 +82,15 @@ const props = defineProps<{
 	modelValue: { name: string } | null
 	placeholder?: string
 	limit: number
+	isTermSearch: boolean | null
 }>()
 
 const query = ref("")
+const customClick = ref(false)
+const startDate = ref<string | undefined>(undefined)
+const endDate = ref<string | undefined>(undefined)
+const termName = ref<string | undefined>(undefined)
+let datesAdjusted = false
 
 const emit = defineEmits(["update:modelValue"])
 
@@ -86,12 +118,54 @@ const filteredItems = computed(() => {
 })
 
 function displayValue(item: { name: string }): string {
-	if (item) {
-		return item.name
+	if (datesAdjusted) {
+		termName.value = startDate.value + " - " + endDate.value
+	}
+	if (item && termName.value) {
+		return termName.value
 	}
 
 	return ""
 }
+
+function handleCustomClick(): void {
+	customClick.value = !customClick.value
+}
+
+const updateStartDate = (event: Event): void => {
+	const target = event.target as HTMLInputElement
+	startDate.value = target.value
+	emit("update:modelValue", {
+		...props.modelValue,
+		start_at: startDate.value,
+	})
+	datesAdjusted = true
+}
+
+const updateEndDate = (event: Event): void => {
+	const target = event.target as HTMLInputElement
+	endDate.value = target.value
+	emit("update:modelValue", {
+		...props.modelValue,
+		end_at: endDate.value,
+	})
+	datesAdjusted = true
+}
+
+watch(
+	() => props.modelValue,
+	(selection) => {
+		if (!selection?.start_at || !selection.end_at) {
+			return
+		}
+		startDate.value = selection.start_at.split("T")[0].replace(/\//g, "-")
+		endDate.value = selection.end_at.split("T")[0].replace(/\//g, "-")
+		if (!customClick.value) {
+			termName.value = selection.name || undefined
+		}
+		datesAdjusted = false
+	}
+)
 </script>
 
 <style scoped lang="scss">
@@ -130,7 +204,7 @@ function displayValue(item: { name: string }): string {
 		border: 1px solid #d8d8d8;
 		text-align: left;
 		z-index: 40;
-		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 
 		&-item {
 			padding: 1rem 1.5rem;
@@ -168,5 +242,31 @@ function displayValue(item: { name: string }): string {
 			max-height: 30px;
 		}
 	}
+}
+.custom-box {
+	position: absolute;
+	border: 1px solid #d8d8d8;
+	background-color: #fff;
+	border-radius: 7px;
+	padding: 10px;
+	width: 150px;
+	margin-left: 122px;
+}
+
+.custom-click-color {
+	background-color: #f2f3f8;
+}
+
+.date-input input[type="date"] {
+	font-family: inherit;
+	font-size: 1rem;
+	font-weight: 400;
+}
+
+#dateLabel {
+	color: #0f254a;
+}
+.date-input {
+	margin-bottom: 5px;
 }
 </style>
