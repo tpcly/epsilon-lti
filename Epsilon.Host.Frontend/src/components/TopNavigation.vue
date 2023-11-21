@@ -96,7 +96,7 @@ watch([fromDate, toDate], () => {
 </script>
 
 <style lang="scss" scoped>
-.header {
+.top-navigation {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
