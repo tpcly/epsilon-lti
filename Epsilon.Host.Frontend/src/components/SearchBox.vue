@@ -262,6 +262,6 @@ function handleCustomClick(): void {
 	color: #0f254a;
 }
 .date-input {
-	margin-bottom: 5px; /* Adjust the margin as needed */
+	margin-bottom: 5px;
 }
 </style>
