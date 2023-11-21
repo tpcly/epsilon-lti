@@ -1,5 +1,5 @@
 <template>
-	<td :style="{ backgroundColor: getColor() }"></td>
+	<td :style="{ backgroundColor: getColor() }" />
 </template>
 <script setup lang="ts">
 import { defineProps } from "vue/dist/vue"

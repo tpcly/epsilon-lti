@@ -10,7 +10,7 @@
  */
 
 export interface EnrollmentTerm {
-	name: string
+	name?: string | null
 	/** @format date-time */
 	start_at?: string | null
 	/** @format date-time */

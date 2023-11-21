@@ -7,12 +7,8 @@ namespace Epsilon.Abstractions;
 /// </summary>
 /// <param name="CourseId">Canvas personal course id</param>
 /// <param name="UserId">Canvas user id</param>
-/// <param name="AccessToken">Canvas access token</param>
 public record CanvasUserSession(
-    [Required]
-    int CourseId,
-    [Required]
-    int UserId,
-    [Required]
-    string AccessToken
+    [Required] int CourseId,
+    [Required] int UserId,
+    [Required] bool IsTeacher
 );
