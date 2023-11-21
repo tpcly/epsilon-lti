@@ -77,12 +77,16 @@ jobs:
   unit-testing:
     name: Unit testing
     runs-on: ubuntu-20.04
-    needs: [ build-frontend, build-backend, lint-frontend ]
+    needs: [ build-backend ]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v3.2.0
         with:
           dotnet-version: '6.0.x'
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore    
       - name: Test with the dotnet CLI
         run: dotnet test --no-restore --verbosity normal
         
