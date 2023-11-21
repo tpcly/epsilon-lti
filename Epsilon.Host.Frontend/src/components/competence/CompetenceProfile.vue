@@ -40,11 +40,11 @@ import { useStore } from "vuex"
 
 const store = useStore()
 import { computed } from "vue"
-import {
-	LearningDomainOutcome,
-	LearningDomainSubmission,
-	LearningDomainType,
-} from "@/api.generated"
+import type {
+LearningDomainOutcome,
+LearningDomainSubmission,
+LearningDomainType,
+} from "~/api.generated";
 import CompetenceProfileCell from "@/components/Competence/CompetenceProfileCell.vue"
 
 const props = defineProps<{
