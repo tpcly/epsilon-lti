@@ -75,13 +75,24 @@ jobs:
                 run: pnpm run format-code
     
     build-docker:
-        name: Build Docker
-        runs-on: ubuntu-20.04
-        needs: [ build-frontend, build-backend, lint-frontend, code-analysis ]
-        steps:
-            -   uses: actions/checkout@v4
-            -   name: Build the containers
-                run: docker-compose -f docker-compose.development.yml build
+      name: Build Docker
+      runs-on: ubuntu-20.04
+      needs: [ build-frontend, build-backend, lint-frontend ]
+      steps:
+        -   uses: actions/checkout@v4
+        -   name: Build the containers
+            run: docker-compose -f docker-compose.development.yml build
+    unitTesting:
+      name: Unit testing
+      runs-on: ubuntu-20.04
+      needs: [ build-frontend, build-backend, lint-frontend ]
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-dotnet@v3.2.0
+          with:
+            dotnet-version: '6.0.x'
+        - name: Test with the dotnet CLI
+          run: dotnet test --no-restore --verbosity normal
     code-analysis:
         name: Code analysis
         needs: [ build-backend, build-frontend, lint-frontend ]
