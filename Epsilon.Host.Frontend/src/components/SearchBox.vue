@@ -1,6 +1,7 @@
 <template>
-	<div class="search-box">
+	<div ref="searchBox" class="search-box">
 		<Combobox
+			v-slot="{ open }"
 			:model-value="modelValue"
 			@update:model-value="emit('update:modelValue', $event)">
 			<div class="search-box-input">
@@ -8,12 +9,19 @@
 					:display-value="displayValue"
 					:placeholder="placeholder"
 					@change="query = $event.target.value" />
-				<ComboboxButton class="search-box-list-arrow">
+				<ComboboxButton
+					class="search-box-list-arrow"
+					@click="
+						() => {
+							open.value = !open.value
+						}
+					">
 					<ChevronUpDownIcon aria-hidden="true" />
 				</ComboboxButton>
 			</div>
 			<ComboboxOptions
 				v-if="items?.length > 0"
+				:static="isStatic"
 				class="search-box-options">
 				<div
 					v-if="filteredItems?.length === 0 && query !== ''"
@@ -36,7 +44,10 @@
 					as="template"
 					:value="item"
 					class="search-box-options-item">
-					<li :class="{ 'search-box-options-item-active': active }">
+					<li
+						:class="{
+							'search-box-options-item-active': active,
+						}">
 						{{ item.name }}
 						<CheckIcon
 							v-if="selected"
@@ -48,6 +59,7 @@
 		</Combobox>
 	</div>
 	<div v-if="customClick" class="custom-box">
+		<h5 class="custom-header">Adjust term dates</h5>
 		<div class="date-input">
 			<label id="dateLabel" for="startDate">Start date</label>
 			<input
@@ -91,6 +103,8 @@ const startDate = ref<string | undefined>(undefined)
 const endDate = ref<string | undefined>(undefined)
 const termName = ref<string | undefined>(undefined)
 let datesAdjusted = false
+const isStatic = ref(false)
+const customInputName = ref(false)
 
 const emit = defineEmits(["update:modelValue"])
 
@@ -119,17 +133,19 @@ const filteredItems = computed(() => {
 
 function displayValue(item: { name: string }): string {
 	if (datesAdjusted) {
-		termName.value = startDate.value + " - " + endDate.value
+		if (startDate.value && endDate.value) {
+			return startDate.value + " - " + endDate.value
+		}
 	}
-	if (item && termName.value) {
-		return termName.value
+	if (item && item.name) {
+		return item.name
 	}
-
 	return ""
 }
 
 function handleCustomClick(): void {
 	customClick.value = !customClick.value
+	isStatic.value = !isStatic.value
 }
 
 const updateStartDate = (event: Event): void => {
@@ -163,7 +179,6 @@ watch(
 		if (!customClick.value) {
 			termName.value = selection.name || undefined
 		}
-		datesAdjusted = false
 	}
 )
 </script>
@@ -243,13 +258,15 @@ watch(
 		}
 	}
 }
+
 .custom-box {
 	position: absolute;
 	border: 1px solid #d8d8d8;
 	background-color: #fff;
 	border-radius: 7px;
 	padding: 10px;
-	width: 150px;
+	height: 180px;
+	width: 180px;
 	margin-left: 122px;
 }
 
@@ -261,12 +278,21 @@ watch(
 	font-family: inherit;
 	font-size: 1rem;
 	font-weight: 400;
+	width: 100%;
 }
 
 #dateLabel {
 	color: #0f254a;
 }
+
 .date-input {
-	margin-bottom: 5px;
+	margin-bottom: 10px;
+	margin-top: 5px;
+}
+
+.custom-header {
+	background-color: #f2f3f8;
+	padding: 5px;
+	text-align: center;
 }
 </style>

@@ -2,7 +2,7 @@
 	<div class="top-navigation">
 		<img alt="logo" class="top-navigation-logo" src="../assets/logo.png" />
 		<Row>
-			<Col :cols="6">
+			<Col :cols="5">
 				<SearchBox
 					v-model="selectedUser"
 					:items="users"
