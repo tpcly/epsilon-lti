@@ -4,8 +4,8 @@
 			<tr>
 				<th />
 				<th
-					v-for="submission of store.state.filterdSubmissions"
-					:key="submission.assignment"
+					v-for="submission of submissions"
+					:key="submission.assignment || undefined"
 					class="kpi-matrix-header kpi-matrix-header-assignment">
 					{{ submission.assignment }}
 				</th>
@@ -13,37 +13,45 @@
 		</thead>
 		<tbody>
 			<tr
-				v-for="outcome of allOutcomes.sort()" :key="outcome">
-				<th :key="outcome" class="kpi-matrix-header kpi-matrix-header-outcome">
+				v-for="outcome of allOutcomes.sort()" :key="outcome.id">
+				<th :key="outcome.name" class="kpi-matrix-header kpi-matrix-header-outcome">
 					<div>
-						{{ store.state.outcomes.find((o) => o.id == outcome).name }}
+						{{ outcome.name }}
 					</div>
 				</th>
 				<KpiMatrixCell
-					v-for="submission of store.state.filterdSubmissions"
+					v-for="submission of submissions"
 					:key="submission.assignmentUrl"
 					:result="
 						submission.results?.find(
-							(r) => r?.outcome?.id == outcome
+							(r) => r?.outcome?.id == outcome.id
 						)
-					"
-					:criteria="submission.criteria?.find((c) => c?.id == outcome)">
+					">
 				</KpiMatrixCell>
 			</tr>
 		</tbody>
 	</table>
 </template>
+
 <script lang="ts" setup>
 import { computed } from "vue"
-import { useStore } from "vuex"
-import KpiMatrixCell from "@/components/Competence/KpiMatrixCell.vue"
+import KpiMatrixCell from "~/components/competence/KpiMatrixCell.vue"
+import {
+	type LearningDomain,
+	type LearningDomainOutcome,
+	type LearningDomainSubmission,
+	type LearningDomainType,
+} from "~/api.generated"
 
-const store = useStore()
+const props = defineProps<{
+	domain: LearningDomain
+	submissions: LearningDomainSubmission[]
+}>()
 
-const allOutcomes = computed(() =>
-	store.state.filterdSubmissions
-		.flatMap((sub) => sub.criteria?.map((cr) => cr.id as string))
-		.filter((value, index, self) => self.indexOf(value) === index)
+const allOutcomes = computed<LearningDomainOutcome[]>(() =>
+	props.submissions.flatMap((submission) =>
+		submission.results!.map((result) => result.outcome!)
+	)
 )
 </script>
 
@@ -62,6 +70,7 @@ const allOutcomes = computed(() =>
 		font-weight: 400;
 
 		&-assignment {
+			width: 200px;
 			border-bottom: 2px solid RGB(218, 219, 223, 0.7);
 			border-right: 2px solid RGB(218, 219, 223, 0.7);
 			border-left: 2px solid RGB(218, 219, 223, 0.7);
@@ -71,6 +80,7 @@ const allOutcomes = computed(() =>
 		}
 
 		&-outcome {
+			min-width: max-content;
 			border: 2px solid RGB(218, 219, 223, 0.7);
 			border-bottom: none;
 			border-left: none;

@@ -37,6 +37,7 @@ export interface LearningDomainOutcome {
 	row: LearningDomainType
 	column?: LearningDomainType
 	value: LearningDomainType
+	/** @minLength 1 */
 	name: string
 }
 
@@ -58,7 +59,9 @@ export interface LearningDomainSubmission {
 
 export interface LearningDomainType {
 	id?: string | null
+	/** @minLength 1 */
 	name: string
+	/** @minLength 1 */
 	shortName: string
 	hexColor?: string | null
 	/** @format int32 */
@@ -76,6 +79,7 @@ export interface PageComponent {
 }
 
 export interface PageUpdateRequest {
+	/** @minLength 1 */
 	body: string
 }
 

@@ -18,11 +18,12 @@
 </template>
 
 <script lang="ts" setup>
+import CompetenceProfile from "~/components/competence/CompetenceProfile.vue"
 import CompetenceGraph from "~/components/performance/CompetenceGraph.vue"
 import PersonalDevelopmentGraph from "~/components/performance/PersonalDevelopmentGraph.vue"
-import {
-	type LearningDomain,
-	type LearningDomainSubmission,
+import type {
+LearningDomain,
+LearningDomainSubmission,
 } from "~/api.generated"
 
 defineProps<{

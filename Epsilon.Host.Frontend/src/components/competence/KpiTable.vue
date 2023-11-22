@@ -1,30 +1,29 @@
 <template>
 	<table class="kpi-table">
-		<tr 
-		v-for="outcomeId of allOutcomes.sort()" :key="outcomeId" class="kpi-table-outcome">
+		<tr v-for="outcome of allOutcomes.sort()" :key="outcome.id" class="kpi-table-outcome">
 			<th class="kpi-table-outcome kpi-table-outcome-name">
-				{{ store.state.outcomes.find((o) => o.id === outcomeId).name }}
+				{{ outcome.name }}
 			</th>
 			<td class="kpi-table-outcome kpi-table-outcome-submission">
 				<div
-					v-for="submission of store.state.filterdSubmissions.filter(
+					v-for="submission of submissions.filter(
 						(s) => {
 							if (s.results != null) {
 								return (
 									s.results.filter(
-										(r) => r?.outcome?.id == outcomeId
+										(r) => r?.outcome?.id == outcome.id
 									).length > 0
 								)
 							}
 						}
 					)"
 					:key="submission.submittedAt">
-					<a :href="submission.assignmentUrl" target="_blank">{{
+					<a :href="submission.assignmentUrl || undefined" target="_blank">{{
 						submission.assignment
 					}}</a>
 					<span>{{
-						submission.results.find(
-							(r) => r.outcome.id === outcomeId
+						submission.results?.find(
+							(r) => r.outcome?.id == outcome.id
 						)?.grade
 					}}</span>
 				</div>
@@ -32,17 +31,24 @@
 		</tr>
 	</table>
 </template>
+
 <script setup lang="ts">
-import { useStore } from "vuex"
 import { computed } from "vue"
+import type {
+	LearningDomainOutcome,
+	LearningDomainSubmission,
+} from "~/api.generated"
 
-const store = useStore()
+const props = defineProps<{
+	outcomes: LearningDomainOutcome[]
+	submissions: LearningDomainSubmission[]
+}>()
 
-const allOutcomes = computed(() =>
-	store.state.filterdSubmissions
-		.flatMap((sub) => sub.results?.map((r) => parseInt(r.outcome?.id)))
-		.filter((value, index, self) => self.indexOf(value) === index)
-) as unknown as number[]
+const allOutcomes = computed<LearningDomainOutcome[]>(() =>
+	props.submissions.flatMap((submission) =>
+		submission.results!.map((result) => result.outcome!)
+	)
+)
 </script>
 
 <style scoped lang="scss">

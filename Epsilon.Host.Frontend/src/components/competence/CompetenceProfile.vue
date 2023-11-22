@@ -4,7 +4,7 @@
 			<tr>
 				<td />
 				<th
-					v-for="col of store.state.domain.columnsSet?.types"
+					v-for="col of domain.columnsSet?.types"
 					:key="col.id"
 					class="competence-profile-header competence-profile-header-col">
 					{{ col.name }}
@@ -12,69 +12,51 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="row of store.state.domain.rowsSet?.types" :key="row.id">
+			<tr v-for="row of domain.rowsSet.types" :key="row.id">
 				<th
 					class="competence-profile-header competence-profile-header-row">
 					<div
-						class="profile-header-color"
-						:style="{
-							backgroundColor: '#' + row.hexColor,
-						}"></div>
+						class="competence-profile-header-color"
+						:style="{ backgroundColor: '#' + row.hexColor }" />
 					{{ row.name }}
 				</th>
 				<CompetenceProfileCell
-					v-for="col of store.state.domain.columnsSet?.types"
+					v-for="col of domain.columnsSet?.types"
 					:key="col.id"
-					:col="col"
-					:row="row"
-					:submissions="submissions"
-					:result="getFiltered(row, col, allOutcomes)">
-				</CompetenceProfileCell>
+					class="competence-profile-cell"
+					:outcomes="outcomes(row, col)" />
 			</tr>
 		</tbody>
 	</table>
 </template>
-
 <script setup lang="ts">
-import { useStore } from "vuex"
-
-const store = useStore()
 import { computed } from "vue"
-import type {
-LearningDomainOutcome,
-LearningDomainSubmission,
-LearningDomainType,
-} from "~/api.generated";
-import CompetenceProfileCell from "@/components/Competence/CompetenceProfileCell.vue"
+import {
+	type LearningDomain,
+	type LearningDomainOutcome,
+	type LearningDomainSubmission,
+	type LearningDomainType,
+} from "~/api.generated"
+import CompetenceProfileCell from "~/components/competence/CompetenceProfileCell.vue"
 
 const props = defineProps<{
+	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
 }>()
 
-const allOutcomes = computed(() =>
-	props.submissions
-		.flatMap((sub) => sub.criteria?.map((cr) => cr.id))
-		.filter((value, index, self) => self.indexOf(value) === index)
-) as unknown as number[]
+const allOutcomes = computed<LearningDomainOutcome[]>(() =>
+	props.submissions.flatMap((submission) =>
+		submission.results!.map((result) => result.outcome!)
+	)
+)
 
-function getFiltered(
+const outcomes = (
 	row: LearningDomainType,
-	col: LearningDomainType,
-	outcomes: number[]
-): LearningDomainOutcome {
-	return store.state.outcomes
-		.filter(
-			(o: LearningDomainOutcome) =>
-				o?.row?.id === row.id &&
-				o?.column?.id === col.id &&
-				outcomes.includes(o.id as number)
-		)
-		.reduce((acc: LearningDomainOutcome, value: LearningDomainOutcome) => {
-			return (acc?.value?.shortName as unknown as number) >
-				(value?.value?.shortName as unknown as number)
-				? acc
-				: value
-		}, null)
+	column: LearningDomainType
+): LearningDomainOutcome[] => {
+	return allOutcomes.value.filter(
+		(outcome) => outcome.row.id == row.id && outcome.column?.id == column.id
+	)
 }
 </script>
 

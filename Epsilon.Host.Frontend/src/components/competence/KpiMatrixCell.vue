@@ -2,10 +2,10 @@
 	<td :style="{ backgroundColor: getColor() }" />
 </template>
 <script setup lang="ts">
-import { defineProps } from "vue/dist/vue"
-import {
-	LearningDomainCriteria,
-	LearningDomainOutcomeRecord,
+import { defineProps } from "vue"
+import type{
+LearningDomainCriteria,
+LearningDomainOutcomeRecord,
 } from "@/api.generated"
 
 const props = defineProps<{

@@ -10,6 +10,7 @@
 						<Tab class="toolbar-slider-item">
 							Performance dashboard
 						</Tab>
+						<Tab class="toolbar-slider-item"> Competence Document </Tab>
 					</TabList>
 				</div>
 			</div>
@@ -18,6 +19,10 @@
 				<TabPanels>
 					<TabPanel>
 						<PerformanceDashboard
+							:submissions="filteredSubmissions" />
+					</TabPanel>
+					<TabPanel>
+						<CompetenceDocument 
 							:submissions="filteredSubmissions" />
 					</TabPanel>
 				</TabPanels>
