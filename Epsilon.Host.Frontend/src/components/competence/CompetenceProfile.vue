@@ -91,7 +91,7 @@ const outcomes = (
 		}
 
 		&-row:first-child {
-			border-right: 2px solid RGB(218, 219, 223, 0.7);
+			border-right: 1px solid RGB(218, 219, 223, 0.7);
 		}
 
 		&-color {
