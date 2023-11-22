@@ -12,20 +12,24 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr
-				v-for="outcome of allOutcomes.sort()" :key="outcome.id">
-				<th :key="outcome.name" class="kpi-matrix-header kpi-matrix-header-outcome">
+			<tr v-for="outcome of allOutcomes.sort()" :key="outcome.id">
+				<th
+					:key="outcome.name"
+					class="kpi-matrix-header kpi-matrix-header-outcome">
 					<div>
 						{{ outcome.name }}
 					</div>
 				</th>
 				<KpiMatrixCell
 					v-for="submission of submissions"
-					:key="submission.assignmentUrl"
+					:key="submission.assignmentUrl || undefined"
 					:result="
 						submission.results?.find(
 							(r) => r?.outcome?.id == outcome.id
 						)
+					"
+					:criteria="
+						submission.criteria ? submission.criteria[0] : undefined
 					">
 				</KpiMatrixCell>
 			</tr>
@@ -40,7 +44,6 @@ import {
 	type LearningDomain,
 	type LearningDomainOutcome,
 	type LearningDomainSubmission,
-	type LearningDomainType,
 } from "~/api.generated"
 
 const props = defineProps<{
@@ -66,7 +69,7 @@ const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 	}
 
 	&-header {
-		padding: .5rem;
+		padding: 0.5rem;
 		font-weight: 400;
 
 		&-assignment {

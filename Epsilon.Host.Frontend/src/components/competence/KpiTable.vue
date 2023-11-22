@@ -1,26 +1,29 @@
 <template>
 	<table class="kpi-table">
-		<tr v-for="outcome of allOutcomes.sort()" :key="outcome.id" class="kpi-table-outcome">
+		<tr
+			v-for="outcome of allOutcomes.sort()"
+			:key="outcome.id"
+			class="kpi-table-outcome">
 			<th class="kpi-table-outcome kpi-table-outcome-name">
 				{{ outcome.name }}
 			</th>
 			<td class="kpi-table-outcome kpi-table-outcome-submission">
 				<div
-					v-for="submission of submissions.filter(
-						(s) => {
-							if (s.results != null) {
-								return (
-									s.results.filter(
-										(r) => r?.outcome?.id == outcome.id
-									).length > 0
-								)
-							}
+					v-for="submission of submissions.filter((s) => {
+						if (s.results != null) {
+							return (
+								s.results.filter(
+									(r) => r?.outcome?.id == outcome.id
+								).length > 0
+							)
 						}
-					)"
+					})"
 					:key="submission.submittedAt">
-					<a :href="submission.assignmentUrl || undefined" target="_blank">{{
-						submission.assignment
-					}}</a>
+					<a
+						:href="submission.assignmentUrl || undefined"
+						target="_blank">
+						{{ submission.assignment }}</a
+					>
 					<span>{{
 						submission.results?.find(
 							(r) => r.outcome?.id == outcome.id
@@ -61,7 +64,7 @@ template {
 	display: block;
 	overflow: auto;
 	border-collapse: collapse;
-	
+
 	&-outcome {
 		border-bottom: 2px solid RGB(218, 219, 223, 0.7);
 		padding: 10px;
@@ -70,7 +73,7 @@ template {
 			width: 200px;
 			border-right: 2px solid RGB(218, 219, 223, 0.7);
 		}
-		&-submission{
+		&-submission {
 			width: 400px;
 			div {
 				display: flex;

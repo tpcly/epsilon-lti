@@ -4,14 +4,14 @@
 		<div></div>
 		<div></div>
 		<CompetenceProfile
-            v-if="hboIDomain"
+			v-if="hboIDomain"
 			:submissions="submissions"
-            :domain="hboIDomain" />
+			:domain="hboIDomain" />
 		<div></div>
 		<div></div>
-		<KpiMatrix 
-            v-if="hboIDomain"
-			:submissions="submissions" 
+		<KpiMatrix
+			v-if="hboIDomain"
+			:submissions="submissions"
 			:domain="hboIDomain" />
 	</div>
 </template>
@@ -20,14 +20,14 @@
 import KpiMatrix from "~/components/competence/KpiMatrix.vue"
 import KpiTable from "~/components/competence/KpiTable.vue"
 import CompetenceProfile from "~/components/competence/CompetenceProfile.vue"
-import type { 
-LearningDomain, 
-LearningDomainSubmission,
-LearningDomainOutcome,
+import type {
+	LearningDomain,
+	LearningDomainSubmission,
+	LearningDomainOutcome,
 } from "~/api.generated"
 
 const props = defineProps<{
-    submissions: LearningDomainSubmission[]
+	submissions: LearningDomainSubmission[]
 }>()
 
 const api = useApi()
@@ -51,14 +51,14 @@ const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 
 <style scoped>
 .competence-document {
-    grid-template-columns: 1fr;
+	grid-template-columns: 1fr;
 }
 @media screen and (min-width: 580px) {
-    .competence-document {
-        display: grid;
-        grid-template-columns: 1fr 5fr 1fr;
-        gap: 2rem 0;
-        justify-content: space-between;
-    }
+	.competence-document {
+		display: grid;
+		grid-template-columns: 1fr 5fr 1fr;
+		gap: 2rem 0;
+		justify-content: space-between;
+	}
 }
 </style>

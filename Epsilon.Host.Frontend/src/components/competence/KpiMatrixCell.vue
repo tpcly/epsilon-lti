@@ -3,9 +3,9 @@
 </template>
 <script setup lang="ts">
 import { defineProps } from "vue"
-import type{
-LearningDomainCriteria,
-LearningDomainOutcomeRecord,
+import type {
+	LearningDomainCriteria,
+	LearningDomainOutcomeRecord,
 } from "@/api.generated"
 
 const props = defineProps<{

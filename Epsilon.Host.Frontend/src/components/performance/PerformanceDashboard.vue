@@ -21,10 +21,7 @@
 import CompetenceProfile from "~/components/competence/CompetenceProfile.vue"
 import CompetenceGraph from "~/components/performance/CompetenceGraph.vue"
 import PersonalDevelopmentGraph from "~/components/performance/PersonalDevelopmentGraph.vue"
-import type {
-LearningDomain,
-LearningDomainSubmission,
-} from "~/api.generated"
+import type { LearningDomain, LearningDomainSubmission } from "~/api.generated"
 
 defineProps<{
 	submissions: LearningDomainSubmission[]
