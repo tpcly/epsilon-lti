@@ -98,13 +98,18 @@ const props = defineProps<{
 }>()
 
 const query = ref("")
-const customClick = ref(false)
+
 const startDate = ref<string | undefined>(undefined)
 const endDate = ref<string | undefined>(undefined)
-const termName = ref<string | undefined>(undefined)
 let datesAdjusted = false
+
+// Reset the default open/close behaviour of the combobox
 const isStatic = ref(false)
-const customInputName = ref(false)
+const customClick = ref(false)
+
+// For when combobox input is date or term name
+let dateName = ref(false)
+const termName = ref<string | undefined>(undefined)
 
 const emit = defineEmits(["update:modelValue"])
 
@@ -131,9 +136,11 @@ const filteredItems = computed(() => {
 		.slice(0, props.limit)
 })
 
+// Display term name or term dates (custom)
 function displayValue(item: { name: string }): string {
 	if (datesAdjusted) {
 		if (startDate.value && endDate.value) {
+			dateName = true
 			return startDate.value + " - " + endDate.value
 		}
 	}
@@ -143,6 +150,7 @@ function displayValue(item: { name: string }): string {
 	return ""
 }
 
+// Handle open/close of the custom term box
 function handleCustomClick(): void {
 	customClick.value = !customClick.value
 	isStatic.value = !isStatic.value
@@ -168,6 +176,7 @@ const updateEndDate = (event: Event): void => {
 	datesAdjusted = true
 }
 
+// Watch for changes and fill in date boxes
 watch(
 	() => props.modelValue,
 	(selection) => {
@@ -178,6 +187,10 @@ watch(
 		endDate.value = selection.end_at.split("T")[0].replace(/\//g, "-")
 		if (!customClick.value) {
 			termName.value = selection.name || undefined
+		}
+		if (dateName && datesAdjusted) {
+			datesAdjusted = false
+			dateName = false
 		}
 	}
 )
