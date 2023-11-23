@@ -1,5 +1,8 @@
 <template>
-	<div ref="searchBox" class="search-box">
+	<div
+		ref="searchBox"
+		class="search-box"
+		:style="{ width: isTermSearch ? '122px' : '100%' }">
 		<Combobox
 			v-slot="{ open }"
 			:model-value="modelValue"
@@ -43,7 +46,8 @@
 					v-slot="{ selected, active }"
 					as="template"
 					:value="item"
-					class="search-box-options-item">
+					class="search-box-options-item"
+					:style="{ width: !isTermSearch ? '215px' : '100%' }">
 					<li
 						:class="{
 							'search-box-options-item-active': active,
@@ -88,10 +92,11 @@ import {
 	ComboboxOption,
 } from "@headlessui/vue"
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid"
+import type { EnrollmentTerm } from "~/api.generated"
 
 const props = defineProps<{
 	items: Array<{ name?: string | null }> | null
-	modelValue: { name: string } | null
+	modelValue: EnrollmentTerm | null
 	placeholder?: string
 	limit: number
 	isTermSearch: boolean | null
@@ -108,7 +113,7 @@ const isStatic = ref(false)
 const customClick = ref(false)
 
 // For when combobox input is date or term name
-let dateName = ref(false)
+let dateName = false
 const termName = ref<string | undefined>(undefined)
 
 const emit = defineEmits(["update:modelValue"])

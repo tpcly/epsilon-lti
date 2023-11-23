@@ -1,8 +1,8 @@
 <template>
 	<div class="top-navigation">
 		<img alt="logo" class="top-navigation-logo" src="../assets/logo.png" />
-		<Row>
-			<Col :cols="5">
+		<Row class="search-boxes">
+			<Col :cols="7">
 				<SearchBox
 					v-model="selectedUser"
 					:items="users"
@@ -10,7 +10,7 @@
 					placeholder="Student"
 					:is-term-search="null" />
 			</Col>
-			<Col :cols="4">
+			<Col :cols="5">
 				<SearchBox
 					v-model="selectedTerm"
 					:items="terms"
@@ -102,12 +102,13 @@ watch([fromDate, toDate], () => {
 		height: 5rem;
 		object-fit: contain;
 	}
-
-	&-row2 {
-		margin-right: -120px;
-	}
 }
+
 #dateRangeCol {
 	margin-right: 30px;
+}
+
+.search-boxes {
+	margin-right: 105px;
 }
 </style>
