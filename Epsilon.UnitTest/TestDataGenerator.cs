@@ -1,4 +1,6 @@
-﻿using Epsilon.Abstractions;
+﻿using System.Globalization;
+using Epsilon.Abstractions;
+using Tpcly.Canvas.Abstractions.GraphQl;
 
 namespace Epsilon.UnitTest;
 
@@ -53,5 +55,18 @@ public static class TestDataGenerator
         }
 
         return outcomes;
+    }
+    
+    
+    public static List<User> GenerateUsers(int count)
+    {
+        var users = new List<User>();
+
+        for (var i = 0; i < count; i++)
+        {
+            users.Add(new User(i.ToString(CultureInfo.CurrentCulture), $"test{i}", null));
+        }
+
+        return users;
     }
 }
