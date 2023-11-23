@@ -4,29 +4,39 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
+using Epsilon.Components;
 
 namespace Epsilon.Services;
 
 public class CompetenceDocumentService : ICompetenceDocumentService
 {
-    private readonly IPageComponentManager _pageComponent;
+    private readonly ILearningDomainService _domainService;
+    private readonly ILearningOutcomeCanvasResultService _canvasResultService;
 
-    public CompetenceDocumentService(IPageComponentManager pageComponent)
+    public CompetenceDocumentService(
+        ILearningDomainService domainService,
+        ILearningOutcomeCanvasResultService canvasResultService
+    )
     {
-        _pageComponent = pageComponent;
+        _domainService = domainService;
+        _canvasResultService = canvasResultService;
     }
 
-    public async Task<CompetenceDocument> GetDocument(int courseId, DateTime from, DateTime to)
+    public async Task<CompetenceDocument> GetDocument(string userId, DateTime? from = null, DateTime? to = null)
     {
-        var components = await FetchComponents(courseId).ToListAsync();
+        var submissions = _canvasResultService.GetSubmissions(userId);
+        if (from != null && to != null)
+        {
+            submissions = submissions.Where(s => s.SubmittedAt <= from && s.SubmittedAt >= to);
+        }
+
+        var components = await FetchComponents(submissions).ToListAsync();
 
         return new CompetenceDocument(components);
     }
 
     public void WriteDocument(Stream stream, CompetenceDocument document)
     {
-        var startPosition = stream.Position;
-
         using var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
         wordDocument.AddMainDocumentPart();
@@ -38,15 +48,11 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         }
 
         wordDocument.Save();
-        wordDocument.Close();
-
-        // Reset stream position to start position
-        stream.Position = startPosition;
+        wordDocument.Dispose();
     }
 
-    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(int courseId)
+    private async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions)
     {
-        yield return await _pageComponent.Fetch(courseId, "homepage");
-        yield return await _pageComponent.Fetch(courseId, "projects");
+        yield return new CompetenceProfileComponent(submissions, await _domainService.GetDomainsFromTenant());
     }
 }
