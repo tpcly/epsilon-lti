@@ -22,14 +22,14 @@
 				</th>
 				<KpiMatrixCell
 					v-for="submission of submissions"
-					:key="submission.assignmentUrl || undefined"
+					:key="submission?.assignmentUrl"
 					:result="
 						submission.results?.find(
 							(r) => r?.outcome?.id == outcome.id
 						)
 					"
 					:criteria="
-						submission.criteria ? submission.criteria[0] : undefined
+						submission.criteria?.find((c) => c?.id == outcome.id)
 					">
 				</KpiMatrixCell>
 			</tr>
@@ -54,6 +54,10 @@ const props = defineProps<{
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 	props.submissions.flatMap((submission) =>
 		submission.results!.map((result) => result.outcome!)
+	).filter((outcome, index, self) =>
+		index === self.findIndex((t) => (
+			t.id === outcome.id
+		))
 	)
 )
 </script>
