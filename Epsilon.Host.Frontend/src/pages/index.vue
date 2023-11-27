@@ -71,12 +71,19 @@ const filteredSubmissions = computed(() => {
 	}
 
 	return submissions.value.filter((submission) => {
-		const submittedAt = new Date(submission.submittedAt!)
+		if (
+			submission.criteria !== null &&
+			submission.criteria !== undefined &&
+			submission.criteria!.length > 0
+		) {
+			console.log(submission.results)
+			const submittedAt = new Date(submission.submittedAt!)
 
-		return (
-			submittedAt >= unwrappedFilterRange.start &&
-			submittedAt <= unwrappedFilterRange.end
-		)
+			return (
+				submittedAt >= unwrappedFilterRange.start &&
+				submittedAt <= unwrappedFilterRange.end
+			)
+		}
 	})
 })
 

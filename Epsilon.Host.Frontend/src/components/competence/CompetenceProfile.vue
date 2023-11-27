@@ -45,13 +45,14 @@ const props = defineProps<{
 }>()
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
-	props.submissions.flatMap((submission) =>
-		submission.results!.map((result) => result.outcome!)
-	).filter((outcome, index, self) =>
-		index === self.findIndex((t) => (
-			t.id === outcome.id
-		))
-	)
+	props.submissions
+		.flatMap((submission) =>
+			submission.results!.map((result) => result.outcome!)
+		)
+		.filter(
+			(outcome, index, self) =>
+				index === self.findIndex((t) => t.id === outcome.id)
+		)
 )
 
 const outcomes = (
