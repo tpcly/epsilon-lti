@@ -51,14 +51,9 @@ const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 
 <style scoped>
 .competence-document {
-	grid-template-columns: 1fr;
-}
-@media screen and (min-width: 580px) {
-	.competence-document {
-		display: grid;
-		grid-template-columns: 1fr 5fr 1fr;
-		gap: 2rem 0;
-		justify-content: space-between;
-	}
+	display: grid;
+	grid-template-columns: 1fr 5fr 1fr;
+	gap: 2rem 0;
+	justify-content: space-between;
 }
 </style>

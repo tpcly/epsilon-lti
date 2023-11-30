@@ -5,14 +5,14 @@
 				<th />
 				<th
 					v-for="submission of submissions"
-					:key="submission.assignment || undefined"
+					:key="submission.assignment"
 					class="kpi-matrix-header kpi-matrix-header-assignment">
 					{{ submission.assignment }}
 				</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="outcome of allOutcomes.sort()" :key="outcome.id">
+			<tr v-for="outcome of allOutcomes.sort((a, b) => a.value.order! - b.value.order!)" :key="outcome.id">
 				<th
 					:key="outcome.name"
 					class="kpi-matrix-header kpi-matrix-header-outcome">

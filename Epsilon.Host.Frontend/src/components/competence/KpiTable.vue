@@ -1,7 +1,7 @@
 <template>
 	<table class="kpi-table">
 		<tr
-			v-for="outcome of allOutcomes.sort()"
+			v-for="outcome of allOutcomes.sort((a, b) => a.value.order! - b.value.order!)"
 			:key="outcome.id"
 			class="kpi-table-outcome">
 			<th class="kpi-table-outcome kpi-table-outcome-name">
