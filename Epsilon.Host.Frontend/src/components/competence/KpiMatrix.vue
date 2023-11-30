@@ -12,7 +12,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="outcome of allOutcomes.sort((a, b) => a.value.order! - b.value.order!)" :key="outcome.id">
+			<tr
+				v-for="outcome of allOutcomes.sort(
+					(a, b) => a.value.order! - b.value.order!
+				)"
+				:key="outcome.id">
 				<th
 					:key="outcome.name"
 					class="kpi-matrix-header kpi-matrix-header-outcome">
@@ -78,7 +82,7 @@ const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 		font-weight: 400;
 
 		&-assignment {
-			width: 200px;
+			width: fit-content;
 			border-bottom: 2px solid RGB(218, 219, 223, 0.7);
 			border-right: 2px solid RGB(218, 219, 223, 0.7);
 			border-left: 2px solid RGB(218, 219, 223, 0.7);

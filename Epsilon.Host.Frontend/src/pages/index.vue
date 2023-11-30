@@ -71,9 +71,7 @@ const filteredSubmissions = computed(() => {
 	}
 
 	return submissions.value.filter((submission) => {
-		if (
-			submission.criteria!.length > 0
-		) {
+		if (submission.criteria!.length > 0) {
 			const submittedAt = new Date(submission.submittedAt!)
 
 			return (
