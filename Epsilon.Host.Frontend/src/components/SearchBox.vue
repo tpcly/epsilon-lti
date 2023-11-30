@@ -102,15 +102,14 @@ const props = defineProps<{
 	isTermSearch: boolean | null
 }>()
 
-const query = ref("")
-
+const query = ref<string>("")
 const startDate = ref<string | undefined>(undefined)
 const endDate = ref<string | undefined>(undefined)
 let datesAdjusted = false
 
 // Reset the default open/close behaviour of the combobox
-const isStatic = ref(false)
-const customClick = ref(false)
+const isStatic = ref<boolean>(false)
+const customClick = ref<boolean>(false)
 
 // For when combobox input is date or term name
 let dateName = false
@@ -142,15 +141,15 @@ const filteredItems = computed(() => {
 })
 
 // Display term name or term dates (custom)
-function displayValue(item: { name: string }): string {
+function displayValue(term: EnrollmentTerm): string {
 	if (datesAdjusted) {
 		if (startDate.value && endDate.value) {
 			dateName = true
 			return startDate.value + " - " + endDate.value
 		}
 	}
-	if (item && item.name) {
-		return item.name
+	if (term && term.name) {
+		return term.name
 	}
 	return ""
 }
@@ -283,9 +282,8 @@ watch(
 	background-color: #fff;
 	border-radius: 7px;
 	padding: 10px;
-	height: 180px;
-	width: 180px;
-	margin-left: 122px;
+	width: 15%;
+	margin-left: 10.8%;
 }
 
 .custom-click-color {

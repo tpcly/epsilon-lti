@@ -104,11 +104,7 @@ watch([fromDate, toDate], () => {
 	}
 }
 
-#dateRangeCol {
-	margin-right: 30px;
-}
-
 .search-boxes {
-	margin-right: 105px;
+	margin-right: 10%;
 }
 </style>
