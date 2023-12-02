@@ -34,7 +34,6 @@ public class LearningDomainServiceTests
     [Fact]
     public async Task GetDomain_ReturnsExpectedDomain()
     {
-        _learningDomain = TestDataGenerator.GenerateRandomLearningDomain();
         // Arrange
         var domainName = _learningDomain.Id;
         _learningDomainRepositoryMock.Setup(repo => repo.SingleOrDefaultAsync(d => d.Id == domainName, It.IsAny<string[]>())).ReturnsAsync(_learningDomain);
@@ -48,8 +47,8 @@ public class LearningDomainServiceTests
         Assert.NotNull(_learningDomain.RowsSet);
         Assert.Null(_learningDomain.ColumnsSet);
     }
-    
-    
+
+
     [Fact]
     public async Task GetDomain_ReturnsExpectedDomainWithColumnTypes()
     {
@@ -84,4 +83,19 @@ public class LearningDomainServiceTests
         Assert.Equal(_learningDomain, result);
         Assert.Null(_learningDomain.ColumnsSet);
     }
+
+    [Fact]
+    public async Task GetDomainsFromTenant_ReturnsCorrectDomains()
+    {
+        // Arrange
+        var expectedDomains = new List<LearningDomain> { _learningDomain, };
+        _learningDomainRepositoryMock.Setup(static repo => repo.AllToListAsync(null, It.IsAny<string[]?>(), It.IsAny<int?>(), It.IsAny<int?>())).ReturnsAsync(expectedDomains);
+
+        // Act
+        var result = await _learningDomainService.GetDomainsFromTenant();
+
+        // Assert
+        Assert.Equal(expectedDomains, result);
+    }
+
 }
