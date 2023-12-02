@@ -38,15 +38,15 @@ public class DocumentController : ControllerBase
 
 
     [HttpGet("download/word")]
-    public async Task<IActionResult> DownloadWord(int courseId, DateTime from, DateTime to)
+    public async Task<IActionResult> DownloadWord(string userId, DateTime from, DateTime to)
     {
-        var document = await _competenceDocumentService.GetDocument(courseId, from, to);
+        var document = await _competenceDocumentService.GetDocument(userId, from, to);
 
         using var stream = new MemoryStream();
         _competenceDocumentService.WriteDocument(stream, document);
 
         return File(
-            stream,
+            stream.ToArray(),
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "CompetenceDocument.docx"
         );
