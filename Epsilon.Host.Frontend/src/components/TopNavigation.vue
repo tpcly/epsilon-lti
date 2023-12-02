@@ -1,28 +1,22 @@
 <template>
 	<div class="top-navigation">
 		<img alt="logo" class="top-navigation-logo" src="../assets/logo.png" />
-		<Row>
-			<Col :cols="6">
+		<Row class="search-boxes">
+			<Col :cols="7">
 				<SearchBox
 					v-model="selectedUser"
 					:items="users"
 					:limit="5"
-					placeholder="Student" />
+					placeholder="Student"
+					:is-term-search="null" />
 			</Col>
-			<Col :cols="3">
-				<TermDateFilter
-					:from-date="fromDate"
-					:to-date="toDate"
-					placeholder="Term"
-					@update:from-date="fromDate = $event"
-					@update:to-date="toDate = $event" />
-			</Col>
-			<Col :cols="3">
+			<Col :cols="5">
 				<SearchBox
 					v-model="selectedTerm"
 					:items="terms"
 					:limit="10"
-					placeholder="Term" />
+					placeholder="Term"
+					:is-term-search="true" />
 			</Col>
 		</Row>
 	</div>
@@ -30,7 +24,6 @@
 
 <script lang="ts" setup>
 import SearchBox from "~/components/SearchBox.vue"
-import TermDateFilter from "@/components/TermDateFilter.vue"
 import Row from "~/components/LayoutRow.vue"
 import Col from "~/components/LayoutCol.vue"
 import { type EnrollmentTerm, type User } from "~/api.generated"
@@ -109,5 +102,9 @@ watch([fromDate, toDate], () => {
 		height: 5rem;
 		object-fit: contain;
 	}
+}
+
+.search-boxes {
+	margin-right: 10%;
 }
 </style>
