@@ -30,19 +30,19 @@ public class CompetenceDocumentService : ICompetenceDocumentService
             submissions = submissions.Where(s => s.SubmittedAt <= from && s.SubmittedAt >= to);
         }
 
-        var components = await FetchComponents(submissions).ToListAsync();
+        var components = FetchComponents(submissions);
 
         return new CompetenceDocument(components);
     }
 
-    public void WriteDocument(Stream stream, CompetenceDocument document)
+    public async void WriteDocument(Stream stream, CompetenceDocument document)
     {
         using var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
         wordDocument.AddMainDocumentPart();
         wordDocument.MainDocumentPart!.Document = new Document();
 
-        foreach (var competenceWordComponent in document.Components)
+        foreach (var competenceWordComponent in await document.Components.ToListAsync())
         {
             competenceWordComponent.AddToWordDocument(wordDocument.MainDocumentPart);
         }
@@ -51,7 +51,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         wordDocument.Dispose();
     }
 
-    private async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions)
+    public async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions)
     {
         yield return new CompetenceProfileComponent(submissions, await _domainService.GetDomainsFromTenant());
     }

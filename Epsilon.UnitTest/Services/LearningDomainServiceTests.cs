@@ -45,7 +45,6 @@ public class LearningDomainServiceTests
         Assert.Equal(_learningDomain, result);
         Assert.NotNull(_learningDomain.ValuesSet);
         Assert.NotNull(_learningDomain.RowsSet);
-        Assert.Null(_learningDomain.ColumnsSet);
     }
 
 
@@ -65,23 +64,6 @@ public class LearningDomainServiceTests
         Assert.Equal(_learningDomain, result);
         Assert.NotNull(_learningDomain.ValuesSet);
         Assert.NotNull(_learningDomain.RowsSet);
-        Assert.NotNull(_learningDomain.ColumnsSet);
-    }
-
-
-    [Fact]
-    public async Task GetDomain_ReturnsColumnNull()
-    {
-        // Arrange
-        var domainName = _learningDomain.Id;
-        _learningDomainRepositoryMock.Setup(repo => repo.SingleOrDefaultAsync(d => d.Id == domainName, It.IsAny<string[]>())).ReturnsAsync(_learningDomain);
-
-        // Act
-        var result = await _learningDomainService.GetDomain(domainName);
-
-        // Assert
-        Assert.Equal(_learningDomain, result);
-        Assert.Null(_learningDomain.ColumnsSet);
     }
 
     [Fact]

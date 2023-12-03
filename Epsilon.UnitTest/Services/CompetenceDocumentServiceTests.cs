@@ -1,7 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Validation;
 using Epsilon.Abstractions;
-using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
 using Epsilon.Services;
 using Moq;
@@ -15,6 +14,7 @@ public class CompetenceDocumentServiceTests
     private readonly Mock<ILearningDomainService> _domainServiceMock = new Mock<ILearningDomainService>();
     private readonly Mock<ILearningOutcomeCanvasResultService> _canvasResultServiceMock = new Mock<ILearningOutcomeCanvasResultService>();
     private readonly CompetenceDocumentService _competenceDocumentService;
+    private readonly IAsyncEnumerable<LearningDomainSubmission> _submissions = TestDataGenerator.GenerateRandomLearningDomainSubmissions(40);
 
     public CompetenceDocumentServiceTests(ITestOutputHelper testOutputHelper)
     {
@@ -23,29 +23,48 @@ public class CompetenceDocumentServiceTests
     }
 
     [Fact]
-    public async Task GetDocument_ReturnsCorrectDocument()
+    public async Task GetDocument_ReturnsCorrectDocumentWithFilteredDates()
     {
-        // // Arrange
-        // var userId = "testUser";
-        // var from = DateTime.Now.AddDays(-7);
-        // var to = DateTime.Now;
-        // var expectedDocument = new CompetenceDocument(new List<AbstractCompetenceComponent>());
-        //
-        // _canvasResultServiceMock.Setup(service => service.GetSubmissions(userId)).Returns(new List<LearningDomainSubmission>());
-        // _domainServiceMock.Setup(static service => service.GetDomainsFromTenant()).ReturnsAsync(new List<LearningDomain>());
-        //
-        // // Act
-        // var result = await _competenceDocumentService.GetDocument(userId, from, to);
-        //
-        // // Assert
-        // Assert.Equal(expectedDocument.Components.Count, result.Components.Count);
+        // Arrange
+        var userId = "testUser";
+        var from = DateTime.Now.AddDays(-7);
+        var to = DateTime.Now;
+        var expectedDocument = _competenceDocumentService.FetchComponents(_submissions);
+        
+        _canvasResultServiceMock.Setup(service => service.GetSubmissions(userId)).Returns(_submissions);
+        _domainServiceMock.Setup(static service => service.GetDomainsFromTenant()).ReturnsAsync(new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),});
+        
+        // Act
+        var result = await _competenceDocumentService.GetDocument(userId, from, to);
+        
+        // Assert
+        Assert.Equal(await expectedDocument.CountAsync(), await result.Components.CountAsync());
+    }
+    
+    
+    [Fact]
+    public async Task GetDocument_ReturnsCorrectDocumentWithNoDates()
+    {
+        // Arrange
+        var userId = "testUser";
+        var expectedDocument = _competenceDocumentService.FetchComponents(_submissions);
+        
+        _canvasResultServiceMock.Setup(service => service.GetSubmissions(userId)).Returns(_submissions);
+        _domainServiceMock.Setup(static service => service.GetDomainsFromTenant()).ReturnsAsync(new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),});
+        
+        // Act
+        var result = await _competenceDocumentService.GetDocument(userId, null, null);
+        
+        // Assert
+        Assert.Equal(await expectedDocument.CountAsync(), await result.Components.CountAsync());
     }
 
     [Fact]
     public void WriteDocument_WritesToStream()
     {
         // Arrange
-        var document = new CompetenceDocument(new List<AbstractCompetenceComponent>());
+        
+        var document = new CompetenceDocument(_competenceDocumentService.FetchComponents(_submissions));
         using var stream = new MemoryStream();
 
         // Act
@@ -59,7 +78,7 @@ public class CompetenceDocumentServiceTests
     private void ValidateOpnXmlWordGeneration()
     {
         // Arrange
-        var document = new CompetenceDocument(new List<AbstractCompetenceComponent>());
+        var document = new CompetenceDocument(_competenceDocumentService.FetchComponents(_submissions));
         using var stream = new MemoryStream();
         _competenceDocumentService.WriteDocument(stream, document);
         using var wordprocessingDocument = WordprocessingDocument.Open(stream, false);
