@@ -8,7 +8,7 @@ namespace Epsilon.Host.WebApi.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class FilterController : Controller
 {
     private readonly IFilterService _filterService;

@@ -41,7 +41,7 @@ const fromDate = ref<Date | null>(null)
 const toDate = ref<Date | null>(null)
 
 onMounted(async () => {
-	const response = await api.filter.accessibleStudentsList()
+	const response = await api.filter.filterAccessibleStudentsList()
 
 	users.value = response.data
 	selectedUser.value = users.value[0]
@@ -57,7 +57,7 @@ watch(selectedUser, async () => {
 
 	terms.value = []
 
-	const response = await api.filter.participatedTermsList({
+	const response = await api.filter.filterParticipatedTermsList({
 		studentId: selectedUser.value._id,
 	})
 
