@@ -35,9 +35,11 @@ const hboIDomain = ref<LearningDomain | null>(null)
 const personalDevelopmentDomain = ref<LearningDomain | null>(null)
 
 onMounted(async () => {
-	hboIDomain.value = (await api.learning.domainDetail("hbo-i-2018")).data
+	hboIDomain.value = (
+		await api.learning.learningDomainDetail("hbo-i-2018")
+	).data
 	personalDevelopmentDomain.value = (
-		await api.learning.domainDetail("pd-2020-bsc")
+		await api.learning.learningDomainDetail("pd-2020-bsc")
 	).data
 })
 </script>

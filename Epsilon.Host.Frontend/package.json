@@ -12,7 +12,7 @@
 		"setup-ssl": "node aspnetcore-https && node aspnetcore-nuxt",
 		"lint": "eslint --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore .",
 		"format-code": "prettier --check .",
-		"generate-api-schema": "pnpm dlx swagger-typescript-api -p https://localhost:7084/swagger/v1/swagger.json -o src/ -n api.generated.ts"
+		"generate-api-schema": "pnpm dlx swagger-typescript-api -p https://localhost:7084/swagger/v1/swagger.json -o src/ -n api.generated.ts --module-name-index 1"
 	},
 	"dependencies": {
 		"apexcharts": "^3.44.1",
