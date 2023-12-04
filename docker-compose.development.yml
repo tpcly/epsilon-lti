@@ -54,7 +54,7 @@ services:
     image: mariadb:10
     environment:
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
-      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_DATABASE: ${DB_DATABASE}
     ports:
       - 3306:3306
     volumes:
