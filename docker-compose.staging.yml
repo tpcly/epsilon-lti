@@ -34,7 +34,6 @@ services:
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
     env_file:
       - .env.staging
-  
   api:
     container_name: Epsilon-API
     build:
@@ -51,9 +50,8 @@ services:
   db:
     container_name: Epsilon-DB
     image: mariadb:10
-    environment:
-      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
-      MARIADB_DATABASE: ${DB_DATABASE}
+    env_file:
+      - .env.staging
     ports:
       - 3306:3306
     volumes:

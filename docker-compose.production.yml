@@ -11,12 +11,6 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      # Redirection
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-      # HTTP challenge
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       # HTTPS / Certificates
       - "--certificatesresolvers.letsencrypt.acme.email=typiqally@gmail.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
@@ -40,7 +34,6 @@ services:
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
     env_file:
       - .env.production
-  
   api:
     container_name: Epsilon-API
     build:
@@ -54,13 +47,11 @@ services:
       - ASPNETCORE_URLS=http://+:80;
     env_file:
       - .env.production
-
   db:
     container_name: Epsilon-DB
     image: mariadb:10
-    environment:
-      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
-      MARIADB_DATABASE: ${DB_DATABASE}
+    env_file:
+      - .env.production
     ports:
       - 3306:3306
     volumes:

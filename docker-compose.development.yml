@@ -34,7 +34,6 @@ services:
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
     env_file:
       - .env.development
-  
   api:
     container_name: Epsilon-API
     build:
@@ -46,15 +45,13 @@ services:
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
     environment:
       - ASPNETCORE_URLS=http://+:80;
-      - ASPNETCORE_ENVIRONMENT=Development
     env_file:
       - .env.development
   db:
     container_name: Epsilon-DB
     image: mariadb:10
-    environment:
-      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
-      MARIADB_DATABASE: ${DB_DATABASE}
+    env_file:
+      - .env.development
     ports:
       - 3306:3306
     volumes:
