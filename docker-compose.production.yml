@@ -11,6 +11,12 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+	  # Redirection
+	  - "--entrypoints.web.http.redirections.entrypoint.to=web-secure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+	  # HTTP challenge
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       # HTTPS / Certificates
       - "--certificatesresolvers.letsencrypt.acme.email=typiqally@gmail.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
