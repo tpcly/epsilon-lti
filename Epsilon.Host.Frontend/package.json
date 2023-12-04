@@ -32,7 +32,7 @@
 		"@types/lodash": "^4.14.202",
 		"@types/node": "^20.10.1",
 		"eslint": "^8.55.0",
-		"eslint-config-prettier": "^9.0.0",
+		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.0.1",
 		"h3": "^1.9.0",
 		"jwt-decode": "^4.0.0",
