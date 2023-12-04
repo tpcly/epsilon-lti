@@ -1,4 +1,4 @@
-﻿version: "3.3"
+version: "3.3"
 services:
   traefik:
     image: "traefik:v2.10"
@@ -11,11 +11,11 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-	  # Redirection
-	  - "--entrypoints.web.http.redirections.entrypoint.to=web-secure"
+      # Redirection
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-	  # HTTP challenge
+      # HTTP challenge
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       # HTTPS / Certificates
       - "--certificatesresolvers.letsencrypt.acme.email=typiqally@gmail.com"
@@ -54,6 +54,7 @@ services:
       - ASPNETCORE_URLS=http://+:80;
     env_file:
       - .env.production
+
   db:
     container_name: Epsilon-DB
     image: mariadb:10
