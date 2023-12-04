@@ -32,11 +32,11 @@ const api = useApi()
 const hboIDomain = ref<LearningDomain | null>(null)
 const personalDevelopmentDomain = ref<LearningDomain | null>(null)
 
-onMounted(async () => {
-	hboIDomain.value = (await api.learning.domainDetail("hbo-i-2018")).data
-	personalDevelopmentDomain.value = (
-		await api.learning.domainDetail("pd-2020-bsc")
-	).data
+api.learning.domainDetail("hbo-i-2018").then((hboIData) => {
+	hboIDomain.value = hboIData.data
+})
+api.learning.domainDetail("pd-2020-bsc").then((personalDevelopmentData) => {
+	personalDevelopmentDomain.value = personalDevelopmentData.data
 })
 </script>
 

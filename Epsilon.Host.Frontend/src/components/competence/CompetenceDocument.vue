@@ -1,14 +1,10 @@
 <template>
 	<div v-if="submissions" class="competence-document">
 		<KpiTable :submissions="submissions" :outcomes="allOutcomes" />
-		<div></div>
-		<div></div>
 		<CompetenceProfile
 			v-if="hboIDomain"
 			:submissions="submissions"
 			:domain="hboIDomain" />
-		<div></div>
-		<div></div>
 		<KpiMatrix
 			v-if="hboIDomain"
 			:submissions="submissions"
@@ -35,11 +31,11 @@ const api = useApi()
 const hboIDomain = ref<LearningDomain | null>(null)
 const personalDevelopmentDomain = ref<LearningDomain | null>(null)
 
-onMounted(async () => {
-	hboIDomain.value = (await api.learning.domainDetail("hbo-i-2018")).data
-	personalDevelopmentDomain.value = (
-		await api.learning.domainDetail("pd-2020-bsc")
-	).data
+api.learning.domainDetail("hbo-i-2018").then((hboIData) => {
+	hboIDomain.value = hboIData.data
+})
+api.learning.domainDetail("pd-2020-bsc").then((personalDevelopmentData) => {
+	personalDevelopmentDomain.value = personalDevelopmentData.data
 })
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
@@ -52,8 +48,6 @@ const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 <style scoped>
 .competence-document {
 	display: grid;
-	grid-template-columns: 1fr 5fr 1fr;
 	gap: 2rem 0;
-	justify-content: space-between;
 }
 </style>
