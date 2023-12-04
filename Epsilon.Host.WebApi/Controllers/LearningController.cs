@@ -7,7 +7,7 @@ namespace Epsilon.Host.WebApi.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class LearningController : ControllerBase
 {
     private readonly ILearningDomainService _learningDomainService;

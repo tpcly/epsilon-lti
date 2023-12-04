@@ -3,6 +3,8 @@ on:
     workflow_dispatch:
     push:
         branches: [ main, develop ]
+    release:
+      types: [published]
 jobs:
     api:
         name: Build API Docker image and publish

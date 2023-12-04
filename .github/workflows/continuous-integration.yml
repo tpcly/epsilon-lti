@@ -78,10 +78,16 @@ jobs:
         name: Build Docker
         runs-on: ubuntu-20.04
         needs: [ build-frontend, build-backend, lint-frontend, code-analysis ]
+        strategy:
+          fail-fast: false
+          matrix:
+            stage: [ 'development', 'staging', 'production' ]
         steps:
             -   uses: actions/checkout@v4
+            -   name: Create env file for ${{ matrix.stage }}
+                run: cp .env.example .env.${{ matrix.stage }}
             -   name: Build the containers
-                run: docker-compose -f docker-compose.development.yml build
+                run: docker-compose -f docker-compose.${{ matrix.stage }}.yml build
     code-analysis:
         name: Code analysis
         needs: [ build-backend, build-frontend, lint-frontend ]

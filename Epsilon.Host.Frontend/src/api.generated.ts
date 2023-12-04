@@ -37,6 +37,7 @@ export interface LearningDomainOutcome {
 	row: LearningDomainType
 	column?: LearningDomainType
 	value: LearningDomainType
+	/** @minLength 1 */
 	name: string
 }
 
@@ -58,7 +59,9 @@ export interface LearningDomainSubmission {
 
 export interface LearningDomainType {
 	id?: string | null
+	/** @minLength 1 */
 	name: string
+	/** @minLength 1 */
 	shortName: string
 	hexColor?: string | null
 	/** @format int32 */
@@ -76,6 +79,7 @@ export interface PageComponent {
 }
 
 export interface PageUpdateRequest {
+	/** @minLength 1 */
 	body: string
 }
 
@@ -306,10 +310,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Document
-		 * @name PageDetail
-		 * @request GET:/Document/page/{pageName}
+		 * @name DocumentPageDetail
+		 * @request GET:/api/Document/page/{pageName}
 		 */
-		pageDetail: (
+		documentPageDetail: (
 			pageName: string,
 			query?: {
 				/** @format int32 */
@@ -318,7 +322,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 			params: RequestParams = {}
 		) =>
 			this.request<PageComponent, any>({
-				path: `/Document/page/${pageName}`,
+				path: `/api/Document/page/${pageName}`,
 				method: "GET",
 				query: query,
 				format: "json",
@@ -329,10 +333,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Document
-		 * @name PageCreate
-		 * @request POST:/Document/page/{pageName}
+		 * @name DocumentPageCreate
+		 * @request POST:/api/Document/page/{pageName}
 		 */
-		pageCreate: (
+		documentPageCreate: (
 			pageName: string,
 			data: PageUpdateRequest,
 			query?: {
@@ -342,7 +346,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 			params: RequestParams = {}
 		) =>
 			this.request<PageComponent, any>({
-				path: `/Document/page/${pageName}`,
+				path: `/api/Document/page/${pageName}`,
 				method: "POST",
 				query: query,
 				body: data,
@@ -355,13 +359,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Document
-		 * @name DownloadWordList
-		 * @request GET:/Document/download/word
+		 * @name DocumentDownloadWordList
+		 * @request GET:/api/Document/download/word
 		 */
-		downloadWordList: (
+		documentDownloadWordList: (
 			query?: {
-				/** @format int32 */
-				courseId?: number
+				userId?: string
 				/** @format date-time */
 				from?: string
 				/** @format date-time */
@@ -370,7 +373,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 			params: RequestParams = {}
 		) =>
 			this.request<void, any>({
-				path: `/Document/download/word`,
+				path: `/api/Document/download/word`,
 				method: "GET",
 				query: query,
 				...params,
@@ -381,17 +384,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Filter
-		 * @name ParticipatedTermsList
-		 * @request GET:/Filter/participated-terms
+		 * @name FilterParticipatedTermsList
+		 * @request GET:/api/Filter/participated-terms
 		 */
-		participatedTermsList: (
+		filterParticipatedTermsList: (
 			query?: {
 				studentId?: string
 			},
 			params: RequestParams = {}
 		) =>
 			this.request<EnrollmentTerm[], any>({
-				path: `/Filter/participated-terms`,
+				path: `/api/Filter/participated-terms`,
 				method: "GET",
 				query: query,
 				format: "json",
@@ -402,12 +405,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Filter
-		 * @name AccessibleStudentsList
-		 * @request GET:/Filter/accessible-students
+		 * @name FilterAccessibleStudentsList
+		 * @request GET:/api/Filter/accessible-students
 		 */
-		accessibleStudentsList: (params: RequestParams = {}) =>
+		filterAccessibleStudentsList: (params: RequestParams = {}) =>
 			this.request<User[], any>({
-				path: `/Filter/accessible-students`,
+				path: `/api/Filter/accessible-students`,
 				method: "GET",
 				format: "json",
 				...params,
@@ -418,17 +421,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Learning
-		 * @name OutcomesList
-		 * @request GET:/Learning/outcomes
+		 * @name LearningOutcomesList
+		 * @request GET:/api/Learning/outcomes
 		 */
-		outcomesList: (
+		learningOutcomesList: (
 			query?: {
 				studentId?: string
 			},
 			params: RequestParams = {}
 		) =>
 			this.request<LearningDomainSubmission[], any>({
-				path: `/Learning/outcomes`,
+				path: `/api/Learning/outcomes`,
 				method: "GET",
 				query: query,
 				format: "json",
@@ -439,12 +442,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Learning
-		 * @name DomainDetail
-		 * @request GET:/Learning/domain/{name}
+		 * @name LearningDomainDetail
+		 * @request GET:/api/Learning/domain/{name}
 		 */
-		domainDetail: (name: string, params: RequestParams = {}) =>
+		learningDomainDetail: (name: string, params: RequestParams = {}) =>
 			this.request<LearningDomain, any>({
-				path: `/Learning/domain/${name}`,
+				path: `/api/Learning/domain/${name}`,
 				method: "GET",
 				format: "json",
 				...params,
@@ -454,12 +457,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Learning
-		 * @name DomainOutcomesList
-		 * @request GET:/Learning/domain/outcomes
+		 * @name LearningDomainOutcomesList
+		 * @request GET:/api/Learning/domain/outcomes
 		 */
-		domainOutcomesList: (params: RequestParams = {}) =>
+		learningDomainOutcomesList: (params: RequestParams = {}) =>
 			this.request<LearningDomainOutcome, any>({
-				path: `/Learning/domain/outcomes`,
+				path: `/api/Learning/domain/outcomes`,
 				method: "GET",
 				format: "json",
 				...params,
