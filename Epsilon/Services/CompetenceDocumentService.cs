@@ -48,8 +48,6 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         }
 
         wordDocument.Save();
-        // Reset stream position to start position
-        stream.Position = startPosition;
         wordDocument.Dispose();
     }
 
