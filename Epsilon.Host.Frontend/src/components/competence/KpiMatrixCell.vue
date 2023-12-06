@@ -1,9 +1,11 @@
 <template>
-	<td :style="{ backgroundColor: getColor() }" />
+	<td :style="{ backgroundColor: getColor() }">
+		{{ result?.outcome.value.shortName }}
+	</td>
 </template>
 <script setup lang="ts">
-import { defineProps } from "vue/dist/vue"
-import {
+import { defineProps } from "vue"
+import type {
 	LearningDomainCriteria,
 	LearningDomainOutcomeRecord,
 } from "@/api.generated"
@@ -31,6 +33,7 @@ function getColor(): string {
 
 <style scoped lang="scss">
 td {
-	border: #bfbebb 0.5px solid;
+	text-align: center;
+	border: 2px solid rgb(218, 219, 223);
 }
 </style>

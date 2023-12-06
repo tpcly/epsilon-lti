@@ -1,77 +1,101 @@
 <template>
-	<h2>KPI-Table</h2>
-	<table>
-		<tr v-for="outcomeId of allOutcomes.sort()" :key="outcomeId">
-			<th>
-				{{ store.state.outcomes.find((o) => o.id === outcomeId).name }}
+	<h2>Kpi-Table</h2>
+	<table class="kpi-table">
+		<tr
+			v-for="outcome of allOutcomes.sort(
+				(a, b) => a.value.order! - b.value.order!
+			)"
+			:key="outcome.id"
+			class="kpi-table-outcome">
+			<th class="kpi-table-outcome kpi-table-outcome-name">
+				{{ outcome.name }}
 			</th>
-			<td>
+			<td class="kpi-table-outcome kpi-table-outcome-submission">
 				<div
-					v-for="submission of store.state.filterdSubmissions.filter(
-						(s) => {
-							if (s.results != null) {
-								return (
-									s.results.filter(
-										(r) => r?.outcome?.id == outcomeId
-									).length > 0
-								)
-							}
+					v-for="submission of submissions.filter((s) => {
+						if (s.results != null) {
+							return (
+								s.results.filter(
+									(r) => r?.outcome?.id == outcome.id
+								).length > 0
+							)
 						}
-					)"
+					})"
 					:key="submission.submittedAt">
-					<a :href="submission.assignmentUrl" target="_blank">{{
-						submission.assignment
-					}}</a>
-				</div>
-			</td>
-			<td>
-				<div
-					v-for="submission of store.state.filterdSubmissions.filter(
-						(s) => {
-							if (s.results != null) {
-								return (
-									s.results.filter(
-										(r) => r?.outcome?.id == outcomeId
-									).length > 0
-								)
-							}
-						}
-					)"
-					:key="submission.submittedAt">
-					{{
-						submission.results.find(
-							(r) => r.outcome.id === outcomeId
+					<a :href="submission?.assignmentUrl" target="_blank">
+						{{ submission.assignment }}</a
+					>
+					<span>{{
+						submission.results?.find(
+							(r) => r.outcome?.id == outcome.id
 						)?.grade
-					}}
+					}}</span>
 				</div>
 			</td>
 		</tr>
 	</table>
 </template>
+
 <script setup lang="ts">
-import { useStore } from "vuex"
 import { computed } from "vue"
+import type {
+	LearningDomainOutcome,
+	LearningDomainSubmission,
+} from "~/api.generated"
 
-const store = useStore()
+const props = defineProps<{
+	outcomes: LearningDomainOutcome[]
+	submissions: LearningDomainSubmission[]
+}>()
 
-const allOutcomes = computed(() =>
-	store.state.filterdSubmissions
-		.flatMap((sub) => sub.results?.map((r) => parseInt(r.outcome?.id)))
-		.filter((value, index, self) => self.indexOf(value) === index)
-) as unknown as number[]
+const allOutcomes = computed<LearningDomainOutcome[]>(() =>
+	props.submissions
+		.flatMap((submission) =>
+			submission.results!.map((result) => result.outcome!)
+		)
+		.filter(
+			(outcome, index, self) =>
+				index === self.findIndex((t) => t.id === outcome.id)
+		)
+)
 </script>
+
 <style scoped lang="scss">
-tr {
-	border: 3px lightgray solid;
+template {
+	display: flex;
+	flex-direction: column;
 }
 
-tr td,
-tr th {
-	padding: 10px;
+.kpi-table {
+	display: block;
+	overflow: auto;
+	border-collapse: collapse;
+
+	&-outcome {
+		border-bottom: 2px solid rgb(218, 219, 223);
+		padding: 10px;
+
+		&-name {
+			width: 200px;
+			border-right: 2px solid rgb(218, 219, 223);
+		}
+		&-submission {
+			width: 400px;
+			div {
+				display: flex;
+				justify-content: space-between;
+				a {
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					max-width: 95%;
+				}
+			}
+		}
+	}
 }
 
 td div {
-	border-bottom: 2px lightgray solid;
-	width: 100%;
+	border-bottom: 2px solid rgb(218, 219, 223);
 }
 </style>

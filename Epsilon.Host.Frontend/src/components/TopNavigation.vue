@@ -37,6 +37,7 @@ const terms = ref<EnrollmentTerm[]>([])
 const selectedUser = ref<User | null>(null)
 const selectedTerm = ref<EnrollmentTerm | null>(null)
 
+const correctedFromDate = ref<Date | null>(null)
 const fromDate = ref<Date | null>(null)
 const toDate = ref<Date | null>(null)
 
@@ -73,15 +74,17 @@ watch(selectedTerm, () => {
 
 	const termsUnwrapped = terms.value
 
-	fromDate.value = new Date(
+	correctedFromDate.value = new Date(
 		termsUnwrapped[termsUnwrapped.length - 1]?.start_at!
 	)
 
 	toDate.value = new Date(selectedTermUnwrapped?.end_at)
+	fromDate.value = new Date(selectedTermUnwrapped?.start_at)
 })
 
-watch([fromDate, toDate], () => {
+watch([correctedFromDate, toDate], () => {
 	emit("rangeChange", {
+		startCorrected: correctedFromDate.value,
 		start: fromDate.value,
 		end: toDate.value,
 	})
