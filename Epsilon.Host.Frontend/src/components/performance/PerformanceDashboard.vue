@@ -1,47 +1,30 @@
 <template>
 	<div class="performance-dashboard">
 		<CompetenceProfile
-			v-if="hboIDomain"
 			:submissions="submissions"
-			:domain="hboIDomain" />
-		<LearningDomainValues v-if="hboIDomain" :domain="hboIDomain" />
+			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+		<LearningDomainValues
+			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
 		<div />
 		<CompetenceGraph
-			v-if="hboIDomain"
-			:domain="hboIDomain"
+			:domain="domains.find((l) => l.id == 'hbo-i-2018')"
 			:submissions="submissions" />
 		<PersonalDevelopmentGraph
-			v-if="personalDevelopmentDomain"
-			:domain="personalDevelopmentDomain"
+			:domain="domains.find((l) => l.id == 'pd-2020-bsc')"
 			:submissions="submissions" />
 	</div>
 </template>
 
 <script lang="ts" setup>
+import CompetenceProfile from "~/components/competence/CompetenceProfile.vue"
 import CompetenceGraph from "~/components/performance/CompetenceGraph.vue"
 import PersonalDevelopmentGraph from "~/components/performance/PersonalDevelopmentGraph.vue"
-import {
-	type LearningDomain,
-	type LearningDomainSubmission,
-} from "~/api.generated"
+import type { LearningDomain, LearningDomainSubmission } from "~/api.generated"
 
 defineProps<{
 	submissions: LearningDomainSubmission[]
+	domains: LearningDomain[]
 }>()
-
-const api = useApi()
-
-const hboIDomain = ref<LearningDomain | null>(null)
-const personalDevelopmentDomain = ref<LearningDomain | null>(null)
-
-onMounted(async () => {
-	hboIDomain.value = (
-		await api.learning.learningDomainDetail("hbo-i-2018")
-	).data
-	personalDevelopmentDomain.value = (
-		await api.learning.learningDomainDetail("pd-2020-bsc")
-	).data
-})
 </script>
 
 <style scoped>

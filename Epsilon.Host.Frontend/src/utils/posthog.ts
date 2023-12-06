@@ -1,13 +1,18 @@
-import posthog from "posthog-js"
+import posthog, { PostHog } from "posthog-js"
 
 export class Posthog {
-	static init(): void {
-		posthog.init("phc_wdX1JI1sEoh51qmTetv3MIvy5Sa8QywWgCrxTKzcCDI", {
-			api_host: "https://eu.posthog.com",
-			session_recording: {
-				maskAllInputs: true,
-				maskTextSelector: "*",
-			},
-		})
+	static init(): PostHog | void {
+		const p = posthog.init(
+			"phc_wdX1JI1sEoh51qmTetv3MIvy5Sa8QywWgCrxTKzcCDI",
+			{
+				api_host: "https://eu.posthog.com",
+				session_recording: {
+					maskAllInputs: true,
+					maskTextSelector: "*",
+				},
+			}
+		)
+		p?.setPersonPropertiesForFlags({ $current_url: location.href })
+		return p
 	}
 }

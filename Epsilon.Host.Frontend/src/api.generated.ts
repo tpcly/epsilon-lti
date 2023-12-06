@@ -461,7 +461,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Learning/domain/outcomes
 		 */
 		learningDomainOutcomesList: (params: RequestParams = {}) =>
-			this.request<LearningDomainOutcome, any>({
+		  this.request<LearningDomainOutcome[], any>({
 				path: `/api/Learning/domain/outcomes`,
 				method: "GET",
 				format: "json",
