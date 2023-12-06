@@ -1,10 +1,15 @@
 <template>
 	<div v-if="submissions" class="competence-document">
-		<KpiTable :submissions="submissions" :outcomes="allOutcomes" />
+		<KpiTable
+			:outcomes="allOutcomes"
+			:submissions="filteredSubmissionsDateSelection" />
+		<h2>Competence Profile</h2>
 		<CompetenceProfile
-			:submissions="submissions"
+			:submissions="filteredSubmissionsDateSelection"
 			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
-		<KpiMatrix :submissions="submissions" />
+		<KpiMatrix
+			:outcomes="outcomes"
+			:submissions="filteredSubmissionsDateSelection" />
 	</div>
 </template>
 
@@ -14,14 +19,43 @@ import KpiTable from "~/components/competence/KpiTable.vue"
 import CompetenceProfile from "~/components/competence/CompetenceProfile.vue"
 import type {
 	LearningDomain,
-	LearningDomainSubmission,
 	LearningDomainOutcome,
+	LearningDomainSubmission,
 } from "~/api.generated"
 
 const props = defineProps<{
 	submissions: LearningDomainSubmission[]
 	domains: LearningDomain[]
+	filterRange: {
+		start: Date
+		end: Date
+		startCorrected: Date
+	} | null
 }>()
+
+const outcomes = ref<LearningDomainOutcome[]>([])
+
+const filteredSubmissionsDateSelection = computed(() => {
+	const unwrappedFilterRange = props.filterRange
+
+	if (!unwrappedFilterRange) {
+		return props.submissions
+	}
+
+	return props.submissions.filter((submission) => {
+		if (submission.criteria!.length > 0) {
+			const submittedAt = new Date(submission.submittedAt!)
+
+			return (
+				submittedAt >= unwrappedFilterRange.start &&
+				submittedAt <= unwrappedFilterRange.end
+			)
+		}
+	})
+})
+
+const api = useApi()
+api.learning.learningDomainOutcomesList().then((r) => (outcomes.value = r.data))
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 	props.submissions.flatMap((submission) =>

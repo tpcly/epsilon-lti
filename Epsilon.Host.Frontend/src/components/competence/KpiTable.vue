@@ -1,4 +1,5 @@
 <template>
+	<h2>Kpi-Table</h2>
 	<table class="kpi-table">
 		<tr
 			v-for="outcome of allOutcomes.sort(

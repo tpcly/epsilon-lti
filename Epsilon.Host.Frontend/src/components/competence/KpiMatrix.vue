@@ -1,4 +1,5 @@
 <template>
+	<h2>Kpi-Matrix</h2>
 	<table class="kpi-matrix">
 		<thead>
 			<tr>
@@ -12,28 +13,22 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr
-				v-for="outcome of allOutcomes.sort(
-					(a, b) => a.value.order! - b.value.order!
-				)"
-				:key="outcome.id">
-				<th
-					:key="outcome.name"
-					class="kpi-matrix-header kpi-matrix-header-outcome">
+			<tr v-for="outcomeId of allOutcomes.sort()" :key="outcomeId">
+				<th class="kpi-matrix-header kpi-matrix-header-outcome">
 					<div>
-						{{ outcome.name }}
+						{{ outcomes.find((o) => o.id == outcomeId).name }}
 					</div>
 				</th>
 				<KpiMatrixCell
 					v-for="submission of submissions"
 					:key="submission?.assignmentUrl"
+					:criteria="
+						submission.criteria?.find((c) => c!.id == outcomeId)
+					"
 					:result="
 						submission.results?.find(
-							(r) => r?.outcome?.id == outcome.id
+							(r) => r?.outcome?.id == outcomeId
 						)
-					"
-					:criteria="
-						submission.criteria?.find((c) => c?.id == outcome.id)
 					">
 				</KpiMatrixCell>
 			</tr>
@@ -51,18 +46,19 @@ import {
 
 const props = defineProps<{
 	submissions: LearningDomainSubmission[]
+	outcomes: LearningDomainOutcome[]
 }>()
 
-const allOutcomes = computed<LearningDomainOutcome[]>(() =>
-	props.submissions
-		.flatMap((submission) =>
-			submission.results!.map((result) => result.outcome!)
-		)
-		.filter(
-			(outcome, index, self) =>
-				index === self.findIndex((t) => t.id === outcome.id)
-		)
-)
+const allOutcomes = computed<number[]>(() => {
+	let list: number[] = []
+	props.submissions.map((submission) =>
+		submission.criteria!.map((result) => {
+			list = list.filter((c) => c !== result.id)
+			list.push(result.id as number)
+		})
+	)
+	return list
+})
 </script>
 
 <style lang="scss" scoped>

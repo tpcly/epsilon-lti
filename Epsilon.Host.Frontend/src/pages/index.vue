@@ -21,14 +21,15 @@
 				<TabPanels>
 					<TabPanel>
 						<PerformanceDashboard
-							v-if="domains.length"
+							v-if="domains.length > 1"
 							:submissions="filteredSubmissions"
 							:domains="domains" />
 					</TabPanel>
 					<TabPanel>
 						<CompetenceDocument
-							v-if="domains.length"
+							v-if="domains.length > 1"
 							:submissions="filteredSubmissions"
+							:filter-range="filterRange"
 							:domains="domains" />
 					</TabPanel>
 				</TabPanels>
@@ -69,7 +70,11 @@ if (process.client && data.value?.idToken) {
 const api = useApi()
 
 const submissions = ref<LearningDomainSubmission[]>([])
-const filterRange = ref<{ start: Date; end: Date } | null>(null)
+const filterRange = ref<{
+	start: Date
+	end: Date
+	startCorrected: Date
+} | null>(null)
 
 const domains = ref<LearningDomain[]>([])
 
@@ -95,7 +100,7 @@ const filteredSubmissions = computed(() => {
 			const submittedAt = new Date(submission.submittedAt!)
 
 			return (
-				submittedAt >= unwrappedFilterRange.start &&
+				submittedAt >= unwrappedFilterRange.startCorrected &&
 				submittedAt <= unwrappedFilterRange.end
 			)
 		}
