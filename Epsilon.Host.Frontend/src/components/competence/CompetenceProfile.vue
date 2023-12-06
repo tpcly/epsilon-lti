@@ -2,7 +2,7 @@
 	<table class="competence-profile">
 		<thead>
 			<tr>
-				<td />
+				<th />
 				<th
 					v-for="col of domain.columnsSet?.types"
 					:key="col.id"
@@ -65,8 +65,13 @@ const outcomes = (
 	border-collapse: collapse;
 	width: 750px;
 
-	tr:last-of-type .competence-profile-header-row {
+	tr {
 		border-bottom: 2px solid rgb(218, 219, 223);
+	}
+
+	tr td {
+		border-right: 2px solid rgb(218, 219, 223);
+		border-left: 2px solid rgb(218, 219, 223);
 	}
 
 	&-header {
@@ -75,20 +80,14 @@ const outcomes = (
 		font-size: 0.9rem;
 
 		&-col {
-			border: 2px solid rgb(218, 219, 223);
-			border-top: transparent;
+			border-right: 2px solid rgb(218, 219, 223);
+			border-left: 2px solid rgb(218, 219, 223);
 			width: 6rem;
 		}
 
 		&-row {
-			border: 2px solid rgb(218, 219, 223);
-			border-bottom-style: none;
-			border-left-style: none;
+			border-top-style: solid;
 			display: flex;
-		}
-
-		&-row:first-child {
-			border-right: 1px solid rgb(218, 219, 223);
 		}
 
 		&-color {
