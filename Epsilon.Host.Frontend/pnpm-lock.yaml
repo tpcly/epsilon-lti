@@ -6,14 +6,14 @@ settings:
 
 dependencies:
   apexcharts:
-    specifier: ^3.44.1
-    version: 3.44.1
+    specifier: ^3.44.2
+    version: 3.44.2
   nuxt:
     specifier: ^3.8.2
     version: 3.8.2(@types/node@20.10.3)(eslint@8.55.0)(sass@1.69.5)(typescript@5.2.2)(vite@4.5.0)
   posthog-js:
-    specifier: ^1.93.3
-    version: 1.93.3
+    specifier: ^1.93.6
+    version: 1.93.6
   vue:
     specifier: ^3.3.10
     version: 3.3.10(typescript@5.2.2)
@@ -22,7 +22,7 @@ dependencies:
     version: 4.2.5(vue@3.3.10)
   vue3-apexcharts:
     specifier: ^1.4.4
-    version: 1.4.4(apexcharts@3.44.1)(vue@3.3.10)
+    version: 1.4.4(apexcharts@3.44.2)(vue@3.3.10)
 
 devDependencies:
   '@headlessui/vue':
@@ -2169,8 +2169,8 @@ packages:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
-  /apexcharts@3.44.1:
-    resolution: {integrity: sha512-nWd6bWf8E+c3YOsB0j0R4MOebMv1rBRWsK6aA11jF+pbag9IuBl4zrT4L42fxmDdLMcf5t3trWIXiGJmbLi2tA==}
+  /apexcharts@3.44.2:
+    resolution: {integrity: sha512-QWOFS/SC1TDsuI8VudVuIwLhs1qE6kwixRvmABMUgTVeVzizRWgQh8pdEIgwl+Zvr0TlM3vHPz6Dc5NP1hJ7BA==}
     dependencies:
       '@yr/monotone-cubic-spline': 1.0.3
       svg.draggable.js: 2.2.2
@@ -4949,8 +4949,8 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /posthog-js@1.93.3:
-    resolution: {integrity: sha512-jEOWwaQpTRbqLPrDLY6eZr7t95h+LyXqN7Yq1/K6u3V0Y1C9xHtYhpuGzYamirVnCDTbVq22RM++OBUaIpp9Wg==}
+  /posthog-js@1.93.6:
+    resolution: {integrity: sha512-Jou2awqQH5PDtDe9hZxpe9PO4D0uUOU7eA1lGni4pBxJckeA94P7WF3ieQj355xY96ZcXVQmGJykypO/FyBvpQ==}
     dependencies:
       fflate: 0.4.8
     dev: false
@@ -6127,13 +6127,13 @@ packages:
       '@vue/devtools-api': 6.5.0
       vue: 3.3.10(typescript@5.2.2)
 
-  /vue3-apexcharts@1.4.4(apexcharts@3.44.1)(vue@3.3.10):
+  /vue3-apexcharts@1.4.4(apexcharts@3.44.2)(vue@3.3.10):
     resolution: {integrity: sha512-TH89uZrxGjaDvkaYAISvj8+k6Bf1rUKFillc8oJirs5XZEPiwM1ELKZQ786wz0rfPqkSHHny2lqqUCK7Rw+LcQ==}
     peerDependencies:
       apexcharts: '> 3.0.0'
       vue: '> 3.0.0'
     dependencies:
-      apexcharts: 3.44.1
+      apexcharts: 3.44.2
       vue: 3.3.10(typescript@5.2.2)
     dev: false
 
