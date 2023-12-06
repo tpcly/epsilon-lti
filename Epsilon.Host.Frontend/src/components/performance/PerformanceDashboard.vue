@@ -32,12 +32,14 @@ const api = useApi()
 const hboIDomain = ref<LearningDomain | null>(null)
 const personalDevelopmentDomain = ref<LearningDomain | null>(null)
 
-api.learning.domainDetail("hbo-i-2018").then((hboIData) => {
+api.learning.learningDomainDetail("hbo-i-2018").then((hboIData) => {
 	hboIDomain.value = hboIData.data
 })
-api.learning.domainDetail("pd-2020-bsc").then((personalDevelopmentData) => {
-	personalDevelopmentDomain.value = personalDevelopmentData.data
-})
+api.learning
+	.learningDomainDetail("pd-2020-bsc")
+	.then((personalDevelopmentData) => {
+		personalDevelopmentDomain.value = personalDevelopmentData.data
+	})
 </script>
 
 <style scoped>
