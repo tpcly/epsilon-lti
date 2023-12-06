@@ -10,7 +10,9 @@
 						<Tab class="toolbar-slider-item">
 							Performance dashboard
 						</Tab>
-						<Tab class="toolbar-slider-item">
+						<Tab
+							v-if="enableCompetenceProfile"
+							class="toolbar-slider-item">
 							Competence Document
 						</Tab>
 					</TabList>
@@ -46,6 +48,8 @@ import {
 	type LearningDomainSubmission,
 	type User,
 } from "~/api.generated"
+import { Posthog } from "~/utils/posthog"
+import type { PostHog } from "posthog-js"
 
 const { readCallback, validateCallback } = useLti()
 
@@ -65,6 +69,14 @@ if (process.client && data.value?.idToken) {
 	if (validation) {
 		useState("id_token", () => callback?.idToken)
 	}
+}
+const enableCompetenceProfile = ref<boolean | undefined>(false)
+if (process.client) {
+	const po = Posthog.init() as PostHog
+	po.onFeatureFlags(function () {
+		enableCompetenceProfile.value =
+			po.isFeatureEnabled("competence-profile")
+	})
 }
 
 const api = useApi()
