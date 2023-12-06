@@ -2,7 +2,7 @@
 	<table class="competence-profile">
 		<thead>
 			<tr>
-				<td />
+				<th />
 				<th
 					v-for="col of domain.columnsSet?.types"
 					:key="col.id"
@@ -29,7 +29,6 @@
 		</tbody>
 	</table>
 </template>
-
 <script setup lang="ts">
 import { computed } from "vue"
 import {
@@ -63,13 +62,16 @@ const outcomes = (
 
 <style scoped lang="scss">
 .competence-profile {
-	box-sizing: border-box;
-	table-layout: fixed;
+	border-collapse: collapse;
 	width: 750px;
 
-	tr:last-of-type .competence-profile-header-row,
-	tr:last-of-type .competence-profile-data {
-		border-bottom: 2px solid RGB(218, 219, 223, 0.7);
+	tr {
+		border-bottom: 2px solid rgb(218, 219, 223);
+	}
+
+	tr td {
+		border-right: 2px solid rgb(218, 219, 223);
+		border-left: 2px solid rgb(218, 219, 223);
 	}
 
 	&-header {
@@ -78,20 +80,14 @@ const outcomes = (
 		font-size: 0.9rem;
 
 		&-col {
-			border: 2px solid RGB(218, 219, 223, 0.7);
-			border-top: transparent;
+			border-right: 2px solid rgb(218, 219, 223);
+			border-left: 2px solid rgb(218, 219, 223);
 			width: 6rem;
 		}
 
 		&-row {
-			border: 2px solid RGB(218, 219, 223, 0.7);
-			border-bottom-style: none;
-			border-left-style: none;
+			border-top-style: solid;
 			display: flex;
-		}
-
-		&-row:first-child {
-			border-right: 1px solid RGB(218, 219, 223, 0.7);
 		}
 
 		&-color {

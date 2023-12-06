@@ -125,7 +125,9 @@ const series = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.competence-graph {
-	margin-left: 265px;
+@media screen and (min-width: 580px) {
+	.competence-graph {
+		margin-left: 265px;
+	}
 }
 </style>
