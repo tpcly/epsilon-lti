@@ -75,28 +75,28 @@ const outcomes = (
 		font-size: 0.9rem;
 
 		&-col {
-			border-bottom: 2px solid RGB(218, 219, 223, 0.7);
-			border-right: 2px solid RGB(218, 219, 223, 0.7);
-			border-left: 2px solid RGB(218, 219, 223, 0.7);
+			border: 2px solid RGB(218, 219, 223, 0.7);
+			border-top: transparent;
 			width: 6rem;
 		}
 
 		&-row {
 			border: 2px solid RGB(218, 219, 223, 0.7);
-			border-bottom: none;
-			border-left: none;
+			border-bottom-style: none;
+			border-left-style: none;
 			display: flex;
 		}
-	}
-	&-row:first-child {
-		border-right: 2px solid RGB(218, 219, 223, 0.7);
-	}
 
-	.profile-header-color {
-		margin: 3px 10px 0;
-		width: 15px;
-		height: 15px;
-		font-size: 0.9rem;
+		&-row:first-child {
+			border-right: 1px solid RGB(218, 219, 223, 0.7);
+		}
+
+		&-color {
+			margin: 3px 10px 0;
+			width: 15px;
+			height: 15px;
+			font-size: 0.9rem;
+		}
 	}
 }
 </style>
