@@ -72,12 +72,12 @@ template {
 	border-collapse: collapse;
 
 	&-outcome {
-		border-bottom: 2px solid RGB(218, 219, 223, 0.7);
+		border-bottom: 2px solid rgb(218, 219, 223);
 		padding: 10px;
 
 		&-name {
 			width: 200px;
-			border-right: 2px solid RGB(218, 219, 223, 0.7);
+			border-right: 2px solid rgb(218, 219, 223);
 		}
 		&-submission {
 			width: 400px;
@@ -96,6 +96,6 @@ template {
 }
 
 td div {
-	border-bottom: 2px solid RGB(218, 219, 223, 0.7);
+	border-bottom: 2px solid rgb(218, 219, 223);
 }
 </style>

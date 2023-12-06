@@ -3,18 +3,18 @@
 	<table class="kpi-matrix">
 		<thead>
 			<tr>
-				<th />
+				<th></th>
 				<th
 					v-for="submission of submissions"
 					:key="submission.assignment"
-					class="kpi-matrix-header kpi-matrix-header-assignment">
+					class="kpi-matrix-header">
 					{{ submission.assignment }}
 				</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr v-for="outcomeId of allOutcomes.sort()" :key="outcomeId">
-				<th class="kpi-matrix-header kpi-matrix-header-outcome">
+				<th class="kpi-matrix-outcome">
 					<div>
 						{{ outcomes.find((o) => o.id == outcomeId).name }}
 					</div>
@@ -22,6 +22,7 @@
 				<KpiMatrixCell
 					v-for="submission of submissions"
 					:key="submission?.assignmentUrl"
+					class="kpi-matrix-cell"
 					:criteria="
 						submission.criteria?.find((c) => c!.id == outcomeId)
 					"
@@ -63,36 +64,27 @@ const allOutcomes = computed<number[]>(() => {
 
 <style lang="scss" scoped>
 .kpi-matrix {
-	display: block;
-	max-width: -webkit-fill-available;
-	overflow: auto;
-
-	tr:last-of-type .kpi-matrix-header-assignment {
-		border-bottom: 2px solid RGB(218, 219, 223, 0.7);
+	&-header {
+		text-decoration: underline;
+		writing-mode: vertical-lr;
+		-webkit-writing-mode: vertical-lr;
+		transform: rotate(180deg);
+		//border: 2px solid rgb(218, 219, 223);
+		//position: absolute;
+		padding: 10px;
 	}
 
-	&-header {
-		padding: 0.5rem;
-		font-weight: 400;
+	&-cell {
+		width: 10px;
+	}
 
-		&-assignment {
-			width: fit-content;
-			border-bottom: 2px solid RGB(218, 219, 223, 0.7);
-			border-right: 2px solid RGB(218, 219, 223, 0.7);
-			border-left: 2px solid RGB(218, 219, 223, 0.7);
-			writing-mode: vertical-rl;
-			transform: rotate(180deg);
-			padding: 10px;
-		}
-
-		&-outcome {
-			min-width: max-content;
-			border: 2px solid RGB(218, 219, 223, 0.7);
-			border-bottom: none;
-			border-left: none;
-			display: flex;
-			padding: 10px;
-		}
+	&-outcome {
+		width: 10px;
+		border: 2px solid rgb(218, 219, 223);
+		border-bottom: none;
+		border-left: none;
+		//display: flex;
+		padding: 10px;
 	}
 }
 </style>

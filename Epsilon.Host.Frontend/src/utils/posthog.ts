@@ -13,7 +13,6 @@ export class Posthog {
 			}
 		)
 		p?.setPersonPropertiesForFlags({ $current_url: location.href })
-		console.log(location.href)
 		return p
 	}
 }

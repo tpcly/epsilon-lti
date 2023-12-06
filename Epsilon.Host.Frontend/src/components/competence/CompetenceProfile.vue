@@ -66,7 +66,7 @@ const outcomes = (
 	width: 750px;
 
 	tr:last-of-type .competence-profile-header-row {
-		border-bottom: 2px solid RGB(218, 219, 223, 0.7);
+		border-bottom: 2px solid rgb(218, 219, 223);
 	}
 
 	&-header {
@@ -75,20 +75,20 @@ const outcomes = (
 		font-size: 0.9rem;
 
 		&-col {
-			border: 2px solid RGB(218, 219, 223, 0.7);
+			border: 2px solid rgb(218, 219, 223);
 			border-top: transparent;
 			width: 6rem;
 		}
 
 		&-row {
-			border: 2px solid RGB(218, 219, 223, 0.7);
+			border: 2px solid rgb(218, 219, 223);
 			border-bottom-style: none;
 			border-left-style: none;
 			display: flex;
 		}
 
 		&-row:first-child {
-			border-right: 1px solid RGB(218, 219, 223, 0.7);
+			border-right: 1px solid rgb(218, 219, 223);
 		}
 
 		&-color {

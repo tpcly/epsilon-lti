@@ -1,5 +1,7 @@
 <template>
-	<td :style="{ backgroundColor: getColor() }" />
+	<td :style="{ backgroundColor: getColor() }">
+		{{ result?.outcome.value.shortName }}
+	</td>
 </template>
 <script setup lang="ts">
 import { defineProps } from "vue"
@@ -32,8 +34,6 @@ function getColor(): string {
 <style scoped lang="scss">
 td {
 	text-align: center;
-	border-bottom: 2px solid RGB(218, 219, 223, 0.7);
-	border-right: 2px solid RGB(218, 219, 223, 0.7);
-	border-top: 2px solid RGB(218, 219, 223, 0.7);
+	border: 2px solid rgb(218, 219, 223);
 }
 </style>

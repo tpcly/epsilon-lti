@@ -8,6 +8,7 @@
 			:submissions="filteredSubmissionsDateSelection"
 			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
 		<KpiMatrix
+			v-if="outcomes.length > 0"
 			:outcomes="outcomes"
 			:submissions="filteredSubmissionsDateSelection" />
 	</div>
