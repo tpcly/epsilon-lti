@@ -2,13 +2,9 @@
 	<div v-if="submissions" class="competence-document">
 		<KpiTable :submissions="submissions" :outcomes="allOutcomes" />
 		<CompetenceProfile
-			v-if="hboIDomain"
 			:submissions="submissions"
-			:domain="hboIDomain" />
-		<KpiMatrix
-			v-if="hboIDomain"
-			:submissions="submissions"
-			:domain="hboIDomain" />
+			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+		<KpiMatrix :submissions="submissions" />
 	</div>
 </template>
 
@@ -24,19 +20,8 @@ import type {
 
 const props = defineProps<{
 	submissions: LearningDomainSubmission[]
+	domains: LearningDomain[]
 }>()
-
-const api = useApi()
-
-const hboIDomain = ref<LearningDomain | null>(null)
-const personalDevelopmentDomain = ref<LearningDomain | null>(null)
-
-api.learning.domainDetail("hbo-i-2018").then((hboIData) => {
-	hboIDomain.value = hboIData.data
-})
-api.learning.domainDetail("pd-2020-bsc").then((personalDevelopmentData) => {
-	personalDevelopmentDomain.value = personalDevelopmentData.data
-})
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 	props.submissions.flatMap((submission) =>

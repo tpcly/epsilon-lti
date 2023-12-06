@@ -1,18 +1,16 @@
 <template>
 	<div class="performance-dashboard">
 		<CompetenceProfile
-			v-if="hboIDomain"
 			:submissions="submissions"
-			:domain="hboIDomain" />
-		<LearningDomainValues v-if="hboIDomain" :domain="hboIDomain" />
+			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+		<LearningDomainValues
+			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
 		<div />
 		<CompetenceGraph
-			v-if="hboIDomain"
-			:domain="hboIDomain"
+			:domain="domains.find((l) => l.id == 'hbo-i-2018')"
 			:submissions="submissions" />
 		<PersonalDevelopmentGraph
-			v-if="personalDevelopmentDomain"
-			:domain="personalDevelopmentDomain"
+			:domain="domains.find((l) => l.id == 'pd-2020-bsc')"
 			:submissions="submissions" />
 	</div>
 </template>
@@ -25,21 +23,8 @@ import type { LearningDomain, LearningDomainSubmission } from "~/api.generated"
 
 defineProps<{
 	submissions: LearningDomainSubmission[]
+	domains: LearningDomain[]
 }>()
-
-const api = useApi()
-
-const hboIDomain = ref<LearningDomain | null>(null)
-const personalDevelopmentDomain = ref<LearningDomain | null>(null)
-
-api.learning.learningDomainDetail("hbo-i-2018").then((hboIData) => {
-	hboIDomain.value = hboIData.data
-})
-api.learning
-	.learningDomainDetail("pd-2020-bsc")
-	.then((personalDevelopmentData) => {
-		personalDevelopmentDomain.value = personalDevelopmentData.data
-	})
 </script>
 
 <style scoped>

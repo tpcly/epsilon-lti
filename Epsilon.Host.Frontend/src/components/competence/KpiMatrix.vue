@@ -45,13 +45,11 @@
 import { computed } from "vue"
 import KpiMatrixCell from "~/components/competence/KpiMatrixCell.vue"
 import {
-	type LearningDomain,
 	type LearningDomainOutcome,
 	type LearningDomainSubmission,
 } from "~/api.generated"
 
 const props = defineProps<{
-	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
 }>()
 
