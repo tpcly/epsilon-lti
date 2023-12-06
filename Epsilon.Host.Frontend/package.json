@@ -20,7 +20,7 @@
 		"vue": "^3.3.10",
 		"vue-router": "^4.2.5",
 		"vue3-apexcharts": "^1.4.4",
-		"posthog-js": "^1.93.3"
+		"posthog-js": "^1.93.6"
 	},
 	"devDependencies": {
 		"@headlessui/vue": "1.7.16",
