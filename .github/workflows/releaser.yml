@@ -19,13 +19,16 @@ on:
             - "v*"
 jobs:
     tagged-release:
-        name: "Tagged Release"
-        runs-on: "ubuntu-latest"
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
         steps:
-            - uses: "marvinpinto/action-automatic-releases@latest"
+            - uses: actions/checkout@v3
+            - uses: ncipollo/release-action@v1
               with:
-                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  artifacts: "./"
+                  token: ${{ secrets.GITHUB_TOKEN }}
                   draft: ${{ inputs.draft || true }}
-                  automatic_release_tag: ${{ inputs.tag || github.ref_name }}
-                  title: ${{ inputs.tag || github.ref_name }}
-                  prerelease: ${{ inputs.prerelease || false }}
+                  generateReleaseNotes: true
+                  tag: ${{ inputs.tag || github.ref_name }}
+                  prerelease: ${{ inputs.prerelease || false }}               
