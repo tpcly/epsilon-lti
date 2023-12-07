@@ -1,5 +1,6 @@
 ﻿name: Release
 on:
+    workflow_call: 
     workflow_dispatch:
         inputs:
             tag:
@@ -18,8 +19,11 @@ on:
         tags:
             - "v*"
 jobs:
+    continuous-integration:
+        uses: ./.github/workflows/continuous-integration.yml
     tagged-release:
         runs-on: ubuntu-latest
+        needs: [ continuous-integration ]
         permissions:
             contents: write
         steps:
