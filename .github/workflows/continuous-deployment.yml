@@ -10,8 +10,13 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                image: [ 'webapi', 'frontend' ]
+                image: [ 'WebAPI', 'Frontend' ]
         steps:
+            - name: set lower case repository name
+              run: |
+                  echo "imageName_LC=${imageName,,}" >>${GITHUB_ENV}
+              env:
+                  imageName: '${{ matrix.image }}'
             - name: Check out the repo
               uses: actions/checkout@v4
             - name: Log in to Docker Hub
@@ -29,5 +34,5 @@ jobs:
                   context: .
                   file: ./Epsilon.Host.${{ matrix.image }}/Dockerfile
                   push: true
-                  tags: ${{ matrix.image }}-${{ steps.meta.outputs.tags }}, ${{ matrix.image }}-latest
-                  labels: ${{ matrix.image }}-${{ steps.meta.outputs.labels }}
+                  tags: {{ $imageName_LC }}-${{ steps.meta.outputs.tags }}, {{ $imageName_LC }}-latest
+                  labels: {{ $imageName_LC }}-${{ steps.meta.outputs.labels }}
