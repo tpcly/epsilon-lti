@@ -30,7 +30,7 @@ jobs:
                   context: ./Epsilon.Host.Frontend
                   push: true
                   tags: frontend-${{ steps.meta.outputs.tags }}, frontend-latest
-                  labels: ${{ steps.meta.outputs.labels }}
+                  labels: frontend-${{ steps.meta.outputs.labels }}
             - uses: docker/build-push-action@v5
               if: matrix.image == 'WebAPi'
               with:
@@ -38,4 +38,4 @@ jobs:
                   file: ./Epsilon.Host.WebApi/Dockerfile
                   push: true
                   tags: api-${{ steps.meta.outputs.tags }}, api-latest
-                  labels: ${{ steps.meta.outputs.labels }}
+                  labels: api-${{ steps.meta.outputs.labels }}
