@@ -20,6 +20,8 @@ on:
             - "v*"
 jobs:
     continuous-integration:
+        permissions:
+            contents: write
         uses: ./.github/workflows/continuous-integration.yml
     tagged-release:
         runs-on: ubuntu-latest
