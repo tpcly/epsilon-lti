@@ -30,5 +30,6 @@ jobs:
                   draft: ${{ inputs.draft || true }}
                   commit: ${{ github.sha }}
                   generateReleaseNotes: true
+                  allowUpdates: true
                   tag: ${{ inputs.tag || github.ref_name }}
                   prerelease: ${{ inputs.prerelease || false }}               
