@@ -7,10 +7,6 @@ jobs:
     api:
         name: Build API Docker image and publish
         runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                image: [ 'WebAPI', 'Frontend' ]
         steps:
             - name: Check out the repo
               uses: actions/checkout@v4
@@ -25,17 +21,35 @@ jobs:
               with:
                   images: typiqally/epsilon
             - uses: docker/build-push-action@v5
-              if: matrix.image == 'Frontend'
-              with:
-                  context: ./Epsilon.Host.Frontend
-                  push: true
-                  tags: frontend-${{ steps.meta.outputs.tags }}, frontend-latest
-                  labels: frontend-${{ steps.meta.outputs.labels }}
-            - uses: docker/build-push-action@v5
-              if: matrix.image == 'WebAPi'
               with:
                   context: .
                   file: ./Epsilon.Host.WebApi/Dockerfile
                   push: true
-                  tags: api-${{ steps.meta.outputs.tags }}, api-latest
-                  labels: api-${{ steps.meta.outputs.labels }}
+                  tags: ${{ steps.meta.outputs.tags }}-api
+                  labels: ${{ steps.meta.outputs.labels }}-api
+    
+    frontend:
+        name: Build frontend Docker image and publish
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out the repo
+              uses: actions/checkout@v4
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_TOKEN }}
+            - name: Extract metadata (tags, labels) for Docker
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                  images: typiqally/epsilon
+            - uses: docker/build-push-action@v5
+              with:
+                  context: ./Epsilon.Host.Frontend
+                  push: true
+                  tags: ${{ steps.meta.outputs.tags }}-frontend
+                  labels: ${{ steps.meta.outputs.labels }}-frontend
+                  
+                  
+                  
