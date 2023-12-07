@@ -28,6 +28,7 @@ jobs:
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   draft: ${{ inputs.draft || true }}
+                  commit: ${{ github.sha }}
                   generateReleaseNotes: true
                   tag: ${{ inputs.tag || github.ref_name }}
                   prerelease: ${{ inputs.prerelease || false }}               
