@@ -24,14 +24,12 @@ jobs:
               uses: docker/metadata-action@v5
               with:
                   images: typiqally/epsilon
-            - id: lower-repo
-              shell: pwsh
-              run: |
-                  "::set-output name=repository::$($env:matrix.image.ToLowerInvariant())"
             - uses: docker/build-push-action@v5
+              env: 
+                  name: ${{ matrix.image == 'Frontend' && 'frontend' || 'api' }}
               with:
                   context: .
                   file: ./Epsilon.Host.${{ matrix.image }}/Dockerfile
                   push: true
-                  tags: ${{ matrix.image }}-${{ steps.meta.outputs.tags }}, ${{ matrix.image }}-latest
+                  tags: ${{ name }}-${{ steps.meta.outputs.tags }}, ${{ name }}-latest
                   labels: ${{ steps.meta.outputs.labels }}
