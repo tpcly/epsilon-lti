@@ -1,6 +1,6 @@
 ﻿name: Release
 on:
-    workflow_call: 
+    workflow_call:
     workflow_dispatch:
         inputs:
             tag:
@@ -21,7 +21,9 @@ on:
 jobs:
     continuous-integration:
         permissions:
-            contents: write
+            actions: read
+            contents: read
+            security-events: write
         uses: ./.github/workflows/continuous-integration.yml
     tagged-release:
         runs-on: ubuntu-latest
