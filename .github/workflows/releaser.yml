@@ -19,7 +19,7 @@ on:
         tags:
             - "v*"
 jobs:
-    continuous-integration:
+    ci:
         permissions:
             actions: read
             contents: read
@@ -27,7 +27,7 @@ jobs:
         uses: ./.github/workflows/continuous-integration.yml
     tagged-release:
         runs-on: ubuntu-latest
-        needs: [ continuous-integration ]
+        needs: [ ci ]
         permissions:
             contents: write
         steps:
