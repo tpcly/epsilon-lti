@@ -31,5 +31,5 @@ jobs:
                   context: .
                   file: ./Epsilon.Host.${{ matrix.image }}/Dockerfile
                   push: true
-                  tags: ${{ name }}-${{ steps.meta.outputs.tags }}, ${{ name }}-latest
+                  tags: ${{ env.name }}-${{ steps.meta.outputs.tags }}, ${{ env.name }}-latest
                   labels: ${{ steps.meta.outputs.labels }}
