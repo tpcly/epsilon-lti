@@ -1,7 +1,7 @@
 ﻿name: Release
 on:
     workflow_dispatch:
-        inputs: 
+        inputs:
             tag:
                 description: "Tag"
                 required: true
