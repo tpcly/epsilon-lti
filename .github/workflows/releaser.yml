@@ -1,4 +1,4 @@
-﻿name: Releaser
+﻿name: Release
 on:
 	workflow_dispatch:
 	push:

@@ -30,3 +30,4 @@ jobs:
 				  push: true
 				  tags: ${{ matrix.image }}-${{ steps.meta.outputs.tags }}, ${{ matrix.image }}-latest
 				  labels: ${{ matrix.image }}-${{ steps.meta.outputs.labels }}
+				  
