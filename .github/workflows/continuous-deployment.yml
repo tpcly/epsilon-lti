@@ -12,11 +12,6 @@ jobs:
             matrix:
                 image: [ 'WebAPI', 'Frontend' ]
         steps:
-            - name: set lower case repository name
-              run: |
-                  echo "IMAGENAME_LC=${imageName,,}" >>${GITHUB_ENV}
-              env:
-                  imageName: '${{ matrix.image }}'
             - name: Check out the repo
               uses: actions/checkout@v4
             - name: Log in to Docker Hub
@@ -29,10 +24,14 @@ jobs:
               uses: docker/metadata-action@v5
               with:
                   images: typiqally/epsilon
+            - id: lower-repo
+              shell: pwsh
+              run: |
+                  "::set-output name=repository::$($env:matrix.image.ToLowerInvariant())"
             - uses: docker/build-push-action@v5
               with:
                   context: .
                   file: ./Epsilon.Host.${{ matrix.image }}/Dockerfile
                   push: true
-                  tags: ${{ IMAGENAME_LC }}-${{ steps.meta.outputs.tags }}, ${{ IMAGENAME_LC }}-latest
-                  labels: ${{ IMAGENAME_LC }}-${{ steps.meta.outputs.labels }}
+                  tags: ${{ matrix.image }}-${{ steps.meta.outputs.tags }}, ${{ matrix.image }}-latest
+                  labels: ${{ steps.meta.outputs.labels }}
