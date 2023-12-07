@@ -24,8 +24,9 @@ jobs:
         steps:
             - uses: "marvinpinto/action-automatic-releases@latest"
               with:
-                  repo_token: "${{ secrets.GITHUB_TOKEN }}"
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
                   draft: ${{ inputs.draft || true }}
                   automatic_release_tag: ${{ inputs.tag || github.ref_name }}
+                  title: ${{ inputs.tag || github.ref_name }}
                   prerelease: ${{ inputs.prerelease || false }}
                   files: ./
