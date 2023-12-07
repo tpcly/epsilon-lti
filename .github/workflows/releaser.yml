@@ -1,0 +1,31 @@
+﻿name: Release
+on:
+    workflow_dispatch:
+        inputs:
+            tag:
+                description: "Tag"
+                required: true
+                default: "v0.0.0"
+            draft:
+                description: "Draft"
+                required: true
+                default: true
+            prerelease:
+                description: "Prerelease"
+                required: true
+                default: false
+    push:
+        tags:
+            - "v*"
+jobs:
+    tagged-release:
+        name: "Tagged Release"
+        runs-on: "ubuntu-latest"
+        steps:
+            - uses: "marvinpinto/action-automatic-releases@latest"
+              with:
+                  repo_token: "${{ secrets.GITHUB_TOKEN }}"
+                  draft: ${{ inputs.draft || true }}
+                  automatic_release_tag: ${{ inputs.tag || github.ref_name }}
+                  prerelease: ${{ inputs.prerelease ?? false }}
+                  files: ./
