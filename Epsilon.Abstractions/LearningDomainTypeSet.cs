@@ -7,7 +7,7 @@ public record LearningDomainTypeSet : Entity<Guid>
 {
     // ReSharper disable once ReplaceAutoPropertyWithComputedProperty
     [Required]
-    public IEnumerable<LearningDomainType> Types { get; private set; } = null!;
+    public IEnumerable<LearningDomainType> Types { get; set; } = null!;
 
     public void Order()
     {

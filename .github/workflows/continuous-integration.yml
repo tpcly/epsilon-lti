@@ -14,15 +14,17 @@ on:
             - '**.ts'
             - '**.vue'
             - '**.css'
+            - '**.yaml'
 
 jobs:
+    
     build-backend:
         name: Build .NET solution
         runs-on: ubuntu-20.04
         
         steps:
             - uses: actions/checkout@v4
-            - uses: actions/setup-dotnet@v3.2.0
+            - uses: actions/setup-dotnet@v4.0.0
               with:
                   dotnet-version: '8.0.x'
             - name: Restore dependencies
@@ -75,10 +77,27 @@ jobs:
             - name: Perform code formatter
               run: pnpm run format-code
     
+    
+    unit-testing:
+        name: Unit testing
+        runs-on: ubuntu-20.04
+        needs: [ build-backend ]
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-dotnet@v3.2.0
+              with:
+                  dotnet-version: '6.0.x'
+            - name: Restore dependencies
+              run: dotnet restore
+            - name: Build
+              run: dotnet build --no-restore
+            - name: Test with the dotnet CLI
+              run: dotnet test --no-restore --verbosity normal
+    
     build-docker:
         name: Build Docker
         runs-on: ubuntu-20.04
-        needs: [ build-frontend, build-backend, lint-frontend, code-analysis ]
+        needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
         strategy:
             fail-fast: false
             matrix:
@@ -89,16 +108,16 @@ jobs:
               run: cp .env.example .env.${{ matrix.stage }}
             - name: Build the containers
               run: docker-compose -f docker-compose.${{ matrix.stage }}.yml build
+    
     code-analysis:
         name: Code analysis
-        needs: [ build-backend, build-frontend, lint-frontend ]
+        needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
         runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
         timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
         permissions:
             actions: read
             contents: read
             security-events: write
-        
         strategy:
             fail-fast: false
             matrix:
