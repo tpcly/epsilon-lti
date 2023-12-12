@@ -122,7 +122,7 @@ function loadDomains(domainNames: string[]): void {
 
 loadDomains(["hbo-i-2018", "pd-2020-bsc"])
 
-function downloadCompetenceDocument() {
+function downloadCompetenceDocument(): void {
 	api.document
 		.documentDownloadWordList({
 			userId: currentUser.value?._id as string,
