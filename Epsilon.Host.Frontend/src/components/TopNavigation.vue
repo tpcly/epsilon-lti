@@ -1,6 +1,9 @@
 <template>
 	<div class="top-navigation">
-		<img alt="logo" class="top-navigation-logo" src="../assets/logo.png" />
+		<img
+			alt="logo"
+			class="top-navigation-logo"
+			src="../assets/logo-white.png" />
 		<Row class="search-boxes">
 			<Col :cols="7">
 				<SearchBox
@@ -97,7 +100,7 @@ watch([correctedFromDate, toDate], () => {
 	justify-content: space-between;
 	align-items: center;
 	padding: 2rem 3rem;
-	background-color: #f2f3f8;
+	background-color: #11284c;
 	width: 100%;
 	border-radius: 0.5rem;
 

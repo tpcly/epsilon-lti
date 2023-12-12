@@ -184,7 +184,7 @@ const handleRangeChange = (range: { start: Date; end: Date }): void => {
 
 	&-download {
 		list-style: none;
-		background-color: #f2f3f8;
+		background-color: #11284c;
 		padding: 5px;
 		border-radius: 8px;
 		font-size: 1em;
@@ -195,6 +195,7 @@ const handleRangeChange = (range: { start: Date; end: Date }): void => {
 			cursor: pointer;
 			background-color: transparent;
 			border: none;
+			color: #ffffff;
 			font-size: 1em;
 
 			&:active,
@@ -204,13 +205,14 @@ const handleRangeChange = (range: { start: Date; end: Date }): void => {
 
 			&:hover {
 				background-color: #d8d9dd;
+				color: black;
 			}
 		}
 	}
 
 	&-slider {
 		list-style: none;
-		background-color: #f2f3f8;
+		background-color: #11284c;
 		padding: 5px;
 		border-radius: 8px;
 		width: fit-content;
@@ -225,18 +227,22 @@ const handleRangeChange = (range: { start: Date; end: Date }): void => {
 			background-color: transparent;
 			border: none;
 			font-size: 1em;
+			color: #ffffff;
 
 			&:active,
 			&:focus {
 				outline: transparent;
+				color: black;
 			}
 
 			&:hover {
 				background-color: #d8d9dd;
+				color: black;
 			}
 
 			&[data-headlessui-state="selected"] {
 				background-color: white;
+				color: black;
 			}
 		}
 	}
