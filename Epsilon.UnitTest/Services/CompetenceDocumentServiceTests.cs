@@ -29,10 +29,9 @@ public class CompetenceDocumentServiceTests
         var userId = "testUser";
         var from = DateTime.Now.AddDays(-7);
         var to = DateTime.Now;
-        var expectedDocument = _competenceDocumentService.FetchComponents(_submissions);
+        var expectedDocument = CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),});
         
         _canvasResultServiceMock.Setup(service => service.GetSubmissions(userId)).Returns(_submissions);
-        _domainServiceMock.Setup(static service => service.GetDomainsFromTenant()).ReturnsAsync(new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),});
         
         // Act
         var result = await _competenceDocumentService.GetDocument(userId, from, to);
@@ -47,11 +46,9 @@ public class CompetenceDocumentServiceTests
     {
         // Arrange
         var userId = "testUser";
-        var expectedDocument = _competenceDocumentService.FetchComponents(_submissions);
+        var expectedDocument = CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),});
         
         _canvasResultServiceMock.Setup(service => service.GetSubmissions(userId)).Returns(_submissions);
-        _domainServiceMock.Setup(static service => service.GetDomainsFromTenant()).ReturnsAsync(new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),});
-        
         // Act
         var result = await _competenceDocumentService.GetDocument(userId, null, null);
         
@@ -60,27 +57,27 @@ public class CompetenceDocumentServiceTests
     }
 
     [Fact]
-    public void WriteDocument_WritesToStream()
+    public async void WriteDocument_WritesToStream()
     {
         // Arrange
         
-        var document = new CompetenceDocument(_competenceDocumentService.FetchComponents(_submissions));
+        var document = new CompetenceDocument(CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),}));
         using var stream = new MemoryStream();
 
         // Act
-        _competenceDocumentService.WriteDocument(stream, document);
+        await _competenceDocumentService.WriteDocument(stream, document);
 
         // Assert
         Assert.True(stream.Length > 0);
     }
 
     [Fact]
-    private void ValidateOpnXmlWordGeneration()
+    private async void ValidateOpnXmlWordGeneration()
     {
         // Arrange
-        var document = new CompetenceDocument(_competenceDocumentService.FetchComponents(_submissions));
+        var document = new CompetenceDocument(CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),}));
         using var stream = new MemoryStream();
-        _competenceDocumentService.WriteDocument(stream, document);
+        await _competenceDocumentService.WriteDocument(stream, document);
         using var wordprocessingDocument = WordprocessingDocument.Open(stream, false);
         var validator = new OpenXmlValidator();
         var count = 0;

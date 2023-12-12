@@ -43,7 +43,7 @@ public class DocumentController : ControllerBase
         var document = await _competenceDocumentService.GetDocument(userId, from, to);
 
         using var stream = new MemoryStream();
-        _competenceDocumentService.WriteDocument(stream, document);
+        await _competenceDocumentService.WriteDocument(stream, document);
 
         return File(
             stream.ToArray(),
