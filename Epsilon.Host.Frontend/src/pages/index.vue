@@ -170,7 +170,11 @@ const handleUserChange = async (user: User): Promise<void> => {
 	submissions.value = outcomesResponse.data
 }
 
-const handleRangeChange = (range: { start: Date; end: Date }): void => {
+const handleRangeChange = (range: {
+	start: Date
+	end: Date
+	startCorrected: Date
+}): void => {
 	filterRange.value = range
 }
 </script>
