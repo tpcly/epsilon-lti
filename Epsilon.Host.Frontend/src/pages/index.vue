@@ -17,7 +17,7 @@
 						</Tab>
 					</TabList>
 				</div>
-				<div class="toolbar-download">
+				<div class="toolbar-download" v-if="enableCompetenceGeneration">
 					<Menu>
 						<MenuButton @click="downloadCompetenceDocument">
 							Download
@@ -88,11 +88,15 @@ if (process.client && data.value?.idToken) {
 	}
 }
 const enableCompetenceProfile = ref<boolean | undefined>(false)
+const enableCompetenceGeneration = ref<boolean | undefined>(false)
 if (process.client) {
 	const po = Posthog.init() as PostHog
 	po.onFeatureFlags(function () {
 		enableCompetenceProfile.value =
 			po.isFeatureEnabled("competence-profile")
+		enableCompetenceGeneration.value = po.isFeatureEnabled(
+			"competence-generation"
+		)
 	})
 }
 
