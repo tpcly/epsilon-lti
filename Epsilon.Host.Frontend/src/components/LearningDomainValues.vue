@@ -1,5 +1,5 @@
 <template>
-	<table class="learning-domain-values">
+	<table class="learning-domain-values" v-if="domain">
 		<tr
 			v-for="type of types"
 			:key="type"
@@ -10,6 +10,20 @@
 			<th class="learning-domain-values-value-text">
 				{{ type.name }}
 			</th>
+		</tr>
+		<tr class="masteryLegend mastery-line-legend">
+			<td
+				class="masteryLegend-icon"
+				:style="{ backgroundColor: masteryLineColor }" />
+			<th class="masteryLegend-text">Mastery</th>
+		</tr>
+	</table>
+	<table class="learning-domain-values" v-else>
+		<tr v-for="type of 4" :key="type" class="learning-domain-values-row">
+			<td
+				class="learning-domain-values-value-color"
+				:style="{ backgroundColor: '#11284C' }" />
+			<th class="learning-domain-values-value-text">{{ type }}</th>
 		</tr>
 		<tr class="masteryLegend mastery-line-legend">
 			<td
@@ -29,8 +43,8 @@ const props = defineProps<{
 
 // TODO: Centralize this ugly sorting compare function, maybe possible with lodash?
 const types = computed(() => {
-	const types = props.domain.valuesSet.types
-	return types.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+	const types = props.domain?.valuesSet.types
+	return types?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
 })
 </script>
 

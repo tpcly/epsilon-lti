@@ -7,9 +7,11 @@
 			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
 		<div />
 		<CompetenceGraph
+			v-if="domains.length > 0"
 			:domain="domains.find((l) => l.id == 'hbo-i-2018')"
 			:submissions="submissions" />
 		<PersonalDevelopmentGraph
+			v-if="domains.length > 0"
 			:domain="domains.find((l) => l.id == 'pd-2020-bsc')"
 			:submissions="submissions" />
 	</div>

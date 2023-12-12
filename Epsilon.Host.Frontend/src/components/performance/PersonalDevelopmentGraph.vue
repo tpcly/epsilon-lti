@@ -23,8 +23,8 @@ const props = defineProps<{
 	submissions: LearningDomainSubmission[]
 }>()
 
-onMounted(() => {
-	const rowTypes = props.domain.rowsSet.types
+watch(props.domain, () => {
+	const rowTypes = props.domain?.rowsSet?.types
 
 	rowTypes.forEach((s: LearningDomainType) => {
 		chartOptions.xaxis.categories.push(s.shortName)

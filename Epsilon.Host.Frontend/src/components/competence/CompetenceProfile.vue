@@ -1,10 +1,10 @@
 <template>
-	<table class="competence-profile">
+	<table class="competence-profile" v-if="domain">
 		<thead>
 			<tr>
 				<th />
 				<th
-					v-for="col of domain.columnsSet?.types"
+					v-for="col of domain?.columnsSet?.types"
 					:key="col.id"
 					class="competence-profile-header competence-profile-header-col">
 					{{ col.name }}
@@ -12,7 +12,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="row of domain.rowsSet.types" :key="row.id">
+			<tr v-for="row of domain?.rowsSet.types" :key="row.id">
 				<th
 					class="competence-profile-header competence-profile-header-row">
 					<div
@@ -21,16 +21,37 @@
 					{{ row.name }}
 				</th>
 				<CompetenceProfileCell
-					v-for="col of domain.columnsSet?.types"
+					v-for="col of domain?.columnsSet?.types"
 					:key="col.id"
 					class="competence-profile-cell"
 					:outcomes="outcomes(row, col)" />
 			</tr>
 		</tbody>
 	</table>
+	<table class="competence-profile" v-else>
+		<thead>
+			<tr>
+				<th />
+				<th
+					v-for="i of 5"
+					:key="i"
+					class="competence-profile-header competence-profile-header-col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr v-for="x of 5" :key="x">
+				<th
+					class="competence-profile-header competence-profile-header-row">
+					<div
+						class="competence-profile-header-color"
+						:style="{ backgroundColor: '#11284C' }" />
+				</th>
+				<td v-for="i of 5" :key="i" class="competence-profile-cell" />
+			</tr>
+		</tbody>
+	</table>
 </template>
 <script setup lang="ts">
-import { computed } from "vue"
 import {
 	type LearningDomain,
 	type LearningDomainOutcome,

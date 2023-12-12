@@ -11,7 +11,7 @@
 							Performance dashboard
 						</Tab>
 						<Tab
-							v-if="enableCompetenceProfile"
+							v-if="enableCompetenceProfile && domains.length > 1"
 							class="toolbar-slider-item">
 							Competence Document
 						</Tab>
@@ -30,13 +30,11 @@
 				<TabPanels>
 					<TabPanel>
 						<PerformanceDashboard
-							v-if="domains.length > 1"
 							:submissions="filteredSubmissions"
 							:domains="domains" />
 					</TabPanel>
 					<TabPanel>
 						<CompetenceDocument
-							v-if="domains.length > 1"
 							:submissions="filteredSubmissions"
 							:filter-range="filterRange"
 							:domains="domains" />
@@ -120,7 +118,7 @@ function loadDomains(domainNames: string[]): void {
 	})
 }
 
-loadDomains(["hbo-i-2018", "pd-2020-bsc"])
+// loadDomains(["hbo-i-2018", "pd-2020-bsc"])
 
 function downloadCompetenceDocument(): void {
 	api.document

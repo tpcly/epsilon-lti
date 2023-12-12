@@ -106,7 +106,7 @@ onMounted(() => {
  * an array with objects for each row: The name of the row, Corresponding color and an array with scores.
  */
 const series = computed(() => {
-	return calculateAverageTaskOutcomes(props.submissions, props.domain).map(
+	return calculateAverageTaskOutcomes(props.submissions, props.domain)?.map(
 		(layer: DecayingAveragePerLayer) => {
 			const row = props.domain?.rowsSet?.types.find(
 				(l) => l.id === layer.architectureLayer
