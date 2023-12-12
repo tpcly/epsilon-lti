@@ -30,7 +30,8 @@ public class CompetenceDocumentService : ICompetenceDocumentService
             submissions = submissions.Where(s => s.SubmittedAt <= from && s.SubmittedAt >= to);
         }
 
-        var components = FetchComponents(submissions);
+        var domains = await _domainService.GetDomainsFromTenant();
+        var components = FetchComponents(submissions, domains);
 
         return new CompetenceDocument(components);
     }
@@ -48,11 +49,10 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         }
 
         wordDocument.Save();
-        wordDocument.Dispose();
     }
 
-    public async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions)
+    public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
     {
-        yield return new CompetenceProfileComponent(submissions, await _domainService.GetDomainsFromTenant());
+        yield return new CompetenceProfileComponent(submissions, domains);
     }
 }

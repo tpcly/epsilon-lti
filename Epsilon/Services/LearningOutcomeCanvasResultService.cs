@@ -72,7 +72,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         {
             throw new HttpRequestException("No Courses are given");
         }
-        
+
         foreach (var submission in submissionsTask.Result.Courses.Where(static c => c.Submissions != null).SelectMany(static c => c.Submissions!.Nodes))
         {
             yield return new LearningDomainSubmission(
