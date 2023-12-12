@@ -164,7 +164,7 @@ const handleUserChange = async (user: User): Promise<void> => {
 		return
 	}
 	currentUser.value = user
-
+	submissions.value = []
 	const outcomesResponse = await api?.learning.learningOutcomesList({
 		studentId: user._id,
 	})
