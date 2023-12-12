@@ -35,14 +35,14 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         return new CompetenceDocument(components);
     }
 
-    public static async Task<bool> WriteDocument(Stream stream, CompetenceDocument document)
+    public async void WriteDocument(Stream stream, CompetenceDocument document)
     {
         using var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
         wordDocument.AddMainDocumentPart();
         wordDocument.MainDocumentPart!.Document = new Document();
 
-        await foreach (var competenceWordComponent in document.Components)
+        foreach (var competenceWordComponent in await document.Components.ToListAsync())
         {
             competenceWordComponent.AddToWordDocument(wordDocument.MainDocumentPart);
         }
@@ -52,7 +52,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         return true;
     }
 
-    private async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions)
+    public async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions)
     {
         yield return new CompetenceProfileComponent(submissions, await _domainService.GetDomainsFromTenant());
         yield return new KpiTable(submissions, await _domainService.GetDomainsFromTenant());
