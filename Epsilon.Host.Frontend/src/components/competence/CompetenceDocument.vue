@@ -58,6 +58,20 @@ const filteredSubmissionsDateSelection = computed(() => {
 const api = useApi()
 api.learning.learningDomainOutcomesList().then((r) => (outcomes.value = r.data))
 
+const data = api.document.documentDownloadWordList({
+  userId: "27381",
+  from: props.filterRange?.start.toDateString()!,
+  to: props.filterRange?.end.toDateString()!,
+}).then(async (response) => {
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'competence-document.docx');
+    document.body.appendChild(link);
+    link.click();
+});
+
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 	props.submissions.flatMap((submission) =>
 		submission.results!.map((result) => result.outcome!)

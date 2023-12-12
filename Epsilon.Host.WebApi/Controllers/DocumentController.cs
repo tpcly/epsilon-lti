@@ -1,6 +1,7 @@
 using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
 using Epsilon.Host.WebApi.Models;
+using Epsilon.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,10 +41,10 @@ public class DocumentController : ControllerBase
     [HttpGet("download/word")]
     public async Task<IActionResult> DownloadWord(string userId, DateTime from, DateTime to)
     {
-        var document = await _competenceDocumentService.GetDocument(userId, from, to);
+        var document = _competenceDocumentService.GetDocument(userId, from, to);
 
         using var stream = new MemoryStream();
-        _competenceDocumentService.WriteDocument(stream, document);
+        await CompetenceDocumentService.WriteDocument(stream, document);
 
         return File(
             stream.ToArray(),
