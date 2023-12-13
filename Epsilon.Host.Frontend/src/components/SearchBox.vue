@@ -16,7 +16,7 @@
 					class="search-box-list-arrow"
 					@click="
 						() => {
-							open.value = !open.value
+							open = !open as boolean
 						}
 					">
 					<ChevronUpDownIcon aria-hidden="true" />
