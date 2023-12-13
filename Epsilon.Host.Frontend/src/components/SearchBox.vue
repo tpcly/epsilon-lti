@@ -98,7 +98,7 @@ const props = defineProps<{
 	items: Array<{ name?: string | null }> | null
 	modelValue: EnrollmentTerm | null
 	placeholder?: string
-	limit: number | null
+	limit?: number | null
 	isTermSearch: boolean | null
 }>()
 

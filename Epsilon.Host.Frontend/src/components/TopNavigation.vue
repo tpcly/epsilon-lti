@@ -16,7 +16,6 @@
 				<SearchBox
 					v-model="selectedTerm"
 					:items="terms"
-					:limit="10"
 					placeholder="Term"
 					:is-term-search="true" />
 			</Col>
