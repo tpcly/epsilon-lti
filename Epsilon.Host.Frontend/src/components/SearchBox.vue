@@ -98,7 +98,7 @@ const props = defineProps<{
 	items: Array<{ name?: string | null }> | null
 	modelValue: EnrollmentTerm | null
 	placeholder?: string
-	limit: number
+	limit: number | null
 	isTermSearch: boolean | null
 }>()
 
@@ -123,7 +123,7 @@ const filteredItems = computed(() => {
 	}
 
 	if (query.value === "") {
-		return props.items.slice(0, props.limit)
+		return props.items.slice(0, props.limit ?? undefined)
 	}
 
 	return props.items
@@ -137,7 +137,7 @@ const filteredItems = computed(() => {
 				.replace(/\s+/g, "")
 				.includes(query.value.toLowerCase().replace(/\s+/g, ""))
 		})
-		.slice(0, props.limit)
+		.slice(0, props.limit ?? undefined)
 })
 
 // Display term name or term dates (custom)

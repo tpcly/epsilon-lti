@@ -9,7 +9,6 @@
 				<SearchBox
 					v-model="selectedUser"
 					:items="users"
-					:limit="5"
 					placeholder="Student"
 					:is-term-search="null" />
 			</Col>
