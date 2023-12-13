@@ -1,7 +1,6 @@
 using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
 using Epsilon.Host.WebApi.Models;
-using Epsilon.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,7 +43,7 @@ public class DocumentController : ControllerBase
         var document = _competenceDocumentService.GetDocument(userId, from, to);
 
         using var stream = new MemoryStream();
-        await _competenceDocumentService.WriteDocument(stream, document);
+        await _competenceDocumentService.WriteDocument(stream, await document);
 
         return File(
             stream.ToArray(),

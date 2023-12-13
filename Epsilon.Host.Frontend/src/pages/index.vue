@@ -17,7 +17,7 @@
 						</Tab>
 					</TabList>
 				</div>
-				<div class="toolbar-download" v-if="enableCompetenceGeneration">
+				<div v-if="enableCompetenceGeneration" class="toolbar-download">
 					<Menu>
 						<MenuButton @click="downloadCompetenceDocument">
 							Download

@@ -3,12 +3,19 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
+using BottomBorder = DocumentFormat.OpenXml.Wordprocessing.BottomBorder;
+using LeftBorder = DocumentFormat.OpenXml.Wordprocessing.LeftBorder;
+using RightBorder = DocumentFormat.OpenXml.Wordprocessing.RightBorder;
+using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
+using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
+using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
+using TopBorder = DocumentFormat.OpenXml.Wordprocessing.TopBorder;
 
 namespace Epsilon.Components;
 
 public class KpiTable : AbstractCompetenceComponent
 {
-    public override void AddToWordDocument(MainDocumentPart mainDocumentPart)
+    public override async Task<Body>? AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
         var body = new Body();
 
@@ -80,38 +87,45 @@ public class KpiTable : AbstractCompetenceComponent
         
         // sort all outcomes from the 
 
-        //var allOutcomes = Submissions.SelectMany(static e => e.Results.Select(static result => result.Outcome).ToAsyncEnumerable());
-
+        var allOutcomes = Submissions.SelectMany(static e => e.Results.Select(static result => result.Outcome).DistinctBy(static e => e.Value.Order).ToAsyncEnumerable());
+        
         // Create the table body rows and cells
-        //await foreach (var outcome in allOutcomes.OrderByDescending(static e => e.Value.Order))
-        //{
-            //var tableRow = new TableRow();
+        await foreach (var outcome in allOutcomes.OrderByDescending(static e => e.Value.Order))
+        {
+            var tableRow = new TableRow();
             
-            // Outcome (KPI) column
-            //tableRow.AppendChild(CreateTableCellWithBorders("3000", new Paragraph(new Run(new Text(outcome.Name)))));
+             // Outcome (KPI) column
+            tableRow.AppendChild(CreateTableCellWithBorders("3000", new Paragraph(new Run(new Text(outcome.Name)))));
             
             // Assignments column
-            // var assignmentsParagraph = new Paragraph();
-            // var assignmentsRun = assignmentsParagraph.AppendChild(new Run());
-            //
-            // await foreach (var assignment in Submissions.SelectMany(static e => e.Assignment!.ToAsyncEnumerable()))
-            // {
-            //     var rel = mainDocumentPart.AddHyperlinkRelationship(assignment.Link, true);
-            //     var relationshipId = rel.Id;
-            //     
-            //     var runProperties = new RunProperties(
-            //         new Underline { Val = UnderlineValues.Single, });
-            //     
-            //     assignmentsRun.AppendChild(new Hyperlink(new Run(runProperties, new Text(assignment.Name)))
-            //     {
-            //         History = OnOffValue.FromBoolean(true),
-            //         Id = relationshipId,
-            //     });
-            //
-            //     assignmentsRun.AppendChild(new Break());
-            // }
-            //
-            // tableRow.AppendChild(CreateTableCellWithBorders("5000", assignmentsParagraph));
+            var assignmentsParagraph = new Paragraph();
+            var assignmentsRun = assignmentsParagraph.AppendChild(new Run());
+            
+            await foreach (var assignment in Submissions.Select(static e => e.Assignment!.ToString()))
+            {
+                Console.WriteLine("Assignment:  " + assignment);
+                // await foreach (var uri in Submissions.Select(static e => e.AssignmentUrl))
+                // {
+                //     HyperlinkRelationship rel;
+                //     rel = mainDocumentPart.AddHyperlinkRelationship(uri, true);
+                // }
+                //
+                // var relationshipId = "0";
+                //
+                // var runProperties = new RunProperties(
+                //     new Underline { Val = UnderlineValues.Single, });
+                //
+                // assignmentsRun.AppendChild(new Hyperlink(new Run(runProperties, new Text(assignment.ToString())))
+                // {
+                //     History = OnOffValue.FromBoolean(true),
+                //     Id = relationshipId,
+                // });
+
+                assignmentsRun.AppendChild(new Text(assignment.ToString()));
+                assignmentsRun.AppendChild(new Paragraph());
+            }
+            
+            tableRow.AppendChild(CreateTableCellWithBorders("5000", assignmentsParagraph));
             //
             // // Grades column
             // var grades = entry.Value.Assignments.Select(static a => a.Grade);
@@ -126,9 +140,9 @@ public class KpiTable : AbstractCompetenceComponent
             //
             // tableRow.AppendChild(CreateTableCellWithBorders("1000", gradesParagraph));
             
-            // Add the row to the table
-            //table.AppendChild(tableRow);
-        //}
+             // Add the row to the table
+            table.AppendChild(tableRow);
+        }
         
         // Newline to separate the table from the rest of the document
         body.Append(new Paragraph(new Run(new Text(""))));
@@ -137,6 +151,7 @@ public class KpiTable : AbstractCompetenceComponent
         body.AppendChild(table);
 
         mainDocumentPart.Document.AppendChild(body);
+        return null;
     }
 
     private static TableCell CreateTableCellWithBorders(string? width, params OpenXmlElement[] elements)

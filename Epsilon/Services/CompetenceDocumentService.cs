@@ -22,7 +22,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         _canvasResultService = canvasResultService;
     }
 
-    public CompetenceDocument GetDocument(string userId, DateTime? from = null, DateTime? to = null)
+    public async Task<CompetenceDocument> GetDocument(string userId, DateTime? from = null, DateTime? to = null)
     {
         var submissions = _canvasResultService.GetSubmissions(userId);
         if (from != null && to != null)
@@ -55,5 +55,6 @@ public class CompetenceDocumentService : ICompetenceDocumentService
     public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
     {
         yield return new CompetenceProfileComponent(submissions, domains);
+        yield return new KpiTable(submissions, domains);
     }
 }
