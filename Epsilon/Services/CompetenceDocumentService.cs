@@ -27,34 +27,33 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         var submissions = _canvasResultService.GetSubmissions(userId);
         if (from != null && to != null)
         {
-            submissions = submissions.Where(s => s.SubmittedAt <= from && s.SubmittedAt >= to);
+            submissions = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to);
         }
 
-        var components = FetchComponents(submissions);
+        var domains = await _domainService.GetDomainsFromTenant();
+        var components = FetchComponents(submissions, domains);
 
         return new CompetenceDocument(components);
     }
 
-    public async void WriteDocument(Stream stream, CompetenceDocument document)
+    public async Task<WordprocessingDocument> WriteDocument(Stream stream, CompetenceDocument document)
     {
-        using var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
+        var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
         wordDocument.AddMainDocumentPart();
         wordDocument.MainDocumentPart!.Document = new Document();
 
         foreach (var competenceWordComponent in await document.Components.ToListAsync())
         {
-            competenceWordComponent.AddToWordDocument(wordDocument.MainDocumentPart);
+            await competenceWordComponent.AddToWordDocument(wordDocument.MainDocumentPart);
         }
 
         wordDocument.Save();
-        wordDocument.Dispose();
-        return true;
+        return wordDocument;
     }
 
-    public async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions)
+    public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
     {
-        yield return new CompetenceProfileComponent(submissions, await _domainService.GetDomainsFromTenant());
-        yield return new KpiTable(submissions, await _domainService.GetDomainsFromTenant());
+        yield return new CompetenceProfileComponent(submissions, domains);
     }
 }
