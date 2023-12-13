@@ -107,8 +107,4 @@ watch([correctedFromDate, toDate], () => {
 		object-fit: contain;
 	}
 }
-
-.search-boxes {
-	margin-right: 10%;
-}
 </style>
