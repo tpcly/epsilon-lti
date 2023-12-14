@@ -19,7 +19,10 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         body.Append(new Paragraph(new Run(new Text(count.ToString(CultureInfo.InvariantCulture)))));
         await foreach (var sub in Submissions)
         {
-            body.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "We tried"))));
+            if (sub.Criteria.Any())
+            {
+                body.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "We tried"))));
+            }
         }
 
         mainDocumentPart.Document.AppendChild(body);
