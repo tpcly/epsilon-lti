@@ -35,16 +35,12 @@
 					</TabPanel>
 					<TabPanel>
 						<CompetenceDocument
+							:outcomes="outcomes"
 							:submissions="filteredSubmissions"
 							:filter-range="filterRange"
 							:domains="domains" />
 					</TabPanel>
 				</TabPanels>
-				<LoadingModel
-					:loading="loadingOutcomes"
-					:title="
-						'Loading outcomes of ' + currentUser?.name
-					"></LoadingModel>
 			</main>
 		</TabGroup>
 	</div>
@@ -63,6 +59,7 @@ import {
 import TopNavigation from "~/components/TopNavigation.vue"
 import {
 	type LearningDomain,
+	type LearningDomainOutcome,
 	type LearningDomainSubmission,
 	type User,
 } from "~/api.generated"
@@ -70,6 +67,7 @@ import { Posthog } from "~/utils/posthog"
 import type { PostHog } from "posthog-js"
 import PerformanceDashboard from "~/components/performance/PerformanceDashboard.vue"
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
+import { Generator } from "~/utils/generator"
 
 const { readCallback, validateCallback } = useLti()
 
@@ -114,8 +112,12 @@ const filterRange = ref<{
 const currentUser = ref<User | null>(null)
 
 const domains = ref<LearningDomain[]>([])
+const outcomes = ref<LearningDomainOutcome[]>([])
 
 function loadDomains(domainNames: string[]): void {
+	api.learning
+		.learningDomainOutcomesList()
+		.then((r) => (outcomes.value = r.data))
 	domainNames.map(function (domainName) {
 		api.learning.learningDomainDetail(domainName).then((hboIData) => {
 			domains.value?.push(hboIData.data)
@@ -162,19 +164,32 @@ const filteredSubmissions = computed(() => {
 	})
 })
 const loadingOutcomes = ref<boolean>(false)
+
+setInterval(() => {
+	if (outcomes.value.length > 0 && loadingOutcomes.value) {
+		submissions.value = Generator.generateSubmissions(outcomes.value)
+	}
+}, 1000)
+
 const handleUserChange = async (user: User): Promise<void> => {
 	if (user._id === null) {
 		return
 	}
 	currentUser.value = user
-	submissions.value = []
+	submissions.value = Generator.generateSubmissions(outcomes.value)
 	loadingOutcomes.value = true
-	const outcomesResponse = await api?.learning.learningOutcomesList({
-		studentId: user._id,
-	})
-	loadingOutcomes.value = false
 
-	submissions.value = outcomesResponse.data
+	await api?.learning
+		.learningOutcomesList({
+			studentId: user._id,
+		})
+		.then((r) => {
+			submissions.value = []
+			submissions.value = r.data
+		})
+		.finally(() => {
+			loadingOutcomes.value = false
+		})
 }
 
 const handleRangeChange = (range: {

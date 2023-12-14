@@ -27,14 +27,13 @@ import type {
 const props = defineProps<{
 	submissions: LearningDomainSubmission[]
 	domains: LearningDomain[]
+	outcomes: LearningDomainOutcome[]
 	filterRange: {
 		start: Date
 		end: Date
 		startCorrected: Date
 	} | null
 }>()
-
-const outcomes = ref<LearningDomainOutcome[]>([])
 
 const filteredSubmissionsDateSelection = computed(() => {
 	const unwrappedFilterRange = props.filterRange
@@ -54,9 +53,6 @@ const filteredSubmissionsDateSelection = computed(() => {
 		}
 	})
 })
-
-const api = useApi()
-api.learning.learningDomainOutcomesList().then((r) => (outcomes.value = r.data))
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 	props.submissions.flatMap((submission) =>

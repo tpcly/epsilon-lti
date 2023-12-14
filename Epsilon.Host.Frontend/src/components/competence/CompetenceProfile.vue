@@ -46,10 +46,7 @@
 						class="competence-profile-header-color"
 						:style="{ backgroundColor: '#11284C' }" />
 				</th>
-				<td
-					v-for="i of 5"
-					:key="i"
-					class="competence-profile-cell element" />
+				<td v-for="i of 5" :key="i" class="competence-profile-cell" />
 			</tr>
 		</tbody>
 	</table>
@@ -85,24 +82,6 @@ const outcomes = (
 </script>
 
 <style scoped lang="scss">
-@keyframes colorChange {
-	0% {
-		background: #ff0000;
-	} /* Red */
-	33% {
-		background: #00ff00;
-	} /* Green */
-	66% {
-		background: #0000ff;
-	} /* Blue */
-	100% {
-		background: #ffff00;
-	} /* Yellow */
-}
-
-.element {
-	animation: colorChange 4s infinite;
-}
 .competence-profile {
 	border-collapse: collapse;
 	width: 750px;
