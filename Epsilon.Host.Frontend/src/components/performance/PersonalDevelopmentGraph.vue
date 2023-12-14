@@ -42,7 +42,7 @@ const series = computed(() => [
 				y: d.decayingAverage?.toFixed(3),
 				x: props.domain.rowsSet.types.find(
 					(s: LearningDomainType) => s.id == d.skill
-				)!.name,
+				)!.shortName,
 				fillColor:
 					"#" + getValueType(d.masteryLevel?.toString())?.hexColor,
 			}

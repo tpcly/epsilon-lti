@@ -118,7 +118,7 @@ function loadDomains(domainNames: string[]): void {
 	})
 }
 
-// loadDomains(["hbo-i-2018", "pd-2020-bsc"])
+loadDomains(["hbo-i-2018", "pd-2020-bsc"])
 
 function downloadCompetenceDocument(): void {
 	api.document
