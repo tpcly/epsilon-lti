@@ -30,6 +30,7 @@
 				<TabPanels>
 					<TabPanel>
 						<PerformanceDashboard
+							:is-loading="loadingOutcomes"
 							:submissions="filteredSubmissions"
 							:domains="domains" />
 					</TabPanel>

@@ -24,6 +24,7 @@ import {
 const props = defineProps<{
 	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
+	isLoading: boolean
 }>()
 
 const chartOptions = {
@@ -114,7 +115,7 @@ const series = computed(() => {
 
 			return {
 				name: row?.name,
-				color: "#" + row?.hexColor,
+				color: "#" + row?.hexColor + (props.isLoading ? "80" : ""),
 				data: layer.layerActivities.map((column) =>
 					column.decayingAverage.toFixed(3)
 				),

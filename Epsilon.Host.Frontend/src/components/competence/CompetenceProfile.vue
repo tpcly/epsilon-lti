@@ -23,6 +23,7 @@
 				<CompetenceProfileCell
 					v-for="col of domain?.columnsSet?.types"
 					:key="col.id"
+					:is-loading="isLoading"
 					class="competence-profile-cell"
 					:outcomes="outcomes(row, col)" />
 			</tr>
@@ -63,6 +64,7 @@ import CompetenceProfileCell from "~/components/competence/CompetenceProfileCell
 const props = defineProps<{
 	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
+	isLoading: boolean
 }>()
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>

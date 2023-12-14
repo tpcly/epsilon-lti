@@ -53,10 +53,9 @@ watch(selectedUser, async () => {
 	if (!selectedUser?.value?._id) {
 		return
 	}
-
-	emit("userChange", selectedUser.value)
-
 	terms.value = []
+	selectedTerm.value = null
+	emit("userChange", selectedUser.value)
 
 	const response = await api.filter.filterParticipatedTermsList({
 		studentId: selectedUser.value._id,

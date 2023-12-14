@@ -21,6 +21,7 @@ import {
 const props = defineProps<{
 	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
+	isLoading: boolean
 }>()
 
 watch(props.domain, () => {
@@ -44,7 +45,9 @@ const series = computed(() => [
 					(s: LearningDomainType) => s.id == d.skill
 				)!.shortName,
 				fillColor:
-					"#" + getValueType(d.masteryLevel?.toString())?.hexColor,
+					"#" +
+					getValueType(d.masteryLevel?.toString())?.hexColor +
+					(props.isLoading ? "80" : ""),
 			}
 		}),
 	},

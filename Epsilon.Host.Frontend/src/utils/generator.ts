@@ -16,7 +16,7 @@ export class Generator {
 	): LearningDomainSubmission[] {
 		const learningDomainSubmissions: LearningDomainSubmission[] = []
 
-		for (let i = 0; i < 15; i++) {
+		for (let i = 0; i < 10; i++) {
 			const learningDomainSubmission: LearningDomainSubmission = {
 				assignment: `Submission ${i}`,
 				assignmentUrl: `https://www.deltafhict.nl`,
@@ -25,7 +25,7 @@ export class Generator {
 				criteria: [],
 			}
 
-			for (let x = 0; x < 10; x++) {
+			for (let x = 0; x < 6; x++) {
 				const outcome = outcomes.at(
 					Math.floor(Math.random() * Math.floor(outcomes.length))
 				)

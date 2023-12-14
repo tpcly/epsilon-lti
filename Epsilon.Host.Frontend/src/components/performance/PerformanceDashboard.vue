@@ -2,16 +2,19 @@
 	<div class="performance-dashboard">
 		<CompetenceProfile
 			:submissions="submissions"
+			:is-loading="isLoading"
 			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
 		<LearningDomainValues
 			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
 		<div />
 		<CompetenceGraph
 			v-if="domains.length > 1 && submissions"
+			:is-loading="isLoading"
 			:domain="domains.find((l) => l.id == 'hbo-i-2018')"
 			:submissions="submissions" />
 		<PersonalDevelopmentGraph
 			v-if="domains.length > 1 && submissions"
+			:is-loading="isLoading"
 			:domain="domains.find((l) => l.id == 'pd-2020-bsc')"
 			:submissions="submissions" />
 	</div>
@@ -26,6 +29,7 @@ import type { LearningDomain, LearningDomainSubmission } from "~/api.generated"
 defineProps<{
 	submissions: LearningDomainSubmission[]
 	domains: LearningDomain[]
+	isLoading: boolean
 }>()
 </script>
 
