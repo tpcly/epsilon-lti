@@ -87,10 +87,15 @@ public class KpiTable : AbstractCompetenceComponent
         
         // sort all outcomes from the 
 
-        var allOutcomes = Submissions.SelectMany(static e => e.Results.Select(static result => result.Outcome).DistinctBy(static e => e.Value.Order).ToAsyncEnumerable());
+        var allOutcomes = Submissions
+            .SelectMany(static e => e.Results
+                                     .Select(static result => result.Outcome)
+                                     .ToAsyncEnumerable());
         
         // Create the table body rows and cells
-        await foreach (var outcome in allOutcomes.OrderByDescending(static e => e.Value.Order))
+        await foreach (var outcome in allOutcomes
+                                      .OrderByDescending(static e => e.Value.Order)
+                                      .Distinct())
         {
             var tableRow = new TableRow();
             
@@ -120,7 +125,7 @@ public class KpiTable : AbstractCompetenceComponent
                 //     History = OnOffValue.FromBoolean(true),
                 //     Id = relationshipId,
                 // });
-
+        
                 assignmentsRun.AppendChild(new Text(assignment.ToString()));
                 assignmentsRun.AppendChild(new Paragraph());
             }
