@@ -28,15 +28,15 @@
 					class="search-box-options-item">
 					No results found
 				</div>
-				<div v-if="isTermSearch">
-					<li
-						id="isTermSearchBox"
-						class="search-box-options-item"
-						:class="{ 'custom-click-color': customClick }"
-						@click="handleCustomClick">
-						Custom﹥
-					</li>
-				</div>
+				<!--				<div v-if="isTermSearch">-->
+				<!--					<li-->
+				<!--						id="isTermSearchBox"-->
+				<!--						class="search-box-options-item"-->
+				<!--						:class="{ 'custom-click-color': customClick }"-->
+				<!--						@click="handleCustomClick">-->
+				<!--						Custom﹥-->
+				<!--					</li>-->
+				<!--				</div>-->
 				<ComboboxOption
 					v-for="(item, id) in filteredItems"
 					:key="id"
