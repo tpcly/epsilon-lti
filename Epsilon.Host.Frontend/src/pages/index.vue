@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<ClientOnly>
 		<TopNavigation
 			@user-change="handleUserChange"
 			@range-change="handleRangeChange" />
@@ -43,7 +43,7 @@
 				</TabPanels>
 			</main>
 		</TabGroup>
-	</div>
+	</ClientOnly>
 </template>
 
 <script lang="ts" setup>
@@ -90,19 +90,8 @@ if (process.client && data.value?.idToken) {
 }
 const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
-if (process.client) {
-	const po = Posthog.init() as PostHog
-	po.onFeatureFlags(function () {
-		enableCompetenceProfile.value =
-			po.isFeatureEnabled("competence-profile")
-		enableCompetenceGeneration.value = po.isFeatureEnabled(
-			"competence-generation"
-		)
-	})
-}
-
 const api = useApi()
-
+const loadingOutcomes = ref<boolean>(false)
 const submissions = ref<LearningDomainSubmission[]>([])
 const filterRange = ref<{
 	start: Date
@@ -113,6 +102,24 @@ const currentUser = ref<User | null>(null)
 
 const domains = ref<LearningDomain[]>([])
 const outcomes = ref<LearningDomainOutcome[]>([])
+if (process.client) {
+	const po = Posthog.init() as PostHog
+	po.onFeatureFlags(function () {
+		enableCompetenceProfile.value =
+			po.isFeatureEnabled("competence-profile")
+		enableCompetenceGeneration.value = po.isFeatureEnabled(
+			"competence-generation"
+		)
+	})
+
+	setInterval(() => {
+		if (outcomes.value.length > 0 && loadingOutcomes.value) {
+			submissions.value = Generator.generateSubmissions(outcomes.value)
+		}
+	}, 1000)
+
+	loadDomains(["hbo-i-2018", "pd-2020-bsc"])
+}
 
 function loadDomains(domainNames: string[]): void {
 	api.learning
@@ -124,8 +131,6 @@ function loadDomains(domainNames: string[]): void {
 		})
 	})
 }
-
-loadDomains(["hbo-i-2018", "pd-2020-bsc"])
 
 function downloadCompetenceDocument(): void {
 	api.document
@@ -163,14 +168,6 @@ const filteredSubmissions = computed(() => {
 		}
 	})
 })
-const loadingOutcomes = ref<boolean>(false)
-
-setInterval(() => {
-	if (outcomes.value.length > 0 && loadingOutcomes.value) {
-		submissions.value = Generator.generateSubmissions(outcomes.value)
-	}
-}, 1000)
-
 const handleUserChange = async (user: User): Promise<void> => {
 	if (user._id === null) {
 		return
