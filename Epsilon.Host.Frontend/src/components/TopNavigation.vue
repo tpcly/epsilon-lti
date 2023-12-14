@@ -106,5 +106,9 @@ watch([correctedFromDate, toDate], () => {
 		height: 5rem;
 		object-fit: contain;
 	}
+
+	.search-box {
+		float: right;
+	}
 }
 </style>

@@ -1,8 +1,5 @@
 <template>
-	<div
-		ref="searchBox"
-		class="search-box"
-		:style="{ width: isTermSearch ? '122px' : '100%' }">
+	<div ref="searchBox" class="search-box">
 		<Combobox
 			v-slot="{ open }"
 			:model-value="modelValue"
