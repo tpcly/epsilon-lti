@@ -1,5 +1,5 @@
 <template>
-	<table class="competence-profile" v-if="domain">
+	<table v-if="domain" class="competence-profile">
 		<thead>
 			<tr>
 				<th />
@@ -28,7 +28,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<table class="competence-profile" v-else>
+	<table v-else class="competence-profile">
 		<thead>
 			<tr>
 				<th />

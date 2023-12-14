@@ -1,5 +1,5 @@
 <template>
-	<table class="learning-domain-values" v-if="domain">
+	<table v-if="domain" class="learning-domain-values">
 		<tr
 			v-for="type of types"
 			:key="type"
@@ -18,7 +18,7 @@
 			<th class="masteryLegend-text">Mastery</th>
 		</tr>
 	</table>
-	<table class="learning-domain-values" v-else>
+	<table v-else class="learning-domain-values">
 		<tr v-for="type of 4" :key="type" class="learning-domain-values-row">
 			<td
 				class="learning-domain-values-value-color"
