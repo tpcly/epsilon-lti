@@ -1,10 +1,8 @@
-name: Continuous deployment
+﻿name: Continuous deployment
 on:
     workflow_dispatch:
-    push:
-        branches: [ main, develop ]
     release:
-      types: [published]
+        types: [ published ]
 jobs:
     api:
         name: Build API Docker image and publish
@@ -13,16 +11,16 @@ jobs:
             - name: Check out the repo
               uses: actions/checkout@v4
             - name: Log in to Docker Hub
-              uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
+              uses: docker/login-action@v3
               with:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_TOKEN }}
             - name: Extract metadata (tags, labels) for Docker
               id: meta
-              uses: docker/metadata-action@e6428a5c4e294a61438ed7f43155db912025b6b3
+              uses: docker/metadata-action@v5
               with:
                   images: typiqally/epsilon
-            - uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56
+            - uses: docker/build-push-action@v5
               with:
                   context: .
                   file: ./Epsilon.Host.WebApi/Dockerfile
@@ -37,18 +35,21 @@ jobs:
             - name: Check out the repo
               uses: actions/checkout@v4
             - name: Log in to Docker Hub
-              uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
+              uses: docker/login-action@v3
               with:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_TOKEN }}
             - name: Extract metadata (tags, labels) for Docker
               id: meta
-              uses: docker/metadata-action@e6428a5c4e294a61438ed7f43155db912025b6b3
+              uses: docker/metadata-action@v5
               with:
                   images: typiqally/epsilon
-            - uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56
+            - uses: docker/build-push-action@v5
               with:
                   context: ./Epsilon.Host.Frontend
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}-frontend
                   labels: ${{ steps.meta.outputs.labels }}-frontend
+                  
+                  
+                  

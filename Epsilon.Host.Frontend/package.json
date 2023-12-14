@@ -17,10 +17,10 @@
 	"dependencies": {
 		"apexcharts": "^3.44.2",
 		"nuxt": "^3.8.2",
-		"vue": "^3.3.10",
+		"vue": "^3.3.11",
 		"vue-router": "^4.2.5",
 		"vue3-apexcharts": "^1.4.4",
-		"posthog-js": "^1.93.6"
+		"posthog-js": "^1.95.1"
 	},
 	"devDependencies": {
 		"@headlessui/vue": "1.7.16",
@@ -30,14 +30,14 @@
 		"@nuxt/schema": "^3.8.2",
 		"@types/jsonwebtoken": "^9.0.5",
 		"@types/lodash": "^4.14.202",
-		"@types/node": "^20.10.3",
+		"@types/node": "^20.10.4",
 		"eslint": "^8.55.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.0.1",
 		"h3": "^1.9.0",
 		"jwt-decode": "^4.0.0",
 		"lodash": "^4.17.21",
-		"prettier": "^3.1.0",
+		"prettier": "^3.1.1",
 		"sass": "^1.69.4"
 	}
 }

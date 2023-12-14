@@ -3,6 +3,7 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
     cancel-in-progress: true
 on:
+    workflow_call:
     pull_request:
         paths:
             - '**.js'
@@ -13,21 +14,23 @@ on:
             - '**.ts'
             - '**.vue'
             - '**.css'
+            - '**.yaml'
 
 jobs:
+    
     build-backend:
         name: Build .NET solution
         runs-on: ubuntu-20.04
         
         steps:
-            -   uses: actions/checkout@v4
-            -   uses: actions/setup-dotnet@v3.2.0
-                with:
-                    dotnet-version: '6.0.x'
-            -   name: Restore dependencies
-                run: dotnet restore
-            -   name: Build
-                run: dotnet build --no-restore
+            - uses: actions/checkout@v4
+            - uses: actions/setup-dotnet@v4.0.0
+              with:
+                  dotnet-version: '6.0.x'
+            - name: Restore dependencies
+              run: dotnet restore
+            - name: Build
+              run: dotnet build --no-restore
     
     build-frontend:
         name: Build frontend
@@ -36,19 +39,19 @@ jobs:
             run:
                 working-directory: Epsilon.Host.Frontend
         steps:
-            -   uses: actions/checkout@v4
-            -   uses: pnpm/action-setup@v2
-                with:
-                    version: 8
-            -   uses: actions/setup-node@v4
-                with:
-                    node-version: 18
-                    cache: 'pnpm'
-                    cache-dependency-path: 'Epsilon.Host.Frontend/pnpm-lock.yaml'
-            -   name: Install modules
-                run: pnpm install
-            -   name: Build
-                run: pnpm build
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 18
+                  cache: 'pnpm'
+                  cache-dependency-path: 'Epsilon.Host.Frontend/pnpm-lock.yaml'
+            - name: Install modules
+              run: pnpm install
+            - name: Build
+              run: pnpm build
     
     lint-frontend:
         name: Lint and format frontend
@@ -58,60 +61,77 @@ jobs:
             run:
                 working-directory: Epsilon.Host.Frontend
         steps:
-            -   uses: actions/checkout@v4
-            -   uses: pnpm/action-setup@v2
-                with:
-                    version: 8
-            -   uses: actions/setup-node@v4
-                with:
-                    node-version: 18
-                    cache: 'pnpm'
-                    cache-dependency-path: 'Epsilon.Host.Frontend/pnpm-lock.yaml'
-            -   name: Install modules
-                run: pnpm install
-            -   name: Perform linter
-                run: pnpm run lint
-            -   name: Perform code formatter
-                run: pnpm run format-code
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 18
+                  cache: 'pnpm'
+                  cache-dependency-path: 'Epsilon.Host.Frontend/pnpm-lock.yaml'
+            - name: Install modules
+              run: pnpm install
+            - name: Perform linter
+              run: pnpm run lint
+            - name: Perform code formatter
+              run: pnpm run format-code
+    
+    
+    unit-testing:
+        name: Unit testing
+        runs-on: ubuntu-20.04
+        needs: [ build-backend ]
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-dotnet@v3.2.0
+              with:
+                  dotnet-version: '6.0.x'
+            - name: Restore dependencies
+              run: dotnet restore
+            - name: Build
+              run: dotnet build --no-restore
+            - name: Test with the dotnet CLI
+              run: dotnet test --no-restore --verbosity normal
     
     build-docker:
         name: Build Docker
         runs-on: ubuntu-20.04
-        needs: [ build-frontend, build-backend, lint-frontend, code-analysis ]
+        needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
         strategy:
-          fail-fast: false
-          matrix:
-            stage: [ 'development', 'staging', 'production' ]
+            fail-fast: false
+            matrix:
+                stage: [ 'development', 'staging', 'production' ]
         steps:
-            -   uses: actions/checkout@v4
-            -   name: Create env file for ${{ matrix.stage }}
-                run: cp .env.example .env.${{ matrix.stage }}
-            -   name: Build the containers
-                run: docker-compose -f docker-compose.${{ matrix.stage }}.yml build
+            - uses: actions/checkout@v4
+            - name: Create env file for ${{ matrix.stage }}
+              run: cp .env.example .env.${{ matrix.stage }}
+            - name: Build the containers
+              run: docker-compose -f docker-compose.${{ matrix.stage }}.yml build
+    
     code-analysis:
         name: Code analysis
-        needs: [ build-backend, build-frontend, lint-frontend ]
+        needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
         runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
         timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
         permissions:
             actions: read
             contents: read
             security-events: write
-        
         strategy:
             fail-fast: false
             matrix:
                 language: [ 'csharp', 'javascript-typescript' ]
         steps:
-            -   name: Checkout repository
-                uses: actions/checkout@v4
-            -   name: Initialize CodeQL
-                uses: github/codeql-action/init@v2
-                with:
-                    languages: ${{ matrix.language }}
-            -   name: Autobuild
-                uses: github/codeql-action/autobuild@v2
-            -   name: Perform CodeQL Analysis
-                uses: github/codeql-action/analyze@v2
-                with:
-                    category: "/language:${{matrix.language}}"
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Initialize CodeQL
+              uses: github/codeql-action/init@v2
+              with:
+                  languages: ${{ matrix.language }}
+            - name: Autobuild
+              uses: github/codeql-action/autobuild@v2
+            - name: Perform CodeQL Analysis
+              uses: github/codeql-action/analyze@v2
+              with:
+                  category: "/language:${{matrix.language}}"
