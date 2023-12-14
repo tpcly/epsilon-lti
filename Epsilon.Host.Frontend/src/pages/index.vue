@@ -26,7 +26,7 @@
 				</div>
 			</div>
 			<hr class="divider mb-lg" />
-			<main>
+			<main style="position: relative">
 				<TabPanels>
 					<TabPanel>
 						<PerformanceDashboard
@@ -40,6 +40,11 @@
 							:domains="domains" />
 					</TabPanel>
 				</TabPanels>
+				<LoadingModel
+					:loading="loadingOutcomes"
+					:title="
+						'Loading outcomes of ' + currentUser?.name
+					"></LoadingModel>
 			</main>
 		</TabGroup>
 	</div>
@@ -156,16 +161,18 @@ const filteredSubmissions = computed(() => {
 		}
 	})
 })
-
+const loadingOutcomes = ref<boolean>(false)
 const handleUserChange = async (user: User): Promise<void> => {
 	if (user._id === null) {
 		return
 	}
 	currentUser.value = user
 	submissions.value = []
+	loadingOutcomes.value = true
 	const outcomesResponse = await api?.learning.learningOutcomesList({
 		studentId: user._id,
 	})
+	loadingOutcomes.value = false
 
 	submissions.value = outcomesResponse.data
 }
