@@ -25,6 +25,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
     public async Task<CompetenceDocument> GetDocument(string userId, DateTime? from = null, DateTime? to = null)
     {
         var submissions = _canvasResultService.GetSubmissions(userId);
+        submissions = submissions.Where(static e => e.Criteria.Any());
         if (from != null && to != null)
         {
             submissions = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to);
