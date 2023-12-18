@@ -96,13 +96,13 @@ watch([correctedFromDate, toDate], () => {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 2rem 3rem;
+	padding: 1rem 1.5rem;
 	background-color: #11284c;
 	width: 100%;
 	border-radius: 0.5rem;
 
 	&-logo {
-		height: 5rem;
+		height: 4rem;
 		object-fit: contain;
 	}
 
