@@ -1,12 +1,22 @@
 <template>
 	<div class="top-navigation">
-		<img alt="logo" class="top-navigation-logo" src="../assets/logo.png" />
+		<a href="https://github.com/tpcly/epsilon-lti" target="_blank">
+			<img
+				alt="logo"
+				class="top-navigation-logo"
+				src="../assets/logo-white.png" />
+			<span
+				v-if="runtimeConfig.public.clientVersion.includes('Beta')"
+				class="top-navigation-beta">
+				Beta
+			</span>
+		</a>
+
 		<Row class="search-boxes">
 			<Col :cols="7">
 				<SearchBox
 					v-model="selectedUser"
 					:items="users"
-					:limit="5"
 					placeholder="Student"
 					:is-term-search="null" />
 			</Col>
@@ -14,7 +24,6 @@
 				<SearchBox
 					v-model="selectedTerm"
 					:items="terms"
-					:limit="10"
 					placeholder="Term"
 					:is-term-search="true" />
 			</Col>
@@ -27,7 +36,6 @@ import SearchBox from "~/components/SearchBox.vue"
 import Row from "~/components/LayoutRow.vue"
 import Col from "~/components/LayoutCol.vue"
 import { type EnrollmentTerm, type User } from "~/api.generated"
-import { ref } from "vue"
 
 const emit = defineEmits(["userChange", "rangeChange"])
 const api = useApi()
@@ -40,6 +48,7 @@ const selectedTerm = ref<EnrollmentTerm | null>(null)
 const correctedFromDate = ref<Date | null>(null)
 const fromDate = ref<Date | null>(null)
 const toDate = ref<Date | null>(null)
+const runtimeConfig = useRuntimeConfig()
 
 onMounted(async () => {
 	const response = await api.filter.filterAccessibleStudentsList()
@@ -53,10 +62,9 @@ watch(selectedUser, async () => {
 	if (!selectedUser?.value?._id) {
 		return
 	}
-
-	emit("userChange", selectedUser.value)
-
 	terms.value = []
+	selectedTerm.value = null
+	emit("userChange", selectedUser.value)
 
 	const response = await api.filter.filterParticipatedTermsList({
 		studentId: selectedUser.value._id,
@@ -73,7 +81,6 @@ watch(selectedTerm, () => {
 	}
 
 	const termsUnwrapped = terms.value
-
 	correctedFromDate.value = new Date(
 		termsUnwrapped[termsUnwrapped.length - 1]?.start_at!
 	)
@@ -96,18 +103,28 @@ watch([correctedFromDate, toDate], () => {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 2rem 3rem;
-	background-color: #f2f3f8;
+	padding: 1rem 1.5rem;
+	background-color: #11284c;
 	width: 100%;
 	border-radius: 0.5rem;
 
 	&-logo {
-		height: 5rem;
+		height: 4rem;
 		object-fit: contain;
 	}
-}
 
-.search-boxes {
-	margin-right: 10%;
+	&-beta {
+		color: #ffffff;
+		padding: 4px 6px;
+		background-color: #848da4;
+		border-radius: 6px;
+		position: relative;
+		right: 20px;
+		top: -45px;
+	}
+
+	.search-box {
+		float: right;
+	}
 }
 </style>
