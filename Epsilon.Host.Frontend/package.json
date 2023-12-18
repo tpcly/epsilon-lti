@@ -15,12 +15,12 @@
 		"generate-api-schema": "pnpm dlx swagger-typescript-api -p https://localhost:7084/swagger/v1/swagger.json -o src/ -n api.generated.ts --module-name-index 1"
 	},
 	"dependencies": {
-		"apexcharts": "^3.44.2",
+		"apexcharts": "^3.45.0",
 		"nuxt": "^3.8.2",
-		"vue": "^3.3.11",
+		"vue": "^3.3.12",
 		"vue-router": "^4.2.5",
 		"vue3-apexcharts": "^1.4.4",
-		"posthog-js": "^1.95.1"
+		"posthog-js": "^1.96.1"
 	},
 	"devDependencies": {
 		"@headlessui/vue": "1.7.16",
@@ -30,8 +30,8 @@
 		"@nuxt/schema": "^3.8.2",
 		"@types/jsonwebtoken": "^9.0.5",
 		"@types/lodash": "^4.14.202",
-		"@types/node": "^20.10.4",
-		"eslint": "^8.55.0",
+		"@types/node": "^20.10.5",
+		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.0.1",
 		"h3": "^1.9.0",
