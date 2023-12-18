@@ -1,7 +1,6 @@
 import type {
 	LearningDomainCriteria,
 	LearningDomainOutcome,
-	LearningDomainOutcomeRecord,
 	LearningDomainSubmission,
 } from "~/api.generated"
 
@@ -33,11 +32,10 @@ export class Generator {
 					masteryPoints: 3,
 				}
 				learningDomainSubmission.criteria?.push(criteria)
-				const result: LearningDomainOutcomeRecord = {
+				learningDomainSubmission.results?.push({
 					outcome: outcome,
-					grade: Math.floor(Math.floor(Math.random() * 6)),
-				}
-				learningDomainSubmission.results?.push(result)
+					grade: Math.floor(Math.random() * (6 - 3 + 1) + 3),
+				})
 			}
 
 			learningDomainSubmissions.push(learningDomainSubmission)

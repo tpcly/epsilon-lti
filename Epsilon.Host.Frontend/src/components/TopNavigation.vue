@@ -62,7 +62,6 @@ watch(selectedUser, async () => {
 	if (!selectedUser?.value?._id) {
 		return
 	}
-	console.log("Trigger new user TopNavigation")
 	terms.value = []
 	selectedTerm.value = null
 	emit("userChange", selectedUser.value)
@@ -82,7 +81,6 @@ watch(selectedTerm, () => {
 	}
 
 	const termsUnwrapped = terms.value
-
 	correctedFromDate.value = new Date(
 		termsUnwrapped[termsUnwrapped.length - 1]?.start_at!
 	)

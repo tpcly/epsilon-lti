@@ -78,7 +78,8 @@ const outcomes = (
 	column: LearningDomainType
 ): LearningDomainOutcome[] => {
 	return allOutcomes.value.filter(
-		(outcome) => outcome.row.id == row.id && outcome.column?.id == column.id
+		(outcome) =>
+			outcome?.row?.id == row.id && outcome?.column?.id == column.id
 	)
 }
 </script>

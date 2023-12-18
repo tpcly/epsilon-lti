@@ -105,7 +105,7 @@ if (process.client && data.value?.idToken) {
 const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
 const api = useApi()
-const loadingOutcomes = ref<boolean>(true)
+const loadingOutcomes = ref<boolean>(false)
 const submissions = ref<LearningDomainSubmission[]>([])
 const filterRange = ref<{
 	start: Date
@@ -128,8 +128,9 @@ if (process.client) {
 
 	setInterval(() => {
 		if (loadingOutcomes.value) {
-			console.log("Generating submissions")
-			submissions.value = Generator.generateSubmissions(outcomes.value)
+			filteredSubmissions.value = Generator.generateSubmissions(
+				outcomes.value
+			)
 		}
 	}, 1000)
 
@@ -165,14 +166,15 @@ function downloadCompetenceDocument(): void {
 		})
 }
 
-const filteredSubmissions = ref<LearningDomainSubmission[]>([])
-watch(submissions, () => {
-	const unwrappedFilterRange = filterRange.value
+const filteredSubmissions = computed({
+	get(): LearningDomainSubmission[] {
+		const unwrappedFilterRange = filterRange.value
 
-	if (!unwrappedFilterRange) {
-		filteredSubmissions.value = submissions.value
-	} else {
-		filteredSubmissions.value = submissions.value.filter((submission) => {
+		if (!unwrappedFilterRange) {
+			return submissions.value
+		}
+
+		return submissions.value.filter((submission) => {
 			if (submission.criteria!.length > 0) {
 				const submittedAt = new Date(submission.submittedAt!)
 
@@ -182,26 +184,27 @@ watch(submissions, () => {
 				)
 			}
 		})
-	}
+	},
+	set(values: LearningDomainSubmission[]) {
+		submissions.value = values
+	},
 })
 
 const handleUserChange = async (user: User): Promise<void> => {
 	if (user._id === null) {
 		return
 	}
-	console.log("Trigger new user index")
 	currentUser.value = user
 	loadingOutcomes.value = true
+	filterRange.value = null
 
 	await api?.learning
 		.learningOutcomesList({
 			studentId: user._id,
 		})
 		.then((r) => {
-			// submissions.value = []
 			submissions.value = r.data
 			loadingOutcomes.value = false
-			console.log("Results loaded")
 		})
 		.finally(() => {})
 }

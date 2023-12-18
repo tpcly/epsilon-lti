@@ -151,12 +151,6 @@ function displayValue(term: EnrollmentTerm): string {
 	return ""
 }
 
-// Handle open/close of the custom term box
-function handleCustomClick(): void {
-	customClick.value = !customClick.value
-	isStatic.value = !isStatic.value
-}
-
 const updateStartDate = (event: Event): void => {
 	const target = event.target as HTMLInputElement
 	startDate.value = target.value
