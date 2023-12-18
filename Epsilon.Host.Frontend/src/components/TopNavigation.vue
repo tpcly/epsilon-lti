@@ -1,9 +1,17 @@
 <template>
 	<div class="top-navigation">
-		<img
-			alt="logo"
-			class="top-navigation-logo"
-			src="../assets/logo-white.png" />
+		<a href="https://github.com/tpcly/epsilon-lti" target="_blank">
+			<img
+				alt="logo"
+				class="top-navigation-logo"
+				src="../assets/logo-white.png" />
+			<span
+				v-if="runtimeConfig.public.clientVersion.includes('Beta')"
+				class="top-navigation-beta">
+				Beta
+			</span>
+		</a>
+
 		<Row class="search-boxes">
 			<Col :cols="7">
 				<SearchBox
@@ -40,6 +48,7 @@ const selectedTerm = ref<EnrollmentTerm | null>(null)
 const correctedFromDate = ref<Date | null>(null)
 const fromDate = ref<Date | null>(null)
 const toDate = ref<Date | null>(null)
+const runtimeConfig = useRuntimeConfig()
 
 onMounted(async () => {
 	const response = await api.filter.filterAccessibleStudentsList()
@@ -104,6 +113,16 @@ watch([correctedFromDate, toDate], () => {
 	&-logo {
 		height: 4rem;
 		object-fit: contain;
+	}
+
+	&-beta {
+		color: #ffffff;
+		padding: 4px 6px;
+		background-color: #848da4;
+		border-radius: 6px;
+		position: relative;
+		right: 20px;
+		top: -45px;
 	}
 
 	.search-box {

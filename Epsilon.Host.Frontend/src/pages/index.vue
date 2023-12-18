@@ -44,6 +44,15 @@
 				</TabPanels>
 			</main>
 		</TabGroup>
+		<div class="credits">
+			<a class="version" :href="versionUrl" target="_blank">
+				{{ runtimeConfig.public.clientVersion }}
+			</a>
+			| Epsilon © {{ new Date().getFullYear() }} |
+			<a target="_blank" href="https://github.com/tpcly/epsilon-lti">
+				GitHub
+			</a>
+		</div>
 	</ClientOnly>
 </template>
 
@@ -70,6 +79,10 @@ import PerformanceDashboard from "~/components/performance/PerformanceDashboard.
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
 import { Generator } from "~/utils/generator"
 
+const runtimeConfig = useRuntimeConfig()
+const versionUrl =
+	"https://github.com/tpcly/epsilon-lti/releases/tag/" +
+	runtimeConfig.public.clientVersion
 const { readCallback, validateCallback } = useLti()
 
 const { data } = await useAsyncData(async () => {
@@ -92,7 +105,7 @@ if (process.client && data.value?.idToken) {
 const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
 const api = useApi()
-const loadingOutcomes = ref<boolean>(false)
+const loadingOutcomes = ref<boolean>(true)
 const submissions = ref<LearningDomainSubmission[]>([])
 const filterRange = ref<{
 	start: Date
@@ -275,5 +288,16 @@ const handleRangeChange = (range: {
 
 .divider {
 	border: 1px solid #f2f3f8;
+}
+.credits,
+.credits a {
+	color: #0f254a;
+}
+.credits {
+	padding: 20px;
+	margin: 0 auto;
+	display: block;
+	width: 50%;
+	text-align: center;
 }
 </style>
