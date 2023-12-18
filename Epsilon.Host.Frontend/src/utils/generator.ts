@@ -15,7 +15,6 @@ export class Generator {
 		outcomes: LearningDomainOutcome[]
 	): LearningDomainSubmission[] {
 		const learningDomainSubmissions: LearningDomainSubmission[] = []
-
 		for (let i = 0; i < 10; i++) {
 			const learningDomainSubmission: LearningDomainSubmission = {
 				assignment: `Submission ${i}`,

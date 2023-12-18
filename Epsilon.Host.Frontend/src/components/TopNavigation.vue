@@ -53,6 +53,7 @@ watch(selectedUser, async () => {
 	if (!selectedUser?.value?._id) {
 		return
 	}
+	console.log("Trigger new user TopNavigation")
 	terms.value = []
 	selectedTerm.value = null
 	emit("userChange", selectedUser.value)

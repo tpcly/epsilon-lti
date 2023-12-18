@@ -114,7 +114,8 @@ if (process.client) {
 	})
 
 	setInterval(() => {
-		if (outcomes.value.length > 0 && loadingOutcomes.value) {
+		if (loadingOutcomes.value) {
+			console.log("Generating submissions")
 			submissions.value = Generator.generateSubmissions(outcomes.value)
 		}
 	}, 1000)
@@ -151,30 +152,32 @@ function downloadCompetenceDocument(): void {
 		})
 }
 
-const filteredSubmissions = computed(() => {
+const filteredSubmissions = ref<LearningDomainSubmission[]>([])
+watch(submissions, () => {
 	const unwrappedFilterRange = filterRange.value
 
 	if (!unwrappedFilterRange) {
-		return submissions.value
+		filteredSubmissions.value = submissions.value
+	} else {
+		filteredSubmissions.value = submissions.value.filter((submission) => {
+			if (submission.criteria!.length > 0) {
+				const submittedAt = new Date(submission.submittedAt!)
+
+				return (
+					submittedAt >= unwrappedFilterRange.startCorrected &&
+					submittedAt <= unwrappedFilterRange.end
+				)
+			}
+		})
 	}
-
-	return submissions.value.filter((submission) => {
-		if (submission.criteria!.length > 0) {
-			const submittedAt = new Date(submission.submittedAt!)
-
-			return (
-				submittedAt >= unwrappedFilterRange.startCorrected &&
-				submittedAt <= unwrappedFilterRange.end
-			)
-		}
-	})
 })
+
 const handleUserChange = async (user: User): Promise<void> => {
 	if (user._id === null) {
 		return
 	}
+	console.log("Trigger new user index")
 	currentUser.value = user
-	submissions.value = Generator.generateSubmissions(outcomes.value)
 	loadingOutcomes.value = true
 
 	await api?.learning
@@ -182,12 +185,12 @@ const handleUserChange = async (user: User): Promise<void> => {
 			studentId: user._id,
 		})
 		.then((r) => {
-			submissions.value = []
+			// submissions.value = []
 			submissions.value = r.data
-		})
-		.finally(() => {
 			loadingOutcomes.value = false
+			console.log("Results loaded")
 		})
+		.finally(() => {})
 }
 
 const handleRangeChange = (range: {
