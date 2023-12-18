@@ -20,9 +20,9 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         var body = new Body();
         // Create a table, with rows for the outcomes and columns for the assignments.
         var table = new Table();
-
-        var assignments = Submissions.Select(static e => e.Assignment);
-
+        
+        var assignments = await Submissions.Select(static e => e.Assignment).ToListAsync();
+        
         // Set table properties for formatting.
         table.AppendChild(new TableProperties(
             new TableWidth
@@ -32,11 +32,22 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
 
         // Calculate the header row height based on the longest assignment name.
         var headerRowHeight = 0;
-        if (await assignments.AnyAsync())
+        var anyAssignments = false;
+
+        foreach (var assignment in assignments.Where(static a => a != null))
         {
-            headerRowHeight = await assignments.MaxAsync(static a => a.Length) * 111;
+            anyAssignments = true;
+            if (assignment != null)
+            {
+                headerRowHeight = Math.Max(headerRowHeight, assignment.Length);
+            }
         }
 
+        if (anyAssignments)
+        {
+            headerRowHeight *= 111;
+        }
+        
         // Create the table header row.
         var headerRow = new TableRow();
         headerRow.AppendChild(new TableRowProperties(new TableRowHeight
@@ -47,46 +58,46 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         // Empty top-left cell.
         headerRow.AppendChild(CreateTableCellWithBorders("2500", new Paragraph(new Run(new Text("")))));
 
-        await foreach (var assignment in assignments)
+        foreach (var assignment in assignments)
         {
             var cell = CreateTableCellWithBorders("100");
             
-            cell.FirstChild.Append(new TextDirection
+            if (assignment != null)
             {
-                Val = TextDirectionValues.TopToBottomLeftToRightRotated,
-            });
+                if (cell.FirstChild != null)
+                {
+                    cell.FirstChild.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
 
-            cell.Append(new Paragraph(new Run(new Text(assignment.Name))));
-            cell.FirstChild.Append(new Shading
-            {
-                Fill = assignments.IndexOf(assignment) % 2 == 0
-                    ? "FFFFFF"
-                    : "d3d3d3",
-            });
-            headerRow.AppendChild(cell);
+                    cell.Append(new Paragraph(new Run(new Text(assignment))));
+                    cell.FirstChild.Append(new Shading
+                    {
+                        Fill = assignments.IndexOf(assignment) % 2 == 0
+                            ? "FFFFFF"
+                            : "d3d3d3",
+                    });
+                    headerRow.AppendChild(cell);
+                }
+            }
         }
 
         table.AppendChild(headerRow);
 
-        var listOfOutcomes = new Dictionary<int, KpiMatrixOutcome>();
-        foreach (var assignment in KpiMatrixAssignments)
-        {
-            foreach (var outcome in assignment.Outcomes)
-            {
-                listOfOutcomes.TryAdd(outcome.Id, outcome);
-            }
-        }
+
+        var listOfOutcomes = Submissions
+            .SelectMany(static e => e.Results
+                                     .Select(static result => new { result.Outcome.Id, result.Outcome,  })
+                                     .ToAsyncEnumerable());
 
         // Add the outcome rows.
-        foreach (var outcome in listOfOutcomes.OrderByDescending(static o => o.Value.Title))
+        await foreach (var outcome in listOfOutcomes.OrderByDescending(static o => o.Outcome.Name))
         {
             var row = new TableRow();
 
             // Add the outcome title cell.
-            row.AppendChild(CreateTableCellWithBorders("2500", new Paragraph(new Run(new Text(outcome.Value.Title)))));
+            row.AppendChild(CreateTableCellWithBorders("2500", new Paragraph(new Run(new Text(outcome.Outcome.Name)))));
 
             // Add the assignment cells.
-            foreach (var assignment in assignments)
+             foreach (var assignment in assignments)
             {
                 var outcomeAssignment = assignment.Outcomes.FirstOrDefault(o => o.Id == outcome.Key);
                 var cell = CreateTableCellWithBorders("100");
@@ -103,6 +114,12 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                     Fill = fillColor,
                 });
 
+
+                cell.FirstChild?.Append(new Shading
+                {
+                    Fill = fillColor,
+                });
+
                 // Add an empty text element since we're using color instead of text.
                 cell.Append(new Paragraph(new Run(new Text(""))));
                 row.AppendChild(cell);
@@ -110,6 +127,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
 
             table.AppendChild(row);
         }
+
 
         body.AppendChild(GetLegend());
         body.Append(new Paragraph(new Run(new Text(""))));
