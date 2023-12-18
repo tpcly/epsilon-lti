@@ -15,6 +15,9 @@
 							class="toolbar-slider-item">
 							Competence Document
 						</Tab>
+						<Tab class="toolbar-slider-item">
+							Semester wrapped
+						</Tab>
 					</TabList>
 				</div>
 				<div v-if="enableCompetenceGeneration" class="toolbar-download">
@@ -40,6 +43,15 @@
 							:submissions="filteredSubmissions"
 							:filter-range="filterRange"
 							:domains="domains" />
+					</TabPanel>
+					<TabPanel>
+						<WrappedDashboard
+							v-if="!loadingOutcomes"
+							:outcomes="outcomes"
+							:submissions="filteredSubmissions"
+							:filter-range="filterRange"
+							:domains="domains">
+						</WrappedDashboard>
 					</TabPanel>
 				</TabPanels>
 			</main>
