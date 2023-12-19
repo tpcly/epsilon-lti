@@ -32,7 +32,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         }
 
         var domains = await _domainService.GetDomainsFromTenant();
-        var components = FetchComponents(submissions, domains);
+        var components = FetchComponents(submissions, domains, await _domainService.GetOutcomes());
 
         return new CompetenceDocument(components);
     }
@@ -53,9 +53,10 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         return wordDocument;
     }
 
-    public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
+    public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
     {
-        yield return new CompetenceProfileComponent(submissions, domains);
-        yield return new KpiMatrixComponent(submissions, domains);
+        var learningDomains = domains.ToList();
+        yield return new CompetenceProfileComponent(submissions, learningDomains, outcomes);
+        yield return new KpiMatrixComponent(submissions, learningDomains, outcomes);
     }
 }
