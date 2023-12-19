@@ -12,7 +12,6 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
     public KpiMatrixComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
         : base(submissions, domains)
     {
-
     }
 
     public override async Task<Body> AddToWordDocument(MainDocumentPart mainDocumentPart)
@@ -119,26 +118,72 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
 
         return mainDocumentPart.Document.AppendChild(body);
     }
-    
 
-    private Task<OpenXmlElement> GetLegend()
+    private static string GetColor(OutcomeGradeStatus status)
+    {
+        return status switch
+        {
+            OutcomeGradeStatus.Mastered => "#44F656",
+            OutcomeGradeStatus.NotMastered => "#FA1818",
+            OutcomeGradeStatus.NotGraded => "#FAFF00",
+            OutcomeGradeStatus.NotAssessed => "#9F2B68",
+            _ => "#9F2B68",
+        };
+    }
+    
+    private static OutcomeGradeStatus GetStatus(double? grade, double? masteryPoints)
+    {
+        if (grade.HasValue && masteryPoints.HasValue)
+        {
+            return grade.Value >= masteryPoints.Value ? OutcomeGradeStatus.Mastered : OutcomeGradeStatus.NotMastered;
+        }
+        else if (masteryPoints.HasValue)
+        {
+            return OutcomeGradeStatus.NotAssessed;
+        }
+        return OutcomeGradeStatus.NotGraded;
+    }
+    
+    private async Task<HashSet<LearningDomainOutcome>> GetAllOutcomesAsync()
+    {
+        var outcomes = new HashSet<LearningDomainOutcome>();
+        var submissions = await Submissions.ToListAsync();
+
+        foreach (var submission in submissions)
+        {
+            foreach (var result in submission.Results)
+            {
+                outcomes.Add(result.Outcome);
+            }
+        }
+        return outcomes;
+    }
+
+    private async Task<OpenXmlElement> GetLegend()
     {
         var table = new Table();
-        foreach (var status in GradeStatus)
+        var submissions = await Submissions.ToListAsync();
+        var allOutcomes = await GetAllOutcomesAsync();
+        foreach (var outcome in allOutcomes)
         {
-            var row = new TableRow();
-            var cellName = CreateTableCellWithBorders("200");
-            cellName.Append(new Paragraph(new Run(new Text(status.Value.Status))));
-
-            var cellValue = CreateTableCellWithBorders("200");
-            cellValue.Append(new Paragraph(new Run(new Text(""))));
-            cellValue.FirstChild?.Append(new Shading
+            foreach (var submission in submissions)
             {
-                Fill = status.Value.Color,
-            });
-            row.AppendChild(cellName);
-            row.AppendChild(cellValue);
-            table.AppendChild(row);
+                var criteria = submission.Criteria.FirstOrDefault(c => c.Id == outcome.Id);
+                var result = submission.Results.FirstOrDefault(r => r.Outcome.Id == outcome.Id);
+                var status = GetStatus(result?.Grade, criteria?.MasteryPoints);
+                var color = GetColor(status);
+                
+                var row = new TableRow();
+                var cellName = CreateTableCellWithBorders("200");
+                cellName.Append(new Paragraph(new Run(new Text(status.ToString()))));
+
+                var cellValue = CreateTableCellWithBorders("200");
+                cellValue.Append(new Paragraph(new Run(new Text(""))));
+                cellValue.FirstChild?.Append(new Shading { Fill = color, });
+                row.AppendChild(cellName);
+                row.AppendChild(cellValue);
+                table.AppendChild(row);
+            }
         }
 
         return table;
