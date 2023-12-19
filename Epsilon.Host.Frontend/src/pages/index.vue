@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<ClientOnly>
 		<TopNavigation
 			@user-change="handleUserChange"
 			@range-change="handleRangeChange" />
@@ -11,13 +11,13 @@
 							Performance dashboard
 						</Tab>
 						<Tab
-							v-if="enableCompetenceProfile"
+							v-if="enableCompetenceProfile && domains.length > 1"
 							class="toolbar-slider-item">
 							Competence Document
 						</Tab>
 					</TabList>
 				</div>
-				<div class="toolbar-download" v-if="enableCompetenceGeneration">
+				<div v-if="enableCompetenceGeneration" class="toolbar-download">
 					<Menu>
 						<MenuButton @click="downloadCompetenceDocument">
 							Download
@@ -26,17 +26,17 @@
 				</div>
 			</div>
 			<hr class="divider mb-lg" />
-			<main>
+			<main style="position: relative">
 				<TabPanels>
 					<TabPanel>
 						<PerformanceDashboard
-							v-if="domains.length > 1"
+							:is-loading="loadingOutcomes"
 							:submissions="filteredSubmissions"
 							:domains="domains" />
 					</TabPanel>
 					<TabPanel>
 						<CompetenceDocument
-							v-if="domains.length > 1"
+							:outcomes="outcomes"
 							:submissions="filteredSubmissions"
 							:filter-range="filterRange"
 							:domains="domains" />
@@ -44,7 +44,16 @@
 				</TabPanels>
 			</main>
 		</TabGroup>
-	</div>
+		<div class="credits">
+			<a class="version" :href="versionUrl" target="_blank">
+				{{ runtimeConfig.public.clientVersion }}
+			</a>
+			| Epsilon © {{ new Date().getFullYear() }} |
+			<a target="_blank" href="https://github.com/tpcly/epsilon-lti">
+				GitHub
+			</a>
+		</div>
+	</ClientOnly>
 </template>
 
 <script lang="ts" setup>
@@ -60,6 +69,7 @@ import {
 import TopNavigation from "~/components/TopNavigation.vue"
 import {
 	type LearningDomain,
+	type LearningDomainOutcome,
 	type LearningDomainSubmission,
 	type User,
 } from "~/api.generated"
@@ -67,7 +77,12 @@ import { Posthog } from "~/utils/posthog"
 import type { PostHog } from "posthog-js"
 import PerformanceDashboard from "~/components/performance/PerformanceDashboard.vue"
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
+import { Generator } from "~/utils/generator"
 
+const runtimeConfig = useRuntimeConfig()
+const versionUrl =
+	"https://github.com/tpcly/epsilon-lti/releases/tag/" +
+	runtimeConfig.public.clientVersion
 const { readCallback, validateCallback } = useLti()
 
 const { data } = await useAsyncData(async () => {
@@ -89,19 +104,8 @@ if (process.client && data.value?.idToken) {
 }
 const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
-if (process.client) {
-	const po = Posthog.init() as PostHog
-	po.onFeatureFlags(function () {
-		enableCompetenceProfile.value =
-			po.isFeatureEnabled("competence-profile")
-		enableCompetenceGeneration.value = po.isFeatureEnabled(
-			"competence-generation"
-		)
-	})
-}
-
 const api = useApi()
-
+const loadingOutcomes = ref<boolean>(false)
 const submissions = ref<LearningDomainSubmission[]>([])
 const filterRange = ref<{
 	start: Date
@@ -111,16 +115,38 @@ const filterRange = ref<{
 const currentUser = ref<User | null>(null)
 
 const domains = ref<LearningDomain[]>([])
+const outcomes = ref<LearningDomainOutcome[]>([])
+if (process.client) {
+	const po = Posthog.init() as PostHog
+	po.onFeatureFlags(function () {
+		enableCompetenceProfile.value =
+			po.isFeatureEnabled("competence-profile")
+		enableCompetenceGeneration.value = po.isFeatureEnabled(
+			"competence-generation"
+		)
+	})
+
+	setInterval(() => {
+		if (loadingOutcomes.value) {
+			filteredSubmissions.value = Generator.generateSubmissions(
+				outcomes.value
+			)
+		}
+	}, 1000)
+
+	loadDomains(["hbo-i-2018", "pd-2020-bsc"])
+}
 
 function loadDomains(domainNames: string[]): void {
+	api.learning
+		.learningDomainOutcomesList()
+		.then((r) => (outcomes.value = r.data))
 	domainNames.map(function (domainName) {
 		api.learning.learningDomainDetail(domainName).then((hboIData) => {
 			domains.value?.push(hboIData.data)
 		})
 	})
 }
-
-loadDomains(["hbo-i-2018", "pd-2020-bsc"])
 
 function downloadCompetenceDocument(): void {
 	api.document
@@ -140,23 +166,28 @@ function downloadCompetenceDocument(): void {
 		})
 }
 
-const filteredSubmissions = computed(() => {
-	const unwrappedFilterRange = filterRange.value
+const filteredSubmissions = computed({
+	get(): LearningDomainSubmission[] {
+		const unwrappedFilterRange = filterRange.value
 
-	if (!unwrappedFilterRange) {
-		return submissions.value
-	}
-
-	return submissions.value.filter((submission) => {
-		if (submission.criteria!.length > 0) {
-			const submittedAt = new Date(submission.submittedAt!)
-
-			return (
-				submittedAt >= unwrappedFilterRange.startCorrected &&
-				submittedAt <= unwrappedFilterRange.end
-			)
+		if (!unwrappedFilterRange) {
+			return submissions.value
 		}
-	})
+
+		return submissions.value.filter((submission) => {
+			if (submission.criteria!.length > 0) {
+				const submittedAt = new Date(submission.submittedAt!)
+
+				return (
+					submittedAt >= unwrappedFilterRange.startCorrected &&
+					submittedAt <= unwrappedFilterRange.end
+				)
+			}
+		})
+	},
+	set(values: LearningDomainSubmission[]) {
+		submissions.value = values
+	},
 })
 
 const handleUserChange = async (user: User): Promise<void> => {
@@ -164,15 +195,25 @@ const handleUserChange = async (user: User): Promise<void> => {
 		return
 	}
 	currentUser.value = user
+	loadingOutcomes.value = true
+	filterRange.value = null
 
-	const outcomesResponse = await api?.learning.learningOutcomesList({
-		studentId: user._id,
-	})
-
-	submissions.value = outcomesResponse.data
+	await api?.learning
+		.learningOutcomesList({
+			studentId: user._id,
+		})
+		.then((r) => {
+			submissions.value = r.data
+			loadingOutcomes.value = false
+		})
+		.finally(() => {})
 }
 
-const handleRangeChange = (range: { start: Date; end: Date }): void => {
+const handleRangeChange = (range: {
+	start: Date
+	end: Date
+	startCorrected: Date
+}): void => {
 	filterRange.value = range
 }
 </script>
@@ -184,7 +225,7 @@ const handleRangeChange = (range: { start: Date; end: Date }): void => {
 
 	&-download {
 		list-style: none;
-		background-color: #f2f3f8;
+		background-color: #11284c;
 		padding: 5px;
 		border-radius: 8px;
 		font-size: 1em;
@@ -195,6 +236,7 @@ const handleRangeChange = (range: { start: Date; end: Date }): void => {
 			cursor: pointer;
 			background-color: transparent;
 			border: none;
+			color: #ffffff;
 			font-size: 1em;
 
 			&:active,
@@ -204,13 +246,14 @@ const handleRangeChange = (range: { start: Date; end: Date }): void => {
 
 			&:hover {
 				background-color: #d8d9dd;
+				color: black;
 			}
 		}
 	}
 
 	&-slider {
 		list-style: none;
-		background-color: #f2f3f8;
+		background-color: #11284c;
 		padding: 5px;
 		border-radius: 8px;
 		width: fit-content;
@@ -225,18 +268,22 @@ const handleRangeChange = (range: { start: Date; end: Date }): void => {
 			background-color: transparent;
 			border: none;
 			font-size: 1em;
+			color: #ffffff;
 
 			&:active,
 			&:focus {
 				outline: transparent;
+				color: black;
 			}
 
 			&:hover {
 				background-color: #d8d9dd;
+				color: black;
 			}
 
 			&[data-headlessui-state="selected"] {
 				background-color: white;
+				color: black;
 			}
 		}
 	}
@@ -244,5 +291,16 @@ const handleRangeChange = (range: { start: Date; end: Date }): void => {
 
 .divider {
 	border: 1px solid #f2f3f8;
+}
+.credits,
+.credits a {
+	color: #0f254a;
+}
+.credits {
+	padding: 20px;
+	margin: 0 auto;
+	display: block;
+	width: 50%;
+	text-align: center;
 }
 </style>

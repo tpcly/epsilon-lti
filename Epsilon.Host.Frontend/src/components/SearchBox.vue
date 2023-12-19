@@ -1,8 +1,5 @@
 <template>
-	<div
-		ref="searchBox"
-		class="search-box"
-		:style="{ width: isTermSearch ? '122px' : '100%' }">
+	<div ref="searchBox" class="search-box">
 		<Combobox
 			v-slot="{ open }"
 			:model-value="modelValue"
@@ -16,7 +13,7 @@
 					class="search-box-list-arrow"
 					@click="
 						() => {
-							open.value = !open.value
+							open = !open as boolean
 						}
 					">
 					<ChevronUpDownIcon aria-hidden="true" />
@@ -31,15 +28,15 @@
 					class="search-box-options-item">
 					No results found
 				</div>
-				<div v-if="isTermSearch">
-					<li
-						id="isTermSearchBox"
-						class="search-box-options-item"
-						:class="{ 'custom-click-color': customClick }"
-						@click="handleCustomClick">
-						Custom﹥
-					</li>
-				</div>
+				<!--				<div v-if="isTermSearch">-->
+				<!--					<li-->
+				<!--						id="isTermSearchBox"-->
+				<!--						class="search-box-options-item"-->
+				<!--						:class="{ 'custom-click-color': customClick }"-->
+				<!--						@click="handleCustomClick">-->
+				<!--						Custom﹥-->
+				<!--					</li>-->
+				<!--				</div>-->
 				<ComboboxOption
 					v-for="(item, id) in filteredItems"
 					:key="id"
@@ -98,7 +95,7 @@ const props = defineProps<{
 	items: Array<{ name?: string | null }> | null
 	modelValue: EnrollmentTerm | null
 	placeholder?: string
-	limit: number
+	limit?: number | null
 	isTermSearch: boolean | null
 }>()
 
@@ -123,7 +120,7 @@ const filteredItems = computed(() => {
 	}
 
 	if (query.value === "") {
-		return props.items.slice(0, props.limit)
+		return props.items.slice(0, props.limit ?? undefined)
 	}
 
 	return props.items
@@ -137,7 +134,7 @@ const filteredItems = computed(() => {
 				.replace(/\s+/g, "")
 				.includes(query.value.toLowerCase().replace(/\s+/g, ""))
 		})
-		.slice(0, props.limit)
+		.slice(0, props.limit ?? undefined)
 })
 
 // Display term name or term dates (custom)
@@ -152,12 +149,6 @@ function displayValue(term: EnrollmentTerm): string {
 		return term.name
 	}
 	return ""
-}
-
-// Handle open/close of the custom term box
-function handleCustomClick(): void {
-	customClick.value = !customClick.value
-	isStatic.value = !isStatic.value
 }
 
 const updateStartDate = (event: Event): void => {

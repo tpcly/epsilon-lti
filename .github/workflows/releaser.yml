@@ -17,7 +17,7 @@ on:
                 default: false
     push:
         tags:
-            - "v*"
+            - "V*"
 jobs:
     ci:
         permissions:
