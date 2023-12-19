@@ -24,7 +24,7 @@
 	},
 	"devDependencies": {
 		"@headlessui/vue": "1.7.16",
-		"@heroicons/vue": "^2.0.18",
+		"@heroicons/vue": "^2.1.1",
 		"@nuxt/devtools": "latest",
 		"@nuxt/eslint-config": "^0.2.0",
 		"@nuxt/schema": "^3.8.2",
