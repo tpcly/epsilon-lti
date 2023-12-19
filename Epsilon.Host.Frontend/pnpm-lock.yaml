@@ -29,8 +29,8 @@ devDependencies:
     specifier: 1.7.16
     version: 1.7.16(vue@3.3.12)
   '@heroicons/vue':
-    specifier: ^2.0.18
-    version: 2.0.18(vue@3.3.12)
+    specifier: ^2.1.1
+    version: 2.1.1(vue@3.3.12)
   '@nuxt/devtools':
     specifier: latest
     version: 1.0.6(nuxt@3.8.2)(vite@4.5.1)
@@ -968,8 +968,8 @@ packages:
       vue: 3.3.12(typescript@5.2.2)
     dev: true
 
-  /@heroicons/vue@2.0.18(vue@3.3.12):
-    resolution: {integrity: sha512-BcTC9nq2TkwNSfQuqo96J7ehx4etezypc2YeTq7KsXWxrcrerhkgjLrxGRBnStN0wrXo0Gv4BInybqz5uBG6Cw==}
+  /@heroicons/vue@2.1.1(vue@3.3.12):
+    resolution: {integrity: sha512-Yi5nh/89L193ALgHyJUQUdNLsKXPrrE3yj5yiR8WAlo7nZyXGxGauQcEAmBsa2XJGMhBMuEdoOiuZ8wEwTBxVQ==}
     peerDependencies:
       vue: '>= 3'
     dependencies:
