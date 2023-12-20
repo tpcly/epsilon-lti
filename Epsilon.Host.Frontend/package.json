@@ -17,7 +17,7 @@
 	"dependencies": {
 		"apexcharts": "^3.45.0",
 		"nuxt": "^3.8.2",
-		"vue": "^3.3.12",
+		"vue": "^3.3.13",
 		"vue-router": "^4.2.5",
 		"vue3-apexcharts": "^1.4.4",
 		"posthog-js": "^1.96.1"
