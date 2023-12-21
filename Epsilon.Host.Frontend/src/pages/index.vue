@@ -3,47 +3,47 @@
 		<TopNavigation
 			@user-change="handleUserChange"
 			@range-change="handleRangeChange" />
-		<TabGroup as="template">
-			<div class="toolbar mb-lg mt-lg">
-				<div class="toolbar-slider">
-					<TabList>
-						<Tab class="toolbar-slider-item">
-							Performance dashboard
-						</Tab>
-						<Tab
-							v-if="enableCompetenceProfile && domains.length > 1"
-							class="toolbar-slider-item">
-							Competence Document
-						</Tab>
-					</TabList>
-				</div>
-				<div v-if="enableCompetenceGeneration" class="toolbar-download">
-					<Menu>
-						<MenuButton @click="downloadCompetenceDocument">
-							Download
-						</MenuButton>
-					</Menu>
-				</div>
-			</div>
-			<hr class="divider mb-lg" />
-			<main style="position: relative">
-				<TabPanels>
-					<TabPanel>
-						<PerformanceDashboard
-							:is-loading="loadingOutcomes"
-							:submissions="filteredSubmissions"
-							:domains="domains" />
-					</TabPanel>
-					<TabPanel>
-						<CompetenceDocument
-							:outcomes="outcomes"
-							:submissions="filteredSubmissions"
-							:filter-range="filterRange"
-							:domains="domains" />
-					</TabPanel>
-				</TabPanels>
-			</main>
-		</TabGroup>
+		<!--		<TabGroup as="template">-->
+		<!--			<div class="toolbar mb-lg mt-lg">-->
+		<!--				<div class="toolbar-slider">-->
+		<!--					<TabList>-->
+		<!--						<Tab class="toolbar-slider-item">-->
+		<!--							Performance dashboard-->
+		<!--						</Tab>-->
+		<!--						<Tab-->
+		<!--							v-if="enableCompetenceProfile && domains.length > 1"-->
+		<!--							class="toolbar-slider-item">-->
+		<!--							Competence Document-->
+		<!--						</Tab>-->
+		<!--					</TabList>-->
+		<!--				</div>-->
+		<!--				<div v-if="enableCompetenceGeneration" class="toolbar-download">-->
+		<!--					<Menu>-->
+		<!--						<MenuButton @click="downloadCompetenceDocument">-->
+		<!--							Download-->
+		<!--						</MenuButton>-->
+		<!--					</Menu>-->
+		<!--				</div>-->
+		<!--			</div>-->
+		<!--			<hr class="divider mb-lg" />-->
+		<!--			<main style="position: relative">-->
+		<!--				<TabPanels>-->
+		<!--					<TabPanel>-->
+		<!--						<PerformanceDashboard-->
+		<!--							:is-loading="loadingOutcomes"-->
+		<!--							:submissions="filteredSubmissions"-->
+		<!--							:domains="domains" />-->
+		<!--					</TabPanel>-->
+		<!--					<TabPanel>-->
+		<!--						<CompetenceDocument-->
+		<!--							:outcomes="outcomes"-->
+		<!--							:submissions="filteredSubmissions"-->
+		<!--							:filter-range="filterRange"-->
+		<!--							:domains="domains" />-->
+		<!--					</TabPanel>-->
+		<!--				</TabPanels>-->
+		<!--			</main>-->
+		<!--		</TabGroup>-->
 		<div class="credits">
 			<a class="version" :href="versionUrl" target="_blank">
 				{{ runtimeConfig.public.clientVersion }}
@@ -57,15 +57,6 @@
 </template>
 
 <script lang="ts" setup>
-import {
-	Tab,
-	TabGroup,
-	TabList,
-	TabPanel,
-	TabPanels,
-	Menu,
-	MenuButton,
-} from "@headlessui/vue"
 import TopNavigation from "~/components/TopNavigation.vue"
 import {
 	type LearningDomain,

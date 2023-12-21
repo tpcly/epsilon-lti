@@ -1,64 +1,5 @@
 <template>
-	<div ref="searchBox" class="search-box">
-		<Combobox
-			v-slot="{ open }"
-			:model-value="modelValue"
-			@update:model-value="emit('update:modelValue', $event)">
-			<div class="search-box-input">
-				<ComboboxInput
-					:display-value="displayValue"
-					:placeholder="placeholder"
-					@change="query = $event.target.value" />
-				<ComboboxButton
-					class="search-box-list-arrow"
-					@click="
-						() => {
-							open = !open as boolean
-						}
-					">
-					<ChevronUpDownIcon aria-hidden="true" />
-				</ComboboxButton>
-			</div>
-			<ComboboxOptions
-				v-if="items?.length > 0"
-				:static="isStatic"
-				class="search-box-options">
-				<div
-					v-if="filteredItems?.length === 0 && query !== ''"
-					class="search-box-options-item">
-					No results found
-				</div>
-				<!--				<div v-if="isTermSearch">-->
-				<!--					<li-->
-				<!--						id="isTermSearchBox"-->
-				<!--						class="search-box-options-item"-->
-				<!--						:class="{ 'custom-click-color': customClick }"-->
-				<!--						@click="handleCustomClick">-->
-				<!--						Custom﹥-->
-				<!--					</li>-->
-				<!--				</div>-->
-				<ComboboxOption
-					v-for="(item, id) in filteredItems"
-					:key="id"
-					v-slot="{ selected, active }"
-					as="template"
-					:value="item"
-					class="search-box-options-item"
-					:style="{ width: !isTermSearch ? '215px' : '100%' }">
-					<li
-						:class="{
-							'search-box-options-item-active': active,
-						}">
-						{{ item.name }}
-						<CheckIcon
-							v-if="selected"
-							class="search-box-options-item-select-icon"
-							aria-hidden="true" />
-					</li>
-				</ComboboxOption>
-			</ComboboxOptions>
-		</Combobox>
-	</div>
+	<div ref="searchBox" class="search-box"></div>
 	<div v-if="customClick" class="custom-box">
 		<h5 class="custom-header">Adjust term dates</h5>
 		<div class="date-input">
@@ -81,14 +22,6 @@
 </template>
 
 <script lang="ts" setup>
-import {
-	Combobox,
-	ComboboxButton,
-	ComboboxInput,
-	ComboboxOptions,
-	ComboboxOption,
-} from "@headlessui/vue"
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid"
 import type { EnrollmentTerm } from "~/api.generated"
 
 const props = defineProps<{
@@ -99,13 +32,13 @@ const props = defineProps<{
 	isTermSearch: boolean | null
 }>()
 
-const query = ref<string>("")
+// const query = ref<string>("")
 const startDate = ref<string | undefined>(undefined)
 const endDate = ref<string | undefined>(undefined)
 let datesAdjusted = false
 
 // Reset the default open/close behaviour of the combobox
-const isStatic = ref<boolean>(false)
+// const isStatic = ref<boolean>(false)
 const customClick = ref<boolean>(false)
 
 // For when combobox input is date or term name
@@ -114,42 +47,42 @@ const termName = ref<string | undefined>(undefined)
 
 const emit = defineEmits(["update:modelValue"])
 
-const filteredItems = computed(() => {
-	if (props.items === null) {
-		return null
-	}
-
-	if (query.value === "") {
-		return props.items.slice(0, props.limit ?? undefined)
-	}
-
-	return props.items
-		.filter((item) => {
-			if (!item.name) {
-				return false
-			}
-
-			return item.name
-				.toLowerCase()
-				.replace(/\s+/g, "")
-				.includes(query.value.toLowerCase().replace(/\s+/g, ""))
-		})
-		.slice(0, props.limit ?? undefined)
-})
+// const filteredItems = computed(() => {
+// 	if (props.items === null) {
+// 		return null
+// 	}
+//
+// 	if (query.value === "") {
+// 		return props.items.slice(0, props.limit ?? undefined)
+// 	}
+//
+// 	return props.items
+// 		.filter((item) => {
+// 			if (!item.name) {
+// 				return false
+// 			}
+//
+// 			return item.name
+// 				.toLowerCase()
+// 				.replace(/\s+/g, "")
+// 				.includes(query.value.toLowerCase().replace(/\s+/g, ""))
+// 		})
+// 		.slice(0, props.limit ?? undefined)
+// })
 
 // Display term name or term dates (custom)
-function displayValue(term: EnrollmentTerm): string {
-	if (datesAdjusted) {
-		if (startDate.value && endDate.value) {
-			dateName = true
-			return startDate.value + " - " + endDate.value
-		}
-	}
-	if (term && term.name) {
-		return term.name
-	}
-	return ""
-}
+// function displayValue(term: EnrollmentTerm): string {
+// 	if (datesAdjusted) {
+// 		if (startDate.value && endDate.value) {
+// 			dateName = true
+// 			return startDate.value + " - " + endDate.value
+// 		}
+// 	}
+// 	if (term && term.name) {
+// 		return term.name
+// 	}
+// 	return ""
+// }
 
 const updateStartDate = (event: Event): void => {
 	const target = event.target as HTMLInputElement
