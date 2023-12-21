@@ -19,14 +19,14 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: typiqally/epsilon
+                  images: nealgeilen/epsilon-api
             - uses: docker/build-push-action@v5
               with:
                   context: .
                   file: ./Epsilon.Host.WebApi/Dockerfile
                   push: true
-                  tags: ${{ steps.meta.outputs.tags }}-api
-                  labels: ${{ steps.meta.outputs.labels }}-api
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
     
     frontend:
         name: Build frontend Docker image and publish
@@ -43,13 +43,13 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: typiqally/epsilon
+                  images: nealgeilen/epsilon-frontend
             - uses: docker/build-push-action@v5
               with:
                   context: ./Epsilon.Host.Frontend
                   push: true
-                  tags: ${{ steps.meta.outputs.tags }}-frontend
-                  labels: ${{ steps.meta.outputs.labels }}-frontend
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
                   
                   
                   
