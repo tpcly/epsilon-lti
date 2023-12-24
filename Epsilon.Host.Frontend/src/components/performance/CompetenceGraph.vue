@@ -88,6 +88,11 @@ const chartOptions = {
 	},
 	tooltip: {
 		enabled: true,
+		y: {
+			formatter: function (value: number): string {
+				return ((value * 100) / 5).toFixed(0) + "%"
+			},
+		},
 	},
 }
 
