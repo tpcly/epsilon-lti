@@ -15,7 +15,7 @@
 		"generate-api-schema": "pnpm dlx swagger-typescript-api -p https://localhost:7084/swagger/v1/swagger.json -o src/ -n api.generated.ts --module-name-index 1"
 	},
 	"dependencies": {
-		"apexcharts": "^3.45.0",
+		"apexcharts": "^3.45.1",
 		"nuxt": "^3.8.2",
 		"vue": "^3.3.13",
 		"vue-router": "^4.2.5",
