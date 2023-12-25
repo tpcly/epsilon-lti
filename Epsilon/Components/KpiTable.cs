@@ -91,10 +91,10 @@ public class KpiTable : AbstractCompetenceComponent
             .SelectMany(static e => e.Results
                                      .Select(static result => result.Outcome)
                                      .ToAsyncEnumerable());
-        
+
         // Create the table body rows and cells
         await foreach (var outcome in allOutcomes
-                                      .OrderByDescending(static e => e.Value.Order)
+                                      .OrderBy(static e => e.Value.Order)
                                       .Distinct())
         {
             var tableRow = new TableRow();
@@ -105,31 +105,96 @@ public class KpiTable : AbstractCompetenceComponent
             // Assignments column
             var assignmentsParagraph = new Paragraph();
             var assignmentsRun = assignmentsParagraph.AppendChild(new Run());
-            
-            await foreach (var assignment in Submissions.Select(static e => e.Assignment!.ToString()))
+
+            await foreach (var submission in Submissions.Select(static e => e))
             {
-                Console.WriteLine("Assignment:  " + assignment);
-                // await foreach (var uri in Submissions.Select(static e => e.AssignmentUrl))
-                // {
-                //     HyperlinkRelationship rel;
-                //     rel = mainDocumentPart.AddHyperlinkRelationship(uri, true);
-                // }
-                //
-                // var relationshipId = "0";
-                //
-                // var runProperties = new RunProperties(
-                //     new Underline { Val = UnderlineValues.Single, });
-                //
-                // assignmentsRun.AppendChild(new Hyperlink(new Run(runProperties, new Text(assignment.ToString())))
-                // {
-                //     History = OnOffValue.FromBoolean(true),
-                //     Id = relationshipId,
-                // });
-        
-                assignmentsRun.AppendChild(new Text(assignment.ToString()));
-                assignmentsRun.AppendChild(new Paragraph());
+                if (submission.Results.Any(r => r.Outcome.Id == outcome.Id))
+                {
+                    var rel = mainDocumentPart.AddHyperlinkRelationship(new Uri(submission.AssignmentUrl!.ToString()), true);
+                    var relationshipId = rel.Id;
+
+                    var hyperlink = new Hyperlink(new RunProperties(
+                        new Underline { Val = UnderlineValues.Single, }), new Text(submission.Assignment!)) { Id = relationshipId, };
+                    
+                    assignmentsRun.AppendChild(hyperlink);
+                    assignmentsRun.AppendChild(new Paragraph());
+                }
             }
             
+            #region start of questionable code
+            // var o = 0;
+            // await foreach (var results in Submissions
+            //                    .Select(static e => e.Results!))
+            // {
+            //     Console.WriteLine("foreach loop " + 2);
+            //     var a = 0;
+            //     await foreach (var criteriaConnectedAssignment in results.ToAsyncEnumerable())
+            //     {
+            //         Console.WriteLine("foreach loop " + 3);
+            //         Console.WriteLine("Connected assignment: " + criteriaConnectedAssignment + " - a: " + a);
+            //         if (criteriaConnectedAssignment.Outcome.Id == outcome.Id)
+            //         {
+            //             Console.WriteLine(true);
+                            #region hyperlink
+            
+                                // await foreach (var uri in Submissions.Select(static e => e.AssignmentUrl))
+                                // {
+                                //     HyperlinkRelationship rel;
+                                //     rel = mainDocumentPart.AddHyperlinkRelationship(uri, true);
+                                // }
+                                //
+                                // var relationshipId = "0";
+                                //
+                                // var runProperties = new RunProperties(
+                                //     new Underline { Val = UnderlineValues.Single, });
+                                //
+                                // assignmentsRun.AppendChild(new Hyperlink(new Run(runProperties, new Text(assignment.ToString())))
+                                // {
+                                //     History = OnOffValue.FromBoolean(true),
+                                //     Id = relationshipId,
+                                // });
+                                // await foreach (var sub in Submissions.Select(static e => e.Assignment!.ToAsyncEnumerable().ToString()))
+                                // {
+                                //     var n = 0;
+                                //     if (i == n)
+                                //     {
+                                //         assignmentsRun.AppendChild(new Text(sub!));
+                                //     }
+                                //
+                                //     n++;
+                                // }
+                        
+            
+                    #endregion
+            //                 await foreach (var sub in Submissions.Select(static e => e.AssignmentUrl!.ToString()))
+            //                 {
+            //                     Console.WriteLine("foreach loop " + 4);
+            //                     Console.WriteLine("submission URL: "+sub + " - o: " + o);
+            //                         if (a == o)
+            //                         {
+            //                             Console.WriteLine("Add submission to outcome " + a + "=" + o);
+            //                             assignmentsRun.AppendChild(new Text(criteriaConnectedAssignment.Outcome.Name!));
+            //                             assignmentsRun.AppendChild(new Paragraph());
+            //                             assignmentsRun.AppendChild(new Text(sub!));
+            //                             assignmentsRun.AppendChild(new Paragraph());
+            //                             break;
+            //                         }
+            //                         Console.WriteLine("before add on a: "+a);
+            //                         a++;
+            //                         Console.WriteLine("after add on a: "+a);
+            //                         // assignmentsRun.AppendChild(new Text(Submissions.Select(static e => e.Assignment).ToString()!));
+            //                 }
+            //         }
+            //         else
+            //         {
+            //             Console.WriteLine(false);
+            //         }
+            //         Console.WriteLine("before add on o: "+o);
+            //         o++;
+            //         Console.WriteLine("after add on o: "+o);
+            //     }
+            // }
+            //
             tableRow.AppendChild(CreateTableCellWithBorders("5000", assignmentsParagraph));
             //
             // // Grades column
@@ -144,6 +209,7 @@ public class KpiTable : AbstractCompetenceComponent
             // }
             //
             // tableRow.AppendChild(CreateTableCellWithBorders("1000", gradesParagraph));
+            #endregion 
             
              // Add the row to the table
             table.AppendChild(tableRow);
