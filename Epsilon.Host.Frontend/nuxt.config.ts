@@ -1,5 +1,6 @@
 import { readFileSync } from "fs"
 import pkg from "./package.json"
+import vuetify, { transformAssetUrls } from "vite-plugin-vuetify"
 const key = process.env.NUXT_SSL_KEY_PATH
 const certificate = process.env.NUXT_SSL_CERT_PATH
 
@@ -17,6 +18,18 @@ export default defineNuxtConfig({
 				: undefined,
 		},
 	},
+	build: {
+		transpile: [/vue/],
+	},
+	modules: [
+		(_options, nuxt): void => {
+			nuxt.hooks.hook("vite:extendConfig", (config) => {
+				// @ts-expect-error
+				config.plugins.push(vuetify({ autoImport: true }))
+			})
+		},
+		//...
+	],
 	ssr: true,
 	pages: true,
 	runtimeConfig: {
@@ -25,6 +38,13 @@ export default defineNuxtConfig({
 		public: {
 			apiEndpoint: process.env.NUXT_API_ENDPOINT,
 			clientVersion: pkg.version,
+		},
+	},
+	vite: {
+		vue: {
+			template: {
+				transformAssetUrls,
+			},
 		},
 	},
 })
