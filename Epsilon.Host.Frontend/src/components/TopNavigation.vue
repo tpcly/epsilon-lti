@@ -14,25 +14,37 @@
 
 		<Row class="search-boxes">
 			<Col :cols="7">
-				<SearchBox
+				<v-autocomplete
 					v-model="selectedUser"
+					style="width: 250px"
+					label="Students"
 					:items="users"
-					placeholder="Student"
-					:is-term-search="null" />
+					density="compact"
+					:flat="true"
+					item-value="_id"
+					item-title="name"
+					return-object
+					no-data-text>
+				</v-autocomplete>
 			</Col>
 			<Col :cols="5">
-				<SearchBox
+				<v-autocomplete
 					v-model="selectedTerm"
+					style="width: 150px"
+					label="Semester"
 					:items="terms"
-					placeholder="Term"
-					:is-term-search="true" />
+					density="compact"
+					:flat="true"
+					item-title="name"
+					return-object
+					no-data-text>
+				</v-autocomplete>
 			</Col>
 		</Row>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import SearchBox from "~/components/SearchBox.vue"
 import Row from "~/components/LayoutRow.vue"
 import Col from "~/components/LayoutCol.vue"
 import { type EnrollmentTerm, type User } from "~/api.generated"
@@ -98,7 +110,7 @@ watch([correctedFromDate, toDate], () => {
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .top-navigation {
 	display: flex;
 	justify-content: space-between;
@@ -107,6 +119,18 @@ watch([correctedFromDate, toDate], () => {
 	background-color: #11284c;
 	width: 100%;
 	border-radius: 0.5rem;
+
+	.v-autocomplete .v-field {
+		padding: 3px 6px;
+	}
+
+	.v-autocomplete {
+		background-color: #ffffff;
+		border-radius: 6px;
+	}
+	.v-autocomplete .v-input__details {
+		display: none;
+	}
 
 	&-logo {
 		height: 4rem;
