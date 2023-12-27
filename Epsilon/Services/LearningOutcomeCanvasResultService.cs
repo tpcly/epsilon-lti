@@ -7,42 +7,48 @@ namespace Epsilon.Services;
 public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultService
 {
     private const string Query = @"
-        query GetSubmissions($studentIds: [ID!]) {
-          allCourses {
-            submissionsConnection(studentIds: $studentIds) {
-              nodes {
-                submissionHistoriesConnection {
-                  nodes {
-                    rubricAssessmentsConnection {
-                      nodes {
-                        assessmentRatings {
-                          criterion {
+        query GetSubmissions($studentIds: ID!) {
+          legacyNode(_id: $studentIds, type: User) {
+            ... on User {
+              enrollments {
+                course {
+                  name
+                  submissionsConnection(studentIds: [$studentIds]) {
+                    nodes {
+                      assignment {
+                        _id
+                        name
+                        htmlUrl
+                        rubric {
+                          criteria {
                             outcome {
                               _id
+                              masteryPoints
                             }
-                            masteryPoints
                           }
-                          points
+                        }
+                      }
+                      postedAt
+                      submittedAt
+                      attempt
+                      rubricAssessmentsConnection {
+                        nodes {
+                          assessmentRatings {
+                            _id
+                            criterion {
+                              outcome {
+                                _id
+                                title
+                              }
+                              masteryPoints
+                            }
+                            points
+                          }
                         }
                       }
                     }
-                    attempt
-                    submittedAt
                   }
                 }
-                assignment {
-                  name
-                  htmlUrl
-                  rubric {
-                    criteria {
-                      outcome {
-                        _id
-                        masteryPoints
-                      }
-                    }
-                  }
-                }
-                postedAt
               }
             }
           }
@@ -68,20 +74,32 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
         await Task.WhenAll(domainOutcomesTask, domainOutcomesTask);
 
-        if (submissionsTask?.Courses == null)
+        if (submissionsTask?.LegacyNode?.Enrollments == null)
         {
-            throw new HttpRequestException("No Courses are given");
+            throw new HttpRequestException("No Enrollments are given");
         }
 
-        foreach (var submission in submissionsTask.Courses.Where(static c => c.Submissions != null).SelectMany(static c => c.Submissions!.Nodes))
+        //TODO Use ID of course to get distinct courses
+        foreach (var enrollment in submissionsTask.LegacyNode.Enrollments.DistinctBy(static e => e.Course?.Name))
         {
-            yield return new LearningDomainSubmission(
-                submission.Assignment?.Name,
-                submission.Assignment?.HtmlUrl,
-                submission.SubmissionHistories?.Nodes.OrderBy(static h => h.Attempt).First().SubmittedAt ?? DateTime.Now,
-                GetSubmissionCriteria(submission, domainOutcomesTask),
-                GetOutcomeResults(submission, domainOutcomesTask)
-            );
+            if (enrollment.Course?.Submissions?.Nodes != null)
+            {
+                foreach (var submissions in enrollment.Course.Submissions.Nodes.GroupBy(static s => s.Assignment?.HtmlUrl))
+                {
+                    Console.WriteLine(submissions.Key);
+                    var latestSubmission = submissions.OrderByDescending(static s => s.SubmittedAt).First();
+                
+                    yield return new LearningDomainSubmission(
+                        latestSubmission.Assignment?.Name,
+                        latestSubmission.Assignment?.HtmlUrl,
+                        latestSubmission.SubmittedAt ?? new DateTime(),
+                        GetSubmissionCriteria(latestSubmission, domainOutcomesTask),
+                        GetOutcomeResults(submissions, domainOutcomesTask)
+                    );
+                }
+
+            }
+
         }
     }
 
@@ -93,7 +111,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
             {
                 if (criteria.Outcome != null)
                 {
-                    var existingDomainCriteria  = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == criteria.Outcome.Id) != null;
+                    var existingDomainCriteria = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == criteria.Outcome.Id) != null;
                     if (existingDomainCriteria)
                     {
                         yield return new LearningDomainCriteria(
@@ -108,17 +126,13 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
 
     private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
-        Submission submission,
+        IEnumerable<Submission> submissions,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
     {
         var outcomeRecords = new List<LearningDomainOutcomeRecord>();
-        if (submission.SubmissionHistories?.Nodes == null)
-        {
-            throw new HttpRequestException("No SubmissionHistories are given");
-        }
         
-        foreach (var submissionHistory in submission.SubmissionHistories.Nodes.OrderByDescending(static s => s.SubmittedAt))
+        foreach (var submissionHistory in submissions.OrderByDescending(static s => s.SubmittedAt))
         {
             var rubricAssessments = submissionHistory.RubricAssessments?.Nodes.SelectMany(static rubricAssessment =>
                 rubricAssessment.AssessmentRatings?.Where(static ar =>
@@ -128,20 +142,22 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                         Criterion.MasteryPoints: not null,
                         Criterion.Outcome: not null,
                     }) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
-
-
+        
+        
             if (rubricAssessments == null)
             {
                 throw new HttpRequestException("No RubricAssessments are found");
             }
-                
+        
             foreach (var assessment in rubricAssessments)
             {
                 var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
                 if (outcome != null)
                 {
-                    outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
-                    outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
+                    if (outcomeRecords.All(r => r.Outcome.Id != outcome.Id))
+                    {
+                        outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
+                    }
                 }
             }
         }
