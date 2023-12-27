@@ -63,17 +63,17 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
     public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId)
     {
-        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
+        var submissionsTask = await _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
 
-        await Task.WhenAll(submissionsTask, domainOutcomesTask);
+        await Task.WhenAll(domainOutcomesTask, domainOutcomesTask);
 
-        if (submissionsTask.Result?.Courses == null)
+        if (submissionsTask?.Courses == null)
         {
             throw new HttpRequestException("No Courses are given");
         }
 
-        foreach (var submission in submissionsTask.Result.Courses.Where(static c => c.Submissions != null).SelectMany(static c => c.Submissions!.Nodes))
+        foreach (var submission in submissionsTask.Courses.Where(static c => c.Submissions != null).SelectMany(static c => c.Submissions!.Nodes))
         {
             yield return new LearningDomainSubmission(
                 submission.Assignment?.Name,
