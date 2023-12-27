@@ -11,6 +11,11 @@
 				</v-tab>
 			</div>
 			<v-spacer></v-spacer>
+			<WrappedDialog
+				:submissions="submissions"
+				:filter-range="filterRange"
+				:outcomes="outcomes"
+				:domains="domains"></WrappedDialog>
 			<v-btn
 				v-if="enableCompetenceGeneration"
 				class="toolbar-download"
