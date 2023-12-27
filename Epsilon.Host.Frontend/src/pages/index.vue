@@ -18,6 +18,7 @@
 				Download
 			</v-btn>
 		</v-tabs>
+		<loading-dialog v-model="loadingOutcomes"></loading-dialog>
 		<v-window v-model="tabs">
 			<v-window-item :value="0">
 				<PerformanceDashboard
@@ -58,6 +59,7 @@ import type { PostHog } from "posthog-js"
 import PerformanceDashboard from "~/components/performance/PerformanceDashboard.vue"
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
 import { Generator } from "~/utils/generator"
+import LoadingDialog from "~/LoadingDialog.vue"
 
 const runtimeConfig = useRuntimeConfig()
 const tabs = ref<number>(0)
