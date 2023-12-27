@@ -12,6 +12,7 @@
 			</div>
 			<v-spacer></v-spacer>
 			<WrappedDialog
+				v-if="!loadingOutcomes"
 				:submissions="submissions"
 				:filter-range="filterRange"
 				:outcomes="outcomes"
