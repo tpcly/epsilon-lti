@@ -12,35 +12,34 @@
 			</span>
 		</a>
 
-		<Row class="search-boxes">
-			<Col :cols="7">
-				<v-autocomplete
-					v-model="selectedUser"
-					style="width: 250px"
-					label="Students"
-					:items="users"
-					density="compact"
-					:flat="true"
-					item-value="_id"
-					item-title="name"
-					return-object
-					no-data-text>
-				</v-autocomplete>
-			</Col>
-			<Col :cols="5">
-				<v-autocomplete
-					v-model="selectedTerm"
-					style="width: 150px"
-					label="Semester"
-					:items="terms"
-					density="compact"
-					:flat="true"
-					item-title="name"
-					return-object
-					no-data-text>
-				</v-autocomplete>
-			</Col>
-		</Row>
+		<div class="search-boxes">
+			<slot :terms="terms"></slot>
+			<v-autocomplete
+				v-model="selectedUser"
+				class="search-box"
+				style="width: 250px"
+				label="Student"
+				:items="users"
+				density="compact"
+				:flat="true"
+				item-value="_id"
+				item-title="name"
+				return-object
+				no-data-text>
+			</v-autocomplete>
+			<v-autocomplete
+				v-model="selectedTerm"
+				class="search-box"
+				style="width: 150px"
+				label="Semester"
+				:items="terms"
+				density="compact"
+				:flat="true"
+				item-title="name"
+				return-object
+				no-data-text>
+			</v-autocomplete>
+		</div>
 	</div>
 </template>
 
@@ -147,8 +146,13 @@ watch([correctedFromDate, toDate], () => {
 		top: -45px;
 	}
 
+	.search-boxes {
+		display: inline-flex;
+	}
+
 	.search-box {
 		float: right;
+		margin-left: 5px;
 	}
 }
 </style>

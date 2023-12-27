@@ -2,7 +2,16 @@
 	<ClientOnly>
 		<TopNavigation
 			@user-change="handleUserChange"
-			@range-change="handleRangeChange" />
+			@range-change="handleRangeChange">
+			<template #default="navigationProps">
+				<WrappedDialog
+					v-if="!loadingOutcomes"
+					:submissions="submissions"
+					:outcomes="outcomes"
+					:terms="navigationProps.terms"
+					:domains="domains"></WrappedDialog>
+			</template>
+		</TopNavigation>
 		<v-tabs v-model="tabs" class="toolbar">
 			<div class="toolbar-items">
 				<v-tab :value="0">Performance Dashboard</v-tab>
@@ -11,12 +20,7 @@
 				</v-tab>
 			</div>
 			<v-spacer></v-spacer>
-			<WrappedDialog
-				v-if="!loadingOutcomes"
-				:submissions="submissions"
-				:filter-range="filterRange"
-				:outcomes="outcomes"
-				:domains="domains"></WrappedDialog>
+
 			<v-btn
 				v-if="enableCompetenceGeneration"
 				class="toolbar-download"

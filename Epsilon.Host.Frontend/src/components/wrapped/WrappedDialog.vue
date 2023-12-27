@@ -1,13 +1,13 @@
 <template>
 	<v-dialog min-width="75%" min-height="75%" class="wrapped-dialog">
 		<template #activator="{ props }">
-			<v-btn v-bind="props" text="Epsilon wrapped"> </v-btn>
+			<v-btn v-bind="props"> {{ term?.name }} wrapped </v-btn>
 		</template>
 
 		<template #default="{ isActive }">
 			<v-card>
 				<v-toolbar>
-					<v-toolbar-title>Epsilon Wrapped</v-toolbar-title>
+					<v-toolbar-title>{{ term?.name }} wrapped</v-toolbar-title>
 
 					<v-spacer></v-spacer>
 
@@ -116,23 +116,11 @@
 			</v-card>
 		</template>
 	</v-dialog>
-
-	<!--	<ol-->
-	<!--		v-for="domain in mostUsedRow"-->
-	<!--		:key="domain.domain.id"-->
-	<!--		style="list-style: numberd">-->
-	<!--		<li-->
-	<!--			v-for="(i, x) in domain.records-->
-	<!--				.sort((a, b) => b.count - a.count)-->
-	<!--				.slice(0, 5)"-->
-	<!--			:key="i.row.id">-->
-	<!--			{{ x + 1 }}. {{ i?.row?.name }}: {{ i.count }}-->
-	<!--		</li>-->
-	<!--	</ol>-->
 </template>
 
 <script setup lang="ts">
 import type {
+	EnrollmentTerm,
 	LearningDomain,
 	LearningDomainOutcome,
 	LearningDomainSubmission,
@@ -143,12 +131,10 @@ const props = defineProps<{
 	submissions: LearningDomainSubmission[]
 	domains: LearningDomain[]
 	outcomes: LearningDomainOutcome[]
-	filterRange: {
-		start: Date
-		end: Date
-		startCorrected: Date
-	} | null
+	terms: EnrollmentTerm[] | null
 }>()
+
+const term = computed<EnrollmentTerm | undefined>(() => props.terms?.at(0))
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 	props.submissions.flatMap((submission) =>
@@ -158,7 +144,10 @@ const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 
 const allOutcomesPast = computed<LearningDomainOutcome[]>(() =>
 	props.submissions
-		.filter((s) => new Date(s.submittedAt!) <= props.filterRange!.start)
+		.filter(
+			(s) =>
+				new Date(s.submittedAt!) <= new Date(term.value!.start_at ?? "")
+		)
 		.flatMap((submission) =>
 			submission.results!.map((result) => result.outcome!)
 		)
@@ -168,8 +157,9 @@ const allOutcomesCurrentSemester = computed<LearningDomainOutcome[]>(() =>
 	props.submissions
 		.filter(
 			(s) =>
-				new Date(s.submittedAt!) >= props.filterRange!.start &&
-				new Date(s.submittedAt!) <= props.filterRange!.end
+				new Date(s.submittedAt!) >=
+					new Date(term.value!.start_at ?? "") &&
+				new Date(s.submittedAt!) <= new Date(term.value!.end_at ?? "")
 		)
 		.flatMap((submission) =>
 			submission.results!.map((result) => result.outcome!)
