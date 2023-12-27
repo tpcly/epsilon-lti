@@ -2,22 +2,29 @@ using System.Globalization;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
 using Tpcly.Canvas.Abstractions.GraphQl;
-using Tpcly.Canvas.Abstractions.Rest;
 
 namespace Epsilon.Services;
 
 public class FilterService : IFilterService
 {
     private const string ParticipatedTermQuery = @"
-        query GetUserSubmissions($studentIds: [ID!]) {
-          allCourses {
-            submissionsConnection(studentIds: $studentIds) {
-              nodes {
-                submittedAt
+        query GetUserTerms($studentIds: ID!) {
+          legacyNode(_id: $studentIds, type: User) {
+            ... on User {
+              enrollments {
+                course {
+                  term {
+                    _id
+                    name
+                    startAt
+                    endAt
+                  }
+                }
               }
             }
           }
         }
+
     ";
 
     private const string AccessibleEnrollmentsQuery = @"
@@ -39,41 +46,38 @@ public class FilterService : IFilterService
 
     private readonly ICanvasUserSessionAccessor _sessionAccessor;
     private readonly ICanvasGraphQlApi _canvasGraphQl;
-    private readonly ICanvasRestApi _canvasRest;
 
-    public FilterService(ICanvasUserSessionAccessor sessionAccessor, ICanvasGraphQlApi canvasGraphQl, ICanvasRestApi canvasRest)
+    public FilterService(ICanvasUserSessionAccessor sessionAccessor, ICanvasGraphQlApi canvasGraphQl)
     {
         _sessionAccessor = sessionAccessor;
         _canvasGraphQl = canvasGraphQl;
-        _canvasRest = canvasRest;
     }
 
     public async Task<IEnumerable<EnrollmentTerm>> GetParticipatedTerms(string studentId)
     {
-        var allTerms = await _canvasRest.Accounts.GetTerms(1);
-
         var variables = new Dictionary<string, object> { { "studentIds", studentId }, };
         var response = await _canvasGraphQl.Query(ParticipatedTermQuery, variables);
 
-        if (response == null)
+        if (response?.LegacyNode?.Enrollments == null)
         {
             return Enumerable.Empty<EnrollmentTerm>();
         }
 
-        var submissions = response.Courses!.SelectMany(static c => c.Submissions!.Nodes);
+        //TODO add term id for better distinction
+        //TODO fix naming error in canvas package for start & end date
+        var participatedTerms = response.LegacyNode.Enrollments
+                                        .Select(static e => e.Course?.Term)
+                                        .DistinctBy(static t => t?.Name)
+                                        .Where(static term => term is { StartAt: not null, EndAt: not null, })
+                                        .OrderByDescending(static term => term?.StartAt);
 
-        var participatedTerms = allTerms!
-                                .Where(static term => term is { StartAt: not null, EndAt: not null, })
-                                .Where(term => submissions.Any(submission => submission.SubmittedAt >= term.StartAt && submission.SubmittedAt <= term.EndAt))
-                                .Distinct()
-                                .OrderByDescending(static term => term.StartAt).ToList();
 
         // Get the corrected term based on a new end date:
         var correctedParticipatedTerms = participatedTerms
                                          .Select((currentTerm, index) => currentTerm with
                                          {
                                              EndAt = index > 0
-                                                 ? participatedTerms[index - 1].StartAt
+                                                 ? participatedTerms.ElementAt(index - 1)?.StartAt
                                                  : currentTerm.EndAt,
                                          })
                                          .ToList();
