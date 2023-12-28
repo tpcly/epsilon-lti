@@ -15,7 +15,7 @@
 		"generate-api-schema": "pnpm dlx swagger-typescript-api -p https://localhost:7084/swagger/v1/swagger.json -o src/ -n api.generated.ts --module-name-index 1"
 	},
 	"dependencies": {
-		"@mdi/font": "^7.3.67",
+		"@mdi/font": "^7.4.47",
 		"apexcharts": "^3.45.1",
 		"nuxt": "^3.9.0",
 		"posthog-js": "^1.96.1",
