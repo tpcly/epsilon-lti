@@ -113,6 +113,7 @@ const outcomes = (
 		&-col {
 			border-right: 2px solid rgb(218, 219, 223);
 			border-left: 2px solid rgb(218, 219, 223);
+			width: 90px;
 		}
 
 		&-row {
