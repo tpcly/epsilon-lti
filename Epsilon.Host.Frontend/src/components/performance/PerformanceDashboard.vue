@@ -1,22 +1,31 @@
 <template>
 	<div class="performance-dashboard">
-		<CompetenceProfile
-			:submissions="submissions"
-			:is-loading="isLoading"
-			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
-		<LearningDomainValues
-			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
-		<div />
-		<CompetenceGraph
-			v-if="domains.length > 1 && submissions"
-			:is-loading="isLoading"
-			:domain="domains.find((l) => l.id == 'hbo-i-2018')"
-			:submissions="submissions" />
-		<PersonalDevelopmentGraph
-			v-if="domains.length > 1 && submissions"
-			:is-loading="isLoading"
-			:domain="domains.find((l) => l.id == 'pd-2020-bsc')"
-			:submissions="submissions" />
+		<v-row>
+			<v-col xs="12">
+				<CompetenceProfile
+					:submissions="submissions"
+					:is-loading="isLoading"
+					:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+			</v-col>
+			<v-col xs="12">
+				<LearningDomainValues
+					:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+			</v-col>
+			<v-col xs="12">
+				<CompetenceGraph
+					v-if="domains.length > 1 && submissions"
+					:is-loading="isLoading"
+					:domain="domains.find((l) => l.id == 'hbo-i-2018')"
+					:submissions="submissions" />
+			</v-col>
+			<v-col xs="12">
+				<PersonalDevelopmentGraph
+					v-if="domains.length > 1 && submissions"
+					:is-loading="isLoading"
+					:domain="domains.find((l) => l.id == 'pd-2020-bsc')"
+					:submissions="submissions" />
+			</v-col>
+		</v-row>
 	</div>
 </template>
 
@@ -33,18 +42,4 @@ defineProps<{
 }>()
 </script>
 
-<style scoped>
-.performance-dashboard {
-	grid-template-columns: 1fr;
-}
-
-@media screen and (min-width: 580px) {
-	.performance-dashboard {
-		display: grid;
-		grid-template-columns: 1fr 5fr 1fr;
-		gap: 2rem 0;
-		align-items: center;
-		justify-items: center;
-	}
-}
-</style>
+<style scoped></style>
