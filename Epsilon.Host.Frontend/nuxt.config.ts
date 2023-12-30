@@ -3,7 +3,7 @@ import pkg from "./package.json"
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify"
 const key = process.env.NUXT_SSL_KEY_PATH
 const certificate = process.env.NUXT_SSL_CRT_PATH
-console.log(key, certificate)
+
 export default defineNuxtConfig({
 	srcDir: "src",
 	devtools: { enabled: true },
