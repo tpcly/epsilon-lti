@@ -1,7 +1,10 @@
 <template>
 	<v-dialog min-width="75%" min-height="75%" class="wrapped-dialog">
 		<template #activator="{ props }">
-			<v-btn v-if="showWrapped" v-bind="props" class="w-100">
+			<v-btn
+				v-if="showWrapped"
+				v-bind="props"
+				class="w-100 wrappedButton">
 				{{ term?.name }} wrapped
 			</v-btn>
 		</template>
@@ -214,5 +217,35 @@ const mostUsedDomains = computed<
 .wrapped-dialog .v-toolbar {
 	background-color: #11284c;
 	color: #ffffff;
+}
+
+/* Define keyframes for the animation */
+@keyframes diagonalColorChange {
+	0% {
+		background-position: 0% 0%;
+	}
+	100% {
+		background-position: 100% 100%;
+	}
+}
+
+/* Apply styles to the button */
+.wrappedButton {
+	width: 200px;
+	height: 50px;
+	font-size: 16px;
+	color: #fff;
+	background: linear-gradient(45deg, #848da4, #11284c);
+	background-size: 200% 200%;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	animation: diagonalColorChange 1s infinite alternate;
+	transition: background 0.3s ease-in-out;
+}
+
+/* Optional hover effect */
+.wrappedButton:hover {
+	background-position: 100% 100%;
 }
 </style>

@@ -4,7 +4,7 @@
 			@user-change="handleUserChange"
 			@range-change="handleRangeChange">
 			<template #default="navigationProps">
-				<v-col cols="12" md="2">
+				<v-col v-if="enableSemesterWrapped" cols="12" md="2">
 					<WrappedDialog
 						v-if="!loadingOutcomes"
 						:submissions="submissions"
@@ -97,6 +97,7 @@ if (process.client && data.value?.idToken) {
 }
 const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
+const enableSemesterWrapped = ref<boolean | undefined>(false)
 const api = useApi()
 const loadingOutcomes = ref<boolean>(false)
 const submissions = ref<LearningDomainSubmission[]>([])
@@ -112,6 +113,7 @@ const outcomes = ref<LearningDomainOutcome[]>([])
 if (process.client) {
 	const po = Posthog.init() as PostHog
 	po.onFeatureFlags(function () {
+		enableSemesterWrapped.value = po.isFeatureEnabled("semester-wrapped")
 		enableCompetenceProfile.value =
 			po.isFeatureEnabled("competence-profile")
 		enableCompetenceGeneration.value = po.isFeatureEnabled(
