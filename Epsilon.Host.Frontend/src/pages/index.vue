@@ -4,9 +4,11 @@
 			@user-change="handleUserChange"
 			@range-change="handleRangeChange">
 			<template #default="navigationProps">
-				<v-col v-if="enableSemesterWrapped" cols="12" md="2">
+				<v-col
+					v-if="enableSemesterWrapped && !loadingOutcomes"
+					cols="12"
+					md="2">
 					<WrappedDialog
-						v-if="!loadingOutcomes"
 						:submissions="submissions"
 						:outcomes="outcomes"
 						:terms="navigationProps.terms"
@@ -99,7 +101,7 @@ const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
 const enableSemesterWrapped = ref<boolean | undefined>(false)
 const api = useApi()
-const loadingOutcomes = ref<boolean>(false)
+const loadingOutcomes = ref<boolean>(true)
 const submissions = ref<LearningDomainSubmission[]>([])
 const filterRange = ref<{
 	start: Date
