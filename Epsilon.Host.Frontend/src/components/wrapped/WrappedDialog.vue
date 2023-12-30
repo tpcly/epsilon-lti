@@ -1,7 +1,9 @@
 <template>
 	<v-dialog min-width="75%" min-height="75%" class="wrapped-dialog">
 		<template #activator="{ props }">
-			<v-btn v-bind="props"> {{ term?.name }} wrapped </v-btn>
+			<v-btn v-bind="props" class="w-100">
+				{{ term?.name }} wrapped
+			</v-btn>
 		</template>
 
 		<template #default="{ isActive }">

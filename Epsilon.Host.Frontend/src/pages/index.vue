@@ -2,7 +2,18 @@
 	<ClientOnly>
 		<TopNavigation
 			@user-change="handleUserChange"
-			@range-change="handleRangeChange" />
+			@range-change="handleRangeChange">
+			<template #default="navigationProps">
+				<v-col cols="12" md="2">
+					<WrappedDialog
+						v-if="!loadingOutcomes"
+						:submissions="submissions"
+						:outcomes="outcomes"
+						:terms="navigationProps.terms"
+						:domains="domains"></WrappedDialog>
+				</v-col>
+			</template>
+		</TopNavigation>
 		<v-tabs v-model="tabs" class="toolbar" show-arrows>
 			<v-tab :value="0">Performance Dashboard</v-tab>
 			<v-tab v-if="enableCompetenceProfile" :value="1">
