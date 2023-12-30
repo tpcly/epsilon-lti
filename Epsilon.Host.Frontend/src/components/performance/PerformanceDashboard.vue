@@ -45,7 +45,7 @@ defineProps<{
 </script>
 
 <style>
-.performance-dashboard .competence-graph .apexcharts-canvas {
+.performance-dashboard .competence-graph {
 	float: right;
 }
 .performance-dashboard .competence-profile {
