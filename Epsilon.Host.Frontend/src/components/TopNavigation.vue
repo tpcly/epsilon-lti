@@ -44,8 +44,6 @@
 </template>
 
 <script lang="ts" setup>
-import Row from "~/components/LayoutRow.vue"
-import Col from "~/components/LayoutCol.vue"
 import { type EnrollmentTerm, type User } from "~/api.generated"
 
 const emit = defineEmits(["userChange", "rangeChange"])
