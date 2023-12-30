@@ -2,12 +2,17 @@
 	<table v-if="domain" class="competence-profile">
 		<thead>
 			<tr>
-				<th />
+				<th class="w-0" />
 				<th
 					v-for="col of domain?.columnsSet?.types"
 					:key="col.id"
 					class="competence-profile-header competence-profile-header-col">
-					{{ col.name }}
+					<div class="d-sm-none text-center">
+						{{ col.shortName }}
+					</div>
+					<div class="d-none d-sm-block text-center">
+						{{ col.name }}
+					</div>
 				</th>
 			</tr>
 		</thead>
@@ -18,7 +23,12 @@
 					<div
 						class="competence-profile-header-color"
 						:style="{ backgroundColor: '#' + row.hexColor }" />
-					{{ row.name }}
+					<div class="d-sm-none">
+						{{ row.shortName }}
+					</div>
+					<div class="d-none d-sm-block">
+						{{ row.name }}
+					</div>
 				</th>
 				<CompetenceProfileCell
 					v-for="col of domain?.columnsSet?.types"
@@ -86,9 +96,6 @@ const outcomes = (
 
 <style scoped lang="scss">
 .competence-profile {
-	border-collapse: collapse;
-	width: 750px;
-
 	tr {
 		border-bottom: 2px solid rgb(218, 219, 223);
 	}
@@ -106,12 +113,13 @@ const outcomes = (
 		&-col {
 			border-right: 2px solid rgb(218, 219, 223);
 			border-left: 2px solid rgb(218, 219, 223);
-			width: 6rem;
+			width: 90px;
 		}
 
 		&-row {
 			border-top-style: solid;
 			display: flex;
+			width: max-content;
 		}
 
 		&-color {
