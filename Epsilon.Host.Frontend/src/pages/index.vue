@@ -2,32 +2,14 @@
 	<ClientOnly>
 		<TopNavigation
 			@user-change="handleUserChange"
-			@range-change="handleRangeChange">
-			<template #default="navigationProps">
-				<WrappedDialog
-					v-if="!loadingOutcomes"
-					:submissions="submissions"
-					:outcomes="outcomes"
-					:terms="navigationProps.terms"
-					:domains="domains"></WrappedDialog>
-			</template>
-		</TopNavigation>
-		<v-tabs v-model="tabs" class="toolbar">
-			<div class="toolbar-items">
-				<v-tab :value="0">Performance Dashboard</v-tab>
-				<v-tab v-if="enableCompetenceProfile" :value="1">
-					Competence Document
-				</v-tab>
-			</div>
-			<v-spacer></v-spacer>
-
-			<v-btn
-				v-if="enableCompetenceGeneration"
-				class="toolbar-download"
-				@click="downloadCompetenceDocument">
-				Download
-			</v-btn>
+			@range-change="handleRangeChange" />
+		<v-tabs v-model="tabs" class="toolbar" show-arrows>
+			<v-tab :value="0">Performance Dashboard</v-tab>
+			<v-tab v-if="enableCompetenceProfile" :value="1">
+				Competence Document
+			</v-tab>
 		</v-tabs>
+
 		<loading-dialog v-model="loadingOutcomes"></loading-dialog>
 		<v-window v-model="tabs">
 			<v-window-item :value="0">
@@ -37,7 +19,14 @@
 					:domains="domains" />
 			</v-window-item>
 			<v-window-item :value="1">
+				<v-btn
+					v-if="enableCompetenceGeneration"
+					class="toolbar-download"
+					@click="downloadCompetenceDocument">
+					Download
+				</v-btn>
 				<CompetenceDocument
+					v-if="enableCompetenceProfile"
 					:outcomes="outcomes"
 					:submissions="filteredSubmissions"
 					:filter-range="filterRange"
@@ -213,8 +202,17 @@ const handleRangeChange = (range: {
 
 <style lang="scss" scoped>
 .toolbar {
+	background-color: #11284c;
+	padding: 5px;
+	border-radius: 8px;
+	width: fit-content;
 	height: unset;
 	margin-top: 10px;
+
+	.v-btn.v-slide-group-item--active {
+		background-color: white !important;
+		color: black !important;
+	}
 
 	.v-btn {
 		border-radius: 5px;
@@ -237,17 +235,6 @@ const handleRangeChange = (range: {
 		&:hover {
 			background-color: #d8d9dd;
 			color: black;
-		}
-	}
-
-	.toolbar-items {
-		background-color: #11284c;
-		padding: 5px;
-		border-radius: 8px;
-
-		.v-btn.v-slide-group-item--active {
-			background-color: white !important;
-			color: black !important;
 		}
 	}
 }

@@ -1,45 +1,48 @@
 <template>
 	<div class="top-navigation">
-		<a href="https://github.com/tpcly/epsilon-lti" target="_blank">
-			<img
-				alt="logo"
-				class="top-navigation-logo"
-				src="../assets/logo-white.png" />
-			<span
-				v-if="runtimeConfig.public.clientVersion.includes('Beta')"
-				class="top-navigation-beta">
-				Beta
-			</span>
-		</a>
-
-		<div class="search-boxes">
-			<slot :terms="terms"></slot>
-			<v-autocomplete
-				v-model="selectedUser"
-				class="search-box"
-				style="width: 250px"
-				label="Student"
-				:items="users"
-				density="compact"
-				:flat="true"
-				item-value="_id"
-				item-title="name"
-				return-object
-				no-data-text>
-			</v-autocomplete>
-			<v-autocomplete
-				v-model="selectedTerm"
-				class="search-box"
-				style="width: 150px"
-				label="Semester"
-				:items="terms"
-				density="compact"
-				:flat="true"
-				item-title="name"
-				return-object
-				no-data-text>
-			</v-autocomplete>
-		</div>
+		<v-row>
+			<v-col cols="12" md="4">
+				<a href="https://github.com/tpcly/epsilon-lti" target="_blank">
+					<img
+						alt="logo"
+						class="top-navigation-logo"
+						src="../assets/logo-white.png" />
+					<div
+						v-if="
+							runtimeConfig.public.clientVersion.includes('Beta')
+						"
+						class="top-navigation-beta">
+						Beta
+					</div>
+				</a>
+			</v-col>
+			<v-spacer></v-spacer>
+			<v-col cols="12" md="3">
+				<v-autocomplete
+					v-model="selectedUser"
+					label="Students"
+					:items="users"
+					density="compact"
+					:flat="true"
+					item-value="_id"
+					item-title="name"
+					return-object
+					no-data-text>
+				</v-autocomplete>
+			</v-col>
+			<v-col cols="12" md="2">
+				<v-autocomplete
+					v-model="selectedTerm"
+					label="Semester"
+					:items="terms"
+					density="compact"
+					:flat="true"
+					item-title="name"
+					return-object
+					no-data-text>
+				</v-autocomplete>
+			</v-col>
+		</v-row>
 	</div>
 </template>
 
@@ -109,9 +112,6 @@ watch([correctedFromDate, toDate], () => {
 
 <style lang="scss">
 .top-navigation {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
 	padding: 1rem 1.5rem;
 	background-color: #11284c;
 	width: 100%;
@@ -130,27 +130,24 @@ watch([correctedFromDate, toDate], () => {
 	}
 
 	&-logo {
-		height: 4rem;
+		height: 3rem;
 		object-fit: contain;
+	}
+
+	a {
+		position: relative;
 	}
 
 	&-beta {
 		color: #ffffff;
-		padding: 4px 6px;
+		width: max-content;
+		text-align: center;
+		padding: 2px 3px;
 		background-color: #848da4;
 		border-radius: 6px;
-		position: relative;
-		right: 20px;
-		top: -45px;
-	}
-
-	.search-boxes {
-		display: inline-flex;
-	}
-
-	.search-box {
-		float: right;
-		margin-left: 5px;
+		position: absolute;
+		right: -20px;
+		top: -40px;
 	}
 }
 </style>
