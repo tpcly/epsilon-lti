@@ -1,7 +1,7 @@
 <template>
 	<v-dialog min-width="75%" min-height="75%" class="wrapped-dialog">
 		<template #activator="{ props }">
-			<v-btn v-bind="props" class="w-100">
+			<v-btn v-if="showWrapped" v-bind="props" class="w-100">
 				{{ term?.name }} wrapped
 			</v-btn>
 		</template>
@@ -137,7 +137,19 @@ const props = defineProps<{
 }>()
 
 const term = computed<EnrollmentTerm | undefined>(() => props.terms?.at(0))
+const showWrapped = computed<boolean>(() => {
+	if (term.value != undefined) {
+		return (
+			(new Date(term.value!.end_at ?? "").getTime() -
+				new Date().getTime()) /
+				1000 /
+				604800 <
+			15
+		)
+	}
 
+	return true
+})
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 	props.submissions.flatMap((submission) =>
 		submission.results!.map((result) => result.outcome!)
