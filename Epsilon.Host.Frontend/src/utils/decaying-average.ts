@@ -38,8 +38,8 @@ export const getAllOutcomes = (
  */
 export const calculateAverageSkillOutcomes = (
 	submissions: LearningDomainSubmission[],
-	domain: LearningDomain
-): DecayingAveragePerSkill[] => {
+	domain: LearningDomain | null
+): DecayingAveragePerSkill[] | undefined => {
 	const outcomes = getAllOutcomes(submissions)
 
 	const groupedOutcomes = Object.entries(
@@ -58,7 +58,7 @@ export const calculateAverageSkillOutcomes = (
 		skill: outcomesGroup.at(0)?.outcome?.row.id,
 	}))
 
-	return domain.rowsSet?.types?.map((skill) => {
+	return domain?.rowsSet?.types?.map((skill) => {
 		const filteredResults = listOfResults.filter(
 			(result) => result.skill === skill.id
 		)
@@ -93,20 +93,20 @@ export const calculateAverageSkillOutcomes = (
  */
 export const calculateAverageTaskOutcomes = (
 	submissions: LearningDomainSubmission[],
-	domain: LearningDomain
-): DecayingAveragePerLayer[] => {
+	domain: LearningDomain | null
+): DecayingAveragePerLayer[] | undefined => {
 	const canvasDecaying = calculateDecayingAverageForAllOutcomes(
 		submissions,
 		domain
 	)
 
-	return domain.rowsSet?.types?.map((layer) => {
+	return domain?.rowsSet?.types?.map((layer) => {
 		const layerActivities = domain.columnsSet?.types!.map((activity) => {
 			let totalScoreActivity = 0
 			let totalScoreArchitectureActivity = 0
 			let amountOfActivities = 0
 
-			canvasDecaying.forEach((l) =>
+			canvasDecaying?.forEach((l) =>
 				l.layerActivities
 					.filter((la) => la.activity === activity.id)
 					.forEach((la) => {
@@ -147,11 +147,11 @@ export const calculateAverageTaskOutcomes = (
  */
 export const calculateDecayingAverageForAllOutcomes = (
 	submissions: LearningDomainSubmission[],
-	domain: LearningDomain
-): DecayingAveragePerLayer[] => {
+	domain: LearningDomain | null
+): DecayingAveragePerLayer[] | undefined => {
 	const results = getAllOutcomes(submissions)
 
-	return domain.rowsSet.types.map((layer) => {
+	return domain?.rowsSet.types.map((layer) => {
 		const filteredResults = results.filter(
 			(outcome) => outcome.outcome?.row.id === layer.id
 		)

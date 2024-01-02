@@ -1,17 +1,33 @@
 <template>
 	<div class="performance-dashboard">
-		<CompetenceProfile
-			:submissions="submissions"
-			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
-		<LearningDomainValues
-			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
-		<div />
-		<CompetenceGraph
-			:domain="domains.find((l) => l.id == 'hbo-i-2018')"
-			:submissions="submissions" />
-		<PersonalDevelopmentGraph
-			:domain="domains.find((l) => l.id == 'pd-2020-bsc')"
-			:submissions="submissions" />
+		<v-row>
+			<v-col xs="12" md="8">
+				<CompetenceProfile
+					:submissions="submissions"
+					:is-loading="isLoading"
+					class="competence-profile"
+					:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+			</v-col>
+			<v-col xs="12" md="4">
+				<LearningDomainValues
+					:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+			</v-col>
+			<v-col xs="12" md="8">
+				<CompetenceGraph
+					v-if="domains.length > 1 && submissions"
+					class="competence-graph"
+					:is-loading="isLoading"
+					:domain="domains.find((l) => l.id == 'hbo-i-2018')"
+					:submissions="submissions" />
+			</v-col>
+			<v-col xs="12" md="4">
+				<PersonalDevelopmentGraph
+					v-if="domains.length > 1 && submissions"
+					:is-loading="isLoading"
+					:domain="domains.find((l) => l.id == 'pd-2020-bsc')"
+					:submissions="submissions" />
+			</v-col>
+		</v-row>
 	</div>
 </template>
 
@@ -24,21 +40,15 @@ import type { LearningDomain, LearningDomainSubmission } from "~/api.generated"
 defineProps<{
 	submissions: LearningDomainSubmission[]
 	domains: LearningDomain[]
+	isLoading: boolean
 }>()
 </script>
 
-<style scoped>
-.performance-dashboard {
-	grid-template-columns: 1fr;
+<style>
+.performance-dashboard .competence-graph {
+	float: right;
 }
-
-@media screen and (min-width: 580px) {
-	.performance-dashboard {
-		display: grid;
-		grid-template-columns: 1fr 5fr 1fr;
-		gap: 2rem 0;
-		align-items: center;
-		justify-items: center;
-	}
+.performance-dashboard .competence-profile {
+	float: right;
 }
 </style>

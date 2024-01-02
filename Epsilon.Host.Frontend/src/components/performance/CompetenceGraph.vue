@@ -6,7 +6,7 @@
 			height="300"
 			type="bar"
 			class="competence-graph"
-			width="520" />
+			style="max-width: 100%; width: 450px" />
 	</ClientOnly>
 </template>
 
@@ -24,6 +24,7 @@ import {
 const props = defineProps<{
 	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
+	isLoading: boolean
 }>()
 
 const chartOptions = {
@@ -87,6 +88,11 @@ const chartOptions = {
 	},
 	tooltip: {
 		enabled: true,
+		y: {
+			formatter: function (value: number): string {
+				return ((value * 100) / 5).toFixed(0) + "%"
+			},
+		},
 	},
 }
 
@@ -106,7 +112,7 @@ onMounted(() => {
  * an array with objects for each row: The name of the row, Corresponding color and an array with scores.
  */
 const series = computed(() => {
-	return calculateAverageTaskOutcomes(props.submissions, props.domain).map(
+	return calculateAverageTaskOutcomes(props.submissions, props.domain)?.map(
 		(layer: DecayingAveragePerLayer) => {
 			const row = props.domain?.rowsSet?.types.find(
 				(l) => l.id === layer.architectureLayer
@@ -114,7 +120,7 @@ const series = computed(() => {
 
 			return {
 				name: row?.name,
-				color: "#" + row?.hexColor,
+				color: "#" + row?.hexColor + (props.isLoading ? "80" : ""),
 				data: layer.layerActivities.map((column) =>
 					column.decayingAverage.toFixed(3)
 				),
@@ -123,11 +129,3 @@ const series = computed(() => {
 	)
 })
 </script>
-
-<style lang="scss" scoped>
-@media screen and (min-width: 580px) {
-	.competence-graph {
-		margin-left: 265px;
-	}
-}
-</style>

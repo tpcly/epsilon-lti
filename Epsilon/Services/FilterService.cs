@@ -97,6 +97,6 @@ public class FilterService : IFilterService
 
                 return er.User.LegacyId == canvasUser?.UserId.ToString(CultureInfo.InvariantCulture) && er.Type == "StudentEnrollment";
             }
-        ).Select(static er => er.User) ?? Array.Empty<User>();
+        ).Select(static er => er.User).DistinctBy(static u => u.LegacyId) ?? Array.Empty<User>();
     }
 }

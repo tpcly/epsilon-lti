@@ -21,10 +21,11 @@ import {
 const props = defineProps<{
 	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
+	isLoading: boolean
 }>()
 
-onMounted(() => {
-	const rowTypes = props.domain.rowsSet.types
+watch(props.domain, () => {
+	const rowTypes = props.domain?.rowsSet?.types
 
 	rowTypes.forEach((s: LearningDomainType) => {
 		chartOptions.xaxis.categories.push(s.shortName)
@@ -42,9 +43,11 @@ const series = computed(() => [
 				y: d.decayingAverage?.toFixed(3),
 				x: props.domain.rowsSet.types.find(
 					(s: LearningDomainType) => s.id == d.skill
-				)!.name,
+				)!.shortName,
 				fillColor:
-					"#" + getValueType(d.masteryLevel?.toString())?.hexColor,
+					"#" +
+					getValueType(d.masteryLevel?.toString())?.hexColor +
+					(props.isLoading ? "80" : ""),
 			}
 		}),
 	},

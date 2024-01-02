@@ -1,65 +1,55 @@
 <template>
-	<div>
+	<ClientOnly>
 		<TopNavigation
 			@user-change="handleUserChange"
 			@range-change="handleRangeChange" />
-		<TabGroup as="template">
-			<div class="toolbar mb-lg mt-lg">
-				<div class="toolbar-slider">
-					<TabList>
-						<Tab class="toolbar-slider-item">
-							Performance dashboard
-						</Tab>
-						<Tab
-							v-if="enableCompetenceProfile"
-							class="toolbar-slider-item">
-							Competence Document
-						</Tab>
-					</TabList>
-				</div>
-				<div v-if="enableCompetenceGeneration" class="toolbar-download">
-					<Menu>
-						<MenuButton @click="downloadCompetenceDocument">
-							Download
-						</MenuButton>
-					</Menu>
-				</div>
-			</div>
-			<hr class="divider mb-lg" />
-			<main>
-				<TabPanels>
-					<TabPanel>
-						<PerformanceDashboard
-							v-if="domains.length > 1"
-							:submissions="filteredSubmissions"
-							:domains="domains" />
-					</TabPanel>
-					<TabPanel>
-						<CompetenceDocument
-							v-if="domains.length > 1"
-							:submissions="filteredSubmissions"
-							:filter-range="filterRange"
-							:domains="domains" />
-					</TabPanel>
-				</TabPanels>
-			</main>
-		</TabGroup>
-	</div>
+		<v-tabs v-model="tabs" class="toolbar" show-arrows>
+			<v-tab :value="0">Performance Dashboard</v-tab>
+			<v-tab v-if="enableCompetenceProfile" :value="1">
+				Competence Document
+			</v-tab>
+		</v-tabs>
+
+		<loading-dialog v-model="loadingOutcomes"></loading-dialog>
+		<v-window v-model="tabs">
+			<v-window-item :value="0">
+				<PerformanceDashboard
+					:is-loading="loadingOutcomes"
+					:submissions="filteredSubmissions"
+					:domains="domains" />
+			</v-window-item>
+			<v-window-item :value="1">
+				<v-btn
+					v-if="enableCompetenceGeneration"
+					class="toolbar-download"
+					@click="downloadCompetenceDocument">
+					Download
+				</v-btn>
+				<CompetenceDocument
+					v-if="enableCompetenceProfile"
+					:outcomes="outcomes"
+					:submissions="filteredSubmissions"
+					:filter-range="filterRange"
+					:domains="domains" />
+			</v-window-item>
+		</v-window>
+		<div class="credits">
+			<a class="version" :href="versionUrl" target="_blank">
+				{{ runtimeConfig.public.clientVersion }}
+			</a>
+			| Epsilon © {{ new Date().getFullYear() }} |
+			<a target="_blank" href="https://github.com/tpcly/epsilon-lti">
+				GitHub
+			</a>
+		</div>
+	</ClientOnly>
 </template>
 
 <script lang="ts" setup>
-import {
-	Tab,
-	TabGroup,
-	TabList,
-	TabPanel,
-	TabPanels,
-	Menu,
-	MenuButton,
-} from "@headlessui/vue"
 import TopNavigation from "~/components/TopNavigation.vue"
 import {
 	type LearningDomain,
+	type LearningDomainOutcome,
 	type LearningDomainSubmission,
 	type User,
 } from "~/api.generated"
@@ -67,7 +57,14 @@ import { Posthog } from "~/utils/posthog"
 import type { PostHog } from "posthog-js"
 import PerformanceDashboard from "~/components/performance/PerformanceDashboard.vue"
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
+import { Generator } from "~/utils/generator"
+import LoadingDialog from "~/LoadingDialog.vue"
 
+const runtimeConfig = useRuntimeConfig()
+const tabs = ref<number>(0)
+const versionUrl =
+	"https://github.com/tpcly/epsilon-lti/releases/tag/" +
+	runtimeConfig.public.clientVersion
 const { readCallback, validateCallback } = useLti()
 
 const { data } = await useAsyncData(async () => {
@@ -89,19 +86,8 @@ if (process.client && data.value?.idToken) {
 }
 const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
-if (process.client) {
-	const po = Posthog.init() as PostHog
-	po.onFeatureFlags(function () {
-		enableCompetenceProfile.value =
-			po.isFeatureEnabled("competence-profile")
-		enableCompetenceGeneration.value = po.isFeatureEnabled(
-			"competence-generation"
-		)
-	})
-}
-
 const api = useApi()
-
+const loadingOutcomes = ref<boolean>(false)
 const submissions = ref<LearningDomainSubmission[]>([])
 const filterRange = ref<{
 	start: Date
@@ -111,16 +97,38 @@ const filterRange = ref<{
 const currentUser = ref<User | null>(null)
 
 const domains = ref<LearningDomain[]>([])
+const outcomes = ref<LearningDomainOutcome[]>([])
+if (process.client) {
+	const po = Posthog.init() as PostHog
+	po.onFeatureFlags(function () {
+		enableCompetenceProfile.value =
+			po.isFeatureEnabled("competence-profile")
+		enableCompetenceGeneration.value = po.isFeatureEnabled(
+			"competence-generation"
+		)
+	})
+
+	setInterval(() => {
+		if (loadingOutcomes.value) {
+			filteredSubmissions.value = Generator.generateSubmissions(
+				outcomes.value
+			)
+		}
+	}, 1000)
+
+	loadDomains(["hbo-i-2018", "pd-2020-bsc"])
+}
 
 function loadDomains(domainNames: string[]): void {
+	api.learning
+		.learningDomainOutcomesList()
+		.then((r) => (outcomes.value = r.data))
 	domainNames.map(function (domainName) {
 		api.learning.learningDomainDetail(domainName).then((hboIData) => {
 			domains.value?.push(hboIData.data)
 		})
 	})
 }
-
-loadDomains(["hbo-i-2018", "pd-2020-bsc"])
 
 function downloadCompetenceDocument(): void {
 	api.document
@@ -140,23 +148,28 @@ function downloadCompetenceDocument(): void {
 		})
 }
 
-const filteredSubmissions = computed(() => {
-	const unwrappedFilterRange = filterRange.value
+const filteredSubmissions = computed({
+	get(): LearningDomainSubmission[] {
+		const unwrappedFilterRange = filterRange.value
 
-	if (!unwrappedFilterRange) {
-		return submissions.value
-	}
-
-	return submissions.value.filter((submission) => {
-		if (submission.criteria!.length > 0) {
-			const submittedAt = new Date(submission.submittedAt!)
-
-			return (
-				submittedAt >= unwrappedFilterRange.startCorrected &&
-				submittedAt <= unwrappedFilterRange.end
-			)
+		if (!unwrappedFilterRange) {
+			return submissions.value
 		}
-	})
+
+		return submissions.value.filter((submission) => {
+			if (submission.criteria!.length > 0) {
+				const submittedAt = new Date(submission.submittedAt!)
+
+				return (
+					submittedAt >= unwrappedFilterRange.startCorrected &&
+					submittedAt <= unwrappedFilterRange.end
+				)
+			}
+		})
+	},
+	set(values: LearningDomainSubmission[]) {
+		submissions.value = values
+	},
 })
 
 const handleUserChange = async (user: User): Promise<void> => {
@@ -164,85 +177,82 @@ const handleUserChange = async (user: User): Promise<void> => {
 		return
 	}
 	currentUser.value = user
+	loadingOutcomes.value = true
+	filterRange.value = null
 
-	const outcomesResponse = await api?.learning.learningOutcomesList({
-		studentId: user._id,
-	})
-
-	submissions.value = outcomesResponse.data
+	await api?.learning
+		.learningOutcomesList({
+			studentId: user._id,
+		})
+		.then((r) => {
+			submissions.value = r.data
+			loadingOutcomes.value = false
+		})
+		.finally(() => {})
 }
 
-const handleRangeChange = (range: { start: Date; end: Date }): void => {
+const handleRangeChange = (range: {
+	start: Date
+	end: Date
+	startCorrected: Date
+}): void => {
 	filterRange.value = range
 }
 </script>
 
 <style lang="scss" scoped>
 .toolbar {
-	display: flex;
-	justify-content: space-between;
+	background-color: #11284c;
+	padding: 5px;
+	border-radius: 8px;
+	width: fit-content;
+	height: unset;
+	margin-top: 10px;
 
-	&-download {
-		list-style: none;
-		background-color: #f2f3f8;
-		padding: 5px;
-		border-radius: 8px;
-		font-size: 1em;
-
-		button {
-			border-radius: 5px;
-			padding: 0.6em 1.2em;
-			cursor: pointer;
-			background-color: transparent;
-			border: none;
-			font-size: 1em;
-
-			&:active,
-			&:focus {
-				outline: transparent;
-			}
-
-			&:hover {
-				background-color: #d8d9dd;
-			}
-		}
+	.v-btn.v-slide-group-item--active {
+		background-color: white !important;
+		color: black !important;
 	}
 
-	&-slider {
-		list-style: none;
-		background-color: #f2f3f8;
-		padding: 5px;
-		border-radius: 8px;
-		width: fit-content;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+	.v-btn {
+		border-radius: 5px;
+		padding: 0.6em 1.2em;
+		cursor: pointer;
+		letter-spacing: unset;
+		background-color: #11284c;
+		border: none;
+		height: unset;
+		font-size: 13px;
+		text-transform: unset;
+		color: #ffffff;
 
-		&-item {
-			border-radius: 5px;
-			padding: 0.6em 1.2em;
-			cursor: pointer;
-			background-color: transparent;
-			border: none;
-			font-size: 1em;
+		&:active,
+		&:focus {
+			outline: transparent;
+			color: black;
+		}
 
-			&:active,
-			&:focus {
-				outline: transparent;
-			}
-
-			&:hover {
-				background-color: #d8d9dd;
-			}
-
-			&[data-headlessui-state="selected"] {
-				background-color: white;
-			}
+		&:hover {
+			background-color: #d8d9dd;
+			color: black;
 		}
 	}
 }
 
 .divider {
 	border: 1px solid #f2f3f8;
+}
+
+.credits,
+.credits a {
+	color: #0f254a;
+}
+
+.credits {
+	padding: 20px;
+	margin: 0 auto;
+	display: block;
+	width: 50%;
+	text-align: center;
 }
 </style>

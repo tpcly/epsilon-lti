@@ -1,5 +1,7 @@
 <template>
-	<td v-if="value" :style="{ background: '#' + value.hexColor }">
+	<td
+		v-if="value"
+		:style="{ background: '#' + value.hexColor + (isLoading ? '80' : '') }">
 		{{ outcomes.length }}
 	</td>
 	<td v-else class="border" />
@@ -13,6 +15,7 @@ import {
 
 const props = defineProps<{
 	outcomes: LearningDomainOutcome[]
+	isLoading: boolean
 }>()
 
 const value = computed<LearningDomainType | null>(() => {
