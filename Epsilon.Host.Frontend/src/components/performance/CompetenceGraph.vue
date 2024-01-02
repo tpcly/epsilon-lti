@@ -6,7 +6,7 @@
 			height="300"
 			type="bar"
 			class="competence-graph"
-			width="520" />
+			style="max-width: 100%; width: 450px" />
 	</ClientOnly>
 </template>
 
@@ -88,6 +88,11 @@ const chartOptions = {
 	},
 	tooltip: {
 		enabled: true,
+		y: {
+			formatter: function (value: number): string {
+				return ((value * 100) / 5).toFixed(0) + "%"
+			},
+		},
 	},
 }
 
@@ -124,11 +129,3 @@ const series = computed(() => {
 	)
 })
 </script>
-
-<style lang="scss" scoped>
-@media screen and (min-width: 580px) {
-	.competence-graph {
-		margin-left: 265px;
-	}
-}
-</style>

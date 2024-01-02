@@ -66,7 +66,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         var submissionsTask = await _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
 
-        await Task.WhenAny(domainOutcomesTask);
+        await Task.WhenAll(domainOutcomesTask, domainOutcomesTask);
 
         if (submissionsTask?.Courses == null)
         {
@@ -107,7 +107,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
     }
 
 
-    private static List<LearningDomainOutcomeRecord> GetOutcomeResults(
+    private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
         Submission submission,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
@@ -130,21 +130,19 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                     }) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
 
 
-            if (rubricAssessments != null)
-            {
-                foreach (var assessment in rubricAssessments)
-                {
-                    var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
-                    if (outcome != null)
-                    {
-                        outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
-                        outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
-                    }
-                }
-            }
-            else
+            if (rubricAssessments == null)
             {
                 throw new HttpRequestException("No RubricAssessments are found");
+            }
+                
+            foreach (var assessment in rubricAssessments)
+            {
+                var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);
+                if (outcome != null)
+                {
+                    outcomeRecords.RemoveAll(r => r.Outcome.Id == outcome.Id);
+                    outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
+                }
             }
         }
 
