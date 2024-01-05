@@ -33,7 +33,7 @@
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.1.2",
-		"h3": "^1.9.0",
+		"h3": "^1.10.0",
 		"jwt-decode": "^4.0.0",
 		"lodash": "^4.17.21",
 		"prettier": "^3.1.1",
