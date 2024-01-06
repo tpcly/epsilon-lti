@@ -122,7 +122,7 @@ export const calculateAverageTaskOutcomes = (
 			const decayingAverage =
 				amountOfActivities > 0
 					? (totalScoreArchitectureActivity / totalScoreActivity) *
-					  (totalScoreActivity / amountOfActivities)
+						(totalScoreActivity / amountOfActivities)
 					: 0
 
 			return {

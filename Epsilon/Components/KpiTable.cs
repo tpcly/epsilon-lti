@@ -9,7 +9,7 @@ namespace Epsilon.Components;
 
 public class KpiTable : AbstractCompetenceComponent
 {
-    public override async Task<Body>? AddToWordDocument(MainDocumentPart mainDocumentPart)
+    public override async Task<Body> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
         var body = new Body();
 
