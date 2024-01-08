@@ -15,7 +15,11 @@ public class LearningController : ControllerBase
     private readonly IAuthorizationUser _authorizationUser;
 
 
-    public LearningController(ILearningDomainService learningDomainService, ILearningOutcomeCanvasResultService learningOutcomeCanvasResultService, IAuthorizationUser authorizationUser)
+    public LearningController(
+        ILearningDomainService learningDomainService,
+        ILearningOutcomeCanvasResultService learningOutcomeCanvasResultService,
+        IAuthorizationUser authorizationUser
+    )
     {
         _learningDomainService = learningDomainService;
         _learningOutcomeCanvasResultService = learningOutcomeCanvasResultService;
@@ -46,7 +50,7 @@ public class LearningController : ControllerBase
 
         return Ok(domain);
     }
-    
+
     [HttpGet("domain/outcomes")]
     public async Task<ActionResult<IEnumerable<LearningDomainOutcome>>> GetDomainOutcomes()
     {

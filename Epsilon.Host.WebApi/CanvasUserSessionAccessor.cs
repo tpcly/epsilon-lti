@@ -32,7 +32,7 @@ public class CanvasUserSessionAccessor : ICanvasUserSessionAccessor
         {
             return null;
         }
-        
+
         var courseId = _canvasOptions.OverrideCourseId ?? int.Parse(courseIdRaw.ToString()!, CultureInfo.InvariantCulture);
         var userId = _canvasOptions.OverrideUserId ?? int.Parse(userIdRaw.ToString()!, CultureInfo.InvariantCulture);
 

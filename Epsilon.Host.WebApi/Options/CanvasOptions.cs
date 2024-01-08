@@ -10,9 +10,9 @@ public class CanvasOptions
 {
     [Required]
     public Uri ApiUrl { get; set; } = null!;
-    
+
     public int? OverrideCourseId { get; set; }
-    
+
     public int? OverrideUserId { get; set; }
 
     [Required(AllowEmptyStrings = false)]

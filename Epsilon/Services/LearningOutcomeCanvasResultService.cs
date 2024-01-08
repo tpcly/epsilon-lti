@@ -93,7 +93,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
             {
                 if (criteria.Outcome != null)
                 {
-                    var existingDomainCriteria  = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == criteria.Outcome.Id) != null;
+                    var existingDomainCriteria = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == criteria.Outcome.Id) != null;
                     if (existingDomainCriteria)
                     {
                         yield return new LearningDomainCriteria(
@@ -117,7 +117,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         {
             throw new HttpRequestException("No SubmissionHistories are given");
         }
-        
+
         foreach (var submissionHistory in submission.SubmissionHistories.Nodes.OrderByDescending(static s => s.SubmittedAt))
         {
             var rubricAssessments = submissionHistory.RubricAssessments?.Nodes.SelectMany(static rubricAssessment =>
@@ -134,7 +134,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
             {
                 throw new HttpRequestException("No RubricAssessments are found");
             }
-                
+
             foreach (var assessment in rubricAssessments)
             {
                 var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);

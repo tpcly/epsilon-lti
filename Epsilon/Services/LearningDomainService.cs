@@ -24,9 +24,9 @@ public class LearningDomainService : ILearningDomainService
     public async Task<LearningDomain?> GetDomain(string name)
     {
         var domain = await _learningDomainRepository.SingleOrDefaultAsync(d => d.Id == name, includeProperties: s_learningDomainProperties);
-        
+
         domain?.Order();
-        
+
         return domain;
     }
 
@@ -34,7 +34,6 @@ public class LearningDomainService : ILearningDomainService
     {
         var domains = await _learningDomainRepository.AllToListAsync(includeProperties: s_learningDomainProperties);
         return domains;
-
     }
 
     public async Task<IEnumerable<LearningDomainOutcome?>> GetOutcomes()
