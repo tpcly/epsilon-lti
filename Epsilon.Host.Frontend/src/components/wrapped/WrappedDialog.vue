@@ -13,14 +13,12 @@
 			<v-card>
 				<v-toolbar>
 					<v-toolbar-title>{{ term?.name }} wrapped</v-toolbar-title>
-
 					<v-spacer></v-spacer>
-
 					<v-btn icon @click="isActive.value = false">
 						<v-icon>mdi-close</v-icon>
 					</v-btn>
 				</v-toolbar>
-				<v-card-title> Masterd KPI's </v-card-title>
+				<v-card-title> Masterd KPI's</v-card-title>
 				<v-card-text>
 					<v-row>
 						<v-col cols="4">
@@ -110,8 +108,8 @@
 													{{ i?.row?.name }}:
 													{{ i.count }}
 												</li>
-											</ol></v-col
-										>
+											</ol>
+										</v-col>
 									</v-row>
 								</v-card-text>
 							</v-card>
