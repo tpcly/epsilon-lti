@@ -43,8 +43,8 @@ const props = defineProps<{
 
 // TODO: Centralize this ugly sorting compare function, maybe possible with lodash?
 const types = computed(() => {
-	const types = props.domain?.valuesSet.types
-	return types?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+	const t = props.domain?.valuesSet.types
+	return t?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
 })
 </script>
 
