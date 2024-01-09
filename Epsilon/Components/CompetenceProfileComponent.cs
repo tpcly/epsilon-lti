@@ -1,7 +1,6 @@
 using System.Globalization;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
@@ -22,55 +21,171 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         var outcomes = 
             Submissions.ToEnumerable()
                        .SelectMany(static o => o.Results.
-                                                 Select(static r => r.Outcome));
+                                                 Select(static r => r.Outcome)).ToList();
         
         var body = new Body();
+        
+        var table = new Table();
+        
+        // Define table properties
+        var tblProp = new TableProperties(
+            new TableWidth(),
+            new TableBorders(
+                new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.None), Size = 3,  },
+                new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.None), Size = 3,  },
+                new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.None), Size = 3,  },
+                new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.None), Size = 3,  }
+            )
+        );
+        table.AppendChild<TableProperties>(tblProp);
+        
+        // Define table grid
+        var tblGrid = new TableGrid();
+        table.AppendChild(tblGrid);
+        
+        var row = new TableRow();
+        
 
         foreach (var domain in Domains)
         {
             if (domain!.ColumnsSet != null)
             {
-                body.AppendChild(GetTableTwoAxis(domain, outcomes));
+                row.AppendChild(CreateTableCell("3000", _headerTableCellBorders, GetTableTwoAxis(domain, outcomes)));
             }
+            else
+            {
+                row.AppendChild(CreateTableCell("3000", _headerTableCellBorders, GetTableOneAxis(domain, outcomes)));
+            }
+
+            
         }
+
+        table.AppendChild(row);
+
+        body.AppendChild(table);
         
         mainDocumentPart.Document.AppendChild(body);
         return body;
     }
-    
-    public static  async Task<IEnumerable<T1>> SelectManyAsync<T, T1>(IEnumerable<T> enumeration, Func<T, Task<IEnumerable<T1>>> func)
-    {
-        return (await Task.WhenAll(enumeration.Select(func))).SelectMany(static s => s);
-    }
 
-    /*private OpenXmlElement GetTableOneAxis(LearningDomainTypeSet valueSet, LearningDomainTypeSet axisSet)
+    private OpenXmlElement GetTableOneAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
     {
         var table = new Table();
         
+        var tblProp = new TableProperties(
+            new TableWidth(),
+            new TableBorders(
+                new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
+                new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
+                new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
+                new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  }
+            )
+        );
+        table.AppendChild<TableProperties>(tblProp);
         
+        // Define table grid
+        var tblGrid = new TableGrid();
+        table.AppendChild(tblGrid);
+
+        var headerRow = new TableRow();
+        
+        foreach (var row in domain.RowsSet.Types.OrderBy(static c => c.Order))
+        {
+            
+            var cell = CreateTableCell(
+                "700", 
+                _borderedTableCellBorders, 
+                new Paragraph(
+                    new Run(
+                        new Text(row.Name)
+                        ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "10",},},}
+                    )
+                );
+            
+            headerRow.AppendChild(cell);
+        }
+        
+        table.AppendChild(headerRow);
+        
+        var domainRow = new TableRow();
+            
+
+        domainRow.Append(new TableRowHeight(){Val = 500,});
+
+        foreach (var row in domain.RowsSet.Types.OrderBy(static c => c.Order))
+        {
+            var cellOutcomes = outcomes.Where(o => o.Row.Id == row.Id).ToList();
+            var types = cellOutcomes.Select(static o => o.Value).ToList();
+            var value = types.MaxBy(static t => t.Order);
+            var count = cellOutcomes.Count.ToString(CultureInfo.InvariantCulture);  
+                
+            var contentCell = new Paragraph(new Run(new Text(count)))
+            {
+                ParagraphProperties = new ParagraphProperties() { Justification = new Justification() { Val = JustificationValues.Center, }, },
+            };
+                
+            var cell = CreateTableCell(
+                "1000",
+                _borderedTableCellBorders,
+                contentCell);
+                
+
+            if (value != null)
+            {
+                cell.TableCellProperties.AppendChild(new Shading { Fill = "#" + value.HexColor, });
+            }
+                
+            domainRow.AppendChild(cell);
+        }
+            
+        table.AppendChild(domainRow);
         
         return table;
-    }*/
+    }
 
-    private OpenXmlElement GetTableTwoAxis(LearningDomain domain, IEnumerable<LearningDomainOutcome> outcomes)
+    private OpenXmlElement GetTableTwoAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
     {
         var table = new Table();
         
-        // Set table properties for formatting.
-        table.AppendChild(new TableProperties(
-            new TableWidth { Width = "8", Type = TableWidthUnitValues.Auto, }));
+        var tblProp = new TableProperties(
+            new TableWidth(),
+            new TableBorders(
+                new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
+                new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 10,  },
+                new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
+                new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  }
+            )
+        );
+        table.AppendChild<TableProperties>(tblProp);
+        
+        // Define table grid
+        var tblGrid = new TableGrid();
+        table.AppendChild(tblGrid);
 
         var headerRow = new TableRow();
 
+        var content = new Paragraph(new Run(new Text("")))
+        {
+            ParagraphProperties = new ParagraphProperties() { Justification = new Justification() { Val = JustificationValues.Center, }, },
+        };
+
         // Empty top-left cell.
         headerRow.AppendChild(
-            CreateTableCell("1500", 
-                _headerTableCellBorders, 
-                new Paragraph(new Run(new Text("")))));
+            CreateTableCell("700", 
+                _headerTableCellBorders, content));
         
         foreach (var col in domain.ColumnsSet.Types.OrderBy(static c => c.Order))
         {
-            var cell = CreateTableCell("1500", _borderedTableCellBorders, new Paragraph(new Run(new Text(col.Name))));
+            
+            var cell = CreateTableCell(
+                "700", 
+                _borderedTableCellBorders, 
+                new Paragraph(
+                    new Run(
+                        new Text(col.Name)
+                        ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "10",},},}
+                    )
+                );
             
             headerRow.AppendChild(cell);
         }
@@ -80,21 +195,38 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         foreach (var row in domain.RowsSet.Types.OrderBy(static r => r.Order))
         {
             var domainRow = new TableRow();
+            
+
+            domainRow.Append(new TableRowHeight(){Val = 500,});
+            
             domainRow.AppendChild(
                 CreateTableCell(
-                    "1500", 
+                    "1000", 
                     _borderedTableCellBorders, 
                     new Paragraph(new Run(new Text(row.Name)))));
 
             foreach (var col in domain.ColumnsSet.Types.OrderBy(static c => c.Order))
             {
-                var cellOutcomes = outcomes.Where(o => o.Row.Id == row.Id && o.Column.Id == col.Id);
-                var count = cellOutcomes.Count().ToString(CultureInfo.InvariantCulture);                    
+                var cellOutcomes = outcomes.Where(o => o.Row.Id == row.Id && o.Column.Id == col.Id).ToList();
+                var types = cellOutcomes.Select(static o => o.Value).ToList();
+                var value = types.MaxBy(static t => t.Order);
+                var count = cellOutcomes.Count.ToString(CultureInfo.InvariantCulture);  
+                
+                var contentCell = new Paragraph(new Run(new Text(count)))
+                {
+                    ParagraphProperties = new ParagraphProperties() { Justification = new Justification() { Val = JustificationValues.Center, }, },
+                };
                 
                 var cell = CreateTableCell(
-                    "1500",
+                    "1000",
                     _borderedTableCellBorders,
-                    new Paragraph(new Run(new Text(count))));
+                    contentCell);
+                
+
+                if (value != null)
+                {
+                    cell.TableCellProperties.AppendChild(new Shading { Fill = "#" + value.HexColor, });
+                }
                 
                 domainRow.AppendChild(cell);
             }
@@ -149,13 +281,14 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         var cellProperties = new TableCellProperties()
         {
             TableCellBorders = (TableCellBorders)borders.CloneNode(true),
+            TableCellVerticalAlignment = new TableCellVerticalAlignment() {Val = TableVerticalAlignmentValues.Center,},
             TableCellWidth = new TableCellWidth()
             {
                 Type = TableWidthUnitValues.Dxa,
                 Width = width,
             },
         };
-
+        
         cell.TableCellProperties = cellProperties;
         
         foreach (var element in elements)
