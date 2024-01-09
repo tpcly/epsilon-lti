@@ -29,7 +29,7 @@ public class CompetenceDocumentServiceTests
         var userId = "testUser";
         var from = DateTime.Now.AddDays(-7);
         var to = DateTime.Now;
-        var expectedDocument = CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),});
+        var expectedDocument = CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),}, new List<LearningDomainOutcome>{TestDataGenerator.GenerateRandomLearningDomainOutcome(),});
         
         _canvasResultServiceMock.Setup(service => service.GetSubmissions(userId)).Returns(_submissions);
         
@@ -46,7 +46,7 @@ public class CompetenceDocumentServiceTests
     {
         // Arrange
         var userId = "testUser";
-        var expectedDocument = CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),});
+        var expectedDocument = CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),}, new List<LearningDomainOutcome>{TestDataGenerator.GenerateRandomLearningDomainOutcome(),});
         
         _canvasResultServiceMock.Setup(service => service.GetSubmissions(userId)).Returns(_submissions);
         // Act
@@ -61,7 +61,7 @@ public class CompetenceDocumentServiceTests
     {
         // Arrange
         
-        var document = new CompetenceDocument(CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),}));
+        var document = new CompetenceDocument(CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),}, new List<LearningDomainOutcome>{TestDataGenerator.GenerateRandomLearningDomainOutcome(),}));
         using var stream = new MemoryStream();
 
         // Act
@@ -75,7 +75,7 @@ public class CompetenceDocumentServiceTests
     private async void ValidateOpnXmlWordGeneration()
     {
         // Arrange
-        var document = new CompetenceDocument(CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),}));
+        var document = new CompetenceDocument(CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),}, new List<LearningDomainOutcome>{TestDataGenerator.GenerateRandomLearningDomainOutcome(),}));
         using var stream = new MemoryStream();
         await _competenceDocumentService.WriteDocument(stream, document);
         using var wordprocessingDocument = WordprocessingDocument.Open(stream, false);
