@@ -43,6 +43,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
 
         wordDocument.AddMainDocumentPart();
         wordDocument.MainDocumentPart!.Document = new Document();
+        wordDocument.MainDocumentPart.Document.AddChild(new Body());
 
         foreach (var competenceWordComponent in await document.Components.ToListAsync())
         {
@@ -56,6 +57,6 @@ public class CompetenceDocumentService : ICompetenceDocumentService
     public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
     {
         yield return new CompetenceProfileComponent(submissions, domains);
-        yield return new KpiTable(submissions, domains);
+        yield return new KpiTableComponent(submissions, domains);
     }
 }

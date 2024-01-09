@@ -10,9 +10,9 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 {
     public override async Task<Body> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
-        var body = new Body();
+        var body = mainDocumentPart.Document.Body;
 
-        body.Append(new Paragraph(new Run(new Text("Hello World!"))));
+        body!.Append(new Paragraph(new Run(new Text("Hello World!"))));
         // toDo: Add the table with realised outcomes, like the performance dashboard.
         
         var count = await Submissions.CountAsync();
@@ -21,8 +21,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         {
             body.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "We tried"))));
         }
-
-        mainDocumentPart.Document.AppendChild(body);
+        
         return body;
     }
 

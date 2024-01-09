@@ -7,14 +7,30 @@ using System.Globalization;
 
 namespace Epsilon.Components;
 
-public class KpiTable : AbstractCompetenceComponent
+public class KpiTableComponent : AbstractCompetenceComponent
 {
     public override async Task<Body> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
-        var body = new Body();
+        var body = mainDocumentPart.Document.Body;
 
         // Create a table to display outcomes, assignments, and grades
         var table = new Table();
+        
+        // Define table properties
+        var tblProp = new TableProperties(
+            new TableWidth(),
+            new TableBorders(
+                new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
+                new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
+                new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
+                new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  }
+            )
+        );
+        table.AppendChild<TableProperties>(tblProp);
+        
+        // Define table grid
+        var tblGrid = new TableGrid();
+        table.AppendChild(tblGrid);
 
         // Define column header texts
         var columnsHeaders = new Dictionary<string, string> { { "KPI", "3000" }, { "Assignments", "5000" }, { "Grades", "1000" }, }; 
@@ -45,10 +61,9 @@ public class KpiTable : AbstractCompetenceComponent
             
              // Outcome (KPI) column
             tableRow.AppendChild(CreateTableCellWithBorders("3000", new Paragraph(new Run(new Text(outcome.Name)))));
-            
+
             // Assignments column
             var assignmentsParagraph = new Paragraph();
-            var assignmentsRun = assignmentsParagraph.AppendChild(new Run());
             
             var gradesParagraph = new Paragraph();
             var gradesRun = gradesParagraph.AppendChild(new Run());
@@ -62,11 +77,10 @@ public class KpiTable : AbstractCompetenceComponent
                         var rel = mainDocumentPart.AddHyperlinkRelationship(new Uri(submission.AssignmentUrl!.ToString()), true);
                         var relationshipId = rel.Id;
 
-                        var hyperlink = new Hyperlink(new RunProperties(
-                            new Underline { Val = UnderlineValues.Single, }), new Text(submission.Assignment!)) { Id = relationshipId, };
+                        var hyperlink = new Hyperlink(new Run(new Text(submission.Assignment!))) { Id = relationshipId, };
                         
-                        assignmentsRun.AppendChild(hyperlink);
-                        assignmentsRun.AppendChild(new Paragraph());
+                        assignmentsParagraph.AppendChild(hyperlink);
+                        assignmentsParagraph.AppendChild(new Run(new Break()));
 
                         var submissionGrade = result.Grade!.Value.ToString(CultureInfo.InvariantCulture);
                         
@@ -88,8 +102,7 @@ public class KpiTable : AbstractCompetenceComponent
         
         // Add the table to the document
         body.AppendChild(table);
-
-        mainDocumentPart.Document.AppendChild(body);
+        
         return null;
     }
 
@@ -97,23 +110,6 @@ public class KpiTable : AbstractCompetenceComponent
     {
         var cell = new TableCell();
         var cellProperties = new TableCellProperties();
-        var borders = new TableCellBorders(
-            new LeftBorder
-            {
-                Val = BorderValues.Single,
-            },
-            new RightBorder
-            {
-                Val = BorderValues.Single,
-            },
-            new TopBorder
-            {
-                Val = BorderValues.Single,
-            },
-            new BottomBorder
-            {
-                Val = BorderValues.Single,
-            });
 
         foreach (var element in elements)
         {
@@ -129,13 +125,12 @@ public class KpiTable : AbstractCompetenceComponent
             });
         }
 
-        cellProperties.Append(borders);
         cell.PrependChild(cellProperties);
 
         return cell;
     }
 
-    public KpiTable(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
+    public KpiTableComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
         : base(submissions, domains)
     {
     }
