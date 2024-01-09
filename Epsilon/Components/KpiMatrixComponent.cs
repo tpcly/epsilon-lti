@@ -79,23 +79,24 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         await foreach (var outcomeCriterion in listOfCriteria)
         {
             var row = new TableRow();
-            var outcome = Outcomes.Single(o => o.Id == outcomeCriterion.Id);
+            var outcome = Outcomes.FirstOrDefault(o => o.Id == outcomeCriterion.Id);
 
             // Create a new paragraph for outcome.Name
-            var paragraphForOutcomeName = new Paragraph(new Run(new Text(outcome.Name)))
+            if (outcome != null)
             {
-                ParagraphProperties = new ParagraphProperties
+                var paragraphForOutcomeName = new Paragraph(new Run(new Text(outcome.Name)))
                 {
-                    Justification = new Justification { Val = JustificationValues.Center, },
-                },
-            };
-            row.AppendChild(CreateTableCellWithBorders("2500", paragraphForOutcomeName));
+                    ParagraphProperties = new ParagraphProperties { Justification = new Justification { Val = JustificationValues.Center, }, },
+                };
+
+                row.AppendChild(CreateTableCellWithBorders("2500", paragraphForOutcomeName));
+            }
 
             await foreach (var sub in Submissions)
             {
                 var cell = CreateTableCellWithBorders("100");
-                var criteria = sub.Criteria.FirstOrDefault(c => c.Id == outcome.Id);
-                var result = sub.Results.FirstOrDefault(r => r.Outcome.Id == outcome.Id);
+                var criteria = sub.Criteria.FirstOrDefault(c => c.Id == outcome?.Id);
+                var result = sub.Results.FirstOrDefault(r => r.Outcome.Id == outcome?.Id);
 
                 var status = GetStatus(result?.Grade, criteria?.MasteryPoints);
                 var fillColor = GetColor(status);
