@@ -17,6 +17,7 @@
 				</a>
 			</v-col>
 			<v-spacer></v-spacer>
+			<slot :terms="terms"></slot>
 			<v-col cols="12" md="3">
 				<v-autocomplete
 					v-model="selectedUser"
