@@ -80,8 +80,17 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         {
             var row = new TableRow();
             var outcome = Outcomes.Single(o => o.Id == outcomeCriterion.Id);
-            row.AppendChild(CreateTableCellWithBorders("2500", new Paragraph(new Run(new Text(outcome.Name)))));
-            
+
+            // Create a new paragraph for outcome.Name
+            var paragraphForOutcomeName = new Paragraph(new Run(new Text(outcome.Name)))
+            {
+                ParagraphProperties = new ParagraphProperties
+                {
+                    Justification = new Justification { Val = JustificationValues.Center, },
+                },
+            };
+            row.AppendChild(CreateTableCellWithBorders("2500", paragraphForOutcomeName));
+
             await foreach (var sub in Submissions)
             {
                 var cell = CreateTableCellWithBorders("100");
@@ -93,15 +102,21 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 cell.FirstChild?.Append(new Shading { Fill = fillColor, });
 
                 var text = result != null ? result.Outcome.Value.ShortName : "";
-                cell.Append(new Paragraph(new Run(new Text(text))));
+                var paragraph = new Paragraph();
+                var run = new Run(new Text(text));
+                paragraph.Append(run);
+                paragraph.ParagraphProperties = new ParagraphProperties()
+                {
+                    Justification = new Justification() { Val = JustificationValues.Center, },
+                };
 
+                cell.Append(paragraph);
                 row.AppendChild(cell);
             }
 
             table.AppendChild(row);
         }
-
-        // body.AppendChild(await GetLegend());
+        
         body.Append(new Paragraph(new Run(new Text(""))));
         body.AppendChild(table);
 
@@ -132,40 +147,6 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             _ => "",
         };
     }
-
-
-    // private async Task<OpenXmlElement> GetLegend()
-    // {
-    //     var table = new Table();
-    //     var submissions = await Submissions.ToListAsync();
-    //     var allOutcomes = await GetAllOutcomesAsync();
-    //     foreach (var outcome in allOutcomes)
-    //     {
-    //         foreach (var submission in submissions)
-    //         {
-    //             var criteria = submission.Criteria.FirstOrDefault(c => c.Id == outcome.Id);
-    //             var result = submission.Results.FirstOrDefault(r => r.Outcome.Id == outcome.Id);
-    //             var status = GetStatus(result?.Grade, criteria?.MasteryPoints);
-    //             var color = GetColor(status);
-    //             
-    //             var row = new TableRow();
-    //             var cellName = CreateTableCellWithBorders("200");
-    //             cellName.Append(new Paragraph(new Run(new Text(status.ToString()))));
-    //
-    //             var cellValue = CreateTableCellWithBorders("200");
-    //             cellValue.Append(new Paragraph(new Run(new Text(""))));
-    //             cellValue.FirstChild?.Append(new Shading
-    //             {
-    //                 Fill = color,
-    //             });
-    //             row.AppendChild(cellName);
-    //             row.AppendChild(cellValue);
-    //             table.AppendChild(row);
-    //         }
-    //     }
-    //
-    //     return table;
-    // }
     
     private static TableCell CreateTableCellWithBorders(string? width, params OpenXmlElement[] elements)
     {
