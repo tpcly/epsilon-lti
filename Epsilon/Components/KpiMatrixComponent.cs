@@ -32,7 +32,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         await foreach (var sub in Submissions)
         {
             anyAssignments = true;
-            headerRowHeight = Math.Max(headerRowHeight, sub?.Assignment?.Length ?? 10);
+            headerRowHeight = Math.Max(headerRowHeight, sub.Assignment?.Length ?? 10);
 
         }
 
@@ -47,7 +47,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
 
         // Empty top-left cell.
         headerRow.AppendChild(CreateTableCellWithBorders("2500", new Paragraph(new Run(new Text("")))));
-
+        var index = 0;
         await foreach (var sub in Submissions)
         {
             var cell = CreateTableCellWithBorders("100");
@@ -57,14 +57,14 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 cell.FirstChild.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
 
                 cell.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "Not found"))));
-                // cell.FirstChild.Append(new Shading
-                // {
-                //     Fill = Submissions.IndexOf(assignment) % 2 == 0
-                //         ? "FFFFFF"
-                //         : "d3d3d3",
-                // });
+                cell.FirstChild.Append(new Shading
+                {
+                    Fill = index % 2 == 0 ? "FFFFFF" : "d3d3d3",
+                });
                 headerRow.AppendChild(cell);
             }
+
+            index++;
         }
 
         table.AppendChild(headerRow);
@@ -80,25 +80,31 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         {
             var row = new TableRow();
             var outcome = Outcomes.Single(o => o.Id == outcomeCriterion.Id);
-            // Add the outcome title cell.
             row.AppendChild(CreateTableCellWithBorders("2500", new Paragraph(new Run(new Text(outcome.Name)))));
-
-            // Add the assignment cells.
+            
             await foreach (var sub in Submissions)
             {
                 if (sub.Criteria.Any(c => c.Id == outcome.Id))
                 {
-                    
-                    
                     var cell = CreateTableCellWithBorders("100");
+                    
+                    var result = sub.Results.FirstOrDefault(r => r.Outcome.Id == outcome.Id);
 
-                    // Set cell color based on GradeStatus.
-                    var fillColor = outcome.Value.HexColor;
+                    if (result != null)
+                    {
+                        var masteryPoints = sub.Criteria.FirstOrDefault(c => c.Id == outcome.Id)?.MasteryPoints;
+                        var status = GetStatus(result.Grade, masteryPoints);
+                        var fillColor = GetColor(status);
+                        cell.FirstChild?.Append(new Shading { Fill = fillColor, });
+                        
+                        var shortName = result.Outcome.Value.ShortName;
+                        cell.Append(new Paragraph(new Run(new Text(shortName))));
+                    }
+                    else
+                    {
+                        cell.Append(new Paragraph(new Run(new Text(""))));
+                    }
 
-                    cell.FirstChild?.Append(new Shading { Fill = fillColor, });
-
-                    // Add an empty text element since we're using color instead of text.
-                    cell.Append(new Paragraph(new Run(new Text(outcome.Name))));
                     row.AppendChild(cell);
                 }
                 else
@@ -117,31 +123,31 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
 
         return mainDocumentPart.Document.AppendChild(body);
     }
-
-    // private static string GetColor(OutcomeGradeStatus status)
-    // {
-    //     return status switch
-    //     {
-    //         OutcomeGradeStatus.Mastered => "#44F656",
-    //         OutcomeGradeStatus.NotMastered => "#FA1818",
-    //         OutcomeGradeStatus.NotGraded => "#FAFF00",
-    //         OutcomeGradeStatus.NotAssessed => "#9F2B68",
-    //         _ => "#9F2B68",
-    //     };
-    // }
     
-    // private static OutcomeGradeStatus GetStatus(double? grade, double? masteryPoints)
-    // {
-    //     if (grade.HasValue && masteryPoints.HasValue)
-    //     {
-    //         return grade.Value >= masteryPoints.Value ? OutcomeGradeStatus.Mastered : OutcomeGradeStatus.NotMastered;
-    //     }
-    //     else if (masteryPoints.HasValue)
-    //     {
-    //         return OutcomeGradeStatus.NotAssessed;
-    //     }
-    //     return OutcomeGradeStatus.NotGraded;
-    // }
+    private static OutcomeGradeStatus GetStatus(double? grade, double? masteryPoints)
+    {
+        if (grade.HasValue && masteryPoints.HasValue)
+        {
+            return grade.Value >= masteryPoints.Value ? OutcomeGradeStatus.Mastered : OutcomeGradeStatus.NotMastered;
+        }
+        if (!grade.HasValue && masteryPoints.HasValue)
+        {
+            return OutcomeGradeStatus.NotAssessed;
+        }
+        return OutcomeGradeStatus.NotGraded;
+    }
+
+    private static string GetColor(OutcomeGradeStatus status)
+    {
+        return status switch
+        {
+            OutcomeGradeStatus.Mastered => "#44F656",
+            OutcomeGradeStatus.NotMastered => "#FA1818",
+            OutcomeGradeStatus.NotAssessed => "#9F2B68",
+            OutcomeGradeStatus.NotGraded => "",
+            _ => "",
+        };
+    }
     
     // private async Task<HashSet<LearningDomainOutcome>> GetAllOutcomesAsync()
     // {
