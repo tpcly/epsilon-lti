@@ -2,48 +2,48 @@
 	<ClientOnly>
 		<TopNavigation
 			@user-change="handleUserChange"
-			@range-change="handleRangeChange" />
-		<TabGroup as="template">
-			<div class="toolbar mb-lg mt-lg">
-				<div class="toolbar-slider">
-					<TabList>
-						<Tab class="toolbar-slider-item">
-							Performance dashboard
-						</Tab>
-						<Tab
-							v-if="enableCompetenceProfile && domains.length > 1"
-							class="toolbar-slider-item">
-							Competence Document
-						</Tab>
-					</TabList>
-				</div>
-				<div v-if="enableCompetenceGeneration" class="toolbar-download">
-					<Menu>
-						<MenuButton @click="downloadCompetenceDocument">
-							Download
-						</MenuButton>
-					</Menu>
-				</div>
-			</div>
-			<hr class="divider mb-lg" />
-			<main style="position: relative">
-				<TabPanels>
-					<TabPanel>
-						<PerformanceDashboard
-							:is-loading="loadingOutcomes"
-							:submissions="filteredSubmissions"
-							:domains="domains" />
-					</TabPanel>
-					<TabPanel>
-						<CompetenceDocument
-							:outcomes="outcomes"
-							:submissions="filteredSubmissions"
-							:filter-range="filterRange"
-							:domains="domains" />
-					</TabPanel>
-				</TabPanels>
-			</main>
-		</TabGroup>
+			@range-change="handleRangeChange">
+			<template #default="navigationProps">
+				<v-col
+					v-if="enableSemesterWrapped && !loadingOutcomes"
+					cols="12"
+					md="2">
+					<WrappedDialog
+						:submissions="submissions"
+						:outcomes="outcomes"
+						:terms="navigationProps.terms"
+						:domains="domains"></WrappedDialog>
+				</v-col>
+			</template>
+		</TopNavigation>
+		<v-tabs v-model="tabs" class="toolbar" show-arrows>
+			<v-tab :value="0">Performance Dashboard</v-tab>
+			<v-tab v-if="enableCompetenceProfile" :value="1">
+				Competence Document
+			</v-tab>
+		</v-tabs>
+		<loading-dialog v-model="loadingOutcomes"></loading-dialog>
+		<v-window v-model="tabs">
+			<v-window-item :value="0">
+				<PerformanceDashboard
+					:is-loading="loadingOutcomes"
+					:submissions="filteredSubmissions"
+					:domains="domains" />
+			</v-window-item>
+			<v-window-item v-if="enableCompetenceProfile" :value="1">
+				<v-btn
+					v-if="enableCompetenceGeneration"
+					class="toolbar-download"
+					@click="downloadCompetenceDocument">
+					Download
+				</v-btn>
+				<CompetenceDocument
+					:outcomes="outcomes"
+					:submissions="filteredSubmissions"
+					:filter-range="filterRange"
+					:domains="domains" />
+			</v-window-item>
+		</v-window>
 		<div class="credits">
 			<a class="version" :href="versionUrl" target="_blank">
 				{{ runtimeConfig.public.clientVersion }}
@@ -57,15 +57,6 @@
 </template>
 
 <script lang="ts" setup>
-import {
-	Tab,
-	TabGroup,
-	TabList,
-	TabPanel,
-	TabPanels,
-	Menu,
-	MenuButton,
-} from "@headlessui/vue"
 import TopNavigation from "~/components/TopNavigation.vue"
 import {
 	type LearningDomain,
@@ -78,8 +69,10 @@ import type { PostHog } from "posthog-js"
 import PerformanceDashboard from "~/components/performance/PerformanceDashboard.vue"
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
 import { Generator } from "~/utils/generator"
+import LoadingDialog from "~/LoadingDialog.vue"
 
 const runtimeConfig = useRuntimeConfig()
+const tabs = ref<number>(0)
 const versionUrl =
 	"https://github.com/tpcly/epsilon-lti/releases/tag/" +
 	runtimeConfig.public.clientVersion
@@ -104,8 +97,9 @@ if (process.client && data.value?.idToken) {
 }
 const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
+const enableSemesterWrapped = ref<boolean | undefined>(false)
 const api = useApi()
-const loadingOutcomes = ref<boolean>(false)
+const loadingOutcomes = ref<boolean>(true)
 const submissions = ref<LearningDomainSubmission[]>([])
 const filterRange = ref<{
 	start: Date
@@ -119,6 +113,7 @@ const outcomes = ref<LearningDomainOutcome[]>([])
 if (process.client) {
 	const po = Posthog.init() as PostHog
 	po.onFeatureFlags(function () {
+		enableSemesterWrapped.value = po.isFeatureEnabled("semester-wrapped")
 		enableCompetenceProfile.value =
 			po.isFeatureEnabled("competence-profile")
 		enableCompetenceGeneration.value = po.isFeatureEnabled(
@@ -220,71 +215,39 @@ const handleRangeChange = (range: {
 
 <style lang="scss" scoped>
 .toolbar {
-	display: flex;
-	justify-content: space-between;
+	background-color: #11284c;
+	padding: 5px;
+	border-radius: 8px;
+	width: fit-content;
+	height: unset;
+	margin-top: 10px;
 
-	&-download {
-		list-style: none;
-		background-color: #11284c;
-		padding: 5px;
-		border-radius: 8px;
-		font-size: 1em;
-
-		button {
-			border-radius: 5px;
-			padding: 0.6em 1.2em;
-			cursor: pointer;
-			background-color: transparent;
-			border: none;
-			color: #ffffff;
-			font-size: 1em;
-
-			&:active,
-			&:focus {
-				outline: transparent;
-			}
-
-			&:hover {
-				background-color: #d8d9dd;
-				color: black;
-			}
-		}
+	.v-btn.v-slide-group-item--active {
+		background-color: white !important;
+		color: black !important;
 	}
 
-	&-slider {
-		list-style: none;
+	.v-btn {
+		border-radius: 5px;
+		padding: 0.6em 1.2em;
+		cursor: pointer;
+		letter-spacing: unset;
 		background-color: #11284c;
-		padding: 5px;
-		border-radius: 8px;
-		width: fit-content;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		border: none;
+		height: unset;
+		font-size: 13px;
+		text-transform: unset;
+		color: #ffffff;
 
-		&-item {
-			border-radius: 5px;
-			padding: 0.6em 1.2em;
-			cursor: pointer;
-			background-color: transparent;
-			border: none;
-			font-size: 1em;
-			color: #ffffff;
+		&:active,
+		&:focus {
+			outline: transparent;
+			color: black;
+		}
 
-			&:active,
-			&:focus {
-				outline: transparent;
-				color: black;
-			}
-
-			&:hover {
-				background-color: #d8d9dd;
-				color: black;
-			}
-
-			&[data-headlessui-state="selected"] {
-				background-color: white;
-				color: black;
-			}
+		&:hover {
+			background-color: #d8d9dd;
+			color: black;
 		}
 	}
 }
@@ -292,10 +255,12 @@ const handleRangeChange = (range: {
 .divider {
 	border: 1px solid #f2f3f8;
 }
+
 .credits,
 .credits a {
 	color: #0f254a;
 }
+
 .credits {
 	padding: 20px;
 	margin: 0 auto;
