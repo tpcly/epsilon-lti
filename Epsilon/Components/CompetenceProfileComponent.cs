@@ -98,7 +98,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 new Paragraph(
                     new Run(
                         new Text(row.Name)
-                        ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "10",},},}
+                        ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "14",},},}
                     )
                 );
             
@@ -110,7 +110,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         var domainRow = new TableRow();
             
 
-        domainRow.Append(new TableRowHeight(){Val = 500,});
+        domainRow.Append(new TableRowHeight(){Val = 2600,});
 
         foreach (var row in domain.RowsSet.Types.OrderBy(static c => c.Order))
         {
@@ -183,7 +183,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 new Paragraph(
                     new Run(
                         new Text(col.Name)
-                        ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "10",},},}
+                        ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "14",},},}
                     )
                 );
             
@@ -203,7 +203,11 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 CreateTableCell(
                     "1000", 
                     _borderedTableCellBorders, 
-                    new Paragraph(new Run(new Text(row.Name)))));
+                    new Paragraph(
+                        new Run(
+                            new Text(row.Name)
+                            ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "14",},},}
+                        )));
 
             foreach (var col in domain.ColumnsSet.Types.OrderBy(static c => c.Order))
             {
