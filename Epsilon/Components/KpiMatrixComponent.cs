@@ -84,34 +84,18 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             
             await foreach (var sub in Submissions)
             {
-                if (sub.Criteria.Any(c => c.Id == outcome.Id))
-                {
-                    var cell = CreateTableCellWithBorders("100");
-                    
-                    var result = sub.Results.FirstOrDefault(r => r.Outcome.Id == outcome.Id);
+                var cell = CreateTableCellWithBorders("100");
+                var criteria = sub.Criteria.FirstOrDefault(c => c.Id == outcome.Id);
+                var result = sub.Results.FirstOrDefault(r => r.Outcome.Id == outcome.Id);
 
-                    if (result != null)
-                    {
-                        var masteryPoints = sub.Criteria.FirstOrDefault(c => c.Id == outcome.Id)?.MasteryPoints;
-                        var status = GetStatus(result.Grade, masteryPoints);
-                        var fillColor = GetColor(status);
-                        cell.FirstChild?.Append(new Shading { Fill = fillColor, });
-                        
-                        var shortName = result.Outcome.Value.ShortName;
-                        cell.Append(new Paragraph(new Run(new Text(shortName))));
-                    }
-                    else
-                    {
-                        cell.Append(new Paragraph(new Run(new Text(""))));
-                    }
+                var status = GetStatus(result?.Grade, criteria?.MasteryPoints);
+                var fillColor = GetColor(status);
+                cell.FirstChild?.Append(new Shading { Fill = fillColor, });
 
-                    row.AppendChild(cell);
-                }
-                else
-                {
-                    var cell = CreateTableCellWithBorders("100");
-                    row.AppendChild(cell);
-                }
+                var text = result != null ? result.Outcome.Value.ShortName : "";
+                cell.Append(new Paragraph(new Run(new Text(text))));
+
+                row.AppendChild(cell);
             }
 
             table.AppendChild(row);
@@ -148,21 +132,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             _ => "",
         };
     }
-    
-    // private async Task<HashSet<LearningDomainOutcome>> GetAllOutcomesAsync()
-    // {
-    //     var outcomes = new HashSet<LearningDomainOutcome>();
-    //     var submissions = await Submissions.ToListAsync();
-    //
-    //     foreach (var submission in submissions)
-    //     {
-    //         foreach (var result in submission.Results)
-    //         {
-    //             outcomes.Add(result.Outcome);
-    //         }
-    //     }
-    //     return outcomes;
-    // }
+
 
     // private async Task<OpenXmlElement> GetLegend()
     // {
