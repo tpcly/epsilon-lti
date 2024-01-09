@@ -1,7 +1,7 @@
 {
 	"name": "epsilon-frontend",
 	"private": true,
-	"version": "V1.0.0-Beta.5",
+	"version": "V1.0.0-Beta.6",
 	"type": "module",
 	"scripts": {
 		"build": "nuxt build",
