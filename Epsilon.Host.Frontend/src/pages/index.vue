@@ -2,14 +2,26 @@
 	<ClientOnly>
 		<TopNavigation
 			@user-change="handleUserChange"
-			@range-change="handleRangeChange" />
+			@range-change="handleRangeChange">
+			<template #default="navigationProps">
+				<v-col
+					v-if="enableSemesterWrapped && !loadingOutcomes"
+					cols="12"
+					md="2">
+					<WrappedDialog
+						:submissions="submissions"
+						:outcomes="outcomes"
+						:terms="navigationProps.terms"
+						:domains="domains"></WrappedDialog>
+				</v-col>
+			</template>
+		</TopNavigation>
 		<v-tabs v-model="tabs" class="toolbar" show-arrows>
 			<v-tab :value="0">Performance Dashboard</v-tab>
 			<v-tab v-if="enableCompetenceProfile" :value="1">
 				Competence Document
 			</v-tab>
 		</v-tabs>
-
 		<loading-dialog v-model="loadingOutcomes"></loading-dialog>
 		<v-window v-model="tabs">
 			<v-window-item :value="0">
@@ -18,7 +30,7 @@
 					:submissions="filteredSubmissions"
 					:domains="domains" />
 			</v-window-item>
-			<v-window-item :value="1">
+			<v-window-item v-if="enableCompetenceProfile" :value="1">
 				<v-btn
 					v-if="enableCompetenceGeneration"
 					class="toolbar-download"
@@ -26,7 +38,6 @@
 					Download
 				</v-btn>
 				<CompetenceDocument
-					v-if="enableCompetenceProfile"
 					:outcomes="outcomes"
 					:submissions="filteredSubmissions"
 					:filter-range="filterRange"
@@ -86,8 +97,9 @@ if (process.client && data.value?.idToken) {
 }
 const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
+const enableSemesterWrapped = ref<boolean | undefined>(false)
 const api = useApi()
-const loadingOutcomes = ref<boolean>(false)
+const loadingOutcomes = ref<boolean>(true)
 const submissions = ref<LearningDomainSubmission[]>([])
 const filterRange = ref<{
 	start: Date
@@ -101,6 +113,7 @@ const outcomes = ref<LearningDomainOutcome[]>([])
 if (process.client) {
 	const po = Posthog.init() as PostHog
 	po.onFeatureFlags(function () {
+		enableSemesterWrapped.value = po.isFeatureEnabled("semester-wrapped")
 		enableCompetenceProfile.value =
 			po.isFeatureEnabled("competence-profile")
 		enableCompetenceGeneration.value = po.isFeatureEnabled(
