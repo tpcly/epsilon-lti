@@ -14,5 +14,5 @@ public abstract class AbstractCompetenceComponent: IWordCompetenceComponent
     protected IAsyncEnumerable<LearningDomainSubmission> Submissions { get; set; }
     protected IEnumerable<LearningDomain?> Domains { get; set; }
 
-    public abstract Task<Body> AddToWordDocument(MainDocumentPart mainDocumentPart);
+    public abstract Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart);
 }

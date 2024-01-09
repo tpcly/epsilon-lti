@@ -9,7 +9,7 @@ namespace Epsilon.Components;
 
 public class KpiTableComponent : AbstractCompetenceComponent
 {
-    public override async Task<Body> AddToWordDocument(MainDocumentPart mainDocumentPart)
+    public override async Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
         var body = mainDocumentPart.Document.Body;
 
@@ -41,18 +41,18 @@ public class KpiTableComponent : AbstractCompetenceComponent
         // Create the header cells
         foreach (var columnHeader in columnsHeaders)
         {
-            headerRow.AppendChild(CreateTableCellWithBorders(columnHeader.Value, new Paragraph(new Run(new Text(columnHeader.Key)))));
+            headerRow.AppendChild(CreateTableCell(columnHeader.Value, new Paragraph(new Run(new Text(columnHeader.Key)))));
         }
 
         // Add the header row to the table
         table.AppendChild(headerRow);
-
+        
+        // Get allOutcomes
         var allOutcomes = Submissions
             .SelectMany(static e => e.Results
                                      .Select(static result => result.Outcome)
                                      .ToAsyncEnumerable());
 
-        // Create the table body rows and cells
         await foreach (var outcome in allOutcomes
                                       .OrderBy(static e => e.Value.Order)
                                       .Distinct())
@@ -60,7 +60,7 @@ public class KpiTableComponent : AbstractCompetenceComponent
             var tableRow = new TableRow();
             
              // Outcome (KPI) column
-            tableRow.AppendChild(CreateTableCellWithBorders("3000", new Paragraph(new Run(new Text(outcome.Name)))));
+            tableRow.AppendChild(CreateTableCell("3000", new Paragraph(new Run(new Text(outcome.Name)))));
 
             // Assignments column
             var assignmentsParagraph = new Paragraph();
@@ -77,7 +77,7 @@ public class KpiTableComponent : AbstractCompetenceComponent
                         var rel = mainDocumentPart.AddHyperlinkRelationship(new Uri(submission.AssignmentUrl!.ToString()), true);
                         var relationshipId = rel.Id;
 
-                        var hyperlink = new Hyperlink(new Run(new Text(submission.Assignment!))) { Id = relationshipId, };
+                        var hyperlink = new Hyperlink(new Run(new RunProperties(new Underline { Val = UnderlineValues.Single, }), new Text(submission.Assignment!))) { Id = relationshipId, };
                         
                         assignmentsParagraph.AppendChild(hyperlink);
                         assignmentsParagraph.AppendChild(new Run(new Break()));
@@ -90,23 +90,23 @@ public class KpiTableComponent : AbstractCompetenceComponent
                 }
             }
             
-            tableRow.AppendChild(CreateTableCellWithBorders("5000", assignmentsParagraph));
-            tableRow.AppendChild(CreateTableCellWithBorders("1000", gradesParagraph));
+            tableRow.AppendChild(CreateTableCell("5000", assignmentsParagraph));
+            tableRow.AppendChild(CreateTableCell("1000", gradesParagraph));
             
              // Add the row to the table
             table.AppendChild(tableRow);
         }
         
         // Newline to separate the table from the rest of the document
-        body.Append(new Paragraph(new Run(new Text(""))));
+        body?.Append(new Paragraph(new Run(new Text(""))));
         
         // Add the table to the document
-        body.AppendChild(table);
+        body?.AppendChild(table);
         
-        return null;
+        return body;
     }
 
-    private static TableCell CreateTableCellWithBorders(string? width, params OpenXmlElement[] elements)
+    private static TableCell CreateTableCell(string? width, params OpenXmlElement[] elements)
     {
         var cell = new TableCell();
         var cellProperties = new TableCellProperties();
