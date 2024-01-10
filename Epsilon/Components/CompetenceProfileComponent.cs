@@ -16,14 +16,14 @@ namespace Epsilon.Components;
 
 public class CompetenceProfileComponent : AbstractCompetenceComponent
 {
-    public override async Task<Body> AddToWordDocument(MainDocumentPart mainDocumentPart)
+    public override async Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
         var outcomes = 
             Submissions.ToEnumerable()
                        .SelectMany(static o => o.Results.
                                                  Select(static r => r.Outcome)).ToList();
         
-        var body = new Body();
+        var body = mainDocumentPart.Document.Body;
         
         var table = new Table();
         
@@ -62,7 +62,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
         table.AppendChild(row);
 
-        body.AppendChild(table);
+        body?.AppendChild(table);
         
         mainDocumentPart.Document.AppendChild(body);
         return body;
@@ -132,7 +132,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
             if (value != null)
             {
-                cell.TableCellProperties.AppendChild(new Shading { Fill = "#" + value.HexColor, });
+                cell.TableCellProperties?.AppendChild(new Shading { Fill = "#" + value.HexColor, });
             }
                 
             domainRow.AppendChild(cell);
@@ -211,7 +211,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
             foreach (var col in domain.ColumnsSet.Types.OrderBy(static c => c.Order))
             {
-                var cellOutcomes = outcomes.Where(o => o.Row.Id == row.Id && o.Column.Id == col.Id).ToList();
+                var cellOutcomes = outcomes.Where(o => o.Row.Id == row.Id && o.Column?.Id == col.Id).ToList();
                 var types = cellOutcomes.Select(static o => o.Value).ToList();
                 var value = types.MaxBy(static t => t.Order);
                 var count = cellOutcomes.Count.ToString(CultureInfo.InvariantCulture);  
@@ -229,7 +229,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
                 if (value != null)
                 {
-                    cell.TableCellProperties.AppendChild(new Shading { Fill = "#" + value.HexColor, });
+                    cell.TableCellProperties?.AppendChild(new Shading { Fill = "#" + value.HexColor, });
                 }
                 
                 domainRow.AppendChild(cell);
