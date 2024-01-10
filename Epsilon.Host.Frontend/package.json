@@ -18,8 +18,8 @@
 		"@mdi/font": "^7.4.47",
 		"apexcharts": "^3.45.1",
 		"nuxt": "^3.9.1",
-		"posthog-js": "^1.96.1",
-		"vue": "^3.4.6",
+		"posthog-js": "^1.97.1",
+		"vue": "^3.4.7",
 		"vue-router": "^4.2.5",
 		"vue3-apexcharts": "^1.4.4"
 	},
@@ -29,7 +29,7 @@
 		"@nuxt/schema": "^3.9.1",
 		"@types/jsonwebtoken": "^9.0.5",
 		"@types/lodash": "^4.14.202",
-		"@types/node": "^20.10.7",
+		"@types/node": "^20.10.8",
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.1.2",
@@ -39,6 +39,6 @@
 		"prettier": "^3.1.1",
 		"sass": "^1.69.7",
 		"vite-plugin-vuetify": "^2.0.1",
-		"vuetify": "^3.4.9"
+		"vuetify": "^3.4.10"
 	}
 }
