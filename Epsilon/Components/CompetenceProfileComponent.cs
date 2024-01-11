@@ -1,4 +1,5 @@
 using System.Globalization;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Epsilon.Abstractions;
@@ -8,7 +9,7 @@ namespace Epsilon.Components;
 
 public class CompetenceProfileComponent : AbstractCompetenceComponent
 {
-    public override async Task<Body> AddToWordDocument(MainDocumentPart mainDocumentPart)
+    public override async Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
         var body = new Body();
 
@@ -24,6 +25,36 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
         mainDocumentPart.Document.AppendChild(body);
         return body;
+    }
+    
+    public static TableCell CreateTableCell(string? width, TableCellBorders? borders, params OpenXmlElement[]? elements)
+    {
+        width ??= "300";
+        
+        var cell = new TableCell();
+        var cellProperties = new TableCellProperties();
+        if (borders != null)
+        {
+            cellProperties.TableCellBorders = (TableCellBorders)borders.CloneNode(true);
+        }
+        
+        cellProperties.TableCellVerticalAlignment = new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center, };
+        cellProperties.TableCellWidth = new TableCellWidth()
+        {
+            Type = TableWidthUnitValues.Dxa,
+            Width = width,
+        };
+        
+        cell.TableCellProperties = cellProperties;
+        if (elements != null)
+        {
+            foreach (var element in elements)
+            {
+                cell.Append(element);
+            }
+        }
+
+        return cell;
     }
 
     public CompetenceProfileComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
