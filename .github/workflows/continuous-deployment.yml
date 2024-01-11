@@ -1,6 +1,5 @@
 ﻿name: Continuous deployment
 on:
-    workflow_dispatch:
     release:
         types: [ published ]
 jobs:
