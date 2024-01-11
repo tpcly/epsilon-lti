@@ -5,12 +5,10 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
 using BottomBorder = DocumentFormat.OpenXml.Wordprocessing.BottomBorder;
-using LeftBorder = DocumentFormat.OpenXml.Wordprocessing.LeftBorder;
 using RightBorder = DocumentFormat.OpenXml.Wordprocessing.RightBorder;
 using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
 using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
 using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
-using TopBorder = DocumentFormat.OpenXml.Wordprocessing.TopBorder;
 
 namespace Epsilon.Components;
 
@@ -18,62 +16,64 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 {
     public override async Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
+        
+        var body = mainDocumentPart.Document.Body;
+        
+        if (body == null)
+        {
+            return body;
+        }
+        
+        body.AppendChild(
+
+            new Paragraph(
+                new Run(
+                    new Text("Competence profile")
+                )
+                )
+        );  
+        body.AppendChild( new Paragraph(
+            new Run(
+                new Text(" ")
+            )
+        ));
+        
         var outcomes = 
             Submissions.ToEnumerable()
                        .SelectMany(static o => o.Results.
                                                  Select(static r => r.Outcome)).ToList();
-        
-        var body = mainDocumentPart.Document.Body;
-        
-        var table = new Table();
-        
-        // Define table properties
-        var tblProp = new TableProperties(
-            new TableWidth(),
-            new TableBorders(
-                new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.None), Size = 3,  },
-                new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.None), Size = 3,  },
-                new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.None), Size = 3,  },
-                new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.None), Size = 3,  }
-            )
-        );
-        table.AppendChild<TableProperties>(tblProp);
-        
-        // Define table grid
-        var tblGrid = new TableGrid();
-        table.AppendChild(tblGrid);
-        
-        var row = new TableRow();
-        
 
         foreach (var domain in Domains)
         {
             if (domain!.ColumnsSet != null)
             {
-                row.AppendChild(CreateTableCell("3000", _headerTableCellBorders, GetTableTwoAxis(domain, outcomes)));
+                body.AppendChild(GetTableTwoAxis(domain, outcomes));
             }
             else
             {
-                row.AppendChild(CreateTableCell("3000", _headerTableCellBorders, GetTableOneAxis(domain, outcomes)));
+                body.AppendChild(GetTableOneAxis(domain, outcomes));
             }
-
-            
+            body.AppendChild(
+                new Paragraph(
+                    new Run(
+                        new Text(" ")
+                    )
+                )
+            );   
         }
-
-        table.AppendChild(row);
-
-        body?.AppendChild(table);
-
+        
         return body;
     }
 
-    private OpenXmlElement GetTableOneAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
+    private static OpenXmlElement GetTableOneAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
     {
         var table = new Table();
         
         var tblProp = new TableProperties(
             new TableWidth(),
             new TableBorders(
+                new TopBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
+                new LeftBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
                 new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
                 new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
                 new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
@@ -93,11 +93,10 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
             
             var cell = CreateTableCell(
                 "700", 
-                _borderedTableCellBorders, 
                 new Paragraph(
                     new Run(
                         new Text(row.Name)
-                        ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "14",},},}
+                        ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "16",},},}
                     )
                 );
             
@@ -105,11 +104,11 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         }
         
         table.AppendChild(headerRow);
-        
-        var domainRow = new TableRow();
-            
 
-        domainRow.Append(new TableRowHeight(){Val = 2600,});
+        var domainRow = new TableRow() { TableRowProperties = new TableRowProperties(new TableRowHeight() { Val = 2600, }), };
+        
+
+        domainRow.Append();
 
         foreach (var row in domain.RowsSet.Types.OrderBy(static c => c.Order))
         {
@@ -125,7 +124,6 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 
             var cell = CreateTableCell(
                 "1000",
-                _borderedTableCellBorders,
                 contentCell);
                 
 
@@ -142,7 +140,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         return table;
     }
 
-    private OpenXmlElement GetTableTwoAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
+    private static OpenXmlElement GetTableTwoAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
     {
         var table = new Table();
         
@@ -150,7 +148,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
             new TableWidth(),
             new TableBorders(
                 new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 10,  },
+                new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
                 new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
                 new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  }
             )
@@ -171,18 +169,17 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         // Empty top-left cell.
         headerRow.AppendChild(
             CreateTableCell("700", 
-                _headerTableCellBorders, content));
+                content));
         
         foreach (var col in domain.ColumnsSet.Types.OrderBy(static c => c.Order))
         {
             
             var cell = CreateTableCell(
                 "700", 
-                _borderedTableCellBorders, 
                 new Paragraph(
                     new Run(
                         new Text(col.Name)
-                        ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "14",},},}
+                        ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "16",},},}
                     )
                 );
             
@@ -193,19 +190,15 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
         foreach (var row in domain.RowsSet.Types.OrderBy(static r => r.Order))
         {
-            var domainRow = new TableRow();
-            
-
-            domainRow.Append(new TableRowHeight(){Val = 500,});
+            var domainRow = new TableRow() { TableRowProperties = new TableRowProperties(new TableRowHeight() { Val = 500, }), };
             
             domainRow.AppendChild(
                 CreateTableCell(
                     "1000", 
-                    _borderedTableCellBorders, 
                     new Paragraph(
                         new Run(
                             new Text(row.Name)
-                            ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "14",},},}
+                            ){RunProperties = new RunProperties(){FontSize = new FontSize(){Val = "16",},},}
                         )));
 
             foreach (var col in domain.ColumnsSet.Types.OrderBy(static c => c.Order))
@@ -222,7 +215,6 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 
                 var cell = CreateTableCell(
                     "1000",
-                    _borderedTableCellBorders,
                     contentCell);
                 
 
@@ -240,50 +232,12 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         return table;
     }
     
-    private readonly TableCellBorders _borderedTableCellBorders = new TableCellBorders(
-        new LeftBorder
-        {
-            Val = BorderValues.Single,
-        },
-        new RightBorder
-        {
-            Val = BorderValues.Single,
-        },
-        new TopBorder
-        {
-            Val = BorderValues.Single,
-        },
-        new BottomBorder
-        {
-            Val = BorderValues.Single,
-        });
-    
-    private readonly TableCellBorders _headerTableCellBorders = new TableCellBorders(
-        new LeftBorder
-        {
-            Val = BorderValues.None,
-        },
-        new RightBorder
-        {
-            Val = BorderValues.None,
-        },
-        new TopBorder
-        {
-            Val = BorderValues.None,
-        },
-        new BottomBorder
-        {
-            Val = BorderValues.None,
-        });
-    
-    private static TableCell CreateTableCell(string? width, TableCellBorders borders, params OpenXmlElement[] elements)
+    private static TableCell CreateTableCell(string? width, params OpenXmlElement[] elements)
     {
         width ??= "300";
-        
         var cell = new TableCell();
         var cellProperties = new TableCellProperties()
         {
-            TableCellBorders = (TableCellBorders)borders.CloneNode(true),
             TableCellVerticalAlignment = new TableCellVerticalAlignment() {Val = TableVerticalAlignmentValues.Center,},
             TableCellWidth = new TableCellWidth()
             {
