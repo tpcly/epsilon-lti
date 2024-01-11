@@ -19,6 +19,8 @@ jobs:
                       context: './Epsilon.Host.Frontend'
                       dockerfile: './Epsilon.Host.Frontend/Dockerfile'
         steps:
+            - name: Test
+              run: echo ${{ github.event.release.tag_name }}
             - name: Check out the repo
               uses: actions/checkout@v4
             - name: Log in to Docker Hub
@@ -34,8 +36,8 @@ jobs:
                   push: true
                   tags: |
                       ${{ matrix.image }}:acc
-                      ${{ matrix.image }}:${{ github.event.release.name}}
-                      ${{ !contains(github.event.release.name, 'Beta') && format('{0}:latest', matrix.image) || '' }}
+                      ${{ matrix.image }}:${{ github.event.release.tag_name }}
+                      ${{ !contains(github.event.release.tag_name, 'Beta') && format('{0}:latest', matrix.image) || '' }}
 
                   
                   
