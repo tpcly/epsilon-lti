@@ -41,7 +41,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
         wordDocument.AddMainDocumentPart();
-        wordDocument.MainDocumentPart!.Document = new Document();
+        wordDocument.MainDocumentPart!.Document = new Document(new Body());
 
         foreach (var competenceWordComponent in await document.Components.ToListAsync())
         {

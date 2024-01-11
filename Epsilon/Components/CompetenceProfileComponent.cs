@@ -63,8 +63,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         table.AppendChild(row);
 
         body?.AppendChild(table);
-        
-        mainDocumentPart.Document.AppendChild(body);
+
         return body;
     }
 
