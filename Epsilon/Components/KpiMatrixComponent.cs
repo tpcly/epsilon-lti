@@ -14,9 +14,9 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
     {
     }
 
-    public override async Task<Body> AddToWordDocument(MainDocumentPart mainDocumentPart)
+    public override async Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
-        var body = new Body();
+         var body = mainDocumentPart.Document.Body;
         // Create a table, with rows for the outcomes and columns for the assignments.
         var table = new Table();
 
@@ -24,7 +24,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         // Set table properties for formatting.
         table.AppendChild(new TableProperties(
             new TableWidth { Width = "0", Type = TableWidthUnitValues.Auto, }));
-
+        table.AppendChild(new TableGrid());
         // Calculate the header row height based on the longest assignment name.
         var headerRowHeight = 0;
         var anyAssignments = false;
@@ -44,9 +44,9 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         // Create the table header row.
         var headerRow = new TableRow();
         headerRow.AppendChild(new TableRowProperties(new TableRowHeight { Val = (UInt32Value)(uint)headerRowHeight, }));
-
+        
         // Empty top-left cell.
-        headerRow.AppendChild(CreateTableCellWithBorders("2500", new Paragraph(new Run(new Text("")))));
+        headerRow.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), new Paragraph(new Run(new Text("")))));
         var index = 0;
         await foreach (var sub in Submissions)
         {
@@ -55,12 +55,11 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             if (cell.FirstChild != null)
             {
                 cell.FirstChild.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
-
-                cell.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "Not found"))));
                 cell.FirstChild.Append(new Shading
                 {
                     Fill = index % 2 == 0 ? "FFFFFF" : "d3d3d3",
                 });
+                cell.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "Not found"))));
                 headerRow.AppendChild(cell);
             }
 
@@ -118,10 +117,9 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             table.AppendChild(row);
         }
         
-        body.Append(new Paragraph(new Run(new Text(""))));
-        body.AppendChild(table);
-
-        return mainDocumentPart.Document.AppendChild(body);
+        body?.Append(new Paragraph(new Run(new Text(""))));
+        body?.AppendChild(table);
+        return body;
     }
     
     private static OutcomeGradeStatus GetStatus(double? grade, double? masteryPoints)
@@ -147,6 +145,27 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             OutcomeGradeStatus.NotGraded => "",
             _ => "",
         };
+    }
+
+    private static TableCellBorders GetBorders()
+    {
+        return  new TableCellBorders(
+            new LeftBorder
+            {
+                Val = BorderValues.Single,
+            },
+            new RightBorder
+            {
+                Val = BorderValues.Single,
+            },
+            new TopBorder
+            {
+                Val = BorderValues.Single,
+            },
+            new BottomBorder
+            {
+                Val = BorderValues.Single,
+            });
     }
     
     private static TableCell CreateTableCellWithBorders(string? width, params OpenXmlElement[] elements)
