@@ -25,6 +25,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
     public async Task<CompetenceDocument> GetDocument(string userId, DateTime? from = null, DateTime? to = null)
     {
         var submissions = _canvasResultService.GetSubmissions(userId);
+        submissions = submissions.Where(static s => s.Criteria.Any());
         if (from != null && to != null)
         {
             submissions = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to);
@@ -55,5 +56,6 @@ public class CompetenceDocumentService : ICompetenceDocumentService
     public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
     {
         yield return new CompetenceProfileComponent(submissions, domains);
+        yield return new KpiTableComponent(submissions, domains);
     }
 }
