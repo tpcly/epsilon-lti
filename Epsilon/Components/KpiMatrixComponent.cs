@@ -57,6 +57,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 cell.FirstChild.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
                 cell.FirstChild.Append(new Shading
                 {
+                    Val = ShadingPatternValues.Clear,
                     Fill = index % 2 == 0 ? "FFFFFF" : "d3d3d3",
                 });
                 cell.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "Not found"))));
