@@ -50,7 +50,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         var index = 0;
         await foreach (var sub in Submissions)
         {
-            var cell = CreateTableCellWithBorders("100");
+            var cell = CompetenceProfileComponent.CreateTableCell("100", null, null);
 
             if (cell.FirstChild != null)
             {
@@ -87,13 +87,13 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 {
                     ParagraphProperties = new ParagraphProperties { Justification = new Justification { Val = JustificationValues.Center, }, },
                 };
-
-                row.AppendChild(CreateTableCellWithBorders("2500", paragraphForOutcomeName));
+                //CompetenceProfileComponent.CreateTableCell("100")
+                row.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", null, paragraphForOutcomeName));
             }
 
             await foreach (var sub in Submissions)
             {
-                var cell = CreateTableCellWithBorders("100");
+                var cell = CompetenceProfileComponent.CreateTableCell("100", null, null);
                 var criteria = sub.Criteria.FirstOrDefault(c => c.Id == outcome?.Id);
                 var result = sub.Results.FirstOrDefault(r => r.Outcome.Id == outcome?.Id);
 
@@ -166,46 +166,5 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             {
                 Val = BorderValues.Single,
             });
-    }
-    
-    private static TableCell CreateTableCellWithBorders(string? width, params OpenXmlElement[] elements)
-    {
-        var cell = new TableCell();
-        var cellProperties = new TableCellProperties();
-        var borders = new TableCellBorders(
-            new LeftBorder
-            {
-                Val = BorderValues.Single,
-            },
-            new RightBorder
-            {
-                Val = BorderValues.Single,
-            },
-            new TopBorder
-            {
-                Val = BorderValues.Single,
-            },
-            new BottomBorder
-            {
-                Val = BorderValues.Single,
-            });
-
-        foreach (var element in elements)
-        {
-            cell.Append(element);
-        }
-
-        if (width != null)
-        {
-            cellProperties.Append(new TableCellWidth
-            {
-                Type = TableWidthUnitValues.Dxa, Width = width,
-            });
-        }
-
-        cellProperties.Append(borders);
-        cell.PrependChild(cellProperties);
-
-        return cell;
     }
 }
