@@ -33,7 +33,7 @@ jobs:
                   context: ${{ matrix.context }}
                   file: ${{ matrix.dockerfile }}
                   push: true
-                  labels: |
+                  tags: |
                       ${{ matrix.image }}:acc
                       ${{ matrix.image }}:${{ github.sha }}
                       ${{ !contains(github.sha, 'Beta') && 'latest' || '' }}
