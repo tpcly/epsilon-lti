@@ -50,7 +50,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         var index = 0;
         await foreach (var sub in Submissions)
         {
-            var cell = CompetenceProfileComponent.CreateTableCell("100", null, null);
+            var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), null);
 
             if (cell.FirstChild != null)
             {
@@ -87,13 +87,12 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 {
                     ParagraphProperties = new ParagraphProperties { Justification = new Justification { Val = JustificationValues.Center, }, },
                 };
-                //CompetenceProfileComponent.CreateTableCell("100")
-                row.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", null, paragraphForOutcomeName));
+                row.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), paragraphForOutcomeName));
             }
 
             await foreach (var sub in Submissions)
             {
-                var cell = CompetenceProfileComponent.CreateTableCell("100", null, null);
+                var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), null);
                 var criteria = sub.Criteria.FirstOrDefault(c => c.Id == outcome?.Id);
                 var result = sub.Results.FirstOrDefault(r => r.Outcome.Id == outcome?.Id);
 
