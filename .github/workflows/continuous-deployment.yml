@@ -18,7 +18,7 @@ jobs:
                       dockerfile: './Epsilon.Host.WebApi/Dockerfile'
                     - image: 'nealgeilen/epsilon-frontend'
                       context: './Epsilon.Host.Frontend'
-                      dockerfile: './Dockerfile'
+                      dockerfile: '/Dockerfile'
         steps:
             - name: Check out the repo
               uses: actions/checkout@v4
