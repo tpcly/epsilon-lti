@@ -70,7 +70,6 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         var table = new Table();
         
         var tblProp = new TableProperties(
-            new TableJustification(){Val = TableRowAlignmentValues.Center,},
             new TableWidth(),
             new TableBorders(
                 new TopBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
@@ -156,7 +155,6 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         var table = new Table();
         
         var tblProp = new TableProperties(
-            
             new TableWidth(),
             new TableBorders(
                 new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
