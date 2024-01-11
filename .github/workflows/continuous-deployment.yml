@@ -34,7 +34,7 @@ jobs:
                   push: true
                   tags: |
                       ${{ matrix.image }}:acc
-                      ${{ matrix.image }}:${{ github.sha }}
+                      ${{ matrix.image }}:${{ github.ref }}
                       ${{ !contains(github.sha, 'Beta') && format('{0}:latest', matrix.image) || '' }}
 
                   
