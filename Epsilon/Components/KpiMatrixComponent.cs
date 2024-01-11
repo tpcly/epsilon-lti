@@ -99,7 +99,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
 
                 var status = GetStatus(result?.Grade, criteria?.MasteryPoints);
                 var fillColor = GetColor(status);
-                cell.FirstChild?.Append(new Shading { Fill = fillColor, });
+                cell.FirstChild?.Append(new Shading { Val = ShadingPatternValues.Clear, Fill = fillColor, });
 
                 var text = result != null ? result.Outcome.Value.ShortName : "";
                 var paragraph = new Paragraph();
