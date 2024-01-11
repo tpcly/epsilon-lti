@@ -70,6 +70,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         var table = new Table();
         
         var tblProp = new TableProperties(
+            new TableJustification(){Val = TableRowAlignmentValues.Center,},
             new TableWidth(),
             new TableBorders(
                 new TopBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
@@ -86,7 +87,11 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         var tblGrid = new TableGrid();
         table.AppendChild(tblGrid);
 
-        var headerRow = new TableRow();
+        var headerRow = new TableRow()
+        {
+            TableRowProperties = new TableRowProperties(
+                new TableJustification(){Val = TableRowAlignmentValues.Center,}),
+        };
         
         foreach (var row in domain.RowsSet.Types.OrderBy(static c => c.Order))
         {
@@ -105,7 +110,13 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         
         table.AppendChild(headerRow);
 
-        var domainRow = new TableRow() { TableRowProperties = new TableRowProperties(new TableRowHeight() { Val = 2600, }), };
+        var domainRow = new TableRow()
+        {
+            TableRowProperties = new TableRowProperties(
+                new TableJustification(){Val = TableRowAlignmentValues.Center,},
+                new TableRowHeight() { Val = 2600, }
+                ),
+        };
         
 
         domainRow.Append();
@@ -145,6 +156,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         var table = new Table();
         
         var tblProp = new TableProperties(
+            
             new TableWidth(),
             new TableBorders(
                 new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
@@ -159,7 +171,11 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         var tblGrid = new TableGrid();
         table.AppendChild(tblGrid);
 
-        var headerRow = new TableRow();
+        var headerRow = new TableRow()
+        {
+            TableRowProperties = new TableRowProperties(
+                new TableJustification(){Val = TableRowAlignmentValues.Center,}),
+        };
 
         var content = new Paragraph(new Run(new Text("")))
         {
@@ -190,7 +206,12 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
         foreach (var row in domain.RowsSet.Types.OrderBy(static r => r.Order))
         {
-            var domainRow = new TableRow() { TableRowProperties = new TableRowProperties(new TableRowHeight() { Val = 500, }), };
+            var domainRow = new TableRow()
+            {
+                TableRowProperties = new TableRowProperties(
+                    new TableJustification(){Val = TableRowAlignmentValues.Center,},
+                    new TableRowHeight() { Val = 500, }),
+            };
             
             domainRow.AppendChild(
                 CreateTableCell(
