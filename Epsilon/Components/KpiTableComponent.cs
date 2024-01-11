@@ -12,6 +12,18 @@ public class KpiTableComponent : AbstractCompetenceComponent
     public override async Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
         var body = mainDocumentPart.Document.Body;
+        
+        body.AppendChild(new Paragraph(
+                new Run(
+                    new Text("KPI-table")
+                )
+            )
+        );  
+        body.AppendChild( new Paragraph(
+            new Run(
+                new Text(" ")
+            )
+        ));
 
         // Create a table to display outcomes, assignments, and grades
         var table = new Table();
