@@ -46,22 +46,20 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         headerRow.AppendChild(new TableRowProperties(new TableRowHeight { Val = (UInt32Value)(uint)headerRowHeight, }));
         
         // Empty top-left cell.
-        headerRow.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), null, new Paragraph(new Run(new Text("")))));
+        headerRow.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), new Paragraph(new Run(new Text("")))));
         var index = 0;
         await foreach (var sub in Submissions)
         {
-            var shading = new Shading
-            {
-                Val = ShadingPatternValues.Clear,
-                Fill = index % 2 == 0
-                    ? "FFFFFF"
-                    : "d3d3d3",
-            };
-            var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), shading, null);
+            var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), null);
 
             if (cell.FirstChild != null)
             {
                 cell.FirstChild.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
+                cell.TableCellProperties?.AppendChild(new Shading
+                {
+                    Val = ShadingPatternValues.Clear,
+                    Fill = index % 2 == 0 ? "FFFFFF" : "d3d3d3",
+                });
                 cell.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "Not found"))));
                 headerRow.AppendChild(cell);
             }
@@ -90,20 +88,22 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 {
                     ParagraphProperties = new ParagraphProperties { Justification = new Justification { Val = JustificationValues.Center, }, },
                 };
-                row.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), null, paragraphForOutcomeName));
+                row.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), paragraphForOutcomeName));
             }
 
             await foreach (var sub in Submissions)
             {
+                var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), null);
                 var criteria = sub.Criteria.FirstOrDefault(c => c.Id == outcome?.Id);
                 var result = sub.Results.FirstOrDefault(r => r.Outcome.Id == outcome?.Id);
 
                 var status = GetStatus(result?.Grade, criteria?.MasteryPoints);
                 var fillColor = GetColor(status);
-                var shading = new Shading { Val = ShadingPatternValues.Clear, Fill = fillColor, };
-                var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), shading, null);
-              
-
+                if (string.IsNullOrEmpty(fillColor))
+                {
+                    fillColor = "FFFFFF"; // default color code
+                }
+                cell.TableCellProperties?.AppendChild(new Shading { Val = ShadingPatternValues.Clear, Fill = fillColor, });
                 var text = result != null ? result.Outcome.Value.ShortName : "";
                 var paragraph = new Paragraph();
                 var run = new Run(new Text(text));
@@ -145,8 +145,8 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             OutcomeGradeStatus.Mastered => "#44F656",
             OutcomeGradeStatus.NotMastered => "#FA1818",
             OutcomeGradeStatus.NotAssessed => "#9F2B68",
-            OutcomeGradeStatus.NotGraded => "",
-            _ => "",
+            OutcomeGradeStatus.NotGraded => "FFFFFF",
+            _ => "FFFFFF",
         };
     }
 

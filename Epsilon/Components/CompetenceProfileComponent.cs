@@ -27,19 +27,16 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         return body;
     }
     
-    public static TableCell CreateTableCell(string? width, TableCellBorders? borders, Shading? shading, params OpenXmlElement[]? elements)
+    public static TableCell CreateTableCell(string? width, TableCellBorders? borders, params OpenXmlElement[]? elements)
     {
         width ??= "300";
         
         var cell = new TableCell();
         var cellProperties = new TableCellProperties();
+
         if (borders != null)
         {
             cellProperties.TableCellBorders = (TableCellBorders)borders.CloneNode(true);
-        }
-        if (shading != null)
-        {
-            cellProperties.Append(shading.CloneNode(true));
         }
         cellProperties.TableCellVerticalAlignment = new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center, };
         cellProperties.TableCellWidth = new TableCellWidth()
