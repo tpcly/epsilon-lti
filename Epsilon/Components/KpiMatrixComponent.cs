@@ -17,15 +17,12 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
     public override async Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
          var body = mainDocumentPart.Document.Body;
-        // Create a table, with rows for the outcomes and columns for the assignments.
         var table = new Table();
 
-
-        // Set table properties for formatting.
         table.AppendChild(new TableProperties(
             new TableWidth { Width = "0", Type = TableWidthUnitValues.Auto, }));
         table.AppendChild(new TableGrid());
-        // Calculate the header row height based on the longest assignment name.
+
         var headerRowHeight = 0;
         var anyAssignments = false;
 
@@ -33,7 +30,6 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         {
             anyAssignments = true;
             headerRowHeight = Math.Max(headerRowHeight, sub.Assignment?.Length ?? 10);
-
         }
 
         if (anyAssignments)
@@ -44,29 +40,23 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         // Create the table header row.
         var headerRow = new TableRow();
         headerRow.AppendChild(new TableRowProperties(new TableRowHeight { Val = (UInt32Value)(uint)headerRowHeight, }));
-        
-        // Empty top-left cell.
-        headerRow.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), new Paragraph(new Run(new Text("")))));
+
         var index = 0;
         await foreach (var sub in Submissions)
         {
-            var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), null);
-
+            var cell = CompetenceProfileComponent.CreateTableCell("100", _borderedTableCellBorders, null);
+            
             if (cell.FirstChild != null)
             {
                 cell.FirstChild.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
-                cell.TableCellProperties?.AppendChild(new Shading
-                {
-                    Val = ShadingPatternValues.Clear,
-                    Fill = index % 2 == 0 ? "FFFFFF" : "d3d3d3",
-                });
+
                 cell.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "Not found"))));
                 headerRow.AppendChild(cell);
             }
 
             index++;
         }
-
+        headerRow.AppendChild(new TableCell()); 
         table.AppendChild(headerRow);
 
 
@@ -80,20 +70,21 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         {
             var row = new TableRow();
             var outcome = Outcomes.FirstOrDefault(o => o.Id == outcomeCriterion.Id);
-
-            // Create a new paragraph for outcome.Name
+            
             if (outcome != null)
             {
                 var paragraphForOutcomeName = new Paragraph(new Run(new Text(outcome.Name)))
                 {
                     ParagraphProperties = new ParagraphProperties { Justification = new Justification { Val = JustificationValues.Center, }, },
                 };
-                row.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), paragraphForOutcomeName));
+                row.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", _borderedTableCellBorders, null, paragraphForOutcomeName));
             }
+            var extraCell = new TableCell();
+            extraCell.Append(new Paragraph(new Run(new Text("Extra Info")))); // Replace "Extra Info" with actual data
+            row.AppendChild(extraCell);
 
             await foreach (var sub in Submissions)
             {
-                var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), null);
                 var criteria = sub.Criteria.FirstOrDefault(c => c.Id == outcome?.Id);
                 var result = sub.Results.FirstOrDefault(r => r.Outcome.Id == outcome?.Id);
 
@@ -101,17 +92,20 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 var fillColor = GetColor(status);
                 if (string.IsNullOrEmpty(fillColor))
                 {
-                    fillColor = "FFFFFF"; // default color code
+                    fillColor = "FFFFFF";
                 }
-                cell.TableCellProperties?.AppendChild(new Shading { Val = ShadingPatternValues.Clear, Fill = fillColor, });
-                var text = result != null ? result.Outcome.Value.ShortName : "";
+
+                var shading = new Shading { Val = ShadingPatternValues.Clear, Fill = fillColor, };
+
+                var cell = CompetenceProfileComponent.CreateTableCell("100", _borderedTableCellBorders, shading);
+
+                var text = result != null
+                    ? result.Outcome.Value.ShortName
+                    : "";
                 var paragraph = new Paragraph();
                 var run = new Run(new Text(text));
                 paragraph.Append(run);
-                paragraph.ParagraphProperties = new ParagraphProperties()
-                {
-                    Justification = new Justification() { Val = JustificationValues.Center, },
-                };
+                paragraph.ParagraphProperties = new ParagraphProperties() { Justification = new Justification() { Val = JustificationValues.Center, }, };
 
                 cell.Append(paragraph);
                 row.AppendChild(cell);
@@ -149,25 +143,22 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             _ => "FFFFFF",
         };
     }
-
-    private static TableCellBorders GetBorders()
-    {
-        return  new TableCellBorders(
-            new LeftBorder
-            {
-                Val = BorderValues.Single,
-            },
-            new RightBorder
-            {
-                Val = BorderValues.Single,
-            },
-            new TopBorder
-            {
-                Val = BorderValues.Single,
-            },
-            new BottomBorder
-            {
-                Val = BorderValues.Single,
-            });
-    }
+    
+    private readonly TableCellBorders _borderedTableCellBorders = new TableCellBorders(
+        new TopBorder
+        {
+            Val = BorderValues.Single,
+        },
+        new LeftBorder
+        {
+            Val = BorderValues.Single,
+        },
+        new BottomBorder
+        {
+            Val = BorderValues.Single,
+        },
+        new RightBorder
+        {
+            Val = BorderValues.Single,
+        });
 }

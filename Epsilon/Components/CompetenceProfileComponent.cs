@@ -26,36 +26,42 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         mainDocumentPart.Document.AppendChild(body);
         return body;
     }
+
     
-    public static TableCell CreateTableCell(string? width, TableCellBorders? borders, params OpenXmlElement[]? elements)
+    public static TableCell CreateTableCell(string? width, TableCellBorders borders, Shading? shading, params OpenXmlElement[]? elements)
     {
         width ??= "300";
-        
-        var cell = new TableCell();
-        var cellProperties = new TableCellProperties();
 
-        if (borders != null)
+        var cell = new TableCell();
+
+        var cellProperties = new TableCellProperties
         {
-            cellProperties.TableCellBorders = (TableCellBorders)borders.CloneNode(true);
-        }
-        cellProperties.TableCellVerticalAlignment = new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center, };
-        cellProperties.TableCellWidth = new TableCellWidth()
-        {
-            Type = TableWidthUnitValues.Dxa,
-            Width = width,
+            TableCellBorders = (TableCellBorders)borders.CloneNode(true),
+            TableCellWidth = new TableCellWidth
+            {
+                Type = TableWidthUnitValues.Dxa,
+                Width = width,
+            },
         };
         
-        cell.TableCellProperties = cellProperties;
+        if (shading != null)
+        {
+            cellProperties.Shading = (Shading)shading.CloneNode(true);
+        }
+
+        cell.Append(cellProperties);
+
         if (elements != null)
         {
             foreach (var element in elements)
             {
-                cell.Append(element);
+                cell.Append(element.CloneNode(true));
             }
         }
 
         return cell;
     }
+
 
     public CompetenceProfileComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
         : base(submissions, domains, outcomes)
