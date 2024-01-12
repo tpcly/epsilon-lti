@@ -153,19 +153,19 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
     private static TableCellBorders GetBorders()
     {
         return  new TableCellBorders(
-            new LeftBorder
-            {
-                Val = BorderValues.Single,
-            },
-            new RightBorder
-            {
-                Val = BorderValues.Single,
-            },
             new TopBorder
             {
                 Val = BorderValues.Single,
             },
+            new LeftBorder
+            {
+                Val = BorderValues.Single,
+            },
             new BottomBorder
+            {
+                Val = BorderValues.Single,
+            },
+            new RightBorder
             {
                 Val = BorderValues.Single,
             });
