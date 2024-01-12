@@ -19,11 +19,6 @@ jobs:
                       context: './Epsilon.Host.Frontend'
                       dockerfile: './Epsilon.Host.Frontend/Dockerfile'
         steps:
-            - env:
-                  GITHUB_CONTEXT: ${{ toJson(github) }}
-              run: echo "$GITHUB_CONTEXT"
-            - name: Test
-              run: echo ${{ github.event.release.tag_name }}
             - name: Check out the repo
               uses: actions/checkout@v4
             - name: Log in to Docker Hub
