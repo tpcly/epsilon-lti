@@ -142,8 +142,8 @@ public class KpiTableComponent : AbstractCompetenceComponent
         return cell;
     }
 
-    public KpiTableComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
-        : base(submissions, domains)
+    public KpiTableComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
+        : base(submissions, domains, outcomes)
     {
     }
 }

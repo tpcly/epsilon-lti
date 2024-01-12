@@ -275,8 +275,8 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         return cell;
     }
     
-    public CompetenceProfileComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
-        : base(submissions, domains)
+    public CompetenceProfileComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
+        : base(submissions, domains, outcomes)
     {
     }
 }

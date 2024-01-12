@@ -25,14 +25,14 @@ public class CompetenceDocumentService : ICompetenceDocumentService
     public async Task<CompetenceDocument> GetDocument(string userId, DateTime? from = null, DateTime? to = null)
     {
         var submissions = _canvasResultService.GetSubmissions(userId);
-        submissions = submissions.Where(static s => s.Criteria.Any());
+        submissions = submissions.Where(static e => e.Criteria.Any());
         if (from != null && to != null)
         {
             submissions = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to);
         }
 
         var domains = await _domainService.GetDomainsFromTenant();
-        var components = FetchComponents(submissions, domains);
+        var components = FetchComponents(submissions, domains, await _domainService.GetOutcomes());
 
         return new CompetenceDocument(components);
     }
@@ -53,9 +53,10 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         return wordDocument;
     }
 
-    public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
+    public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
     {
-        yield return new CompetenceProfileComponent(submissions, domains);
-        yield return new KpiTableComponent(submissions, domains);
+        yield return new CompetenceProfileComponent(submissions, domains, outcomes);
+        yield return new KpiTableComponent(submissions, domains, outcomes);
+        yield return new KpiMatrixComponent(submissions, domains, outcomes);
     }
 }
