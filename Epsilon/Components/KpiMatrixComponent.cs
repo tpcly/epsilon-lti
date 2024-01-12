@@ -46,7 +46,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         headerRow.AppendChild(new TableRowProperties(new TableRowHeight { Val = (UInt32Value)(uint)headerRowHeight, }));
         
         // Empty top-left cell.
-        headerRow.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), new Paragraph(new Run(new Text("")))));
+      
         var index = 0;
         await foreach (var sub in Submissions)
         {
@@ -55,11 +55,14 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             if (cell.FirstChild != null)
             {
                 cell.FirstChild.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
-                cell.TableCellProperties?.AppendChild(new Shading
+                var shading2 = new Shading
                 {
                     Val = ShadingPatternValues.Clear,
-                    Fill = index % 2 == 0 ? "FFFFFF" : "d3d3d3",
-                });
+                    Fill = index % 2 == 0
+                        ? "FFFFFF"
+                        : "d3d3d3",
+                };
+                headerRow.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), shading2, new Paragraph(new Run(new Text("")))));
                 cell.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "Not found"))));
                 headerRow.AppendChild(cell);
             }
@@ -88,12 +91,11 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 {
                     ParagraphProperties = new ParagraphProperties { Justification = new Justification { Val = JustificationValues.Center, }, },
                 };
-                row.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), paragraphForOutcomeName));
+                row.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), null, paragraphForOutcomeName));
             }
 
             await foreach (var sub in Submissions)
             {
-                var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), null);
                 var criteria = sub.Criteria.FirstOrDefault(c => c.Id == outcome?.Id);
                 var result = sub.Results.FirstOrDefault(r => r.Outcome.Id == outcome?.Id);
 
@@ -103,7 +105,9 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 {
                     fillColor = "FFFFFF"; // default color code
                 }
-                cell.TableCellProperties?.AppendChild(new Shading { Val = ShadingPatternValues.Clear, Fill = fillColor, });
+
+                var shading = new Shading { Val = ShadingPatternValues.Clear, Fill = fillColor, };
+                var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), shading);
                 var text = result != null ? result.Outcome.Value.ShortName : "";
                 var paragraph = new Paragraph();
                 var run = new Run(new Text(text));
