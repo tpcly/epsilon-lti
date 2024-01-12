@@ -26,42 +26,36 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         mainDocumentPart.Document.AppendChild(body);
         return body;
     }
-
     
-    public static TableCell CreateTableCell(string? width, TableCellBorders borders, Shading? shading, params OpenXmlElement[]? elements)
+    public static TableCell CreateTableCell(string? width, TableCellBorders? borders, params OpenXmlElement[]? elements)
     {
         width ??= "300";
-
+        
         var cell = new TableCell();
+        var cellProperties = new TableCellProperties();
 
-        var cellProperties = new TableCellProperties
+        if (borders != null)
         {
-            TableCellBorders = (TableCellBorders)borders.CloneNode(true),
-            TableCellWidth = new TableCellWidth
-            {
-                Type = TableWidthUnitValues.Dxa,
-                Width = width,
-            },
+            cellProperties.TableCellBorders = (TableCellBorders)borders.CloneNode(true);
+        }
+        cellProperties.TableCellVerticalAlignment = new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center, };
+        cellProperties.TableCellWidth = new TableCellWidth()
+        {
+            Type = TableWidthUnitValues.Dxa,
+            Width = width,
         };
         
-        if (shading != null)
-        {
-            cellProperties.Shading = (Shading)shading.CloneNode(true);
-        }
-
-        cell.Append(cellProperties);
-
+        cell.TableCellProperties = cellProperties;
         if (elements != null)
         {
             foreach (var element in elements)
             {
-                cell.Append(element.CloneNode(true));
+                cell.Append(element);
             }
         }
 
         return cell;
     }
-
 
     public CompetenceProfileComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
         : base(submissions, domains, outcomes)
