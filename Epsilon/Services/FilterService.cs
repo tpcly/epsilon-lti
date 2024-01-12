@@ -62,17 +62,17 @@ public class FilterService : IFilterService
         {
             return Enumerable.Empty<EnrollmentTerm>();
         }
-        
+
         var participatedTerms = response.LegacyNode.Enrollments
                                         .Select(static e => e.Course?.Term)
                                         .DistinctBy(static t => t?.Id)
                                         .Where(static term => term is { StartAt: not null, EndAt: not null, })
-                                        .OrderByDescending(static term => term?.StartAt);
+                                        .OrderByDescending(static term => term?.StartAt).ToList();
 
 
         // Get the corrected term based on a new end date:
         var correctedParticipatedTerms = participatedTerms
-                                         .Select((currentTerm, index) => currentTerm with
+                                         .Select((currentTerm, index) => currentTerm! with
                                          {
                                              EndAt = index > 0
                                                  ? participatedTerms.ElementAt(index - 1)?.StartAt
