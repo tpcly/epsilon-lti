@@ -79,8 +79,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
             throw new HttpRequestException("No Enrollments are given");
         }
 
-        //TODO Use ID of course to get distinct courses
-        foreach (var enrollment in submissionsTask.LegacyNode.Enrollments.DistinctBy(static e => e.Course?.Name))
+        foreach (var enrollment in submissionsTask.LegacyNode.Enrollments.DistinctBy(static e => e.Course?.Id))
         {
             if (enrollment.Course?.Submissions?.Nodes != null)
             {

@@ -62,12 +62,10 @@ public class FilterService : IFilterService
         {
             return Enumerable.Empty<EnrollmentTerm>();
         }
-
-        //TODO add term id for better distinction
-        //TODO fix naming error in canvas package for start & end date
+        
         var participatedTerms = response.LegacyNode.Enrollments
                                         .Select(static e => e.Course?.Term)
-                                        .DistinctBy(static t => t?.Name)
+                                        .DistinctBy(static t => t?.Id)
                                         .Where(static term => term is { StartAt: not null, EndAt: not null, })
                                         .OrderByDescending(static term => term?.StartAt);
 
