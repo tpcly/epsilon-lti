@@ -11,7 +11,9 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
           legacyNode(_id: $studentIds, type: User) {
             ... on User {
               enrollments {
+                _id
                 course {
+                  _id
                   name
                   submissionsConnection(studentIds: [$studentIds]) {
                     nodes {
@@ -85,7 +87,6 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
             {
                 foreach (var submissions in enrollment.Course.Submissions.Nodes.GroupBy(static s => s.Assignment?.HtmlUrl))
                 {
-                    Console.WriteLine(submissions.Key);
                     var latestSubmission = submissions.OrderByDescending(static s => s.SubmittedAt).First();
                 
                     yield return new LearningDomainSubmission(
