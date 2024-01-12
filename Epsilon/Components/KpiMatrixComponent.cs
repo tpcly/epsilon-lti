@@ -47,26 +47,26 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         headerRow.AppendChild(new TableRowProperties(new TableRowHeight { Val = (UInt32Value)(uint)headerRowHeight, }));
         
         // Empty top-left cell.
+        headerRow.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), null, new Paragraph(new Run(new Text(" ")))));
       
         var index = 0;
         await foreach (var sub in Submissions)
         {
-            var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), null);
-
-            if (cell.FirstChild != null)
+            var shading = new Shading
             {
-                cell.FirstChild.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
-                var shading2 = new Shading
-                {
-                    Val = ShadingPatternValues.Clear,
-                    Fill = index % 2 == 0
-                        ? "FFFFFF"
-                        : "d3d3d3",
-                };
-                headerRow.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), shading2, new Paragraph(new Run(new Text("")))));
-                cell.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "Not found"))));
-                headerRow.AppendChild(cell);
-            }
+                Val = ShadingPatternValues.Clear,
+                Fill = index % 2 == 0
+                    ? "FFFFFF"
+                    : "d3d3d3",
+            };
+            
+            var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), shading);
+            
+            cell.FirstChild.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
+            
+            cell.Append(new Paragraph(new Run(new Text(sub.Assignment ?? "Not found"))));
+            headerRow.AppendChild(cell);
+            
 
             index++;
         }
