@@ -42,7 +42,7 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
         wordDocument.AddMainDocumentPart();
-        wordDocument.MainDocumentPart!.Document = new Document();
+        wordDocument.MainDocumentPart!.Document = new Document(new Body());
 
         foreach (var competenceWordComponent in await document.Components.ToListAsync())
         {
@@ -55,8 +55,8 @@ public class CompetenceDocumentService : ICompetenceDocumentService
 
     public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
     {
-        var learningDomains = domains.ToList();
-        yield return new CompetenceProfileComponent(submissions, learningDomains, outcomes);
-        yield return new KpiMatrixComponent(submissions, learningDomains, outcomes);
+        yield return new CompetenceProfileComponent(submissions, domains);
+        yield return new KpiTableComponent(submissions, domains);
+        yield return new KpiMatrixComponent(submissions, domain, outcomes);
     }
 }
