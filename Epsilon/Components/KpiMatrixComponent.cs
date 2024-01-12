@@ -25,6 +25,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         table.AppendChild(new TableProperties(
             new TableWidth { Width = "0", Type = TableWidthUnitValues.Auto, }));
         table.AppendChild(new TableGrid());
+        
         // Calculate the header row height based on the longest assignment name.
         var headerRowHeight = 0;
         var anyAssignments = false;
@@ -79,7 +80,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                                      .ToAsyncEnumerable());
 
         // Add the outcome rows.
-        await foreach (var outcomeCriterion in listOfCriteria.Distinct())
+        await foreach (var outcomeCriterion in listOfCriteria.Distinct().OrderBy(static a => a.Id))
         {
             var row = new TableRow();
             var outcome = Outcomes.FirstOrDefault(o => o.Id == outcomeCriterion.Id);
