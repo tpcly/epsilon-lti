@@ -76,7 +76,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                                      .ToAsyncEnumerable());
 
         // Add the outcome rows.
-        await foreach (var outcomeCriterion in listOfCriteria)
+        await foreach (var outcomeCriterion in listOfCriteria.Distinct())
         {
             var row = new TableRow();
             var outcome = Outcomes.FirstOrDefault(o => o.Id == outcomeCriterion.Id);
