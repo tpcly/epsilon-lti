@@ -1,5 +1,4 @@
 using Tpcly.Canvas.Abstractions.GraphQl;
-using Tpcly.Canvas.Abstractions.Rest;
 
 namespace Epsilon.Abstractions.Services;
 
