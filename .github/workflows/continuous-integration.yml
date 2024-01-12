@@ -23,6 +23,9 @@ jobs:
         runs-on: ubuntu-20.04
         
         steps:
+            - env:
+                  GITHUB_CONTEXT: ${{ toJson(github) }}
+              run: echo "$GITHUB_CONTEXT"
             - uses: actions/checkout@v4
             - uses: actions/setup-dotnet@v4.0.0
               with:
