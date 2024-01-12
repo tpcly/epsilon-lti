@@ -55,8 +55,8 @@ public class CompetenceDocumentService : ICompetenceDocumentService
 
     public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
     {
-        yield return new CompetenceProfileComponent(submissions, domains);
-        yield return new KpiTableComponent(submissions, domains);
-        yield return new KpiMatrixComponent(submissions, domain, outcomes);
+        yield return new CompetenceProfileComponent(submissions, domains, outcomes);
+        yield return new KpiTableComponent(submissions, domains, outcomes);
+        yield return new KpiMatrixComponent(submissions, domains, outcomes);
     }
 }

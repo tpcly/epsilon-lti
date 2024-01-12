@@ -47,7 +47,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         headerRow.AppendChild(new TableRowProperties(new TableRowHeight { Val = (UInt32Value)(uint)headerRowHeight, }));
         
         // Empty top-left cell.
-        headerRow.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), null, new Paragraph(new Run(new Text(" ")))));
+        headerRow.AppendChild(CreateTableCell("2500", GetBorders(), null, new Paragraph(new Run(new Text(" ")))));
       
         var index = 0;
         await foreach (var sub in Submissions)
@@ -60,7 +60,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                     : "d3d3d3",
             };
             
-            var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), shading);
+            var cell = CreateTableCell("100", GetBorders(), shading);
             
             cell.FirstChild.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
             
@@ -92,7 +92,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 {
                     ParagraphProperties = new ParagraphProperties { Justification = new Justification { Val = JustificationValues.Center, }, },
                 };
-                row.AppendChild(CompetenceProfileComponent.CreateTableCell("2500", GetBorders(), null, paragraphForOutcomeName));
+                row.AppendChild(CreateTableCell("2500", GetBorders(), null, paragraphForOutcomeName));
             }
 
             await foreach (var sub in Submissions)
@@ -108,7 +108,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 }
 
                 var shading = new Shading { Val = ShadingPatternValues.Clear, Fill = fillColor, };
-                var cell = CompetenceProfileComponent.CreateTableCell("100", GetBorders(), shading);
+                var cell = CreateTableCell("100", GetBorders(), shading);
                 var text = result != null ? result.Outcome.Value.ShortName : "";
                 var paragraph = new Paragraph();
                 var run = new Run(new Text(text));
@@ -153,6 +153,36 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             OutcomeGradeStatus.NotGraded => "FFFFFF",
             _ => "FFFFFF",
         };
+    }
+    
+    public static TableCell CreateTableCell(string? width, TableCellBorders borders, Shading? shading, params OpenXmlElement[]? elements)
+    {
+        width ??= "300";
+
+        var cell = new TableCell();
+
+        var cellProperties = new TableCellProperties()
+        {
+            TableCellBorders = (TableCellBorders)borders.CloneNode(true),
+            TableCellWidth = new TableCellWidth { Type = TableWidthUnitValues.Dxa, Width = width, },
+            // TableCellVerticalAlignment = new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center,},
+        };
+
+        if (shading != null)
+        {
+            cellProperties.Shading = (Shading)shading.CloneNode(true);
+        }
+
+        if (elements != null)
+        {
+            foreach (var element in elements)
+            {
+                cell.Append(element.CloneNode(true));
+            }
+        }
+        cell.TableCellProperties = cellProperties;
+
+        return cell;
     }
 
     private static TableCellBorders GetBorders()
