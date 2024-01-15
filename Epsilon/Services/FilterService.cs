@@ -13,6 +13,7 @@ public class FilterService : IFilterService
             ... on User {
               enrollments {
                 course {
+                  _id
                   term {
                     _id
                     name
@@ -55,6 +56,7 @@ public class FilterService : IFilterService
 
     public async Task<IEnumerable<EnrollmentTerm>> GetParticipatedTerms(string studentId)
     {
+        var canvasUser = await _sessionAccessor.GetSessionAsync();
         var variables = new Dictionary<string, object> { { "studentIds", studentId }, };
         var response = await _canvasGraphQl.Query(ParticipatedTermQuery, variables);
 
@@ -63,10 +65,14 @@ public class FilterService : IFilterService
             return Enumerable.Empty<EnrollmentTerm>();
         }
         
+        //Get the term max based on the current course Epsilon resides in.
+        var currentCourseEnrolment = response.LegacyNode.Enrollments.FirstOrDefault(enrollment => enrollment?.Course?.Id == canvasUser?.CourseId.ToString(CultureInfo.InvariantCulture));
+        
+        
         var participatedTerms = response.LegacyNode.Enrollments
                                         .Select(static e => e.Course?.Term)
                                         .DistinctBy(static t => t?.Id)
-                                        .Where(static term => term is { StartAt: not null, EndAt: not null, })
+                                        .Where(term => term is { StartAt: not null, EndAt: not null, } && term.StartAt <= currentCourseEnrolment?.Course?.Term?.StartAt)
                                         .OrderByDescending(static term => term?.StartAt);
 
 
@@ -79,7 +85,8 @@ public class FilterService : IFilterService
                                                  : currentTerm.EndAt,
                                          })
                                          .ToList();
-
+        
+        
         return correctedParticipatedTerms;
     }
 
