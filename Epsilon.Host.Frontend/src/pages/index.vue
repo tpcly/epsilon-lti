@@ -268,4 +268,7 @@ const handleRangeChange = (range: {
 	width: 50%;
 	text-align: center;
 }
+.v-tab.v-tab.v-btn {
+	height: unset;
+}
 </style>
