@@ -193,15 +193,16 @@ const handleUserChange = async (user: User): Promise<void> => {
 	loadingOutcomes.value = true
 	filterRange.value = null
 
-	await api?.learning
+	api?.learning
 		.learningOutcomesList({
 			studentId: user._id,
 		})
 		.then((r) => {
 			submissions.value = r.data
+		})
+		.finally(() => {
 			loadingOutcomes.value = false
 		})
-		.finally(() => {})
 }
 
 const handleRangeChange = (range: {
