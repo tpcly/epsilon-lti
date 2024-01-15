@@ -4,10 +4,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
-using BottomBorder = DocumentFormat.OpenXml.Wordprocessing.BottomBorder;
-using RightBorder = DocumentFormat.OpenXml.Wordprocessing.RightBorder;
 using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
-using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
 using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
 
 namespace Epsilon.Components;
@@ -24,19 +21,8 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
             return body;
         }
         
-        body.AppendChild(
-
-            new Paragraph(
-                new Run(
-                    new Text("Competence profile")
-                )
-                )
-        );  
-        body.AppendChild( new Paragraph(
-            new Run(
-                new Text(" ")
-            )
-        ));
+        body.AppendChild(FormattedText("Competence Profile"));  
+        body.AppendChild(FormattedText(" "));
         
         var outcomes = 
             Submissions.ToEnumerable()
@@ -54,11 +40,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 body.AppendChild(GetTableOneAxis(domain, outcomes));
             }
             body.AppendChild(
-                new Paragraph(
-                    new Run(
-                        new Text(" ")
-                    )
-                )
+                FormattedText("")
             );   
         }
         
@@ -67,24 +49,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
     private static OpenXmlElement GetTableOneAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
     {
-        var table = new Table();
-        
-        var tblProp = new TableProperties(
-            new TableWidth(),
-            new TableBorders(
-                new TopBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new LeftBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  }
-            )
-        );
-        table.AppendChild<TableProperties>(tblProp);
-        
-        // Define table grid
-        var tblGrid = new TableGrid();
-        table.AppendChild(tblGrid);
+        var table = FormattedTable();
 
         var headerRow = new TableRow()
         {
@@ -95,7 +60,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         foreach (var row in domain.RowsSet.Types.OrderBy(static c => c.Order))
         {
             
-            var cell = CreateTableCell(
+            var cell = FormattedTableCell(
                 "700", 
                 new Paragraph(
                     new Run(
@@ -132,7 +97,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 ParagraphProperties = new ParagraphProperties() { Justification = new Justification() { Val = JustificationValues.Center, }, },
             };
                 
-            var cell = CreateTableCell(
+            var cell = FormattedTableCell(
                 "1000",
                 contentCell);
                 
@@ -152,22 +117,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
     private static OpenXmlElement GetTableTwoAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
     {
-        var table = new Table();
-        
-        var tblProp = new TableProperties(
-            new TableWidth(),
-            new TableBorders(
-                new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  }
-            )
-        );
-        table.AppendChild<TableProperties>(tblProp);
-        
-        // Define table grid
-        var tblGrid = new TableGrid();
-        table.AppendChild(tblGrid);
+        var table = FormattedTable();
 
         var headerRow = new TableRow()
         {
@@ -182,13 +132,13 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
         // Empty top-left cell.
         headerRow.AppendChild(
-            CreateTableCell("700", 
+            FormattedTableCell("700", 
                 content));
         
         foreach (var col in domain.ColumnsSet.Types.OrderBy(static c => c.Order))
         {
             
-            var cell = CreateTableCell(
+            var cell = FormattedTableCell(
                 "700", 
                 new Paragraph(
                     new Run(
@@ -212,7 +162,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
             };
             
             domainRow.AppendChild(
-                CreateTableCell(
+                FormattedTableCell(
                     "1000", 
                     new Paragraph(
                         new Run(
@@ -232,7 +182,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                     ParagraphProperties = new ParagraphProperties() { Justification = new Justification() { Val = JustificationValues.Center, }, },
                 };
                 
-                var cell = CreateTableCell(
+                var cell = FormattedTableCell(
                     "1000",
                     contentCell);
                 
@@ -251,29 +201,6 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         return table;
     }
     
-    private static TableCell CreateTableCell(string? width, params OpenXmlElement[] elements)
-    {
-        width ??= "300";
-        var cell = new TableCell();
-        var cellProperties = new TableCellProperties()
-        {
-            TableCellVerticalAlignment = new TableCellVerticalAlignment() {Val = TableVerticalAlignmentValues.Center,},
-            TableCellWidth = new TableCellWidth()
-            {
-                Type = TableWidthUnitValues.Dxa,
-                Width = width,
-            },
-        };
-        
-        cell.TableCellProperties = cellProperties;
-        
-        foreach (var element in elements)
-        {
-            cell.Append(element);
-        }
-
-        return cell;
-    }
     
     public CompetenceProfileComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
         : base(submissions, domains, outcomes)
