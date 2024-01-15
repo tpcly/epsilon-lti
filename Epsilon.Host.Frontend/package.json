@@ -18,6 +18,7 @@
 		"@mdi/font": "^7.4.47",
 		"apexcharts": "^3.45.1",
 		"nuxt": "^3.9.1",
+		"pinia": "^2.1.7",
 		"posthog-js": "^1.98.2",
 		"vue": "^3.4.13",
 		"vue-router": "^4.2.5",

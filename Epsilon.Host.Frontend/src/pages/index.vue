@@ -16,13 +16,31 @@
 				</v-col>
 			</template>
 		</TopNavigation>
-		<v-tabs v-model="tabs" class="toolbar" show-arrows>
+		<v-card v-if="store.errors.length" color="error" class="mt-4">
+			<v-card-title>An error accord</v-card-title>
+			<v-card-text>
+				{{ store.errors.at(0) }}
+			</v-card-text>
+			<v-card-actions>
+				<v-btn @click="router.go()"> Reload application</v-btn>
+				<v-spacer></v-spacer>
+				<v-btn
+					:href="`https://github.com/tpcly/epsilon-lti/issues/new?title=${store.errors.at(0)}`"
+					target="_blank">
+					Report issue
+				</v-btn>
+			</v-card-actions>
+		</v-card>
+		<v-tabs v-model="tabs" class="toolbar mt-4" show-arrows>
 			<v-tab :value="0">Performance Dashboard</v-tab>
 			<v-tab v-if="enableCompetenceProfile" :value="1">
 				Competence Document
 			</v-tab>
 		</v-tabs>
-		<loading-dialog v-model="loadingOutcomes"></loading-dialog>
+		<loading-dialog
+			v-if="!store.errors.length"
+			v-model="loadingOutcomes"></loading-dialog>
+
 		<v-window v-model="tabs">
 			<v-window-item :value="0">
 				<PerformanceDashboard
@@ -70,8 +88,10 @@ import PerformanceDashboard from "~/components/performance/PerformanceDashboard.
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
 import { Generator } from "~/utils/generator"
 import LoadingDialog from "~/LoadingDialog.vue"
+import { useEpsilonStore } from "~/composables/use-store"
 
 const runtimeConfig = useRuntimeConfig()
+const store = useEpsilonStore()
 const tabs = ref<number>(0)
 const versionUrl =
 	"https://github.com/tpcly/epsilon-lti/releases/tag/" +
@@ -95,6 +115,7 @@ if (process.client && data.value?.idToken) {
 		useState("id_token", () => callback?.idToken)
 	}
 }
+const router = useRouter()
 const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
 const enableSemesterWrapped = ref<boolean | undefined>(false)
@@ -137,9 +158,12 @@ function loadDomains(domainNames: string[]): void {
 		.learningDomainOutcomesList()
 		.then((r) => (outcomes.value = r.data))
 	domainNames.map(function (domainName) {
-		api.learning.learningDomainDetail(domainName).then((hboIData) => {
-			domains.value?.push(hboIData.data)
-		})
+		api.learning
+			.learningDomainDetail(domainName)
+			.then((hboIData) => {
+				domains.value?.push(hboIData.data)
+			})
+			.catch((r) => store.addError(r))
 	})
 }
 
@@ -159,6 +183,7 @@ function downloadCompetenceDocument(): void {
 			document.body.appendChild(link)
 			link.click()
 		})
+		.catch((r) => store.addError(r))
 }
 
 const filteredSubmissions = computed({
@@ -203,6 +228,10 @@ const handleUserChange = async (user: User): Promise<void> => {
 		.finally(() => {
 			loadingOutcomes.value = false
 		})
+		.catch((r) => {
+			loadingOutcomes.value = false
+			store.addError(r)
+		})
 }
 
 const handleRangeChange = (range: {
@@ -221,7 +250,6 @@ const handleRangeChange = (range: {
 	border-radius: 8px;
 	width: fit-content;
 	height: unset;
-	margin-top: 10px;
 
 	.v-btn.v-slide-group-item--active {
 		background-color: white !important;
@@ -269,6 +297,7 @@ const handleRangeChange = (range: {
 	width: 50%;
 	text-align: center;
 }
+
 .v-tab.v-tab.v-btn {
 	height: unset;
 }

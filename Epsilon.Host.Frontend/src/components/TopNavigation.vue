@@ -62,12 +62,15 @@ const correctedFromDate = ref<Date | null>(null)
 const fromDate = ref<Date | null>(null)
 const toDate = ref<Date | null>(null)
 const runtimeConfig = useRuntimeConfig()
-
+const store = useEpsilonStore()
 onMounted(() => {
-	api.filter.filterAccessibleStudentsList().then((r) => {
-		users.value = r.data
-		selectedUser.value = users.value[0]
-	})
+	api.filter
+		.filterAccessibleStudentsList()
+		.then((r) => {
+			users.value = r.data
+			selectedUser.value = users.value[0]
+		})
+		.catch((r) => store.addError(r))
 })
 
 // When the user is updated, we should request its terms
@@ -87,6 +90,7 @@ watch(selectedUser, () => {
 			terms.value = r.data
 			selectedTerm.value = terms.value[0]
 		})
+		.catch((r) => store.addError(r))
 })
 
 watch(selectedTerm, () => {
