@@ -102,6 +102,8 @@ const chartOptions = {
 	},
 	yaxis: {
 		show: false,
+		min: 0,
+		max: 5,
 	},
 	legend: {
 		position: "bottom",
