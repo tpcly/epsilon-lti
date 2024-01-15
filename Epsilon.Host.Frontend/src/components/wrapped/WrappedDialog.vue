@@ -24,23 +24,7 @@
 						<v-col cols="4">
 							<v-card>
 								<v-card-title>
-									{{
-										allOutcomesCurrentSemester
-											?.filter(
-												(o) =>
-													allOutcomesPast.filter(
-														(x) => x.id === o.id
-													).length === 0
-											)
-											.filter(
-												(outcome, index, self) =>
-													index ===
-													self.findIndex(
-														(t) =>
-															t.id === outcome.id
-													)
-											).length
-									}}
+									{{ newMasteredKpis }}
 								</v-card-title>
 								<v-card-text>
 									New KPI's masterd this semester
@@ -189,6 +173,24 @@ const allOutcomesCurrentSemester = computed<LearningDomainOutcome[]>(() =>
 			submission.results!.map((result) => result.outcome!)
 		)
 )
+
+const newMasteredKpis = computed<LearningDomainOutcome[]>(() =>
+	allOutcomesCurrentSemester.value
+		?.filter(
+			(o) =>
+				allOutcomesPast.value.filter(
+					(x) => x.id === o.id
+				).length === 0
+		)
+		.filter(
+			(outcome, index, self) =>
+				index ===
+				self.findIndex(
+					(t) =>
+						t.id === outcome.id
+				)
+		).length
+) 
 
 const mostUsedDomains = computed<
 	{
