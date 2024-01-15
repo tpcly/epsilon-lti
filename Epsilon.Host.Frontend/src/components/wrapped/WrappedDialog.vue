@@ -24,9 +24,7 @@
 						<v-col cols="4">
 							<v-card>
 								<v-card-title>
-									{{
-										newMasteredKpis?.length
-									}}
+									{{ newMasteredKpis?.length }}
 								</v-card-title>
 								<v-card-text>
 									New KPI's masterd this semester
@@ -136,7 +134,7 @@ const term = computed<EnrollmentTerm | undefined>(() => props.terms?.at(0))
 const showWrapped = computed<boolean>(() => {
 	if (term.value != undefined) {
 		return (
-			(new Date(term.value!.end_at ?? "").getTime() -
+			(new Date(term.value!.endAt ?? "").getTime() -
 				new Date().getTime()) /
 				1000 /
 				604800 <
@@ -156,7 +154,7 @@ const allOutcomesPast = computed<LearningDomainOutcome[]>(() =>
 	props.submissions
 		.filter(
 			(s) =>
-				new Date(s.submittedAt!) <= new Date(term.value!.start_at ?? "")
+				new Date(s.submittedAt!) <= new Date(term.value!.startAt ?? "")
 		)
 		.flatMap((submission) =>
 			submission.results!.map((result) => result.outcome!)
@@ -168,28 +166,29 @@ const allOutcomesCurrentSemester = computed<LearningDomainOutcome[]>(() =>
 		.filter(
 			(s) =>
 				new Date(s.submittedAt!) >=
-					new Date(term.value!.start_at ?? "") &&
-				new Date(s.submittedAt!) <= new Date(term.value!.end_at ?? "")
+					new Date(term.value!.startAt ?? "") &&
+				new Date(s.submittedAt!) <= new Date(term.value!.endAt ?? "")
 		)
 		.flatMap((submission) =>
 			submission.results!.map((result) => result.outcome!)
 		)
 )
 
-const uniqueOutcomeIds = new Set<number | undefined>();
+const uniqueOutcomeIds = new Set<number | undefined>()
 
 const newMasteredKpis = allOutcomesCurrentSemester?.value.filter((o) => {
-		console.log("O: " + o.id);
-		if (uniqueOutcomeIds.has(o.id)) {
-			return false;
-		}
-		uniqueOutcomeIds.add(o.id);
-		return true;
-	allOutcomesPast.value.filter((x) => x.id == o.id).forEach((x) =>
-	{
-		console.log("X: " + x.id);
-	});
-});
+	console.log("O: " + o.id)
+	if (uniqueOutcomeIds.has(o.id)) {
+		return false
+	}
+	uniqueOutcomeIds.add(o.id)
+	return true
+	allOutcomesPast.value
+		.filter((x) => x.id == o.id)
+		.forEach((x) => {
+			console.log("X: " + x.id)
+		})
+})
 
 const mostUsedDomains = computed<
 	{
