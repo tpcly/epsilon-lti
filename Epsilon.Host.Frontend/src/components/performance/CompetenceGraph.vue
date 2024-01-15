@@ -72,6 +72,7 @@ const chartOptions = {
 		labels: {
 			show: true,
 			rotate: 0,
+			hideOverlappingLabels: false,
 			style: {
 				fontSize: "12.5px",
 			},
