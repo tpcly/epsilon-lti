@@ -174,18 +174,16 @@ const allOutcomesCurrentSemester = computed<LearningDomainOutcome[]>(() =>
 		)
 )
 
-const newMasteredKpis = computed<LearningDomainOutcome[]>(
-	() =>
-		allOutcomesCurrentSemester.value
-			?.filter(
-				(o) =>
-					allOutcomesPast.value.filter((x) => x.id === o.id)
-						.length === 0
-			)
-			.filter(
-				(outcome, index, self) =>
-					index === self.findIndex((t) => t.id === outcome.id)
-			)
+const newMasteredKpis = computed<LearningDomainOutcome[]>(() =>
+	allOutcomesCurrentSemester.value
+		?.filter(
+			(o) =>
+				allOutcomesPast.value.filter((x) => x.id === o.id).length === 0
+		)
+		.filter(
+			(outcome, index, self) =>
+				index === self.findIndex((t) => t.id === outcome.id)
+		)
 )
 
 const mostUsedDomains = computed<
