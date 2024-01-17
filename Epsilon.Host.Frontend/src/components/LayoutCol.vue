@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { defineProps, computed } from "vue"
 
-const props = defineProps<{
+const componentProps = defineProps<{
 	cols?: number | string
 	breakpoints?: { [key: string]: number | string }
 }>()
@@ -15,16 +15,18 @@ const props = defineProps<{
 const classes = computed(() => {
 	const classList: Array<string> = []
 
-	if (props.cols) {
-		const typeOfCols = typeof props.cols
+	if (componentProps.cols) {
+		const typeOfCols = typeof componentProps.cols
 
 		if (typeOfCols === "number" || typeOfCols === "string") {
-			classList.push(`col-${props.cols}`)
+			classList.push(`col-${componentProps.cols}`)
 		}
 	}
 
-	if (props.breakpoints) {
-		for (const [breakpoint, cols] of Object.entries(props.breakpoints)) {
+	if (componentProps.breakpoints) {
+		for (const [breakpoint, cols] of Object.entries(
+			componentProps.breakpoints
+		)) {
 			classList.push(`col-${breakpoint}-${cols}`)
 		}
 	}

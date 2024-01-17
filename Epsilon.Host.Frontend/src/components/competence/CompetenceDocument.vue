@@ -24,7 +24,7 @@ import type {
 	LearningDomainSubmission,
 } from "~/api.generated"
 
-const props = defineProps<{
+const componentProps = defineProps<{
 	submissions: LearningDomainSubmission[]
 	domains: LearningDomain[]
 	outcomes: LearningDomainOutcome[]
@@ -36,13 +36,13 @@ const props = defineProps<{
 }>()
 
 const filteredSubmissionsDateSelection = computed(() => {
-	const unwrappedFilterRange = props.filterRange
+	const unwrappedFilterRange = componentProps.filterRange
 
 	if (!unwrappedFilterRange) {
-		return props.submissions
+		return componentProps.submissions
 	}
 
-	return props.submissions.filter((submission) => {
+	return componentProps.submissions.filter((submission) => {
 		if (submission.criteria!.length > 0) {
 			const submittedAt = new Date(submission.submittedAt!)
 
@@ -55,7 +55,7 @@ const filteredSubmissionsDateSelection = computed(() => {
 })
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
-	props.submissions.flatMap((submission) =>
+	componentProps.submissions.flatMap((submission) =>
 		submission.results!.map((result) => result.outcome!)
 	)
 )
