@@ -11,10 +11,11 @@
 
 export interface EnrollmentTerm {
 	name?: string | null
+	_id?: string | null
 	/** @format date-time */
-	start_at?: string | null
+	startAt?: string | null
 	/** @format date-time */
-	end_at?: string | null
+	endAt?: string | null
 }
 
 export interface LearningDomain {
