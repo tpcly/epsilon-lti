@@ -23,7 +23,7 @@
 				<v-card-title> Masterd KPI's</v-card-title>
 				<v-card-text>
 					<v-row>
-						<v-col cols="4">
+						<v-col cols="12" sm="4">
 							<v-card>
 								<v-card-title>
 									{{ newMasteredKpis.length }}
@@ -33,7 +33,7 @@
 								</v-card-text>
 							</v-card>
 						</v-col>
-						<v-col cols="4">
+						<v-col cols="12" sm="4">
 							<v-card>
 								<v-card-title>
 									{{ allOutcomesCurrentSemester?.length }}
@@ -43,7 +43,7 @@
 								</v-card-text>
 							</v-card>
 						</v-col>
-						<v-col cols="4">
+						<v-col cols="12" sm="4">
 							<v-card>
 								<v-card-title>
 									{{ allOutcomes.length }}
@@ -62,14 +62,17 @@
 						<v-col
 							v-for="domain in mostUsedDomains"
 							:key="domain.domain.id"
-							cols="6">
+							cols="12"
+							sm="6">
 							<v-card>
 								<v-card-text style="text-transform: uppercase">
 									{{ domain.domain.id }}
 								</v-card-text>
 								<v-card-text>
 									<v-row>
-										<v-col :cols="domain.column ? 6 : 12">
+										<v-col
+											:cols="12"
+											:sm="domain.column ? 6 : 12">
 											<ol>
 												<li
 													v-for="(i, x) in domain.row
@@ -86,7 +89,10 @@
 												</li>
 											</ol>
 										</v-col>
-										<v-col v-if="domain.column" cols="6">
+										<v-col
+											v-if="domain.column"
+											cols="12"
+											sm="6">
 											<ol>
 												<li
 													v-for="(
