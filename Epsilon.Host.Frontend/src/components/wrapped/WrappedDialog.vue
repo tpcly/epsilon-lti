@@ -4,8 +4,10 @@
 			<v-btn
 				v-if="showWrapped"
 				v-bind="props"
-				class="w-100 wrappedButton">
-				{{ term?.name }} wrapped
+				class="wrappedButton"
+				size="large">
+				{{ term?.name }}<br />
+				wrapped
 			</v-btn>
 		</template>
 
@@ -234,9 +236,8 @@ const mostUsedDomains = computed<
 
 /* Apply styles to the button */
 .wrappedButton {
-	width: 200px;
-	height: 50px;
-	font-size: 16px;
+	min-width: 100%;
+	font-weight: unset;
 	color: #fff;
 	background: linear-gradient(45deg, #848da4, #11284c);
 	background-size: 200% 200%;
@@ -245,10 +246,5 @@ const mostUsedDomains = computed<
 	cursor: pointer;
 	animation: diagonalColorChange 1s infinite alternate;
 	transition: background 0.3s ease-in-out;
-}
-
-/* Optional hover effect */
-.wrappedButton:hover {
-	background-position: 100% 100%;
 }
 </style>
