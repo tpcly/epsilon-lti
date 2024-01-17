@@ -41,7 +41,7 @@
 			v-if="!store.errors.length"
 			v-model="loadingOutcomes"></loading-dialog>
 
-		<v-window v-model="tabs">
+		<v-window v-model="tabs" class="mt-4">
 			<v-window-item :value="0">
 				<PerformanceDashboard
 					:is-loading="loadingOutcomes"
@@ -49,12 +49,10 @@
 					:domains="domains" />
 			</v-window-item>
 			<v-window-item v-if="enableCompetenceProfile" :value="1">
-				<v-btn
+				<CompetenceGenerationBanner
 					v-if="enableCompetenceGeneration"
-					class="toolbar-download"
-					@click="downloadCompetenceDocument">
-					Download
-				</v-btn>
+					:filter-range="filterRange"
+					:current-user="currentUser"></CompetenceGenerationBanner>
 				<CompetenceDocument
 					:outcomes="outcomes"
 					:submissions="filteredSubmissions"
@@ -89,6 +87,7 @@ import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
 import { Generator } from "~/utils/generator"
 import LoadingDialog from "~/LoadingDialog.vue"
 import { useEpsilonStore } from "~/composables/use-store"
+import CompetenceGenerationBanner from "~/components/competence/CompetenceGenerationBanner.vue"
 
 const runtimeConfig = useRuntimeConfig()
 const store = useEpsilonStore()
@@ -165,25 +164,6 @@ function loadDomains(domainNames: string[]): void {
 			})
 			.catch((r) => store.addError(r))
 	})
-}
-
-function downloadCompetenceDocument(): void {
-	api.document
-		.documentDownloadWordList({
-			userId: currentUser.value?._id as string,
-			from: filterRange.value?.start.toDateString()!,
-			to: filterRange.value?.end.toDateString()!,
-		})
-		.then(async (response) => {
-			const blob = await response.blob()
-			const url = window.URL.createObjectURL(blob)
-			const link = document.createElement("a")
-			link.href = url
-			link.setAttribute("download", "competence-document.docx")
-			document.body.appendChild(link)
-			link.click()
-		})
-		.catch((r) => store.addError(r))
 }
 
 const filteredSubmissions = computed({
