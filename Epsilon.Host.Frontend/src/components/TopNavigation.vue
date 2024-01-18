@@ -62,16 +62,19 @@ const correctedFromDate = ref<Date | null>(null)
 const fromDate = ref<Date | null>(null)
 const toDate = ref<Date | null>(null)
 const runtimeConfig = useRuntimeConfig()
-
-onMounted(async () => {
-	const response = await api.filter.filterAccessibleStudentsList()
-
-	users.value = response.data
-	selectedUser.value = users.value[0]
+const store = useEpsilonStore()
+onMounted(() => {
+	api.filter
+		.filterAccessibleStudentsList()
+		.then((r) => {
+			users.value = r.data
+			selectedUser.value = users.value[0]
+		})
+		.catch((r) => store.addError(r))
 })
 
 // When the user is updated, we should request its terms
-watch(selectedUser, async () => {
+watch(selectedUser, () => {
 	if (!selectedUser?.value?._id) {
 		return
 	}
@@ -79,12 +82,15 @@ watch(selectedUser, async () => {
 	selectedTerm.value = null
 	emit("userChange", selectedUser.value)
 
-	const response = await api.filter.filterParticipatedTermsList({
-		studentId: selectedUser.value._id,
-	})
-
-	terms.value = response.data
-	selectedTerm.value = terms.value[0]
+	api.filter
+		.filterParticipatedTermsList({
+			studentId: selectedUser.value._id,
+		})
+		.then((r) => {
+			terms.value = r.data
+			selectedTerm.value = terms.value[0]
+		})
+		.catch((r) => store.addError(r))
 })
 
 watch(selectedTerm, () => {
