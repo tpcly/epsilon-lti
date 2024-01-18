@@ -88,7 +88,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 foreach (var submissions in enrollment.Course.Submissions.Nodes.GroupBy(static s => s.Assignment?.HtmlUrl))
                 {
                     var latestSubmission = submissions.OrderByDescending(static s => s.SubmittedAt).First();
-                
+
                     yield return new LearningDomainSubmission(
                         latestSubmission.Assignment?.Name,
                         latestSubmission.Assignment?.HtmlUrl,
@@ -97,9 +97,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                         GetOutcomeResults(submissions, domainOutcomesTask)
                     );
                 }
-
             }
-
         }
     }
 
@@ -131,7 +129,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
     )
     {
         var outcomeRecords = new List<LearningDomainOutcomeRecord>();
-        
+
         foreach (var submissionHistory in submissions.OrderByDescending(static s => s.SubmittedAt))
         {
             var rubricAssessments = submissionHistory.RubricAssessments?.Nodes.SelectMany(static rubricAssessment =>
@@ -142,13 +140,13 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                         Criterion.MasteryPoints: not null,
                         Criterion.Outcome: not null,
                     }) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
-        
-        
+
+
             if (rubricAssessments == null)
             {
                 throw new HttpRequestException("No RubricAssessments are found");
             }
-        
+
             foreach (var assessment in rubricAssessments)
             {
                 var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);

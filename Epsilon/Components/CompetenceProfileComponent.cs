@@ -14,7 +14,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
         body.Append(new Paragraph(new Run(new Text("Hello World!"))));
         // toDo: Add the table with realised outcomes, like the performance dashboard.
-        
+
         var count = await Submissions.CountAsync();
         body.Append(new Paragraph(new Run(new Text(count.ToString(CultureInfo.InvariantCulture)))));
         await foreach (var sub in Submissions)

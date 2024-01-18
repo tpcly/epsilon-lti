@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
 using Bogus;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Epsilon.Abstractions;
@@ -65,9 +66,9 @@ public static class TestDataGenerator
         return new LearningDomainOutcomeRecord(GenerateRandomLearningDomainOutcome(), s_faker.Random.Int(0, 10));
     }
 
-    public static List<LearningDomainOutcome> GenerateRandomLearningDomainOutcomes(int count)
+    public static Collection<LearningDomainOutcome> GenerateRandomLearningDomainOutcomes(int count)
     {
-        var outcomes = new List<LearningDomainOutcome>();
+        var outcomes = new Collection<LearningDomainOutcome>();
         for (var i = 0; i < count; i++)
         {
             outcomes.Add(GenerateRandomLearningDomainOutcome());
@@ -77,9 +78,9 @@ public static class TestDataGenerator
     }
 
 
-    public static List<User> GenerateUsers(int count)
+    public static Collection<User> GenerateUsers(int count)
     {
-        var users = new List<User>();
+        var users = new Collection<User>();
 
         for (var i = 0; i < count; i++)
         {
