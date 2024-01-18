@@ -89,17 +89,17 @@ watch(selectedUser, async () => {
 
 watch(selectedTerm, () => {
 	const selectedTermUnwrapped = selectedTerm.value
-	if (!selectedTermUnwrapped?.start_at || !selectedTermUnwrapped.end_at) {
+	if (!selectedTermUnwrapped?.startAt || !selectedTermUnwrapped.endAt) {
 		return
 	}
 
 	const termsUnwrapped = terms.value
 	correctedFromDate.value = new Date(
-		termsUnwrapped[termsUnwrapped.length - 1]?.start_at!
+		termsUnwrapped[termsUnwrapped.length - 1]?.startAt!
 	)
 
-	toDate.value = new Date(selectedTermUnwrapped?.end_at)
-	fromDate.value = new Date(selectedTermUnwrapped?.start_at)
+	toDate.value = new Date(selectedTermUnwrapped?.endAt)
+	fromDate.value = new Date(selectedTermUnwrapped?.startAt)
 })
 
 watch([correctedFromDate, toDate], () => {

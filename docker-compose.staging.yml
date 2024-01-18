@@ -25,9 +25,7 @@ services:
   
   frontend:
     container_name: Epsilon-Frontend
-    build:
-      context: ./Epsilon.Host.Frontend
-      dockerfile: ./Dockerfile
+    image: "nealgeilen/epsilon-frontend:acc"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`epsilon.deltafhict.nl`)"
@@ -36,9 +34,7 @@ services:
       - .env.staging
   api:
     container_name: Epsilon-API
-    build:
-      context: .
-      dockerfile: ./Epsilon.Host.WebApi/Dockerfile
+    image: "nealgeilen/epsilon-api:acc"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`epsilon.deltafhict.nl`) && PathPrefix(`/api`)"
@@ -55,4 +51,4 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - /var/lib/mysql:/data
+      - /epsilon-data:/var/lib/mysql
