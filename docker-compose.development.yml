@@ -55,4 +55,4 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - /var/lib/mysql:/data
+      - /epsilon-data:/var/lib/mysql
