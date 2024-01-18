@@ -71,14 +71,14 @@ import {
 } from "~/api.generated"
 import CompetenceProfileCell from "~/components/competence/CompetenceProfileCell.vue"
 
-const props = defineProps<{
+const componentProps = defineProps<{
 	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
 	isLoading: boolean
 }>()
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
-	props.submissions.flatMap((submission) =>
+	componentProps.submissions.flatMap((submission) =>
 		submission.results!.map((result) => result.outcome!)
 	)
 )

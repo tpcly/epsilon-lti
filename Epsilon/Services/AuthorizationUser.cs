@@ -4,7 +4,7 @@ using Epsilon.Abstractions.Services;
 
 namespace Epsilon.Services;
 
-public class AuthorizationUser: IAuthorizationUser
+public class AuthorizationUser : IAuthorizationUser
 {
     private readonly IFilterService _filterService;
     private readonly ICanvasUserSessionAccessor _sessionAccessor;
@@ -14,8 +14,8 @@ public class AuthorizationUser: IAuthorizationUser
         _filterService = filterService;
         _sessionAccessor = sessionAccessor;
     }
-    
-    
+
+
     public async Task<bool> HasCurrentUserAccessToUser(string userId)
     {
         var acceptedStudentList = await _filterService.GetAccessibleStudents();
@@ -25,6 +25,7 @@ public class AuthorizationUser: IAuthorizationUser
         {
             return acceptedStudentList?.Any(u => u.LegacyId == userId) ?? false;
         }
+
         return true;
     }
 }

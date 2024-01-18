@@ -131,14 +131,16 @@ import type {
 	LearningDomainType,
 } from "~/api.generated"
 
-const props = defineProps<{
+const componentProps = defineProps<{
 	submissions: LearningDomainSubmission[]
 	domains: LearningDomain[]
 	outcomes: LearningDomainOutcome[]
 	terms: EnrollmentTerm[] | null
 }>()
 
-const term = computed<EnrollmentTerm | undefined>(() => props.terms?.at(0))
+const term = computed<EnrollmentTerm | undefined>(() =>
+	componentProps.terms?.at(0)
+)
 const showWrapped = computed<boolean>(() => {
 	if (term.value != undefined) {
 		return (
@@ -153,13 +155,13 @@ const showWrapped = computed<boolean>(() => {
 	return true
 })
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
-	props.submissions.flatMap((submission) =>
+	componentProps.submissions.flatMap((submission) =>
 		submission.results!.map((result) => result.outcome!)
 	)
 )
 
 const allOutcomesPast = computed<LearningDomainOutcome[]>(() =>
-	props.submissions
+	componentProps.submissions
 		.filter(
 			(s) =>
 				new Date(s.submittedAt!) <= new Date(term.value!.startAt ?? "")
@@ -170,7 +172,7 @@ const allOutcomesPast = computed<LearningDomainOutcome[]>(() =>
 )
 
 const allOutcomesCurrentSemester = computed<LearningDomainOutcome[]>(() =>
-	props.submissions
+	componentProps.submissions
 		.filter(
 			(s) =>
 				new Date(s.submittedAt!) >=
@@ -200,7 +202,7 @@ const mostUsedDomains = computed<
 		row: { count: number; row: LearningDomainType }[]
 	}[]
 >(() => {
-	return props.domains.map((d) => {
+	return componentProps.domains.map((d) => {
 		return {
 			row: d.rowsSet?.types?.map((t) => {
 				return {

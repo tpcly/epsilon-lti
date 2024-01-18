@@ -70,10 +70,10 @@ public class FilterService : IFilterService
         
         
         var participatedTerms = response.LegacyNode.Enrollments
-                                        .Select(static e => e.Course?.Term)
+                                        .Select(static e => e.Course?.Term!)
                                         .DistinctBy(static t => t?.Id)
                                         .Where(term => term is { StartAt: not null, EndAt: not null, } && term.StartAt <= currentCourseEnrolment?.Course?.Term?.StartAt)
-                                        .OrderByDescending(static term => term?.StartAt);
+                                        .OrderByDescending(static term => term?.StartAt).ToList();
 
 
         // Get the corrected term based on a new end date:
@@ -104,8 +104,8 @@ public class FilterService : IFilterService
                     return er.Type == "StudentEnrollment";
                 }
 
-                return er.User.LegacyId == canvasUser?.UserId.ToString(CultureInfo.InvariantCulture) && er.Type == "StudentEnrollment";
+                return er.User?.LegacyId == canvasUser?.UserId.ToString(CultureInfo.InvariantCulture) && er.Type == "StudentEnrollment";
             }
-        ).Select(static er => er.User).DistinctBy(static u => u.LegacyId) ?? Array.Empty<User>();
+        ).Select(static er => er.User!).DistinctBy(static u => u.LegacyId) ?? Array.Empty<User>();
     }
 }

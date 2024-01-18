@@ -3,7 +3,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Epsilon.Abstractions.Components;
 
-public abstract class AbstractCompetenceComponent: IWordCompetenceComponent
+public abstract class AbstractCompetenceComponent : IWordCompetenceComponent
 {
     protected AbstractCompetenceComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
     {
