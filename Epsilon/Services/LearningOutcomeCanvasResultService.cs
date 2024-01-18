@@ -125,7 +125,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
     }
 
 
-    private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
+    private static List<LearningDomainOutcomeRecord> GetOutcomeResults(
         IEnumerable<Submission> submissions,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
@@ -141,13 +141,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                         Points: not null,
                         Criterion.MasteryPoints: not null,
                         Criterion.Outcome: not null,
-                    }) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
-        
-        
-            if (rubricAssessments == null)
-            {
-                throw new HttpRequestException("No RubricAssessments are found");
-            }
+                    }) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible")) ?? throw new HttpRequestException("No RubricAssessments are found");;
         
             foreach (var assessment in rubricAssessments)
             {
