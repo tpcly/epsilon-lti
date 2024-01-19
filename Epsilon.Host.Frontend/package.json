@@ -38,7 +38,7 @@
 		"jwt-decode": "^4.0.0",
 		"lodash": "^4.17.21",
 		"prettier": "^3.2.4",
-		"sass": "^1.69.7",
+		"sass": "^1.70.0",
 		"vite-plugin-vuetify": "^2.0.1",
 		"vuetify": "^3.4.11"
 	}
