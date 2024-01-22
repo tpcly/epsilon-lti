@@ -9,8 +9,8 @@ dependencies:
     specifier: ^7.4.47
     version: 7.4.47
   apexcharts:
-    specifier: ^3.45.1
-    version: 3.45.1
+    specifier: ^3.45.2
+    version: 3.45.2
   nuxt:
     specifier: ^3.9.3
     version: 3.9.3(@types/node@20.11.5)(eslint@8.56.0)(sass@1.70.0)(typescript@5.2.2)(vite@5.0.11)
@@ -28,7 +28,7 @@ dependencies:
     version: 4.2.5(vue@3.4.15)
   vue3-apexcharts:
     specifier: ^1.4.4
-    version: 1.4.4(apexcharts@3.45.1)(vue@3.4.15)
+    version: 1.4.4(apexcharts@3.45.2)(vue@3.4.15)
 
 devDependencies:
   '@nuxt/devtools':
@@ -1953,8 +1953,8 @@ packages:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
-  /apexcharts@3.45.1:
-    resolution: {integrity: sha512-pPjj/SA6dfPvR/IKRZF0STdfBGpBh3WRt7K0DFuW9P8erypYkX17EHu3/molPRfo2zSiQwTVpshHC5ncysqfkA==}
+  /apexcharts@3.45.2:
+    resolution: {integrity: sha512-PpuM4sJWy70sUh5U1IFn1m1p45MdHSChLUNnqEoUUUHSU2IHZugFrsVNhov1S8Q0cvfdrCRCvdBtHGSs6PSAWQ==}
     dependencies:
       '@yr/monotone-cubic-spline': 1.0.3
       svg.draggable.js: 2.2.2
@@ -5944,13 +5944,13 @@ packages:
       '@vue/devtools-api': 6.5.0
       vue: 3.4.15(typescript@5.2.2)
 
-  /vue3-apexcharts@1.4.4(apexcharts@3.45.1)(vue@3.4.15):
+  /vue3-apexcharts@1.4.4(apexcharts@3.45.2)(vue@3.4.15):
     resolution: {integrity: sha512-TH89uZrxGjaDvkaYAISvj8+k6Bf1rUKFillc8oJirs5XZEPiwM1ELKZQ786wz0rfPqkSHHny2lqqUCK7Rw+LcQ==}
     peerDependencies:
       apexcharts: '> 3.0.0'
       vue: '> 3.0.0'
     dependencies:
-      apexcharts: 3.45.1
+      apexcharts: 3.45.2
       vue: 3.4.15(typescript@5.2.2)
     dev: false
 
