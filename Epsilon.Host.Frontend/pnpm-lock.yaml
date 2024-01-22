@@ -9,8 +9,8 @@ dependencies:
     specifier: ^7.4.47
     version: 7.4.47
   apexcharts:
-    specifier: ^3.45.1
-    version: 3.45.1
+    specifier: ^3.45.2
+    version: 3.45.2
   nuxt:
     specifier: ^3.9.3
     version: 3.9.3(@types/node@20.11.5)(eslint@8.56.0)(sass@1.70.0)(typescript@5.2.2)(vite@5.0.11)
@@ -28,7 +28,7 @@ dependencies:
     version: 4.2.5(vue@3.4.15)
   vue3-apexcharts:
     specifier: ^1.4.4
-    version: 1.4.4(apexcharts@3.45.1)(vue@3.4.15)
+    version: 1.4.4(apexcharts@3.45.2)(vue@3.4.15)
 
 devDependencies:
   '@nuxt/devtools':
@@ -75,10 +75,10 @@ devDependencies:
     version: 1.70.0
   vite-plugin-vuetify:
     specifier: ^2.0.1
-    version: 2.0.1(vite@5.0.11)(vue@3.4.15)(vuetify@3.4.11)
+    version: 2.0.1(vite@5.0.11)(vue@3.4.15)(vuetify@3.5.1)
   vuetify:
-    specifier: ^3.4.11
-    version: 3.4.11(typescript@5.2.2)(vite-plugin-vuetify@2.0.1)(vue@3.4.15)
+    specifier: ^3.5.1
+    version: 3.5.1(typescript@5.2.2)(vite-plugin-vuetify@2.0.1)(vue@3.4.15)
 
 packages:
 
@@ -1847,7 +1847,7 @@ packages:
   /@vue/shared@3.4.15:
     resolution: {integrity: sha512-KzfPTxVaWfB+eGcGdbSf4CWdaXcGDqckoeXUh7SB3fZdEtzPCK2Vq9B/lRRL3yutax/LWITz+SwvgyOxz5V75g==}
 
-  /@vuetify/loader-shared@2.0.1(vue@3.4.15)(vuetify@3.4.11):
+  /@vuetify/loader-shared@2.0.1(vue@3.4.15)(vuetify@3.5.1):
     resolution: {integrity: sha512-zy5/ohEO7RcJaWYu2Xiy8TBEOkTb42XvWvSAJwXAtY8OlwqyGhzzBp9OvMVjLGIuFXumBpXKlsaVIkeN0OWWSw==}
     peerDependencies:
       vue: ^3.0.0
@@ -1855,7 +1855,7 @@ packages:
     dependencies:
       upath: 2.0.1
       vue: 3.4.15(typescript@5.2.2)
-      vuetify: 3.4.11(typescript@5.2.2)(vite-plugin-vuetify@2.0.1)(vue@3.4.15)
+      vuetify: 3.5.1(typescript@5.2.2)(vite-plugin-vuetify@2.0.1)(vue@3.4.15)
     dev: true
 
   /@yr/monotone-cubic-spline@1.0.3:
@@ -1953,8 +1953,8 @@ packages:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
-  /apexcharts@3.45.1:
-    resolution: {integrity: sha512-pPjj/SA6dfPvR/IKRZF0STdfBGpBh3WRt7K0DFuW9P8erypYkX17EHu3/molPRfo2zSiQwTVpshHC5ncysqfkA==}
+  /apexcharts@3.45.2:
+    resolution: {integrity: sha512-PpuM4sJWy70sUh5U1IFn1m1p45MdHSChLUNnqEoUUUHSU2IHZugFrsVNhov1S8Q0cvfdrCRCvdBtHGSs6PSAWQ==}
     dependencies:
       '@yr/monotone-cubic-spline': 1.0.3
       svg.draggable.js: 2.2.2
@@ -5808,7 +5808,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /vite-plugin-vuetify@2.0.1(vite@5.0.11)(vue@3.4.15)(vuetify@3.4.11):
+  /vite-plugin-vuetify@2.0.1(vite@5.0.11)(vue@3.4.15)(vuetify@3.5.1):
     resolution: {integrity: sha512-GlRVAruohE8b0FqmeYYh1cYg3n8THGOv066uMA44qLv9uhUxSLw55CS7fi2yU0wH363TJ2vq36zUsPTjRFrjGQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
@@ -5816,12 +5816,12 @@ packages:
       vue: ^3.0.0
       vuetify: ^3.0.0
     dependencies:
-      '@vuetify/loader-shared': 2.0.1(vue@3.4.15)(vuetify@3.4.11)
+      '@vuetify/loader-shared': 2.0.1(vue@3.4.15)(vuetify@3.5.1)
       debug: 4.3.4
       upath: 2.0.1
       vite: 5.0.11(@types/node@20.11.5)(sass@1.70.0)
       vue: 3.4.15(typescript@5.2.2)
-      vuetify: 3.4.11(typescript@5.2.2)(vite-plugin-vuetify@2.0.1)(vue@3.4.15)
+      vuetify: 3.5.1(typescript@5.2.2)(vite-plugin-vuetify@2.0.1)(vue@3.4.15)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5944,13 +5944,13 @@ packages:
       '@vue/devtools-api': 6.5.0
       vue: 3.4.15(typescript@5.2.2)
 
-  /vue3-apexcharts@1.4.4(apexcharts@3.45.1)(vue@3.4.15):
+  /vue3-apexcharts@1.4.4(apexcharts@3.45.2)(vue@3.4.15):
     resolution: {integrity: sha512-TH89uZrxGjaDvkaYAISvj8+k6Bf1rUKFillc8oJirs5XZEPiwM1ELKZQ786wz0rfPqkSHHny2lqqUCK7Rw+LcQ==}
     peerDependencies:
       apexcharts: '> 3.0.0'
       vue: '> 3.0.0'
     dependencies:
-      apexcharts: 3.45.1
+      apexcharts: 3.45.2
       vue: 3.4.15(typescript@5.2.2)
     dev: false
 
@@ -5969,8 +5969,8 @@ packages:
       '@vue/shared': 3.4.15
       typescript: 5.2.2
 
-  /vuetify@3.4.11(typescript@5.2.2)(vite-plugin-vuetify@2.0.1)(vue@3.4.15):
-    resolution: {integrity: sha512-8kF1G6/VHZvZEuwL91DybWRimM0d1ueupTfFcxrtLDNMmytCI0PF/hf/Z7tCPe1gfMXrENk9FOP6ojydSmNFpQ==}
+  /vuetify@3.5.1(typescript@5.2.2)(vite-plugin-vuetify@2.0.1)(vue@3.4.15):
+    resolution: {integrity: sha512-fkhU4UFnX/lBARXg+n9mBCDPTaEDHoYGx9SZ5A/1LlzM7LohoqldmrNgza4WgpPTLIWqr6NvYp2NvT2IrcTfhg==}
     engines: {node: ^12.20 || >=14.13}
     peerDependencies:
       typescript: '>=4.7'
@@ -5989,7 +5989,7 @@ packages:
         optional: true
     dependencies:
       typescript: 5.2.2
-      vite-plugin-vuetify: 2.0.1(vite@5.0.11)(vue@3.4.15)(vuetify@3.4.11)
+      vite-plugin-vuetify: 2.0.1(vite@5.0.11)(vue@3.4.15)(vuetify@3.5.1)
       vue: 3.4.15(typescript@5.2.2)
     dev: true
 
