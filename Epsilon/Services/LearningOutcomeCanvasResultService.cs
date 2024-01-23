@@ -19,8 +19,8 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                     nodes {
                       assignment {
                         _id
-                        name
                         htmlUrl
+                        name
                         rubric {
                           criteria {
                             outcome {
@@ -30,21 +30,26 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                           }
                         }
                       }
-                      postedAt
-                      submittedAt
-                      attempt
-                      rubricAssessmentsConnection {
+                      submissionHistoriesConnection {
                         nodes {
-                          assessmentRatings {
-                            _id
-                            criterion {
-                              outcome {
+                          attempt
+                          submittedAt
+                          postedAt
+                          rubricAssessmentsConnection {
+                            nodes {
+                              assessmentRatings {
                                 _id
-                                title
+                                points
+                                criterion {
+                                  outcome {
+                                    _id
+                                    title
+                                    masteryPoints
+                                  }
+                                  masteryPoints
+                                }
                               }
-                              masteryPoints
                             }
-                            points
                           }
                         }
                       }
@@ -87,12 +92,12 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
             {
                 foreach (var submissions in enrollment.Course.Submissions.Nodes.GroupBy(static s => s.Assignment?.HtmlUrl))
                 {
-                    var latestSubmission = submissions.OrderByDescending(static s => s.SubmittedAt).First();
+                    var latestSubmission = submissions.First();
 
                     yield return new LearningDomainSubmission(
                         latestSubmission.Assignment?.Name,
                         latestSubmission.Assignment?.HtmlUrl,
-                        latestSubmission.SubmittedAt ?? new DateTime(),
+                        latestSubmission.SubmissionHistories?.Nodes.OrderByDescending(static sh => sh.SubmittedAt).First().SubmittedAt ?? new DateTime(),
                         GetSubmissionCriteria(latestSubmission, domainOutcomesTask),
                         GetOutcomeResults(submissions, domainOutcomesTask)
                     );
@@ -132,15 +137,13 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
         foreach (var submissionHistory in submissions.OrderByDescending(static s => s.SubmittedAt))
         {
-            var rubricAssessments = submissionHistory.RubricAssessments?.Nodes.SelectMany(static rubricAssessment =>
-                rubricAssessment.AssessmentRatings?.Where(static ar =>
-                    ar is
-                    {
-                        Points: not null,
-                        Criterion.MasteryPoints: not null,
-                        Criterion.Outcome: not null,
-                    }) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
-
+            var rubricAssessments = submissionHistory.SubmissionHistories?.Nodes.SelectMany(static sH =>
+                sH.RubricAssessments?.Nodes.SelectMany(static ar => ar.AssessmentRatings.Where(static ar => ar is
+                {
+                    Points: not null,
+                    Criterion.MasteryPoints: not null,
+                    Criterion.Outcome: not null,
+                })) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
 
             if (rubricAssessments == null)
             {
