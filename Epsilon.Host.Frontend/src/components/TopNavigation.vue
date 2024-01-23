@@ -41,6 +41,26 @@
 					item-title="name"
 					return-object
 					no-data-text>
+					<template #prepend-item>
+						<v-list>
+							<v-list-item>
+								<v-text-field
+									v-model="fromDate"
+									label="start"
+									density="compact"
+									single-line
+									type="date"></v-text-field>
+							</v-list-item>
+							<v-list-item>
+								<v-text-field
+									v-model="toDate"
+									label="start"
+									density="compact"
+									single-line
+									type="date"></v-text-field>
+							</v-list-item>
+						</v-list>
+					</template>
 				</v-autocomplete>
 			</v-col>
 		</v-row>
@@ -108,7 +128,7 @@ watch(selectedTerm, () => {
 	fromDate.value = new Date(selectedTermUnwrapped?.startAt)
 })
 
-watch([correctedFromDate, toDate], () => {
+watch([correctedFromDate, toDate, fromDate], () => {
 	emit("rangeChange", {
 		startCorrected: correctedFromDate.value,
 		start: fromDate.value,
