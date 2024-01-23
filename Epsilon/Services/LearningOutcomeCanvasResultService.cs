@@ -7,45 +7,46 @@ namespace Epsilon.Services;
 public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultService
 {
     private const string Query = @"
-        query GetSubmissions($studentIds: ID!) {
-          legacyNode(_id: $studentIds, type: User) {
-            ... on User {
-              enrollments {
+query GetSubmissions($studentIds: ID!) {
+  legacyNode(_id: $studentIds, type: User) {
+    ... on User {
+      enrollments {
+        _id
+        course {
+          _id
+          name
+          submissionsConnection(studentIds: [$studentIds]) {
+            nodes {
+              assignment {
                 _id
-                course {
-                  _id
-                  name
-                  submissionsConnection(studentIds: [$studentIds]) {
+                htmlUrl
+                name
+                rubric {
+                  criteria {
+                    outcome {
+                      _id
+                      masteryPoints
+                    }
+                  }
+                }
+              }
+              submissionHistoriesConnection {
+                nodes {
+                  attempt
+                  submittedAt
+                  postedAt
+                  rubricAssessmentsConnection {
                     nodes {
-                      assignment {
+                      assessmentRatings {
                         _id
-                        name
-                        htmlUrl
-                        rubric {
-                          criteria {
-                            outcome {
-                              _id
-                              masteryPoints
-                            }
-                          }
-                        }
-                      }
-                      postedAt
-                      submittedAt
-                      attempt
-                      rubricAssessmentsConnection {
-                        nodes {
-                          assessmentRatings {
+                        points
+                        criterion {
+                          outcome {
                             _id
-                            criterion {
-                              outcome {
-                                _id
-                                title
-                              }
-                              masteryPoints
-                            }
-                            points
+                            title
+                            masteryPoints
                           }
+                          masteryPoints
                         }
                       }
                     }
@@ -55,6 +56,12 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
             }
           }
         }
+      }
+    }
+  }
+}
+
+
     ";
 
     private readonly ICanvasGraphQlApi _canvasGraphQlApi;
@@ -87,12 +94,12 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
             {
                 foreach (var submissions in enrollment.Course.Submissions.Nodes.GroupBy(static s => s.Assignment?.HtmlUrl))
                 {
-                    var latestSubmission = submissions.OrderByDescending(static s => s.SubmittedAt).First();
+                    var latestSubmission = submissions.First();
 
                     yield return new LearningDomainSubmission(
                         latestSubmission.Assignment?.Name,
                         latestSubmission.Assignment?.HtmlUrl,
-                        latestSubmission.SubmittedAt ?? new DateTime(),
+                        latestSubmission.SubmissionHistories?.Nodes.OrderByDescending(static sh => sh.SubmittedAt).First().SubmittedAt ?? new DateTime(),
                         GetSubmissionCriteria(latestSubmission, domainOutcomesTask),
                         GetOutcomeResults(submissions, domainOutcomesTask)
                     );
@@ -132,15 +139,13 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
         foreach (var submissionHistory in submissions.OrderByDescending(static s => s.SubmittedAt))
         {
-            var rubricAssessments = submissionHistory.RubricAssessments?.Nodes.SelectMany(static rubricAssessment =>
-                rubricAssessment.AssessmentRatings?.Where(static ar =>
-                    ar is
-                    {
-                        Points: not null,
-                        Criterion.MasteryPoints: not null,
-                        Criterion.Outcome: not null,
-                    }) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
-
+            var rubricAssessments = submissionHistory.SubmissionHistories?.Nodes.SelectMany(static sH =>
+                sH.RubricAssessments?.Nodes.SelectMany(static ar => ar.AssessmentRatings.Where(static ar => ar is
+                {
+                    Points: not null,
+                    Criterion.MasteryPoints: not null,
+                    Criterion.Outcome: not null,
+                })) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
 
             if (rubricAssessments == null)
             {
