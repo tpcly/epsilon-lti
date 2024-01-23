@@ -7,46 +7,50 @@ namespace Epsilon.Services;
 public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultService
 {
     private const string Query = @"
-query GetSubmissions($studentIds: ID!) {
-  legacyNode(_id: $studentIds, type: User) {
-    ... on User {
-      enrollments {
-        _id
-        course {
-          _id
-          name
-          submissionsConnection(studentIds: [$studentIds]) {
-            nodes {
-              assignment {
+        query GetSubmissions($studentIds: ID!) {
+          legacyNode(_id: $studentIds, type: User) {
+            ... on User {
+              enrollments {
                 _id
-                htmlUrl
-                name
-                rubric {
-                  criteria {
-                    outcome {
-                      _id
-                      masteryPoints
-                    }
-                  }
-                }
-              }
-              submissionHistoriesConnection {
-                nodes {
-                  attempt
-                  submittedAt
-                  postedAt
-                  rubricAssessmentsConnection {
+                course {
+                  _id
+                  name
+                  submissionsConnection(studentIds: [$studentIds]) {
                     nodes {
-                      assessmentRatings {
+                      assignment {
                         _id
-                        points
-                        criterion {
-                          outcome {
-                            _id
-                            title
-                            masteryPoints
+                        htmlUrl
+                        name
+                        rubric {
+                          criteria {
+                            outcome {
+                              _id
+                              masteryPoints
+                            }
                           }
-                          masteryPoints
+                        }
+                      }
+                      submissionHistoriesConnection {
+                        nodes {
+                          attempt
+                          submittedAt
+                          postedAt
+                          rubricAssessmentsConnection {
+                            nodes {
+                              assessmentRatings {
+                                _id
+                                points
+                                criterion {
+                                  outcome {
+                                    _id
+                                    title
+                                    masteryPoints
+                                  }
+                                  masteryPoints
+                                }
+                              }
+                            }
+                          }
                         }
                       }
                     }
@@ -56,12 +60,6 @@ query GetSubmissions($studentIds: ID!) {
             }
           }
         }
-      }
-    }
-  }
-}
-
-
     ";
 
     private readonly ICanvasGraphQlApi _canvasGraphQlApi;
