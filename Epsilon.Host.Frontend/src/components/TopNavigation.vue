@@ -45,19 +45,30 @@
 						<v-list>
 							<v-list-item>
 								<v-text-field
-									v-model="fromDate"
 									label="start"
+									:value="
+										fromDate?.toISOString().slice(0, 10)
+									"
 									density="compact"
-									single-line
-									type="date"></v-text-field>
+									type="date"
+									@update:model-value="
+										(s: string) => {
+											console.log(s)
+											fromDate = new Date(s)
+										}
+									"></v-text-field>
 							</v-list-item>
 							<v-list-item>
 								<v-text-field
-									v-model="toDate"
-									label="start"
+									label="End"
+									:value="toDate?.toISOString().slice(0, 10)"
 									density="compact"
-									single-line
-									type="date"></v-text-field>
+									type="date"
+									@update:model-value="
+										(s: string) => {
+											toDate = new Date(s)
+										}
+									"></v-text-field>
 							</v-list-item>
 						</v-list>
 					</template>
@@ -129,6 +140,7 @@ watch(selectedTerm, () => {
 })
 
 watch([correctedFromDate, toDate, fromDate], () => {
+	console.log("Emit is triggered")
 	emit("rangeChange", {
 		startCorrected: correctedFromDate.value,
 		start: fromDate.value,
