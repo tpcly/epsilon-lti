@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
@@ -13,36 +12,16 @@ public class KpiTableComponent : AbstractCompetenceComponent
     {
         var body = mainDocumentPart.Document.Body;
         
-        body.AppendChild(new Paragraph(
-                new Run(
-                    new Text("KPI-table")
-                )
-            )
-        );  
-        body.AppendChild( new Paragraph(
-            new Run(
-                new Text(" ")
-            )
-        ));
+        if (body == null)
+        {
+            return body;
+        }
+        
+        body.AppendChild(CreateText("KPI-table"));  
+        body.AppendChild(CreateText(" "));
 
         // Create a table to display outcomes, assignments, and grades
-        var table = new Table();
-        
-        // Define table properties
-        var tblProp = new TableProperties(
-            new TableWidth(),
-            new TableBorders(
-                new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  },
-                new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3,  }
-            )
-        );
-        table.AppendChild<TableProperties>(tblProp);
-        
-        // Define table grid
-        var tblGrid = new TableGrid();
-        table.AppendChild(tblGrid);
+        var table = CreateTable();
 
         // Define column header texts
         var columnsHeaders = new Dictionary<string, string> { { "KPI", "3000" }, { "Assignments", "5000" }, { "Grades", "1000" }, }; 
@@ -53,7 +32,7 @@ public class KpiTableComponent : AbstractCompetenceComponent
         // Create the header cells
         foreach (var columnHeader in columnsHeaders)
         {
-            headerRow.AppendChild(CreateTableCell(columnHeader.Value, new Paragraph(new Run(new Text(columnHeader.Key)))));
+            headerRow.AppendChild(CreateTableCell(columnHeader.Value, CreateText(columnHeader.Key)));
         }
 
         // Add the header row to the table
@@ -72,7 +51,7 @@ public class KpiTableComponent : AbstractCompetenceComponent
             var tableRow = new TableRow();
             
              // Outcome (KPI) column
-            tableRow.AppendChild(CreateTableCell("3000", new Paragraph(new Run(new Text(outcome.Name)))));
+            tableRow.AppendChild(CreateTableCell("3000", CreateText(outcome.Name)));
 
             // Assignments column
             var assignmentsParagraph = new Paragraph();
@@ -110,36 +89,12 @@ public class KpiTableComponent : AbstractCompetenceComponent
         }
         
         // Newline to separate the table from the rest of the document
-        body?.Append(new Paragraph(new Run(new Text(""))));
+        body.Append(CreateWhiteSpace());
         
         // Add the table to the document
-        body?.AppendChild(table);
+        body.AppendChild(table);
         
         return body;
-    }
-
-    private static TableCell CreateTableCell(string? width, params OpenXmlElement[] elements)
-    {
-        var cell = new TableCell();
-        var cellProperties = new TableCellProperties();
-
-        foreach (var element in elements)
-        {
-            cell.Append(element);
-        }
-
-        if (width != null)
-        {
-            cellProperties.Append(new TableCellWidth
-            {
-                Type = TableWidthUnitValues.Dxa,
-                Width = width,
-            });
-        }
-
-        cell.PrependChild(cellProperties);
-
-        return cell;
     }
 
     public KpiTableComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)

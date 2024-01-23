@@ -21,8 +21,8 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
             return body;
         }
         
-        body.AppendChild(FormattedText("Competence Profile"));  
-        body.AppendChild(FormattedText(" "));
+        body.AppendChild(CreateText("Competence Profile"));  
+        body.AppendChild(CreateWhiteSpace());
         
         var outcomes = 
             Submissions.ToEnumerable()
@@ -40,7 +40,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 body.AppendChild(GetTableOneAxis(domain, outcomes));
             }
             body.AppendChild(
-                FormattedText("")
+                CreateWhiteSpace()
             );   
         }
         
@@ -49,7 +49,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
     private static OpenXmlElement GetTableOneAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
     {
-        var table = FormattedTable();
+        var table = CreateTable();
 
         var headerRow = new TableRow()
         {
@@ -60,7 +60,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         foreach (var row in domain.RowsSet.Types.OrderBy(static c => c.Order))
         {
             
-            var cell = FormattedTableCell(
+            var cell = CreateTableCell(
                 "700", 
                 new Paragraph(
                     new Run(
@@ -90,14 +90,11 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
             var cellOutcomes = outcomes.Where(o => o.Row.Id == row.Id).ToList();
             var types = cellOutcomes.Select(static o => o.Value).ToList();
             var value = types.MaxBy(static t => t.Order);
-            var count = cellOutcomes.Count.ToString(CultureInfo.InvariantCulture);  
+            var count = cellOutcomes.Count.ToString(CultureInfo.InvariantCulture);
+
+            var contentCell = CreateCenteredText(count);
                 
-            var contentCell = new Paragraph(new Run(new Text(count)))
-            {
-                ParagraphProperties = new ParagraphProperties() { Justification = new Justification() { Val = JustificationValues.Center, }, },
-            };
-                
-            var cell = FormattedTableCell(
+            var cell = CreateTableCell(
                 "1000",
                 contentCell);
                 
@@ -117,7 +114,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
     private static OpenXmlElement GetTableTwoAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
     {
-        var table = FormattedTable();
+        var table = CreateTable();
 
         var headerRow = new TableRow()
         {
@@ -125,20 +122,17 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 new TableJustification(){Val = TableRowAlignmentValues.Center,}),
         };
 
-        var content = new Paragraph(new Run(new Text("")))
-        {
-            ParagraphProperties = new ParagraphProperties() { Justification = new Justification() { Val = JustificationValues.Center, }, },
-        };
+        var content = CreateWhiteSpace();
 
         // Empty top-left cell.
         headerRow.AppendChild(
-            FormattedTableCell("700", 
+            CreateTableCell("700", 
                 content));
         
         foreach (var col in domain.ColumnsSet.Types.OrderBy(static c => c.Order))
         {
             
-            var cell = FormattedTableCell(
+            var cell = CreateTableCell(
                 "700", 
                 new Paragraph(
                     new Run(
@@ -162,7 +156,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
             };
             
             domainRow.AppendChild(
-                FormattedTableCell(
+                CreateTableCell(
                     "1000", 
                     new Paragraph(
                         new Run(
@@ -175,14 +169,11 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 var cellOutcomes = outcomes.Where(o => o.Row.Id == row.Id && o.Column?.Id == col.Id).ToList();
                 var types = cellOutcomes.Select(static o => o.Value).ToList();
                 var value = types.MaxBy(static t => t.Order);
-                var count = cellOutcomes.Count.ToString(CultureInfo.InvariantCulture);  
+                var count = cellOutcomes.Count.ToString(CultureInfo.InvariantCulture);
+
+                var contentCell = CreateCenteredText(count);
                 
-                var contentCell = new Paragraph(new Run(new Text(count)))
-                {
-                    ParagraphProperties = new ParagraphProperties() { Justification = new Justification() { Val = JustificationValues.Center, }, },
-                };
-                
-                var cell = FormattedTableCell(
+                var cell = CreateTableCell(
                     "1000",
                     contentCell);
                 

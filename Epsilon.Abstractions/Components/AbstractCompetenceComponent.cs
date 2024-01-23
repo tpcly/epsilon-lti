@@ -20,7 +20,7 @@ public abstract class AbstractCompetenceComponent: IWordCompetenceComponent
 
     public abstract Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart);
 
-    protected static Paragraph FormattedText(string text)
+    protected static Paragraph CreateText(string text)
     {
         return new Paragraph(
             new Run(
@@ -28,8 +28,31 @@ public abstract class AbstractCompetenceComponent: IWordCompetenceComponent
             )
         );
     }
+    
+    protected static Paragraph CreateCenteredText(string text)
+    {
+        return new Paragraph(
+            new Run(
+                new Text(text)
+            )
+        ) { 
+            ParagraphProperties = new ParagraphProperties() 
+            {
+                Justification = new Justification() { Val = JustificationValues.Center, },
+            }, 
+        };
+    }
+    
+    protected static Paragraph CreateWhiteSpace()
+    {
+        return new Paragraph(
+            new Run(
+                new Text(" ")
+            )
+        );
+    }
 
-    protected static Table FormattedTable()
+    protected static Table CreateTable()
     {
         var table = new Table();
         
@@ -52,7 +75,7 @@ public abstract class AbstractCompetenceComponent: IWordCompetenceComponent
         return table;
     }
     
-    protected static TableCell FormattedTableCell(string width, params OpenXmlElement[] elements)
+    protected static TableCell CreateTableCell(string width, params OpenXmlElement[] elements)
     {
         var cell = new TableCell();
         var cellProperties = new TableCellProperties()
@@ -71,6 +94,71 @@ public abstract class AbstractCompetenceComponent: IWordCompetenceComponent
         {
             cell.Append(element);
         }
+
+        return cell;
+    }
+    
+    protected static TableCell CreateTableCell(string width, Shading shading, params OpenXmlElement[] elements)
+    {
+        var cell = new TableCell();
+        var cellProperties = new TableCellProperties()
+        {
+            TableCellVerticalAlignment = new TableCellVerticalAlignment() {Val = TableVerticalAlignmentValues.Center,},
+            TableCellWidth = new TableCellWidth()
+            {
+                Type = TableWidthUnitValues.Dxa,
+                Width = width,
+            },
+            Shading = (Shading)shading.CloneNode(true),
+        };
+        
+        cell.TableCellProperties = cellProperties;
+        
+        foreach (var element in elements)
+        {
+            cell.Append(element);
+        }
+
+        return cell;
+    }
+    
+    protected static TableCell CreateTableCell(string width, Shading shading, string text)
+    {
+        var cell = new TableCell();
+        var cellProperties = new TableCellProperties()
+        {
+            TableCellVerticalAlignment = new TableCellVerticalAlignment() {Val = TableVerticalAlignmentValues.Center,},
+            TableCellWidth = new TableCellWidth()
+            {
+                Type = TableWidthUnitValues.Dxa,
+                Width = width,
+            },
+            Shading = (Shading)shading.CloneNode(true),
+        };
+        
+        cell.TableCellProperties = cellProperties;
+        
+        cell.Append(CreateText(text));
+
+        return cell;
+    }
+    
+    protected static TableCell CreateTableCell(string width, string text)
+    {
+        var cell = new TableCell();
+        var cellProperties = new TableCellProperties()
+        {
+            TableCellVerticalAlignment = new TableCellVerticalAlignment() {Val = TableVerticalAlignmentValues.Center,},
+            TableCellWidth = new TableCellWidth()
+            {
+                Type = TableWidthUnitValues.Dxa,
+                Width = width,
+            },
+        };
+        
+        cell.TableCellProperties = cellProperties;
+        
+        cell.Append(CreateText(text));
 
         return cell;
     }
