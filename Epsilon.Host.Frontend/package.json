@@ -1,7 +1,7 @@
 {
 	"name": "epsilon-frontend",
 	"private": true,
-	"version": "V1.0.0",
+	"version": "V1.0.1",
 	"type": "module",
 	"scripts": {
 		"build": "nuxt build",
@@ -25,7 +25,7 @@
 		"vue3-apexcharts": "^1.4.4"
 	},
 	"devDependencies": {
-		"@nuxt/devtools": "latest",
+		"@nuxt/devtools": "^1.0.8",
 		"@nuxt/eslint-config": "^0.2.0",
 		"@nuxt/schema": "^3.9.3",
 		"@types/jsonwebtoken": "^9.0.5",
