@@ -142,12 +142,7 @@ if (process.client) {
 	})
 
 	setInterval(() => {
-		if (loadingSubmissions.value) {
-			console.log(
-				loadingSubmissions.value,
-				outcomes.value.length,
-				filterRange.value?.startCorrected
-			)
+		if (loadingSubmissions.value && outcomes.value.length > 0) {
 			filteredSubmissions.value = Generator.generateSubmissions(
 				outcomes.value
 			)
@@ -196,7 +191,7 @@ const filteredSubmissions = computed({
 	},
 })
 
-const handleUserChange = async (user: User): Promise<void> => {
+const handleUserChange = (user: User): void => {
 	if (user._id === null) {
 		return
 	}
