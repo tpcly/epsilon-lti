@@ -5,7 +5,7 @@
 			@range-change="handleRangeChange">
 			<template #default="navigationProps">
 				<v-col
-					v-if="enableSemesterWrapped && !loadingOutcomes"
+					v-if="enableSemesterWrapped && !loadingSubmissions"
 					cols="12"
 					md="2">
 					<WrappedDialog
@@ -39,12 +39,12 @@
 		</v-tabs>
 		<loading-dialog
 			v-if="!store.errors.length"
-			v-model="loadingOutcomes"></loading-dialog>
+			v-model="loadingSubmissions"></loading-dialog>
 
 		<v-window v-model="tabs" class="mt-4">
 			<v-window-item :value="0">
 				<PerformanceDashboard
-					:is-loading="loadingOutcomes"
+					:is-loading="loadingSubmissions"
 					:submissions="filteredSubmissions"
 					:domains="domains" />
 			</v-window-item>
@@ -119,7 +119,7 @@ const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
 const enableSemesterWrapped = ref<boolean | undefined>(false)
 const api = useApi()
-const loadingOutcomes = ref<boolean>(true)
+const loadingSubmissions = ref<boolean>(true)
 const submissions = ref<LearningDomainSubmission[]>([])
 const filterRange = ref<{
 	start: Date
@@ -142,7 +142,12 @@ if (process.client) {
 	})
 
 	setInterval(() => {
-		if (loadingOutcomes.value) {
+		if (loadingSubmissions.value) {
+			console.log(
+				loadingSubmissions.value,
+				outcomes.value.length,
+				filterRange.value?.startCorrected
+			)
 			filteredSubmissions.value = Generator.generateSubmissions(
 				outcomes.value
 			)
@@ -156,6 +161,7 @@ function loadDomains(domainNames: string[]): void {
 	api.learning
 		.learningDomainOutcomesList()
 		.then((r) => (outcomes.value = r.data))
+		.catch((r) => store.addError(r))
 	domainNames.map(function (domainName) {
 		api.learning
 			.learningDomainDetail(domainName)
@@ -195,7 +201,7 @@ const handleUserChange = async (user: User): Promise<void> => {
 		return
 	}
 	currentUser.value = user
-	loadingOutcomes.value = true
+	loadingSubmissions.value = true
 	filterRange.value = null
 
 	api?.learning
@@ -206,10 +212,10 @@ const handleUserChange = async (user: User): Promise<void> => {
 			submissions.value = r.data
 		})
 		.finally(() => {
-			loadingOutcomes.value = false
+			loadingSubmissions.value = false
 		})
 		.catch((r) => {
-			loadingOutcomes.value = false
+			loadingSubmissions.value = false
 			store.addError(r)
 		})
 }
