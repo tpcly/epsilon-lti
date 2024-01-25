@@ -40,7 +40,56 @@
 					:flat="true"
 					item-title="name"
 					return-object
-					no-data-text>
+					no-data-text
+					@update:model-value="customDateSelection = false">
+					<template #selection="{ item }">
+						<span v-if="customDateSelection"> Custom </span>
+						<span v-else>{{ item.title }}</span>
+					</template>
+					<template #append-item>
+						<v-menu :close-on-content-click="false">
+							<template #activator="{ props }">
+								<v-list-item v-bind="props">
+									Custom
+								</v-list-item>
+							</template>
+							<v-list>
+								<v-list-item>
+									<v-text-field
+										label="From"
+										:value="
+											correctedFromDate
+												?.toISOString()
+												.slice(0, 10)
+										"
+										density="compact"
+										type="date"
+										@update:model-value="
+											(s: string) => {
+												customDateSelection = true
+												correctedFromDate = new Date(s)
+												fromDate = new Date(s)
+											}
+										"></v-text-field>
+								</v-list-item>
+								<v-list-item>
+									<v-text-field
+										label="Until"
+										:value="
+											toDate?.toISOString().slice(0, 10)
+										"
+										density="compact"
+										type="date"
+										@update:model-value="
+											(s: string) => {
+												customDateSelection = true
+												toDate = new Date(s)
+											}
+										"></v-text-field>
+								</v-list-item>
+							</v-list>
+						</v-menu>
+					</template>
 				</v-autocomplete>
 			</v-col>
 		</v-row>
@@ -61,6 +110,7 @@ const selectedTerm = ref<EnrollmentTerm | null>(null)
 const correctedFromDate = ref<Date | null>(null)
 const fromDate = ref<Date | null>(null)
 const toDate = ref<Date | null>(null)
+const customDateSelection = ref<boolean>(false)
 const runtimeConfig = useRuntimeConfig()
 const store = useEpsilonStore()
 onMounted(() => {
@@ -108,7 +158,7 @@ watch(selectedTerm, () => {
 	fromDate.value = new Date(selectedTermUnwrapped?.startAt)
 })
 
-watch([correctedFromDate, toDate], () => {
+watch([correctedFromDate, toDate, fromDate], () => {
 	emit("rangeChange", {
 		startCorrected: correctedFromDate.value,
 		start: fromDate.value,
