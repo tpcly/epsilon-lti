@@ -21,9 +21,6 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
             return body;
         }
         
-        body.AppendChild(CreateText("Competence Profile"));  
-        body.AppendChild(CreateWhiteSpace());
-        
         var outcomes = 
             Submissions.ToEnumerable()
                        .SelectMany(static o => o.Results.

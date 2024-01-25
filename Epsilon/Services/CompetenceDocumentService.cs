@@ -26,15 +26,15 @@ public class CompetenceDocumentService : ICompetenceDocumentService
     {
         var submissions = _canvasResultService.GetSubmissions(userId);
         submissions = submissions.Where(static e => e.Criteria.Any());
+
         if (from != null && to != null)
         {
-            submissions = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to);
+            var components = FetchComponents(submissions, from.Value, to.Value);
+            return new CompetenceDocument(components);
         }
 
-        var domains = await _domainService.GetDomainsFromTenant();
-        var components = FetchComponents(submissions, domains, await _domainService.GetOutcomes());
+        throw new ArgumentNullException(nameof(from));
 
-        return new CompetenceDocument(components);
     }
 
     public async Task<WordprocessingDocument> WriteDocument(Stream stream, CompetenceDocument document)
@@ -53,10 +53,20 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         return wordDocument;
     }
 
-    public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
+    public async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, DateTime from, DateTime to )
     {
+        var domains = await _domainService.GetDomainsFromTenant();
+        var outcomes = await _domainService.GetOutcomes();
+        var delta = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to);
+        var startSubmissions = submissions.Where(s => s.SubmittedAt <= from);
+
+        yield return new TitleComponent("Starting profile");
+        yield return new CompetenceProfileComponent(startSubmissions, domains, outcomes);
+        yield return new TitleComponent("Intended development");
+        yield return new CompetenceProfileComponent(submissions.Where(static s=> s.SubmittedAt == null), domains, outcomes);
+        yield return new TitleComponent("Final development");
         yield return new CompetenceProfileComponent(submissions, domains, outcomes);
-        yield return new KpiTableComponent(submissions, domains, outcomes);
-        yield return new KpiMatrixComponent(submissions, domains, outcomes);
+        yield return new KpiTableComponent(delta, domains, outcomes);
+        yield return new KpiMatrixComponent(delta, domains, outcomes);
     }
 }
