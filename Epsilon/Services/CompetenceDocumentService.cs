@@ -22,19 +22,13 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         _canvasResultService = canvasResultService;
     }
 
-    public async Task<CompetenceDocument> GetDocument(string userId, DateTime? from = null, DateTime? to = null)
+    public async Task<CompetenceDocument> GetDocument(string userId, DateTime from, DateTime to)
     {
         var submissions = _canvasResultService.GetSubmissions(userId);
         submissions = submissions.Where(static e => e.Criteria.Any());
 
-        if (from != null && to != null)
-        {
-            var components = FetchComponents(submissions, from.Value, to.Value);
-            return new CompetenceDocument(components);
-        }
-
-        throw new ArgumentNullException(nameof(from));
-
+        var components = FetchComponents(submissions, from, to);
+        return new CompetenceDocument(components);
     }
 
     public async Task<WordprocessingDocument> WriteDocument(Stream stream, CompetenceDocument document)
@@ -53,9 +47,9 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         return wordDocument;
     }
 
-    public async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, DateTime from, DateTime to )
+    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, DateTime from, DateTime to )
     {
-        var domains = await _domainService.GetDomainsFromTenant();
+        var domains = _domainService.GetDomainsFromTenant();
         var outcomes = await _domainService.GetOutcomes();
         var delta = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to);
         var startSubmissions = submissions.Where(s => s.SubmittedAt <= from);

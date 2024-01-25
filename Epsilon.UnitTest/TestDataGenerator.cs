@@ -124,6 +124,18 @@ public static class TestDataGenerator
 
         return l;
     }
+    
+    
+    public static IEnumerable<LearningDomain> GenerateRandomLearningDomains(int count)
+    {
+        var l = new List<LearningDomain>();
+        for (var i = 0; i < count; i++)
+        {
+            l.Add(GenerateRandomLearningDomain());
+        }
+
+        return l;
+    }
 
 
     private static IEnumerable<LearningDomainOutcomeRecord> GenerateRandomLearningDomainResultList(int count)
