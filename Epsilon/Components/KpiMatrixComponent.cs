@@ -61,7 +61,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             
             var cell = AbstractCompetenceComponent.CreateTableCell("100", shading);
             
-            cell.FirstChild.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
+            cell.FirstChild?.Append(new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, });
             
             cell.Append(CreateText(sub.Assignment ?? "Not found"));
             headerRow.AppendChild(cell);

@@ -126,7 +126,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
             CreateTableCell("700", 
                 content));
         
-        foreach (var col in domain.ColumnsSet.Types.OrderBy(static c => c.Order))
+        foreach (var col in domain.ColumnsSet!.Types.OrderBy(static c => c.Order))
         {
             
             var cell = CreateTableCell(
