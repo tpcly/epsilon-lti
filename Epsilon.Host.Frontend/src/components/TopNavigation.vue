@@ -40,7 +40,56 @@
 					:flat="true"
 					item-title="name"
 					return-object
-					no-data-text>
+					no-data-text
+					@update:model-value="customDateSelection = false">
+					<template #selection="{ item }">
+						<span v-if="customDateSelection"> Custom </span>
+						<span v-else>{{ item.title }}</span>
+					</template>
+					<template #append-item>
+						<v-menu :close-on-content-click="false">
+							<template #activator="{ props }">
+								<v-list-item v-bind="props">
+									Custom
+								</v-list-item>
+							</template>
+							<v-list>
+								<v-list-item>
+									<v-text-field
+										label="From"
+										:value="
+											correctedFromDate
+												?.toISOString()
+												.slice(0, 10)
+										"
+										density="compact"
+										type="date"
+										@update:model-value="
+											(s: string) => {
+												customDateSelection = true
+												correctedFromDate = new Date(s)
+												fromDate = new Date(s)
+											}
+										"></v-text-field>
+								</v-list-item>
+								<v-list-item>
+									<v-text-field
+										label="Until"
+										:value="
+											toDate?.toISOString().slice(0, 10)
+										"
+										density="compact"
+										type="date"
+										@update:model-value="
+											(s: string) => {
+												customDateSelection = true
+												toDate = new Date(s)
+											}
+										"></v-text-field>
+								</v-list-item>
+							</v-list>
+						</v-menu>
+					</template>
 				</v-autocomplete>
 			</v-col>
 		</v-row>
@@ -61,17 +110,21 @@ const selectedTerm = ref<EnrollmentTerm | null>(null)
 const correctedFromDate = ref<Date | null>(null)
 const fromDate = ref<Date | null>(null)
 const toDate = ref<Date | null>(null)
+const customDateSelection = ref<boolean>(false)
 const runtimeConfig = useRuntimeConfig()
-
-onMounted(async () => {
-	const response = await api.filter.filterAccessibleStudentsList()
-
-	users.value = response.data
-	selectedUser.value = users.value[0]
+const store = useEpsilonStore()
+onMounted(() => {
+	api.filter
+		.filterAccessibleStudentsList()
+		.then((r) => {
+			users.value = r.data
+			selectedUser.value = users.value[0]
+		})
+		.catch((r) => store.addError(r))
 })
 
 // When the user is updated, we should request its terms
-watch(selectedUser, async () => {
+watch(selectedUser, () => {
 	if (!selectedUser?.value?._id) {
 		return
 	}
@@ -79,30 +132,33 @@ watch(selectedUser, async () => {
 	selectedTerm.value = null
 	emit("userChange", selectedUser.value)
 
-	const response = await api.filter.filterParticipatedTermsList({
-		studentId: selectedUser.value._id,
-	})
-
-	terms.value = response.data
-	selectedTerm.value = terms.value[0]
+	api.filter
+		.filterParticipatedTermsList({
+			studentId: selectedUser.value._id,
+		})
+		.then((r) => {
+			terms.value = r.data
+			selectedTerm.value = terms.value[0]
+		})
+		.catch((r) => store.addError(r))
 })
 
 watch(selectedTerm, () => {
 	const selectedTermUnwrapped = selectedTerm.value
-	if (!selectedTermUnwrapped?.start_at || !selectedTermUnwrapped.end_at) {
+	if (!selectedTermUnwrapped?.startAt || !selectedTermUnwrapped.endAt) {
 		return
 	}
 
 	const termsUnwrapped = terms.value
 	correctedFromDate.value = new Date(
-		termsUnwrapped[termsUnwrapped.length - 1]?.start_at!
+		termsUnwrapped[termsUnwrapped.length - 1]?.startAt!
 	)
 
-	toDate.value = new Date(selectedTermUnwrapped?.end_at)
-	fromDate.value = new Date(selectedTermUnwrapped?.start_at)
+	toDate.value = new Date(selectedTermUnwrapped?.endAt)
+	fromDate.value = new Date(selectedTermUnwrapped?.startAt)
 })
 
-watch([correctedFromDate, toDate], () => {
+watch([correctedFromDate, toDate, fromDate], () => {
 	emit("rangeChange", {
 		startCorrected: correctedFromDate.value,
 		start: fromDate.value,

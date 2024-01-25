@@ -112,10 +112,8 @@ public class CompetenceDocumentServiceTests
         {
             _testOutputHelper.WriteLine(ex.Message);
         }
-
-        wordprocessingDocument.Dispose();
         
         //Assert
-        Assert.True(count == 0);
+        Assert.Equal(0, count);
     }
 }

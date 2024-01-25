@@ -10,21 +10,21 @@ import type {
 	LearningDomainOutcomeRecord,
 } from "@/api.generated"
 
-const props = defineProps<{
+const componentProps = defineProps<{
 	result: LearningDomainOutcomeRecord | undefined
 	criteria: LearningDomainCriteria | undefined
 }>()
 
 function getColor(): string {
 	if (
-		props?.result?.grade != null &&
-		props?.criteria?.masteryPoints != null
+		componentProps?.result?.grade != null &&
+		componentProps?.criteria?.masteryPoints != null
 	) {
-		return (((props?.result?.grade as unknown as number) >=
-			props?.criteria?.masteryPoints) as unknown as number)
+		return (((componentProps?.result?.grade as unknown as number) >=
+			componentProps?.criteria?.masteryPoints) as unknown as number)
 			? "#44F656"
 			: "#FA1818"
-	} else if (props.criteria?.masteryPoints != null) {
+	} else if (componentProps.criteria?.masteryPoints != null) {
 		return "#9F2B68"
 	}
 	return ""

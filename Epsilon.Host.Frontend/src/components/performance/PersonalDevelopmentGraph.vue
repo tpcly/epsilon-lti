@@ -18,14 +18,14 @@ import {
 	type LearningDomainType,
 } from "~/api.generated"
 
-const props = defineProps<{
+const componentProps = defineProps<{
 	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
 	isLoading: boolean
 }>()
 
-watch(props.domain, () => {
-	const rowTypes = props.domain?.rowsSet?.types
+watch(componentProps.domain, () => {
+	const rowTypes = componentProps.domain?.rowsSet?.types
 
 	rowTypes.forEach((s: LearningDomainType) => {
 		chartOptions.xaxis.categories.push(s.shortName)
@@ -36,25 +36,25 @@ const series = computed(() => [
 	{
 		name: "Score",
 		data: calculateAverageSkillOutcomes(
-			props.submissions,
-			props.domain
+			componentProps.submissions,
+			componentProps.domain
 		)?.map((d) => {
 			return {
 				y: d.decayingAverage?.toFixed(3),
-				x: props.domain.rowsSet.types.find(
+				x: componentProps.domain.rowsSet.types.find(
 					(s: LearningDomainType) => s.id == d.skill
 				)!.shortName,
 				fillColor:
 					"#" +
 					getValueType(d.masteryLevel?.toString())?.hexColor +
-					(props.isLoading ? "80" : ""),
+					(componentProps.isLoading ? "80" : ""),
 			}
 		}),
 	},
 ])
 
 const getValueType = (id: string | undefined): LearningDomainType =>
-	props.domain.valuesSet.types.find(
+	componentProps.domain.valuesSet.types.find(
 		(masteryLevel: LearningDomainType) => masteryLevel.shortName == id
 	)!
 
@@ -102,6 +102,8 @@ const chartOptions = {
 	},
 	yaxis: {
 		show: false,
+		min: 0,
+		max: 5,
 	},
 	legend: {
 		position: "bottom",

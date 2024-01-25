@@ -45,14 +45,14 @@ import {
 	type LearningDomainSubmission,
 } from "~/api.generated"
 
-const props = defineProps<{
+const componentProps = defineProps<{
 	submissions: LearningDomainSubmission[]
 	outcomes: LearningDomainOutcome[]
 }>()
 
 const allOutcomes = computed<number[]>(() => {
 	let list: number[] = []
-	props.submissions.map((submission) =>
+	componentProps.submissions.map((submission) =>
 		submission.criteria!.map((result) => {
 			list = list.filter((c) => c !== result.id)
 			list.push(result.id as number)

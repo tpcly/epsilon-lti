@@ -43,13 +43,13 @@ import type {
 	LearningDomainSubmission,
 } from "~/api.generated"
 
-const props = defineProps<{
+const componentProps = defineProps<{
 	outcomes: LearningDomainOutcome[]
 	submissions: LearningDomainSubmission[]
 }>()
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
-	props.submissions
+	componentProps.submissions
 		.flatMap((submission) =>
 			submission.results!.map((result) => result.outcome!)
 		)
