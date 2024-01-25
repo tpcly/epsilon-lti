@@ -1,17 +1,25 @@
 <template>
-	<div v-if="submissions" class="competence-document">
-		<KpiTable
-			:outcomes="allOutcomes"
-			:submissions="filteredSubmissionsDateSelection" />
-		<h2>Competence Profile</h2>
-		<CompetenceProfile
-			:submissions="filteredSubmissionsDateSelection"
-			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
-		<KpiMatrix
-			v-if="outcomes.length > 0"
-			:outcomes="outcomes"
-			:submissions="filteredSubmissionsDateSelection" />
-	</div>
+	<v-row>
+		<v-col cols="12">
+			<h2>Competence Profile</h2>
+			<CompetenceProfile
+				:submissions="filteredSubmissionsDateSelection"
+				:domain="domains.find((l) => l.id == 'hbo-i-2018')"
+				is-loading />
+		</v-col>
+		<!--		<v-col cols="12">-->
+		<!--			<KpiTable-->
+		<!--				:outcomes="allOutcomes"-->
+		<!--				:submissions="filteredSubmissionsDateSelection" />-->
+		<!--		</v-col>-->
+		<v-col cols="12">
+			<h2>Kpi-Matrix</h2>
+			<KpiMatrix
+				v-if="outcomes.length > 0"
+				:outcomes="outcomes"
+				:submissions="filteredSubmissionsDateSelection" />
+		</v-col>
+	</v-row>
 </template>
 
 <script lang="ts" setup>
