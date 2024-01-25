@@ -55,6 +55,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             };
 
             var cell = CreateTableCell("100", shading);
+            cell.TableCellProperties!.TextDirection = new TextDirection { Val = TextDirectionValues.TopToBottomLeftToRightRotated, };
 
             cell.Append(CreateText(sub.Assignment ?? "Not found"));
             headerRow.AppendChild(cell);
@@ -106,9 +107,8 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
 
             table.AppendChild(row);
         }
-
-        body?.Append(CreateWhiteSpace());
-        body?.AppendChild(table);
+        
+        body.AppendChild(table);
         return body;
     }
 
