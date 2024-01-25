@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -9,27 +8,30 @@ namespace Epsilon.Components;
 
 public class KpiMatrixComponent : AbstractCompetenceComponent
 {
-
-    public KpiMatrixComponent(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
+    public KpiMatrixComponent(
+        IEnumerable<LearningDomainSubmission> submissions,
+        IEnumerable<LearningDomain?> domains,
+        IEnumerable<LearningDomainOutcome> outcomes
+    )
         : base(submissions, domains, outcomes)
     {
     }
 
     public override async Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
-         var body = mainDocumentPart.Document.Body;
-         
-         if (body == null)
-         {
-             return body;
-         }
-         
-         var table = CreateTable();
-        
-        // Calculate the header row height based on the longest assignment name.
-        var headerRowHeight = await Submissions.MaxAsync(static s => s.Assignment?.Length ?? 10);
+        var body = mainDocumentPart.Document.Body;
 
-        if (await Submissions.AnyAsync())
+        if (body == null)
+        {
+            return body;
+        }
+
+        var table = CreateTable();
+
+        // Calculate the header row height based on the longest assignment name.
+        var headerRowHeight = Submissions.Max(static s => s.Assignment?.Length ?? 10);
+
+        if (Submissions.Any())
         {
             headerRowHeight *= 111;
         }
@@ -37,12 +39,12 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         // Create the table header row.
         var headerRow = new TableRow();
         headerRow.AppendChild(new TableRowProperties(new TableRowHeight { Val = (UInt32Value)(uint)headerRowHeight, }));
-        
+
         // Empty top-left cell.
         headerRow.AppendChild(CreateTableCell("2500", CreateWhiteSpace()));
-      
+
         var index = 0;
-        await foreach (var sub in Submissions)
+        foreach (var sub in Submissions)
         {
             var shading = new Shading
             {
@@ -51,9 +53,9 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                     ? "FFFFFF"
                     : "d3d3d3",
             };
-            
+
             var cell = CreateTableCell("100", shading);
-            
+
             cell.Append(CreateText(sub.Assignment ?? "Not found"));
             headerRow.AppendChild(cell);
 
@@ -63,13 +65,10 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         table.AppendChild(headerRow);
 
 
-        var listOfCriteria = Submissions
-            .SelectMany(static e => e.Criteria
-                                     .Select(static result => result )
-                                     .ToAsyncEnumerable());
+        var listOfCriteria = Submissions.SelectMany(static e => e.Criteria.Select(static result => result));
 
         // Add the outcome rows.
-        await foreach (var outcomeCriterion in listOfCriteria.Distinct().OrderBy(static a => a.Id))
+        foreach (var outcomeCriterion in listOfCriteria.Distinct().OrderBy(static a => a.Id))
         {
             var row = new TableRow();
             var outcome = Outcomes.FirstOrDefault(o => o.Id == outcomeCriterion.Id);
@@ -84,7 +83,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 row.AppendChild(CreateTableCell("2500", paragraphForOutcomeName));
             }
 
-            await foreach (var sub in Submissions)
+            foreach (var sub in Submissions)
             {
                 var criteria = sub.Criteria.FirstOrDefault(c => c.Id == outcome?.Id);
                 var result = sub.Results.FirstOrDefault(r => r.Outcome.Id == outcome?.Id);
@@ -97,29 +96,36 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
                 }
 
                 var shading = new Shading { Val = ShadingPatternValues.Clear, Fill = fillColor, };
-                var cell = CreateTableCell("100", shading, 
-                    CreateCenteredText(result != null ? result.Outcome.Value.ShortName : ""));
+                var cell = CreateTableCell("100",
+                    shading,
+                    CreateCenteredText(result != null
+                        ? result.Outcome.Value.ShortName
+                        : ""));
                 row.AppendChild(cell);
             }
 
             table.AppendChild(row);
         }
-        
+
         body?.Append(CreateWhiteSpace());
         body?.AppendChild(table);
         return body;
     }
-    
+
     private static OutcomeGradeStatus GetStatus(double? grade, double? masteryPoints)
     {
         if (grade.HasValue && masteryPoints.HasValue)
         {
-            return grade.Value >= masteryPoints.Value ? OutcomeGradeStatus.Mastered : OutcomeGradeStatus.NotMastered;
+            return grade.Value >= masteryPoints.Value
+                ? OutcomeGradeStatus.Mastered
+                : OutcomeGradeStatus.NotMastered;
         }
+
         if (!grade.HasValue && masteryPoints.HasValue)
         {
             return OutcomeGradeStatus.NotAssessed;
         }
+
         return OutcomeGradeStatus.NotGraded;
     }
 

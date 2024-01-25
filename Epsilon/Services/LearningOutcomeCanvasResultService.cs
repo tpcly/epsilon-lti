@@ -76,17 +76,17 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
     public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId)
     {
-        var submissionsTask = await _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
+        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
 
-        await Task.WhenAll(domainOutcomesTask, domainOutcomesTask);
-
-        if (submissionsTask?.LegacyNode?.Enrollments == null)
+        Task.WaitAll(submissionsTask, domainOutcomesTask);
+        
+        if (submissionsTask.Result?.LegacyNode?.Enrollments == null)
         {
             throw new HttpRequestException("No Enrollments are given");
         }
 
-        foreach (var enrollment in submissionsTask.LegacyNode.Enrollments.DistinctBy(static e => e.Course?.Id))
+        foreach (var enrollment in submissionsTask.Result.LegacyNode.Enrollments.DistinctBy(static e => e.Course?.Id))
         {
             if (enrollment.Course?.Submissions?.Nodes != null)
             {
