@@ -6,5 +6,5 @@ public interface ILearningDomainService
 
     public Task<IEnumerable<LearningDomainOutcome?>> GetOutcomes();
 
-    public Task<IEnumerable<LearningDomain?>> GetDomainsFromTenant();
+    public IEnumerable<LearningDomain?> GetDomainsFromTenant();
 }

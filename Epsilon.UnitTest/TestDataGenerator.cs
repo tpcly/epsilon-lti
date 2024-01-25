@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
 using Bogus;
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Epsilon.Abstractions;
 using Tpcly.Canvas.Abstractions.GraphQl;
 
@@ -120,6 +119,18 @@ public static class TestDataGenerator
         for (var i = 0; i < count; i++)
         {
             l.Add(GenerateRandomLearningDomainCriteria());
+        }
+
+        return l;
+    }
+    
+    
+    public static IEnumerable<LearningDomain> GenerateRandomLearningDomains(int count)
+    {
+        var l = new List<LearningDomain>();
+        for (var i = 0; i < count; i++)
+        {
+            l.Add(GenerateRandomLearningDomain());
         }
 
         return l;

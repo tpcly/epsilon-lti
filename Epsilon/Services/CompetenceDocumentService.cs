@@ -22,17 +22,13 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         _canvasResultService = canvasResultService;
     }
 
-    public async Task<CompetenceDocument> GetDocument(string userId, DateTime? from = null, DateTime? to = null)
+    public async Task<CompetenceDocument> GetDocument(string userId, DateTime from, DateTime to)
     {
-        var submissions = _canvasResultService.GetSubmissions(userId);
-        if (from != null && to != null)
-        {
-            submissions = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to);
-        }
+        var submissions = await _canvasResultService.GetSubmissions(userId)
+                                              .Where(static e => e.Criteria.Any())
+                                              .ToListAsync();
 
-        var domains = await _domainService.GetDomainsFromTenant();
-        var components = FetchComponents(submissions, domains);
-
+        var components = FetchComponents(submissions, from, to);
         return new CompetenceDocument(components);
     }
 
@@ -41,9 +37,9 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
         wordDocument.AddMainDocumentPart();
-        wordDocument.MainDocumentPart!.Document = new Document();
+        wordDocument.MainDocumentPart!.Document = new Document(new Body());
 
-        foreach (var competenceWordComponent in await document.Components.ToListAsync())
+        await foreach (var competenceWordComponent in document.Components)
         {
             await competenceWordComponent.AddToWordDocument(wordDocument.MainDocumentPart);
         }
@@ -52,8 +48,22 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         return wordDocument;
     }
 
-    public static async IAsyncEnumerable<AbstractCompetenceComponent> FetchComponents(IAsyncEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains)
+    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(IList<LearningDomainSubmission> submissions, DateTime from, DateTime to )
     {
-        yield return new CompetenceProfileComponent(submissions, domains);
+        var domains = _domainService.GetDomainsFromTenant().ToList();
+        var outcomes = (await _domainService.GetOutcomes()).ToList();
+        var delta = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to).ToList();
+        var startSubmissions = submissions.Where(s => s.SubmittedAt <= from).ToList();
+
+        yield return new TitleComponent("Starting profile");
+        yield return new CompetenceProfileComponent(startSubmissions, domains, outcomes);
+        yield return new TitleComponent("Intended development");
+        yield return new CompetenceProfileComponent(new List<LearningDomainSubmission>(), domains, outcomes);
+        yield return new TitleComponent("Final development");
+        yield return new CompetenceProfileComponent(submissions, domains, outcomes);
+        yield return new TitleComponent("KPI Table");
+        yield return new KpiTableComponent(delta, domains, outcomes);
+        yield return new TitleComponent("KPI Matrix");
+        yield return new KpiMatrixComponent(delta, domains, outcomes);
     }
 }
