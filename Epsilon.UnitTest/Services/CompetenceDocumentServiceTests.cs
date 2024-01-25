@@ -25,47 +25,13 @@ public class CompetenceDocumentServiceTests
     }
 
     [Fact]
-    public async Task GetDocument_ReturnsCorrectDocumentWithFilteredDates()
-    {
-        // // Arrange
-        // var userId = "testUser";
-        // var from = DateTime.Now.AddDays(-7);
-        // var to = DateTime.Now;
-        // var expectedDocument = CompetenceDocumentService.FetchComponents(_submissions, new List<LearningDomain?>(){TestDataGenerator.GenerateRandomLearningDomain(), TestDataGenerator.GenerateRandomLearningDomain(),}, new List<LearningDomainOutcome>{TestDataGenerator.GenerateRandomLearningDomainOutcome(),});
-        //
-        // _canvasResultServiceMock.Setup(service => service.GetSubmissions(userId)).Returns(_submissions);
-        //
-        // // Act
-        // var result = await _competenceDocumentService.GetDocument(userId, from, to);
-        //
-        // // Assert
-        // Assert.Equal(await expectedDocument.CountAsync(), await result.Components.CountAsync());
-    }
-    
-    
-    [Fact]
-    public async Task GetDocument_ReturnsCorrectDocumentWithNoDates()
-    {
-        // Arrange
-        // var userId = "testUser";
-        // var expectedDocument = CompetenceDocumentService.FetchComponents(_submissions, null, null);
-        //
-        // _canvasResultServiceMock.Setup(service => service.GetSubmissions(userId)).Returns(_submissions);
-        // // Act
-        // var result = await _competenceDocumentService.GetDocument(userId, null, null);
-        //
-        // // Assert
-        // Assert.Equal(await expectedDocument.CountAsync(), await result.Components.CountAsync());
-    }
-
-    [Fact]
     public async void WriteDocument_WritesToStream()
     {
         // Arrange
         _canvasResultServiceMock.Setup(static s => s.GetSubmissions(It.IsAny<string>())).Returns(_submissions);
         _domainServiceMock.Setup(static s => s.GetDomainsFromTenant()).Returns(_domains);
         _domainServiceMock.Setup(static s => s.GetOutcomes()).ReturnsAsync(_outcomes);
-        var document = await _competenceDocumentService.GetDocument("01010", DateTime.Now.AddDays(-7), DateTime.Now);
+        var document = await _competenceDocumentService.GetDocument("01010", DateTime.Now.AddDays(-365), DateTime.Now);
         using var stream = new MemoryStream();
         
         // Act
@@ -83,7 +49,7 @@ public class CompetenceDocumentServiceTests
         _domainServiceMock.Setup(static s => s.GetDomainsFromTenant()).Returns(_domains);
         _domainServiceMock.Setup(static s => s.GetOutcomes()).ReturnsAsync(_outcomes);
         //Act
-        var document = await _competenceDocumentService.GetDocument("01010", DateTime.Now.AddDays(-7), DateTime.Now);
+        var document = await _competenceDocumentService.GetDocument("01010", DateTime.Now.AddDays(-365), DateTime.Now);
         using var stream = new MemoryStream();
         await _competenceDocumentService.WriteDocument(stream, document);
         using var wordprocessingDocument = WordprocessingDocument.Open(stream, false);

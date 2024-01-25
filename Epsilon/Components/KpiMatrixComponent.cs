@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -26,17 +27,9 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
          var table = CreateTable();
         
         // Calculate the header row height based on the longest assignment name.
-        var headerRowHeight = 0;
-        var anyAssignments = false;
+        var headerRowHeight = await Submissions.MaxAsync(static s => s.Assignment?.Length ?? 10);
 
-        await foreach (var sub in Submissions)
-        {
-            anyAssignments = true;
-            headerRowHeight = Math.Max(headerRowHeight, sub.Assignment?.Length ?? 10);
-
-        }
-
-        if (anyAssignments)
+        if (await Submissions.AnyAsync())
         {
             headerRowHeight *= 111;
         }
