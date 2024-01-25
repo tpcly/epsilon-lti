@@ -26,22 +26,18 @@ public class KpiTableComponent : AbstractCompetenceComponent
             return body;
         }
 
-        // Create a table to display outcomes, assignments, and grades
         var table = CreateTable();
-
-        // Define column header texts
+        
         var columnsHeaders = new Dictionary<string, string> { { "KPI", "3000" }, { "Assignments", "5000" }, { "Grades", "1000" }, };
 
         // Create the table header row
         var headerRow = new TableRow();
-
-        // Create the header cells
+        
         foreach (var columnHeader in columnsHeaders)
         {
             headerRow.AppendChild(CreateTableCell(columnHeader.Value, CreateText(columnHeader.Key)));
         }
-
-        // Add the header row to the table
+        
         table.AppendChild(headerRow);
 
         // Get allOutcomes
@@ -90,14 +86,10 @@ public class KpiTableComponent : AbstractCompetenceComponent
             tableRow.AppendChild(CreateTableCell("5000", assignmentsParagraph));
             tableRow.AppendChild(CreateTableCell("1000", gradesParagraph));
 
-            // Add the row to the table
             table.AppendChild(tableRow);
         }
 
-        // Newline to separate the table from the rest of the document
         body.Append(CreateWhiteSpace());
-
-        // Add the table to the document
         body.AppendChild(table);
 
         return body;

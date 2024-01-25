@@ -1,8 +1,13 @@
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Office2010.Word;
+using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
 using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
+using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
+using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
 
 namespace Epsilon.Components;
 
@@ -26,6 +31,9 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             return body;
         }
 
+        body.AppendChild(CreateLegend());
+        body.AppendChild(CreateWhiteSpace());
+        
         var table = CreateTable();
 
         // Calculate the header row height based on the longest assignment name.
@@ -112,7 +120,25 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         return body;
     }
 
-    private static OutcomeGradeStatus GetStatus(double? grade, double? masteryPoints)
+    private static OpenXmlElement CreateLegend()
+    {
+        var legend = CreateTable();
+        foreach (OutcomeGradeStatus gradeStatus in Enum.GetValues(typeof(OutcomeGradeStatus)))
+        {
+            var legendRow = new TableRow();
+            legendRow.AppendChild(CreateTableCell("300", new Shading(){Val = ShadingPatternValues.Clear,Fill = GetColor(gradeStatus), },CreateText("")));
+            legendRow.AppendChild(CreateTableCell("300", CreateText(gradeStatus.ToString())));
+            legend.AppendChild(legendRow);
+        }
+        var numberRow = new TableRow();
+        numberRow.AppendChild(CreateTableCell("300", CreateText("1/2/3/4/5")));
+        numberRow.AppendChild(CreateTableCell("300", CreateText("Grade")));
+        legend.AppendChild(numberRow);
+        
+        return legend;
+    }
+
+    private static OutcomeGradeStatus? GetStatus(double? grade, double? masteryPoints)
     {
         if (grade.HasValue && masteryPoints.HasValue)
         {
@@ -126,17 +152,17 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             return OutcomeGradeStatus.NotAssessed;
         }
 
-        return OutcomeGradeStatus.NotGraded;
+        return null;
     }
 
-    private static string GetColor(OutcomeGradeStatus status)
+    private static string GetColor(OutcomeGradeStatus? status)
     {
         return status switch
         {
-            OutcomeGradeStatus.Mastered => "#44F656",
-            OutcomeGradeStatus.NotMastered => "#FA1818",
-            OutcomeGradeStatus.NotAssessed => "#9F2B68",
-            OutcomeGradeStatus.NotGraded => "FFFFFF",
+            OutcomeGradeStatus.Mastered => "44F656",
+            OutcomeGradeStatus.NotMastered => "FA1818",
+            OutcomeGradeStatus.NotAssessed => "9F2B68",
+            null => "FFFFFF",
             _ => "FFFFFF",
         };
     }
