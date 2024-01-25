@@ -11,7 +11,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
     public KpiMatrixComponent(
         IEnumerable<LearningDomainSubmission> submissions,
         IEnumerable<LearningDomain?> domains,
-        IEnumerable<LearningDomainOutcome> outcomes
+        IEnumerable<LearningDomainOutcome?> outcomes
     )
         : base(submissions, domains, outcomes)
     {
@@ -71,7 +71,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         foreach (var outcomeCriterion in listOfCriteria.Distinct().OrderBy(static a => a.Id))
         {
             var row = new TableRow();
-            var outcome = Outcomes.FirstOrDefault(o => o.Id == outcomeCriterion.Id);
+            var outcome = Outcomes.FirstOrDefault(o => o?.Id == outcomeCriterion.Id);
 
             // Create a new paragraph for outcome.Name
             if (outcome != null)

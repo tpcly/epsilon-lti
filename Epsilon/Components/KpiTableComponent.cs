@@ -11,7 +11,7 @@ public class KpiTableComponent : AbstractCompetenceComponent
     public KpiTableComponent(
         IEnumerable<LearningDomainSubmission> submissions,
         IEnumerable<LearningDomain?> domains,
-        IEnumerable<LearningDomainOutcome> outcomes
+        IEnumerable<LearningDomainOutcome?> outcomes
     )
         : base(submissions, domains, outcomes)
     {

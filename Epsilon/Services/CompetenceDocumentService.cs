@@ -52,13 +52,13 @@ public class CompetenceDocumentService : ICompetenceDocumentService
     {
         var domains = _domainService.GetDomainsFromTenant().ToList();
         var outcomes = (await _domainService.GetOutcomes()).ToList();
-        var delta = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to);
-        var startSubmissions = submissions.Where(s => s.SubmittedAt <= from);
+        var delta = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to).ToList();
+        var startSubmissions = submissions.Where(s => s.SubmittedAt <= from).ToList();
 
         yield return new TitleComponent("Starting profile");
         yield return new CompetenceProfileComponent(startSubmissions, domains, outcomes);
         yield return new TitleComponent("Intended development");
-        yield return new CompetenceProfileComponent(submissions.Where(static s=> s.SubmittedAt == null), domains, outcomes);
+        yield return new CompetenceProfileComponent(new List<LearningDomainSubmission>(), domains, outcomes);
         yield return new TitleComponent("Final development");
         yield return new CompetenceProfileComponent(submissions, domains, outcomes);
         yield return new KpiTableComponent(delta, domains, outcomes);

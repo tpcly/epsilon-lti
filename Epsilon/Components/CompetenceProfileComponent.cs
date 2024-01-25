@@ -11,7 +11,7 @@ namespace Epsilon.Components;
 
 public class CompetenceProfileComponent : AbstractCompetenceComponent
 {
-    public CompetenceProfileComponent(IEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome> outcomes)
+    public CompetenceProfileComponent(IEnumerable<LearningDomainSubmission> submissions, IEnumerable<LearningDomain?> domains, IEnumerable<LearningDomainOutcome?> outcomes)
         : base(submissions, domains, outcomes)
     {
     }
