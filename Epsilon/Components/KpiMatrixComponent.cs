@@ -1,8 +1,5 @@
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Office2010.Word;
-using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
 using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Components;
