@@ -26,9 +26,6 @@ public class KpiTableComponent : AbstractCompetenceComponent
             return body;
         }
 
-        body.AppendChild(CreateText("KPI-table"));
-        body.AppendChild(CreateText(" "));
-
         // Create a table to display outcomes, assignments, and grades
         var table = CreateTable();
 

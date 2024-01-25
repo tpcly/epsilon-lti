@@ -61,7 +61,9 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         yield return new CompetenceProfileComponent(new List<LearningDomainSubmission>(), domains, outcomes);
         yield return new TitleComponent("Final development");
         yield return new CompetenceProfileComponent(submissions, domains, outcomes);
+        yield return new TitleComponent("KPI Table");
         yield return new KpiTableComponent(delta, domains, outcomes);
+        yield return new TitleComponent("KPI Matrix");
         yield return new KpiMatrixComponent(delta, domains, outcomes);
     }
 }
