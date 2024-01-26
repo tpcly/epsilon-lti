@@ -7,11 +7,6 @@
 				:domain="domains.find((l) => l.id == 'hbo-i-2018')"
 				is-loading />
 		</v-col>
-		<!--		<v-col cols="12">-->
-		<!--			<KpiTable-->
-		<!--				:outcomes="allOutcomes"-->
-		<!--				:submissions="filteredSubmissionsDateSelection" />-->
-		<!--		</v-col>-->
 		<v-col cols="12">
 			<h2>Kpi-Matrix</h2>
 			<KpiMatrix
@@ -24,7 +19,6 @@
 
 <script lang="ts" setup>
 import KpiMatrix from "~/components/competence/KpiMatrix.vue"
-import KpiTable from "~/components/competence/KpiTable.vue"
 import CompetenceProfile from "~/components/competence/CompetenceProfile.vue"
 import type {
 	LearningDomain,

@@ -46,7 +46,7 @@
 						<span v-if="customDateSelection"> Custom </span>
 						<span v-else>{{ item.title }}</span>
 					</template>
-					<template #append-item>
+					<template #prepend-item>
 						<v-menu :close-on-content-click="false">
 							<template #activator="{ props }">
 								<v-list-item v-bind="props">
