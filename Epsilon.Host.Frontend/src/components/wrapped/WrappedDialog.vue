@@ -20,7 +20,7 @@
 						<v-icon>mdi-close</v-icon>
 					</v-btn>
 				</v-toolbar>
-				<v-card-title> Masterd KPI's</v-card-title>
+				<v-card-title> Mastered KPI's</v-card-title>
 				<v-card-text>
 					<v-row>
 						<v-col cols="12" sm="4">
@@ -29,7 +29,7 @@
 									{{ newMasteredKpis.length }}
 								</v-card-title>
 								<v-card-text>
-									New KPI's masterd this semester
+									New KPI's mastered this semester
 								</v-card-text>
 							</v-card>
 						</v-col>
@@ -39,7 +39,7 @@
 									{{ allOutcomesCurrentSemester?.length }}
 								</v-card-title>
 								<v-card-text>
-									Total amount of KPI's masterd this semester
+									Total amount of KPI's mastered this semester
 								</v-card-text>
 							</v-card>
 						</v-col>
@@ -56,7 +56,7 @@
 					</v-row>
 				</v-card-text>
 				<v-divider class="mt-4 mb-4"></v-divider>
-				<v-card-title>Domain stats</v-card-title>
+				<v-card-title>Domain specific numbers</v-card-title>
 				<v-card-text>
 					<v-row>
 						<v-col
