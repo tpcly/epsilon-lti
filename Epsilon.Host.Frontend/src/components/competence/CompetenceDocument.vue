@@ -1,22 +1,28 @@
 <template>
-	<div v-if="submissions" class="competence-document">
-		<KpiTable
-			:outcomes="allOutcomes"
-			:submissions="filteredSubmissionsDateSelection" />
-		<h2>Competence Profile</h2>
-		<CompetenceProfile
-			:submissions="filteredSubmissionsDateSelection"
-			:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
-		<KpiMatrix
-			v-if="outcomes.length > 0"
-			:outcomes="outcomes"
-			:submissions="filteredSubmissionsDateSelection" />
-	</div>
+	<v-row class="mt-3">
+		<v-col xs="12" md="8">
+			<CompetenceProfile
+				:submissions="filteredSubmissionsDateSelection"
+				class="competence-profile"
+				:is-loading="false"
+				:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+		</v-col>
+		<v-col xs="12" md="4">
+			<LearningDomainValues
+				:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+		</v-col>
+		<v-col cols="12">
+			<h2>Kpi-Matrix</h2>
+			<KpiMatrix
+				v-if="outcomes.length > 0"
+				:outcomes="outcomes"
+				:submissions="filteredSubmissionsDateSelection" />
+		</v-col>
+	</v-row>
 </template>
 
 <script lang="ts" setup>
 import KpiMatrix from "~/components/competence/KpiMatrix.vue"
-import KpiTable from "~/components/competence/KpiTable.vue"
 import CompetenceProfile from "~/components/competence/CompetenceProfile.vue"
 import type {
 	LearningDomain,
@@ -53,12 +59,6 @@ const filteredSubmissionsDateSelection = computed(() => {
 		}
 	})
 })
-
-const allOutcomes = computed<LearningDomainOutcome[]>(() =>
-	componentProps.submissions.flatMap((submission) =>
-		submission.results!.map((result) => result.outcome!)
-	)
-)
 </script>
 
 <style scoped>

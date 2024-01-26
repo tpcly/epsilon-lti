@@ -1,14 +1,34 @@
 <template>
-	<h2>Kpi-Matrix</h2>
 	<table class="kpi-matrix">
 		<thead>
 			<tr>
-				<th></th>
+				<th>
+					<table>
+						<tr>
+							<td style="background-color: #44f656"></td>
+							<td>Mastered</td>
+						</tr>
+						<tr>
+							<td style="background-color: #fa1818"></td>
+							<td>Not mastered</td>
+						</tr>
+						<tr>
+							<td style="background-color: #9f2b68"></td>
+							<td>Not Assessed</td>
+						</tr>
+						<tr>
+							<td>1/2/3/4/5</td>
+							<td>Grade</td>
+						</tr>
+					</table>
+				</th>
 				<th
 					v-for="submission of submissions"
 					:key="submission.assignment"
 					class="kpi-matrix-header">
-					{{ submission.assignment }}
+					<a :href="submission.assignmentUrl" target="_blank">{{
+						submission.assignment
+					}}</a>
 				</th>
 			</tr>
 		</thead>
@@ -38,7 +58,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue"
 import KpiMatrixCell from "~/components/competence/KpiMatrixCell.vue"
 import {
 	type LearningDomainOutcome,
@@ -68,14 +87,11 @@ const allOutcomes = computed<number[]>(() => {
 		text-decoration: underline;
 		writing-mode: vertical-lr;
 		-webkit-writing-mode: vertical-lr;
-		transform: rotate(180deg);
-		//border: 2px solid rgb(218, 219, 223);
-		//position: absolute;
 		padding: 10px;
 	}
 
 	&-cell {
-		width: 10px;
+		min-width: 25px;
 	}
 
 	&-outcome {
@@ -83,7 +99,6 @@ const allOutcomes = computed<number[]>(() => {
 		border: 2px solid rgb(218, 219, 223);
 		border-bottom: none;
 		border-left: none;
-		//display: flex;
 		padding: 10px;
 	}
 }
