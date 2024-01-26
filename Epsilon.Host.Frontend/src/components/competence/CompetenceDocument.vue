@@ -58,12 +58,6 @@ const filteredSubmissionsDateSelection = computed(() => {
 		}
 	})
 })
-
-const allOutcomes = computed<LearningDomainOutcome[]>(() =>
-	componentProps.submissions.flatMap((submission) =>
-		submission.results!.map((result) => result.outcome!)
-	)
-)
 </script>
 
 <style scoped>
