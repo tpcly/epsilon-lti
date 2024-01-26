@@ -2,7 +2,26 @@
 	<table class="kpi-matrix">
 		<thead>
 			<tr>
-				<th></th>
+				<th>
+					<table>
+						<tr>
+							<td style="background-color: #44f656">Mastered</td>
+						</tr>
+						<tr>
+							<td style="background-color: #fa1818">
+								Not mastered
+							</td>
+						</tr>
+						<tr>
+							<td style="background-color: #9f2b68">
+								Not Assessed
+							</td>
+						</tr>
+						<tr>
+							<td>1/2/3/4/5 Grade</td>
+						</tr>
+					</table>
+				</th>
 				<th
 					v-for="submission of submissions"
 					:key="submission.assignment"

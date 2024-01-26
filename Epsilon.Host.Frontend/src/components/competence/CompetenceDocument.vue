@@ -1,11 +1,14 @@
 <template>
-	<v-row>
-		<v-col cols="12">
-			<h2>Competence Profile</h2>
+	<v-row class="mt-3">
+		<v-col xs="12" md="8">
 			<CompetenceProfile
 				:submissions="filteredSubmissionsDateSelection"
-				:domain="domains.find((l) => l.id == 'hbo-i-2018')"
-				is-loading />
+				class="competence-profile"
+				:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+		</v-col>
+		<v-col xs="12" md="4">
+			<LearningDomainValues
+				:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
 		</v-col>
 		<v-col cols="12">
 			<h2>Kpi-Matrix</h2>
