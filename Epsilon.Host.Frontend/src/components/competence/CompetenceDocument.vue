@@ -4,6 +4,7 @@
 			<CompetenceProfile
 				:submissions="filteredSubmissionsDateSelection"
 				class="competence-profile"
+				:is-loading="false"
 				:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
 		</v-col>
 		<v-col xs="12" md="4">

@@ -5,20 +5,20 @@
 				<th>
 					<table>
 						<tr>
-							<td style="background-color: #44f656">Mastered</td>
+							<td style="background-color: #44f656"></td>
+							<td>Mastered</td>
 						</tr>
 						<tr>
-							<td style="background-color: #fa1818">
-								Not mastered
-							</td>
+							<td style="background-color: #fa1818"></td>
+							<td>Not mastered</td>
 						</tr>
 						<tr>
-							<td style="background-color: #9f2b68">
-								Not Assessed
-							</td>
+							<td style="background-color: #9f2b68"></td>
+							<td>Not Assessed</td>
 						</tr>
 						<tr>
-							<td>1/2/3/4/5 Grade</td>
+							<td>1/2/3/4/5</td>
+							<td>Grade</td>
 						</tr>
 					</table>
 				</th>
