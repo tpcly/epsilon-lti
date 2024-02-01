@@ -85,8 +85,6 @@ builder.Services.AddLti()
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer();
 
-builder.Services.ConfigureOptions<LtiJwtBearerOptions>();
-
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICanvasUserSessionAccessor, CanvasUserSessionAccessor>();
 
@@ -111,6 +109,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI();
+    app.MapControllers().AllowAnonymous();
+}
+else
+{
+    app.MapControllers();
 }
 
 app.UseSwagger();
@@ -122,6 +125,6 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+
 
 app.Run();

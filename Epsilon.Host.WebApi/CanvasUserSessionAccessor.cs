@@ -25,21 +25,29 @@ public class CanvasUserSessionAccessor : ICanvasUserSessionAccessor
             return null;
         }
 
-        var ltiMessage = await context.GetLtiMessageAsync();
-        if (ltiMessage?.Custom == null
-            || !ltiMessage.Custom.TryGetValue("course_id", out var courseIdRaw)
-            || !ltiMessage.Custom.TryGetValue("user_id", out var userIdRaw))
+        var courseId = _canvasOptions.OverrideCourseId ?? null;
+        var userId = _canvasOptions.OverrideUserId ?? null;
+        var isTeacher = _canvasOptions.OverrideCourseId is not null && _canvasOptions.OverrideUserId is not null;
+
+        if (courseId == null && userId == null)
         {
-            return null;
+            var ltiMessage = await context.GetLtiMessageAsync();
+            if (ltiMessage?.Custom == null
+                || !ltiMessage.Custom.TryGetValue("course_id", out var courseIdRaw)
+                || !ltiMessage.Custom.TryGetValue("user_id", out var userIdRaw))
+            {
+                return null;
+            }
+            courseId = int.Parse(courseIdRaw.ToString()!, CultureInfo.InvariantCulture);
+            userId = int.Parse(userIdRaw.ToString()!, CultureInfo.InvariantCulture);
+            isTeacher = ltiMessage.Roles?.Contains("http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor") ?? false;
         }
-
-        var courseId = _canvasOptions.OverrideCourseId ?? int.Parse(courseIdRaw.ToString()!, CultureInfo.InvariantCulture);
-        var userId = _canvasOptions.OverrideUserId ?? int.Parse(userIdRaw.ToString()!, CultureInfo.InvariantCulture);
-
+        
+        
         return new CanvasUserSession(
-            courseId,
-            userId,
-            ltiMessage.Roles?.Contains("http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor") ?? false
+            courseId!.Value,
+            userId!.Value,
+            isTeacher
         );
     }
 }
