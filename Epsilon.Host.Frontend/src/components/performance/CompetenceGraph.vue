@@ -122,7 +122,6 @@ const series = computed(() => {
 		const row = componentProps.domain?.rowsSet?.types.find(
 			(l) => l.id === layer.architectureLayer
 		)
-		console.log(row, layer)
 		return {
 			name: row?.name,
 			color: "#" + row?.hexColor + (componentProps.isLoading ? "80" : ""),

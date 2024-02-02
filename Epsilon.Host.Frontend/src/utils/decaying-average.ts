@@ -3,7 +3,6 @@ import {
 	type LearningDomainOutcomeRecord,
 	type LearningDomainSubmission,
 } from "~/api.generated"
-import { returnStatement } from "@babel/types"
 
 export interface DecayingAveragePerActivity {
 	outcome: string
@@ -125,13 +124,6 @@ export const calculateAverageTaskOutcomes = (
 					? (totalScoreArchitectureActivity / totalScoreActivity) *
 						(totalScoreActivity / amountOfActivities)
 					: 0
-			// console.log(
-			// 	activity.id,
-			// 	// amountOfActivities,
-			// 	// totalScoreArchitectureActivity / totalScoreActivity,
-			// 	totalScoreActivity,
-			// 	amountOfActivities
-			// )
 
 			return {
 				activity: activity.id,
