@@ -122,13 +122,11 @@ const series = computed(() => {
 		const row = componentProps.domain?.rowsSet?.types.find(
 			(l) => l.id === layer.architectureLayer
 		)
-
+		console.log(row, layer)
 		return {
 			name: row?.name,
 			color: "#" + row?.hexColor + (componentProps.isLoading ? "80" : ""),
-			data: layer.layerActivities.map((column) =>
-				column.decayingAverage.toFixed(3)
-			),
+			data: layer.layerActivities.map((column) => column.decayingAverage),
 		}
 	})
 })

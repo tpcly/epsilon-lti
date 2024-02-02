@@ -40,7 +40,7 @@ const series = computed(() => [
 			componentProps.domain
 		)?.map((d) => {
 			return {
-				y: d.decayingAverage?.toFixed(3),
+				y: d.decayingAverage?.toFixed(2),
 				x: componentProps.domain.rowsSet.types.find(
 					(s: LearningDomainType) => s.id == d.skill
 				)!.shortName,
