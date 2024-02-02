@@ -70,7 +70,6 @@ builder.Services.AddScoped<IReadOnlyRepository<LearningDomain>, EntityFrameworkR
 builder.Services.AddScoped<IReadOnlyRepository<LearningDomainOutcome>, EntityFrameworkReadOnlyRepository<ApplicationDbContext, LearningDomainOutcome>>();
 
 // Add domain services
-builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
 builder.Services.AddScoped<IFilterService, FilterService>();
 builder.Services.AddScoped<ILearningDomainService, LearningDomainService>();

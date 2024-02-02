@@ -1,6 +1,4 @@
-using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
-using Epsilon.Host.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,29 +9,11 @@ namespace Epsilon.Host.WebApi.Controllers;
 [Route("api/[controller]")]
 public class DocumentController : ControllerBase
 {
-    private readonly IPageComponentManager _pageComponentManager;
     private readonly ICompetenceDocumentService _competenceDocumentService;
 
-    public DocumentController(IPageComponentManager pageComponentManager, ICompetenceDocumentService competenceDocumentService)
+    public DocumentController(ICompetenceDocumentService competenceDocumentService)
     {
-        _pageComponentManager = pageComponentManager;
         _competenceDocumentService = competenceDocumentService;
-    }
-
-    [HttpGet("page/{pageName}")]
-    public async Task<ActionResult<PageComponent>> GetPage(int courseId, string pageName)
-    {
-        var pageComponent = await _pageComponentManager.Fetch(courseId, pageName);
-
-        return Ok(pageComponent);
-    }
-
-    [HttpPost("page/{pageName}")]
-    public async Task<ActionResult<PageComponent>> UpdateOrCreatePage(int courseId, string pageName, [FromBody] PageUpdateRequest updateRequest)
-    {
-        var createdPageComponent = await _pageComponentManager.CreateOrUpdate(courseId, pageName, updateRequest.Body);
-
-        return Ok(createdPageComponent);
     }
 
 
