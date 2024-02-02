@@ -191,7 +191,7 @@ const filteredSubmissions = computed({
 	},
 })
 
-const handleUserChange = (user: User): void => {
+const handleUserChange = async (user: User): Promise<void> => {
 	if (user._id === null) {
 		return
 	}
@@ -199,20 +199,16 @@ const handleUserChange = (user: User): void => {
 	loadingSubmissions.value = true
 	filterRange.value = null
 
-	api?.learning
-		.learningOutcomesList({
-			studentId: user._id,
-		})
-		.then((r) => {
-			submissions.value = r.data
-		})
-		.finally(() => {
-			loadingSubmissions.value = false
-		})
-		.catch((r) => {
-			loadingSubmissions.value = false
-			store.addError(r)
-		})
+	const response = await api?.learning.learningOutcomesList({
+		studentId: user._id,
+	})
+
+	if (response.error) {
+		store.addError(response.error)
+	}
+
+	submissions.value = response.data
+	loadingSubmissions.value = false
 }
 
 const handleRangeChange = (range: {

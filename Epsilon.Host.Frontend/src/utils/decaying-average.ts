@@ -180,6 +180,7 @@ export const calculateDecayingAverageForAllOutcomes = (
 
 /**
  * Calculate decaying average described by Canvas: https://community.canvaslms.com/t5/Canvas-Basics-Guide/What-are-Outcomes/ta-p/75#decaying_average
+ * @source https://github.com/instructure/canvas-lms/blob/d98cdb2ceef66b3524adb9ec568ab69bd7bdc8b3/app/models/rollup_score.rb#L97
  * @param results
  * @constructor
  * @private
@@ -191,18 +192,20 @@ export const calculateDecayingAverageForOutcomeType = (
 		return 0.0
 	}
 
-	const recentResult = results[results.length - 1]
-	let totalGradeScore = recentResult.grade || 0.0
+	const weight = 65
+	const tmpScoreSets = [...results]
+	const latest = tmpScoreSets.pop()
 
-	if (results.length > 1) {
-		const sumOfGrades = results
-			.slice(0, -1)
-			.reduce((sum, r) => sum + (r.grade || 0.0), 0.0)
-		const averageGrade = sumOfGrades / results.length
-		totalGradeScore = averageGrade * 0.35 + (recentResult.grade || 0) * 0.65
+	if (!latest || tmpScoreSets.length === 0) {
+		return latest?.grade ?? 0
 	}
 
-	return totalGradeScore
+	const tmpScores = tmpScoreSets.map((set) => set.grade ?? 0)
+	const latestWeighted = (latest?.grade ?? 0) * (0.01 * weight)
+	const olderAvgWeighted =
+		(tmpScores.reduce((a, b) => a + b, 0) / tmpScores.length) *
+		(0.01 * (100 - weight))
+	return latestWeighted + olderAvgWeighted
 }
 
 /**

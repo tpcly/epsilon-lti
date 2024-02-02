@@ -1,6 +1,6 @@
 <template>
 	<td :style="{ backgroundColor: getColor() }">
-		{{ result?.outcome.value.shortName }}
+		{{ result?.grade }}
 	</td>
 </template>
 <script setup lang="ts">
