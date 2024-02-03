@@ -84,6 +84,7 @@ builder.Services.AddLti()
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer();
 
+builder.Services.ConfigureOptions<LtiJwtBearerOptions>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICanvasUserSessionAccessor, CanvasUserSessionAccessor>();
 
