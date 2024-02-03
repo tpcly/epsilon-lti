@@ -4,8 +4,10 @@
 			<v-btn
 				v-if="showWrapped"
 				v-bind="props"
-				class="w-100 wrappedButton">
-				{{ term?.name }} wrapped
+				class="wrappedButton"
+				size="large">
+				{{ term?.name }}<br />
+				wrapped
 			</v-btn>
 		</template>
 
@@ -18,30 +20,30 @@
 						<v-icon>mdi-close</v-icon>
 					</v-btn>
 				</v-toolbar>
-				<v-card-title> Masterd KPI's</v-card-title>
+				<v-card-title> Mastered KPI's</v-card-title>
 				<v-card-text>
 					<v-row>
-						<v-col cols="4">
+						<v-col cols="12" sm="4">
 							<v-card>
 								<v-card-title>
 									{{ newMasteredKpis.length }}
 								</v-card-title>
 								<v-card-text>
-									New KPI's masterd this semester
+									New KPI's mastered this semester
 								</v-card-text>
 							</v-card>
 						</v-col>
-						<v-col cols="4">
+						<v-col cols="12" sm="4">
 							<v-card>
 								<v-card-title>
 									{{ allOutcomesCurrentSemester?.length }}
 								</v-card-title>
 								<v-card-text>
-									Total amount of KPI's masterd this semester
+									Total amount of KPI's mastered this semester
 								</v-card-text>
 							</v-card>
 						</v-col>
-						<v-col cols="4">
+						<v-col cols="12" sm="4">
 							<v-card>
 								<v-card-title>
 									{{ allOutcomes.length }}
@@ -54,20 +56,23 @@
 					</v-row>
 				</v-card-text>
 				<v-divider class="mt-4 mb-4"></v-divider>
-				<v-card-title>Domain stats</v-card-title>
+				<v-card-title>Domain specific numbers</v-card-title>
 				<v-card-text>
 					<v-row>
 						<v-col
 							v-for="domain in mostUsedDomains"
 							:key="domain.domain.id"
-							cols="6">
+							cols="12"
+							sm="6">
 							<v-card>
 								<v-card-text style="text-transform: uppercase">
 									{{ domain.domain.id }}
 								</v-card-text>
 								<v-card-text>
 									<v-row>
-										<v-col :cols="domain.column ? 6 : 12">
+										<v-col
+											:cols="12"
+											:sm="domain.column ? 6 : 12">
 											<ol>
 												<li
 													v-for="(i, x) in domain.row
@@ -84,7 +89,10 @@
 												</li>
 											</ol>
 										</v-col>
-										<v-col v-if="domain.column" cols="6">
+										<v-col
+											v-if="domain.column"
+											cols="12"
+											sm="6">
 											<ol>
 												<li
 													v-for="(
@@ -123,14 +131,16 @@ import type {
 	LearningDomainType,
 } from "~/api.generated"
 
-const props = defineProps<{
+const componentProps = defineProps<{
 	submissions: LearningDomainSubmission[]
 	domains: LearningDomain[]
 	outcomes: LearningDomainOutcome[]
 	terms: EnrollmentTerm[] | null
 }>()
 
-const term = computed<EnrollmentTerm | undefined>(() => props.terms?.at(0))
+const term = computed<EnrollmentTerm | undefined>(() =>
+	componentProps.terms?.at(0)
+)
 const showWrapped = computed<boolean>(() => {
 	if (term.value != undefined) {
 		return (
@@ -145,13 +155,13 @@ const showWrapped = computed<boolean>(() => {
 	return true
 })
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
-	props.submissions.flatMap((submission) =>
+	componentProps.submissions.flatMap((submission) =>
 		submission.results!.map((result) => result.outcome!)
 	)
 )
 
 const allOutcomesPast = computed<LearningDomainOutcome[]>(() =>
-	props.submissions
+	componentProps.submissions
 		.filter(
 			(s) =>
 				new Date(s.submittedAt!) <= new Date(term.value!.startAt ?? "")
@@ -162,7 +172,7 @@ const allOutcomesPast = computed<LearningDomainOutcome[]>(() =>
 )
 
 const allOutcomesCurrentSemester = computed<LearningDomainOutcome[]>(() =>
-	props.submissions
+	componentProps.submissions
 		.filter(
 			(s) =>
 				new Date(s.submittedAt!) >=
@@ -192,7 +202,7 @@ const mostUsedDomains = computed<
 		row: { count: number; row: LearningDomainType }[]
 	}[]
 >(() => {
-	return props.domains.map((d) => {
+	return componentProps.domains.map((d) => {
 		return {
 			row: d.rowsSet?.types?.map((t) => {
 				return {
@@ -234,9 +244,8 @@ const mostUsedDomains = computed<
 
 /* Apply styles to the button */
 .wrappedButton {
-	width: 200px;
-	height: 50px;
-	font-size: 16px;
+	min-width: 100%;
+	font-weight: unset;
 	color: #fff;
 	background: linear-gradient(45deg, #848da4, #11284c);
 	background-size: 200% 200%;
@@ -245,10 +254,5 @@ const mostUsedDomains = computed<
 	cursor: pointer;
 	animation: diagonalColorChange 1s infinite alternate;
 	transition: background 0.3s ease-in-out;
-}
-
-/* Optional hover effect */
-.wrappedButton:hover {
-	background-position: 100% 100%;
 }
 </style>

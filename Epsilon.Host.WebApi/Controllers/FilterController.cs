@@ -22,7 +22,7 @@ public class FilterController : Controller
     {
         return await _filterService.GetParticipatedTerms(studentId);
     }
-    
+
     [HttpGet("accessible-students")]
     public async Task<IEnumerable<User>?> GetAccessibleStudents()
     {

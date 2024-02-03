@@ -35,7 +35,7 @@ jobs:
                   tags: |
                       ${{ matrix.image }}:acc
                       ${{ matrix.image }}:${{ github.event.release.tag_name }}
-                      ${{ !contains(github.event.release.tag_name, 'Beta') && format('{0}:latest', matrix.image) || '' }}
+                      ${{ !contains(github.event.release.tag_name, 'Beta') && format('{0}:prod', matrix.image) || '' }}
 
                   
                   

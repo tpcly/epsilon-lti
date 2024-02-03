@@ -70,7 +70,6 @@ builder.Services.AddScoped<IReadOnlyRepository<LearningDomain>, EntityFrameworkR
 builder.Services.AddScoped<IReadOnlyRepository<LearningDomainOutcome>, EntityFrameworkReadOnlyRepository<ApplicationDbContext, LearningDomainOutcome>>();
 
 // Add domain services
-builder.Services.AddScoped<IPageComponentManager, PageComponentManager>();
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
 builder.Services.AddScoped<IFilterService, FilterService>();
 builder.Services.AddScoped<ILearningDomainService, LearningDomainService>();
@@ -86,7 +85,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer();
 
 builder.Services.ConfigureOptions<LtiJwtBearerOptions>();
-
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICanvasUserSessionAccessor, CanvasUserSessionAccessor>();
 
@@ -111,6 +109,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI();
+    app.MapControllers().AllowAnonymous();
+}
+else
+{
+    app.MapControllers();
 }
 
 app.UseSwagger();
@@ -122,6 +125,6 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+
 
 app.Run();

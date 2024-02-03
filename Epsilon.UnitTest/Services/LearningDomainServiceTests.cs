@@ -22,7 +22,8 @@ public class LearningDomainServiceTests
     public async Task GetOutcomes_ReturnsExpectedOutcomes()
     {
         // Arrange
-        _learningDomainOutcomeRepositoryMock.Setup(static repo => repo.AllToListAsync(null, It.IsAny<string[]?>(), It.IsAny<int?>(), It.IsAny<int?>())).ReturnsAsync(_outcomes);
+        _learningDomainOutcomeRepositoryMock.Setup(static repo => repo.AllToListAsync(null, It.IsAny<string[]?>(), It.IsAny<int?>(), It.IsAny<int?>()))
+                                            .ReturnsAsync(_outcomes);
 
         // Act
         var result = await _learningDomainService.GetOutcomes();
@@ -70,11 +71,11 @@ public class LearningDomainServiceTests
     public async Task GetDomainsFromTenant_ReturnsCorrectDomains()
     {
         // Arrange
-        var expectedDomains = new List<LearningDomain> { _learningDomain, };
-        _learningDomainRepositoryMock.Setup(static repo => repo.AllToListAsync(null, It.IsAny<string[]?>(), It.IsAny<int?>(), It.IsAny<int?>())).ReturnsAsync(expectedDomains);
+        var expectedDomains = TestDataGenerator.GenerateRandomLearningDomains(3);
+        _learningDomainRepositoryMock.Setup(static repo => repo.AllToList(null, It.IsAny<string[]?>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(expectedDomains);
 
         // Act
-        var result = await _learningDomainService.GetDomainsFromTenant();
+        var result = _learningDomainService.GetDomainsFromTenant();
 
         // Assert
         Assert.Equal(expectedDomains, result);

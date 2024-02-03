@@ -21,7 +21,7 @@ import {
 	type LearningDomainSubmission,
 } from "~/api.generated"
 
-const props = defineProps<{
+const componentProps = defineProps<{
 	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
 	isLoading: boolean
@@ -72,6 +72,7 @@ const chartOptions = {
 		labels: {
 			show: true,
 			rotate: 0,
+			hideOverlappingLabels: false,
 			style: {
 				fontSize: "12.5px",
 			},
@@ -79,6 +80,8 @@ const chartOptions = {
 	},
 	yaxis: {
 		show: false,
+		min: 0,
+		max: 5,
 	},
 	legend: {
 		show: false,
@@ -97,7 +100,7 @@ const chartOptions = {
 }
 
 onMounted(() => {
-	const columnTypes = props.domain?.columnsSet?.types
+	const columnTypes = componentProps.domain?.columnsSet?.types
 	if (columnTypes != undefined) {
 		columnTypes.forEach((s) => {
 			chartOptions.xaxis.categories.push(s.name as never)
@@ -112,20 +115,18 @@ onMounted(() => {
  * an array with objects for each row: The name of the row, Corresponding color and an array with scores.
  */
 const series = computed(() => {
-	return calculateAverageTaskOutcomes(props.submissions, props.domain)?.map(
-		(layer: DecayingAveragePerLayer) => {
-			const row = props.domain?.rowsSet?.types.find(
-				(l) => l.id === layer.architectureLayer
-			)
-
-			return {
-				name: row?.name,
-				color: "#" + row?.hexColor + (props.isLoading ? "80" : ""),
-				data: layer.layerActivities.map((column) =>
-					column.decayingAverage.toFixed(3)
-				),
-			}
+	return calculateAverageTaskOutcomes(
+		componentProps.submissions,
+		componentProps.domain
+	)?.map((layer: DecayingAveragePerLayer) => {
+		const row = componentProps.domain?.rowsSet?.types.find(
+			(l) => l.id === layer.architectureLayer
+		)
+		return {
+			name: row?.name,
+			color: "#" + row?.hexColor + (componentProps.isLoading ? "80" : ""),
+			data: layer.layerActivities.map((column) => column.decayingAverage),
 		}
-	)
+	})
 })
 </script>

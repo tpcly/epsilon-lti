@@ -24,17 +24,15 @@ public class LearningDomainService : ILearningDomainService
     public async Task<LearningDomain?> GetDomain(string name)
     {
         var domain = await _learningDomainRepository.SingleOrDefaultAsync(d => d.Id == name, includeProperties: s_learningDomainProperties);
-        
+
         domain?.Order();
-        
+
         return domain;
     }
 
-    public async Task<IEnumerable<LearningDomain?>> GetDomainsFromTenant()
-    {
-        var domains = await _learningDomainRepository.AllToListAsync(includeProperties: s_learningDomainProperties);
-        return domains;
-
+    public IEnumerable<LearningDomain?> GetDomainsFromTenant()
+    { 
+        return _learningDomainRepository.AllToList(includeProperties: s_learningDomainProperties);
     }
 
     public async Task<IEnumerable<LearningDomainOutcome?>> GetOutcomes()

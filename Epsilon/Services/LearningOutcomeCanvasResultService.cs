@@ -19,8 +19,8 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                     nodes {
                       assignment {
                         _id
-                        name
                         htmlUrl
+                        name
                         rubric {
                           criteria {
                             outcome {
@@ -30,21 +30,26 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                           }
                         }
                       }
-                      postedAt
-                      submittedAt
-                      attempt
-                      rubricAssessmentsConnection {
+                      submissionHistoriesConnection {
                         nodes {
-                          assessmentRatings {
-                            _id
-                            criterion {
-                              outcome {
+                          attempt
+                          submittedAt
+                          postedAt
+                          rubricAssessmentsConnection {
+                            nodes {
+                              assessmentRatings {
                                 _id
-                                title
+                                points
+                                criterion {
+                                  outcome {
+                                    _id
+                                    title
+                                    masteryPoints
+                                  }
+                                  masteryPoints
+                                }
                               }
-                              masteryPoints
                             }
-                            points
                           }
                         }
                       }
@@ -71,35 +76,33 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
     public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId)
     {
-        var submissionsTask = await _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
+        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
 
-        await Task.WhenAll(domainOutcomesTask, domainOutcomesTask);
-
-        if (submissionsTask?.LegacyNode?.Enrollments == null)
+        Task.WaitAll(submissionsTask, domainOutcomesTask);
+        
+        if (submissionsTask.Result?.LegacyNode?.Enrollments == null)
         {
             throw new HttpRequestException("No Enrollments are given");
         }
 
-        foreach (var enrollment in submissionsTask.LegacyNode.Enrollments.DistinctBy(static e => e.Course?.Id))
+        foreach (var enrollment in submissionsTask.Result.LegacyNode.Enrollments.DistinctBy(static e => e.Course?.Id))
         {
             if (enrollment.Course?.Submissions?.Nodes != null)
             {
                 foreach (var submissions in enrollment.Course.Submissions.Nodes.GroupBy(static s => s.Assignment?.HtmlUrl))
                 {
-                    var latestSubmission = submissions.OrderByDescending(static s => s.SubmittedAt).First();
-                
+                    var latestSubmission = submissions.First();
+
                     yield return new LearningDomainSubmission(
                         latestSubmission.Assignment?.Name,
                         latestSubmission.Assignment?.HtmlUrl,
-                        latestSubmission.SubmittedAt ?? new DateTime(),
+                        latestSubmission.SubmissionHistories?.Nodes.OrderByDescending(static sh => sh.SubmittedAt).First().SubmittedAt ?? new DateTime(),
                         GetSubmissionCriteria(latestSubmission, domainOutcomesTask),
                         GetOutcomeResults(submissions, domainOutcomesTask)
                     );
                 }
-
             }
-
         }
     }
 
@@ -125,24 +128,28 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
     }
 
 
-    private static List<LearningDomainOutcomeRecord> GetOutcomeResults(
+    private static IEnumerable<LearningDomainOutcomeRecord> GetOutcomeResults(
         IEnumerable<Submission> submissions,
         Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask
     )
     {
         var outcomeRecords = new List<LearningDomainOutcomeRecord>();
-        
+
         foreach (var submissionHistory in submissions.OrderByDescending(static s => s.SubmittedAt))
         {
-            var rubricAssessments = submissionHistory.RubricAssessments?.Nodes.SelectMany(static rubricAssessment =>
-                rubricAssessment.AssessmentRatings?.Where(static ar =>
-                    ar is
-                    {
-                        Points: not null,
-                        Criterion.MasteryPoints: not null,
-                        Criterion.Outcome: not null,
-                    }) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible")) ?? throw new HttpRequestException("No RubricAssessments are found");;
-        
+            var rubricAssessments = submissionHistory.SubmissionHistories?.Nodes.SelectMany(static sH =>
+                sH.RubricAssessments?.Nodes.SelectMany(static ar => ar.AssessmentRatings.Where(static ar => ar is
+                {
+                    Points: not null,
+                    Criterion.MasteryPoints: not null,
+                    Criterion.Outcome: not null,
+                })) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
+
+            if (rubricAssessments == null)
+            {
+                throw new HttpRequestException("No RubricAssessments are found");
+            }
+
             foreach (var assessment in rubricAssessments)
             {
                 var outcome = domainOutcomesTask?.Result.SingleOrDefault(o => o?.Id == assessment?.Criterion?.Outcome?.Id);

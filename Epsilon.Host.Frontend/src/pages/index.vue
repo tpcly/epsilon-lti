@@ -5,7 +5,7 @@
 			@range-change="handleRangeChange">
 			<template #default="navigationProps">
 				<v-col
-					v-if="enableSemesterWrapped && !loadingOutcomes"
+					v-if="enableSemesterWrapped && !loadingSubmissions"
 					cols="12"
 					md="2">
 					<WrappedDialog
@@ -16,27 +16,43 @@
 				</v-col>
 			</template>
 		</TopNavigation>
-		<v-tabs v-model="tabs" class="toolbar" show-arrows>
+		<v-card v-if="store.errors.length" color="error" class="mt-4">
+			<v-card-title>An error accord</v-card-title>
+			<v-card-text>
+				{{ store.errors.at(0) }}
+			</v-card-text>
+			<v-card-actions>
+				<v-btn @click="router.go()"> Reload application</v-btn>
+				<v-spacer></v-spacer>
+				<v-btn
+					:href="`https://github.com/tpcly/epsilon-lti/issues/new?title=${store.errors.at(0)}`"
+					target="_blank">
+					Report issue
+				</v-btn>
+			</v-card-actions>
+		</v-card>
+		<v-tabs v-model="tabs" class="toolbar mt-4" show-arrows>
 			<v-tab :value="0">Performance Dashboard</v-tab>
 			<v-tab v-if="enableCompetenceProfile" :value="1">
 				Competence Document
 			</v-tab>
 		</v-tabs>
-		<loading-dialog v-model="loadingOutcomes"></loading-dialog>
-		<v-window v-model="tabs">
+		<loading-dialog
+			v-if="!store.errors.length"
+			v-model="loadingSubmissions"></loading-dialog>
+
+		<v-window v-model="tabs" class="mt-4">
 			<v-window-item :value="0">
 				<PerformanceDashboard
-					:is-loading="loadingOutcomes"
+					:is-loading="loadingSubmissions"
 					:submissions="filteredSubmissions"
 					:domains="domains" />
 			</v-window-item>
 			<v-window-item v-if="enableCompetenceProfile" :value="1">
-				<v-btn
+				<CompetenceGenerationBanner
 					v-if="enableCompetenceGeneration"
-					class="toolbar-download"
-					@click="downloadCompetenceDocument">
-					Download
-				</v-btn>
+					:filter-range="filterRange"
+					:current-user="currentUser"></CompetenceGenerationBanner>
 				<CompetenceDocument
 					:outcomes="outcomes"
 					:submissions="filteredSubmissions"
@@ -70,8 +86,11 @@ import PerformanceDashboard from "~/components/performance/PerformanceDashboard.
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
 import { Generator } from "~/utils/generator"
 import LoadingDialog from "~/LoadingDialog.vue"
+import { useEpsilonStore } from "~/composables/use-store"
+import CompetenceGenerationBanner from "~/components/competence/CompetenceGenerationBanner.vue"
 
 const runtimeConfig = useRuntimeConfig()
+const store = useEpsilonStore()
 const tabs = ref<number>(0)
 const versionUrl =
 	"https://github.com/tpcly/epsilon-lti/releases/tag/" +
@@ -95,11 +114,12 @@ if (process.client && data.value?.idToken) {
 		useState("id_token", () => callback?.idToken)
 	}
 }
+const router = useRouter()
 const enableCompetenceProfile = ref<boolean | undefined>(false)
 const enableCompetenceGeneration = ref<boolean | undefined>(false)
 const enableSemesterWrapped = ref<boolean | undefined>(false)
 const api = useApi()
-const loadingOutcomes = ref<boolean>(true)
+const loadingSubmissions = ref<boolean>(true)
 const submissions = ref<LearningDomainSubmission[]>([])
 const filterRange = ref<{
 	start: Date
@@ -122,7 +142,7 @@ if (process.client) {
 	})
 
 	setInterval(() => {
-		if (loadingOutcomes.value) {
+		if (loadingSubmissions.value && outcomes.value.length > 0) {
 			filteredSubmissions.value = Generator.generateSubmissions(
 				outcomes.value
 			)
@@ -136,29 +156,15 @@ function loadDomains(domainNames: string[]): void {
 	api.learning
 		.learningDomainOutcomesList()
 		.then((r) => (outcomes.value = r.data))
+		.catch((r) => store.addError(r))
 	domainNames.map(function (domainName) {
-		api.learning.learningDomainDetail(domainName).then((hboIData) => {
-			domains.value?.push(hboIData.data)
-		})
+		api.learning
+			.learningDomainDetail(domainName)
+			.then((hboIData) => {
+				domains.value?.push(hboIData.data)
+			})
+			.catch((r) => store.addError(r))
 	})
-}
-
-function downloadCompetenceDocument(): void {
-	api.document
-		.documentDownloadWordList({
-			userId: currentUser.value?._id as string,
-			from: filterRange.value?.start.toDateString()!,
-			to: filterRange.value?.end.toDateString()!,
-		})
-		.then(async (response) => {
-			const blob = await response.blob()
-			const url = window.URL.createObjectURL(blob)
-			const link = document.createElement("a")
-			link.href = url
-			link.setAttribute("download", "competence-document.docx")
-			document.body.appendChild(link)
-			link.click()
-		})
 }
 
 const filteredSubmissions = computed({
@@ -190,18 +196,19 @@ const handleUserChange = async (user: User): Promise<void> => {
 		return
 	}
 	currentUser.value = user
-	loadingOutcomes.value = true
+	loadingSubmissions.value = true
 	filterRange.value = null
 
-	await api?.learning
-		.learningOutcomesList({
-			studentId: user._id,
-		})
-		.then((r) => {
-			submissions.value = r.data
-			loadingOutcomes.value = false
-		})
-		.finally(() => {})
+	const response = await api?.learning.learningOutcomesList({
+		studentId: user._id,
+	})
+
+	if (response.error) {
+		store.addError(response.error)
+	}
+
+	submissions.value = response.data
+	loadingSubmissions.value = false
 }
 
 const handleRangeChange = (range: {
@@ -220,7 +227,6 @@ const handleRangeChange = (range: {
 	border-radius: 8px;
 	width: fit-content;
 	height: unset;
-	margin-top: 10px;
 
 	.v-btn.v-slide-group-item--active {
 		background-color: white !important;
@@ -267,5 +273,9 @@ const handleRangeChange = (range: {
 	display: block;
 	width: 50%;
 	text-align: center;
+}
+
+.v-tab.v-tab.v-btn {
+	height: unset;
 }
 </style>

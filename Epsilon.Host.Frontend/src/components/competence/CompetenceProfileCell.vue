@@ -13,13 +13,13 @@ import {
 	type LearningDomainType,
 } from "~/api.generated"
 
-const props = defineProps<{
+const componentProps = defineProps<{
 	outcomes: LearningDomainOutcome[]
 	isLoading: boolean
 }>()
 
 const value = computed<LearningDomainType | null>(() => {
-	const types = props.outcomes.map((outcome) => outcome.value)
+	const types = componentProps.outcomes.map((outcome) => outcome.value)
 	types.sort((a, b) => (b.order ?? 0) - (a.order ?? 0))
 
 	return types[0]
