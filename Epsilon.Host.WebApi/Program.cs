@@ -16,6 +16,7 @@ using Tpcly.Canvas.Rest;
 using Tpcly.Lti;
 using Tpcly.Persistence.Abstractions;
 using Tpcly.Persistence.EntityFrameworkCore;
+
 #pragma warning disable CA1812
 var builder = WebApplication.CreateBuilder(args);
 #pragma warning restore CA1812
@@ -56,12 +57,7 @@ builder.Services.AddHttpClient<IAccountEndpoint, AccountEndpoint>(canvasHttpClie
 // Add persistence services
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    var connectionString = config.GetConnectionString("Default");
-
-    options.UseMySql(
-        connectionString,
-        ServerVersion.AutoDetect(connectionString)
-    );
+    options.UseNpgsql(config.GetConnectionString("Default"));
 });
 
 builder.Services.AddScoped<IReadOnlyRepository<LearningDomain>, EntityFrameworkReadOnlyRepository<ApplicationDbContext, LearningDomain>>();
@@ -122,7 +118,6 @@ app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 
 app.Run();
