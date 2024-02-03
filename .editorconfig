@@ -533,6 +533,8 @@ dotnet_diagnostic.CA2000.severity = error
 dotnet_diagnostic.CS8602.severity = error
 dotnet_diagnostic.CS8619.severity = error
 dotnet_diagnostic.CS1998.severity = silent
+dotnet_diagnostic.CA1849.severity = silent
+dotnet_diagnostic.CA1859.severity = silent
 
 dotnet_analyzer_diagnostic.category-Reliability.severity = error
 dotnet_analyzer_diagnostic.category-Usage.severity = error
