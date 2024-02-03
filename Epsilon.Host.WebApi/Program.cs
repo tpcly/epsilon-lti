@@ -1,8 +1,6 @@
 using System.Net.Http.Headers;
 using Epsilon.Abstractions;
-using Epsilon.Abstractions.Components;
 using Epsilon.Abstractions.Services;
-using Epsilon.Components;
 using Epsilon.Host.WebApi;
 using Epsilon.Host.WebApi.Data;
 using Epsilon.Host.WebApi.Options;
@@ -26,7 +24,7 @@ var config = builder.Configuration;
 
 // Add CORS rules
 builder.Services.AddCors(options =>
-    options.AddDefaultPolicy(policy => policy.WithOrigins(config["Lti:TargetUri"])
+    options.AddDefaultPolicy(policy => policy.WithOrigins(config["Lti:TargetUri"] ?? throw new InvalidOperationException("No target URI added to configurations"))
                                              .AllowAnyHeader()
                                              .AllowAnyMethod()
                                              .AllowCredentials()));
@@ -79,7 +77,7 @@ builder.Services.AddScoped<IAuthorizationUser, AuthorizationUser>();
 // Add authentication
 builder.Services.AddSingleton<LtiSecurityTokenValidator>();
 builder.Services.AddLti()
-       .AddPlatforms(config.GetSection("Lti").GetSection("Platforms").Get<List<ToolPlatform>>());
+       .AddPlatforms(config.GetSection("Lti").GetSection("Platforms").Get<List<ToolPlatform>>() ?? throw new InvalidOperationException("No platforms added to configurations"));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer();
