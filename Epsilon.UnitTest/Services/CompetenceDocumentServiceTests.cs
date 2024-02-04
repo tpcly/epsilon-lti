@@ -50,45 +50,33 @@ public class CompetenceDocumentServiceTests
         _canvasResultServiceMock.Setup(static s => s.GetSubmissions(It.IsAny<string>())).Returns(_submissions);
         _domainServiceMock.Setup(static s => s.GetDomainsFromTenant()).Returns(_domains);
         _domainServiceMock.Setup(static s => s.GetOutcomes()).ReturnsAsync(_outcomes);
+
         //Act
         var document = await _competenceDocumentService.GetDocument("01010", DateTime.Now.AddDays(-365), DateTime.Now);
         using var stream = new MemoryStream();
         await _competenceDocumentService.WriteDocument(stream, document);
         using var wordprocessingDocument = WordprocessingDocument.Open(stream, false);
         var validator = new OpenXmlValidator();
-        var count = 0;
-        try
-        {
-            foreach (var error in
-                     validator.Validate(wordprocessingDocument))
-            {
-                count++;
-                _testOutputHelper.WriteLine("Error " + count);
-                _testOutputHelper.WriteLine("Description: " + error.Description);
-                _testOutputHelper.WriteLine("ErrorType: " + error.ErrorType);
-                _testOutputHelper.WriteLine("Node: " + error.Node);
-                if (error.Path is not null)
-                {
-                    _testOutputHelper.WriteLine("Path: " + error.Path.XPath);
-                }
-
-                if (error.Part is not null)
-                {
-                    _testOutputHelper.WriteLine("Part: " + error.Part.Uri);
-                }
-
-                _testOutputHelper.WriteLine("-------------------------------------------");
-            }
-
-            _testOutputHelper.WriteLine("count={0}", count);
-        }
-
-        catch (Exception ex)
-        {
-            _testOutputHelper.WriteLine(ex.Message);
-        }
+        var errors = validator.Validate(wordprocessingDocument).ToList();
 
         //Assert
-        Assert.Equal(0, count);
+        foreach (var error in errors)
+        {
+            _testOutputHelper.WriteLine("Description: " + error.Description);
+            _testOutputHelper.WriteLine("ErrorType: " + error.ErrorType);
+            _testOutputHelper.WriteLine("Node: " + error.Node);
+            if (error.Path is not null)
+            {
+                _testOutputHelper.WriteLine("Path: " + error.Path.XPath);
+            }
+        
+            if (error.Part is not null)
+            {
+                _testOutputHelper.WriteLine("Part: " + error.Part.Uri);
+            }
+        
+            _testOutputHelper.WriteLine("-------------------------------------------");
+        }
+        Assert.False(errors.Any());
     }
 }
