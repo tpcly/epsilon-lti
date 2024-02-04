@@ -8,7 +8,6 @@ namespace Epsilon.UnitTest;
 
 public static class TestDataGenerator
 {
-    private static readonly Random s_random = new Random();
     private static readonly Faker s_faker = new Faker();
 
     public static LearningDomainType GenerateRandomLearningDomainType()

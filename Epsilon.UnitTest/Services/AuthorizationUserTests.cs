@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Bogus;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
 using Epsilon.Services;
@@ -11,6 +12,8 @@ public class AuthorizationUserTests
     private readonly Mock<IFilterService> _mockFilterService;
     private readonly Mock<ICanvasUserSessionAccessor> _mockSessionAccessor;
     private readonly AuthorizationUser _authorizationUser;
+    private static readonly Faker s_faker = new Faker();
+
 
     public AuthorizationUserTests()
     {
@@ -24,7 +27,7 @@ public class AuthorizationUserTests
     {
         // Arrange
         var users = TestDataGenerator.GenerateUsers(10);
-        var user = users.First();
+        var user = s_faker.PickRandom(users).First();
 
         _mockFilterService.Setup(static fs => fs.GetAccessibleStudents()).ReturnsAsync(users);
         _mockSessionAccessor.Setup(static sa => sa.GetSessionAsync()).ReturnsAsync(new CanvasUserSession(0,int.Parse(user.LegacyId!, CultureInfo.InvariantCulture), false));
@@ -43,8 +46,8 @@ public class AuthorizationUserTests
     {
         // Arrange
         var users = TestDataGenerator.GenerateUsers(10);
-        var user = users.First();
-        var currentUser = users.Last();
+        var user = s_faker.PickRandom(users).First();
+        var currentUser = s_faker.PickRandom(users).Last();
 
         _mockFilterService.Setup(static fs => fs.GetAccessibleStudents()).ReturnsAsync(users);
         _mockSessionAccessor.Setup(static sa => sa.GetSessionAsync()).ReturnsAsync(new CanvasUserSession(0,int.Parse(user.LegacyId!, CultureInfo.InvariantCulture), true));

@@ -72,7 +72,7 @@ public class LearningDomainServiceTests
     public async Task GetDomainsFromTenant_ReturnsCorrectDomains()
     {
         // Arrange
-        var expectedDomains = TestDataGenerator.GenerateRandomLearningDomains(3);
+        var expectedDomains = TestDataGenerator.GenerateRandomLearningDomains(3).ToList();
         _learningDomainRepositoryMock.Setup(static repo => repo.AllToList(null, It.IsAny<string[]?>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(expectedDomains);
 
         // Act
