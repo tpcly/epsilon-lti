@@ -83,7 +83,7 @@ public static class TestDataGenerator
 
     private static IEnumerable<LearningDomainOutcomeRecord> GenerateRandomLearningDomainResultList(IEnumerable<LearningDomainOutcome> outcomes)
     {
-        foreach (var outcome in outcomes)
+        foreach (var outcome in s_faker.PickRandom(outcomes, s_faker.Random.Int(3, outcomes.Count())))
         {
             yield return GenerateRandomLearningDomainResult(outcome).Generate();
         }
