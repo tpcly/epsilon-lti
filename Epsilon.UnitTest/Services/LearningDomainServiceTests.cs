@@ -9,13 +9,14 @@ public class LearningDomainServiceTests
 {
     private readonly Mock<IReadOnlyRepository<LearningDomain>> _learningDomainRepositoryMock = new Mock<IReadOnlyRepository<LearningDomain>>();
     private readonly Mock<IReadOnlyRepository<LearningDomainOutcome>> _learningDomainOutcomeRepositoryMock = new Mock<IReadOnlyRepository<LearningDomainOutcome>>();
-    private readonly IEnumerable<LearningDomainOutcome> _outcomes = TestDataGenerator.GenerateRandomLearningDomainOutcomes(10);
+    private readonly IEnumerable<LearningDomainOutcome> _outcomes;
     private LearningDomain _learningDomain = TestDataGenerator.GenerateRandomLearningDomain();
     private readonly LearningDomainService _learningDomainService;
 
     public LearningDomainServiceTests()
     {
         _learningDomainService = new LearningDomainService(_learningDomainRepositoryMock.Object, _learningDomainOutcomeRepositoryMock.Object);
+        _outcomes = TestDataGenerator.GenerateRandomLearningDomainOutcomes(10, new List<LearningDomain>() { _learningDomain, });
     }
 
     [Fact]

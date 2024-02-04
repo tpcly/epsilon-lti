@@ -138,17 +138,14 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         foreach (var submissionHistory in submissions.OrderByDescending(static s => s.SubmittedAt))
         {
             var rubricAssessments = submissionHistory.SubmissionHistories?.Nodes.SelectMany(static sH =>
-                sH.RubricAssessments?.Nodes.SelectMany(static ar => ar.AssessmentRatings.Where(static ar => ar is
+                sH.RubricAssessments?.Nodes.SelectMany(static ar => ar.AssessmentRatings?.Where(static ar => ar is
                 {
                     Points: not null,
                     Criterion.MasteryPoints: not null,
                     Criterion.Outcome: not null,
-                })) ?? throw new HttpRequestException("Criteria for RubricAssessments not possible"));
-
-            if (rubricAssessments == null)
-            {
-                throw new HttpRequestException("No RubricAssessments are found");
-            }
+                }) ?? throw new HttpRequestException("Assessment Ratings not possible for rubric assessment"))
+                ?? throw new HttpRequestException("Criteria for RubricAssessments not possible")) 
+                ?? throw new HttpRequestException("RubricAssessments not possible");
 
             foreach (var assessment in rubricAssessments)
             {

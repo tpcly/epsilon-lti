@@ -13,15 +13,17 @@ public class CompetenceDocumentServiceTests
     private readonly ITestOutputHelper _testOutputHelper;
     private readonly Mock<ILearningDomainService> _domainServiceMock = new Mock<ILearningDomainService>();
     private readonly Mock<ILearningOutcomeCanvasResultService> _canvasResultServiceMock = new Mock<ILearningOutcomeCanvasResultService>();
-    private CompetenceDocumentService _competenceDocumentService;
-    private readonly IAsyncEnumerable<LearningDomainSubmission> _submissions = TestDataGenerator.GenerateRandomLearningDomainSubmissions(40);
-    private readonly IEnumerable<LearningDomainOutcome> _outcomes = TestDataGenerator.GenerateRandomLearningDomainOutcomes(50);
+    private readonly CompetenceDocumentService _competenceDocumentService;
+    private readonly IEnumerable<LearningDomainOutcome> _outcomes;
+    private readonly IAsyncEnumerable<LearningDomainSubmission> _submissions;
     private readonly IEnumerable<LearningDomain> _domains = TestDataGenerator.GenerateRandomLearningDomains(2);
 
     public CompetenceDocumentServiceTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
         _competenceDocumentService = new CompetenceDocumentService(_domainServiceMock.Object, _canvasResultServiceMock.Object);
+        _outcomes = TestDataGenerator.GenerateRandomLearningDomainOutcomes(10, _domains.ToList());
+        _submissions = TestDataGenerator.GenerateRandomLearningDomainSubmissions(120, _outcomes.ToList());
     }
 
     [Fact]
@@ -33,10 +35,10 @@ public class CompetenceDocumentServiceTests
         _domainServiceMock.Setup(static s => s.GetOutcomes()).ReturnsAsync(_outcomes);
         var document = await _competenceDocumentService.GetDocument("01010", DateTime.Now.AddDays(-365), DateTime.Now);
         using var stream = new MemoryStream();
-        
+
         // Act
         await _competenceDocumentService.WriteDocument(stream, document);
-        
+
         // Assert
         Assert.True(stream.Length > 0);
     }
@@ -85,7 +87,7 @@ public class CompetenceDocumentServiceTests
         {
             _testOutputHelper.WriteLine(ex.Message);
         }
-        
+
         //Assert
         Assert.Equal(0, count);
     }
