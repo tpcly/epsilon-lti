@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Globalization;
+﻿using System.Globalization;
 using Bogus;
 using Epsilon.Abstractions;
 using Tpcly.Canvas.Abstractions.GraphQl;
@@ -8,141 +7,85 @@ namespace Epsilon.UnitTest;
 
 public static class TestDataGenerator
 {
-    private static readonly Faker s_faker = new Faker();
-
-    public static LearningDomainType GenerateRandomLearningDomainType()
+    private static Faker s_faker = new Faker();
+    private static Faker<LearningDomainType> GenerateRandomLearningDomainType()
     {
         return new Faker<LearningDomainType>()
                .RuleFor(static o => o.Id, static f => f.Random.String())
                .RuleFor(static o => o.Name, static f => f.Random.String2(10))
                .RuleFor(static o => o.ShortName, static f => f.Random.String2(10))
-               .RuleFor(static o => o.HexColor, static f => "FFFFFF")
-               .RuleFor(static o => o.Order, static f => f.Random.Int())
-               .Generate();
+               .RuleFor(static o => o.HexColor, static _ => "FFFFFF")
+               .RuleFor(static o => o.Order, static f => f.Random.Int());
     }
 
-    public static LearningDomainTypeSet GenerateRandomLearningDomainTypeSet()
+    public static Faker<LearningDomainTypeSet> GenerateRandomLearningDomainTypeSet()
     {
-        return new LearningDomainTypeSet
-        {
-            Types = new List<LearningDomainType> { GenerateRandomLearningDomainType(), GenerateRandomLearningDomainType(), GenerateRandomLearningDomainType(), },
-        };
+        return new Faker<LearningDomainTypeSet>()
+               .RuleFor(static o => o.Id, static f => f.Random.Guid())
+               .RuleFor(static o => o.Types, static _ => GenerateRandomLearningDomainType().Generate(3));
     }
 
-    public static LearningDomain GenerateRandomLearningDomain()
+    public static Faker<LearningDomain> GenerateRandomLearningDomain()
     {
         return new Faker<LearningDomain>()
                .RuleFor(static o => o.Id, static f => f.Random.String())
                .RuleFor(static o => o.ColumnsSet,
                    static f => f.Random.Bool()
-                       ? GenerateRandomLearningDomainTypeSet()
+                       ? GenerateRandomLearningDomainTypeSet().Generate()
                        : null)
-               .RuleFor(static o => o.ValuesSet, static f => GenerateRandomLearningDomainTypeSet())
-               .RuleFor(static o => o.RowsSet, static f => GenerateRandomLearningDomainTypeSet())
-               .Generate();
+               .RuleFor(static o => o.ValuesSet, static _ => GenerateRandomLearningDomainTypeSet().Generate())
+               .RuleFor(static o => o.RowsSet, static _ => GenerateRandomLearningDomainTypeSet().Generate());
     }
 
-    public static LearningDomainOutcome GenerateRandomLearningDomainOutcome(LearningDomain domain)
+    public static Faker<LearningDomainOutcome> GenerateRandomLearningDomainOutcome(LearningDomain domain)
     {
         return new Faker<LearningDomainOutcome>()
                .RuleFor(static o => o.Id, static f => f.Random.Int())
                .RuleFor(static o => o.Name, static f => f.Random.String2(10))
-               .RuleFor(static o => o.Row, domain.RowsSet.Types.First())
-               .RuleFor(static o => o.Column, domain.ColumnsSet?.Types.First())
-               .RuleFor(static o => o.Value, domain.ValuesSet.Types.First())
-               .Generate();
+               .RuleFor(static o => o.Row, f => f.PickRandom(domain.RowsSet.Types))
+               .RuleFor(static o => o.Column, f => domain.ColumnsSet?.Types != null ? f.PickRandom(domain.ColumnsSet?.Types): null)
+               .RuleFor(static o => o.Value, f => f.PickRandom(domain.ValuesSet.Types));
     }
 
 
-    public static LearningDomainCriteria GenerateRandomLearningDomainCriteria(LearningDomainOutcome outcome)
+    public static Faker<LearningDomainCriteria> GenerateRandomLearningDomainCriteria(LearningDomainOutcome outcome)
     {
-        return new LearningDomainCriteria(outcome.Id, s_faker.Random.Int(5, 10));
+        return new Faker<LearningDomainCriteria>().CustomInstantiator(f => new LearningDomainCriteria(outcome.Id, f.Random.Int(0, 10)));
     }
 
-    public static LearningDomainOutcomeRecord GenerateRandomLearningDomainResult(LearningDomainOutcome outcome)
+    public static Faker<LearningDomainOutcomeRecord> GenerateRandomLearningDomainResult(LearningDomainOutcome outcome)
     {
-        return new LearningDomainOutcomeRecord(outcome, s_faker.Random.Int(0, 10));
-    }
-
-    public static Collection<LearningDomainOutcome> GenerateRandomLearningDomainOutcomes(int count, List<LearningDomain> domains)
-    {
-        var outcomes = new Collection<LearningDomainOutcome>();
-        for (var i = 0; i < count; i++)
-        {
-            outcomes.Add(GenerateRandomLearningDomainOutcome(s_faker.PickRandom(domains)));
-        }
-
-        return outcomes;
+        return new Faker<LearningDomainOutcomeRecord>().CustomInstantiator(f => new LearningDomainOutcomeRecord(outcome, f.Random.Int(0, 10)));
     }
 
 
-    public static Collection<User> GenerateUsers(int count)
+    public static Faker<User> GenerateUser()
     {
-        var users = new Collection<User>();
-
-        for (var i = 0; i < count; i++)
-        {
-            users.Add(new User(i.ToString(CultureInfo.CurrentCulture), $"test{i}", null));
-        }
-
-        return users;
+        return new Faker<User>()
+            .CustomInstantiator(static f => new User(f.Random.Int(0).ToString(CultureInfo.CurrentCulture), f.Name.FullName(), new Uri(f.Image.PicsumUrl())));
     }
 
-
-    public static IAsyncEnumerable<LearningDomainSubmission> GenerateRandomLearningDomainSubmissions(int count, List<LearningDomainOutcome> outcomes)
+    public static Faker<LearningDomainSubmission> GenerateRandomLearningDomainSubmission(List<LearningDomainOutcome> outcomes)
     {
-        var l = new List<LearningDomainSubmission>();
-        for (var i = 0; i < count; i++)
-        {
-            l.Add(GenerateRandomLearningDomainSubmission(outcomes.OrderBy(static x => Guid.NewGuid()).Take(5).ToList()));
-        }
-
-        return l.ToAsyncEnumerable();
-    }
-
-
-    public static LearningDomainSubmission GenerateRandomLearningDomainSubmission(List<LearningDomainOutcome> outcomes)
-    {
-        return new LearningDomainSubmission(s_faker.Name.JobTitle(),
-            new Uri(s_faker.Internet.Url()),
-            s_faker.Date.Past(),
-            GenerateRandomLearningDomainCriteriaList(outcomes),
-            s_faker.Random.Bool()
-                ? new List<LearningDomainOutcomeRecord>()
-                : GenerateRandomLearningDomainResultList(outcomes));
+        var usedOutcomes = s_faker.PickRandom(outcomes, s_faker.Random.Int(3, 10)).ToList();
+        return new Faker<LearningDomainSubmission>()
+               .CustomInstantiator(f => new LearningDomainSubmission(f.Name.JobTitle(), new Uri(f.Internet.Url()), f.Date.Past(), GenerateRandomLearningDomainCriteriaList(usedOutcomes), GenerateRandomLearningDomainResultList(usedOutcomes)));
     }
 
     private static IEnumerable<LearningDomainCriteria> GenerateRandomLearningDomainCriteriaList(IEnumerable<LearningDomainOutcome> outcomes)
     {
-        var l = new List<LearningDomainCriteria>();
         foreach (var outcome in outcomes)
         {
-            l.Add(GenerateRandomLearningDomainCriteria(outcome));
-
+            yield return GenerateRandomLearningDomainCriteria(outcome).Generate();
         }
-        return l;
-    }
-    
-    
-    public static IEnumerable<LearningDomain> GenerateRandomLearningDomains(int count)
-    {
-        var l = new List<LearningDomain>();
-        for (var i = 0; i < count; i++)
-        {
-            l.Add(GenerateRandomLearningDomain());
-        }
-
-        return l;
     }
 
 
     private static IEnumerable<LearningDomainOutcomeRecord> GenerateRandomLearningDomainResultList(IEnumerable<LearningDomainOutcome> outcomes)
     {
-        var l = new List<LearningDomainOutcomeRecord>();
         foreach (var outcome in outcomes)
         {
-            l.Add(GenerateRandomLearningDomainResult(outcome));
+            yield return GenerateRandomLearningDomainResult(outcome).Generate();
         }
-        return l;
     }
 }

@@ -16,14 +16,14 @@ public class CompetenceDocumentServiceTests
     private readonly CompetenceDocumentService _competenceDocumentService;
     private readonly IEnumerable<LearningDomainOutcome> _outcomes;
     private readonly IAsyncEnumerable<LearningDomainSubmission> _submissions;
-    private readonly IEnumerable<LearningDomain> _domains = TestDataGenerator.GenerateRandomLearningDomains(2);
+    private readonly IEnumerable<LearningDomain> _domains = TestDataGenerator.GenerateRandomLearningDomain().Generate(2);
 
     public CompetenceDocumentServiceTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
         _competenceDocumentService = new CompetenceDocumentService(_domainServiceMock.Object, _canvasResultServiceMock.Object);
-        _outcomes = TestDataGenerator.GenerateRandomLearningDomainOutcomes(10, _domains.ToList());
-        _submissions = TestDataGenerator.GenerateRandomLearningDomainSubmissions(120, _outcomes.ToList());
+        _outcomes = TestDataGenerator.GenerateRandomLearningDomainOutcome(_domains.First()).Generate(50);
+        _submissions = TestDataGenerator.GenerateRandomLearningDomainSubmission(_outcomes.ToList()).Generate(40).ToAsyncEnumerable();
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public class CompetenceDocumentServiceTests
     }
 
     [Fact]
-    private async void ValidateOpnXmlWordGeneration()
+    private async void ValidateOpenXmlWordGeneration()
     {
         // Arrange
         _canvasResultServiceMock.Setup(static s => s.GetSubmissions(It.IsAny<string>())).Returns(_submissions);

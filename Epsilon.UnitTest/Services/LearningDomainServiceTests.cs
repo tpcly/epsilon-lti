@@ -10,13 +10,13 @@ public class LearningDomainServiceTests
     private readonly Mock<IReadOnlyRepository<LearningDomain>> _learningDomainRepositoryMock = new Mock<IReadOnlyRepository<LearningDomain>>();
     private readonly Mock<IReadOnlyRepository<LearningDomainOutcome>> _learningDomainOutcomeRepositoryMock = new Mock<IReadOnlyRepository<LearningDomainOutcome>>();
     private readonly IEnumerable<LearningDomainOutcome> _outcomes;
-    private LearningDomain _learningDomain = TestDataGenerator.GenerateRandomLearningDomain();
+    private readonly LearningDomain _learningDomain = TestDataGenerator.GenerateRandomLearningDomain().Generate();
     private readonly LearningDomainService _learningDomainService;
 
     public LearningDomainServiceTests()
     {
         _learningDomainService = new LearningDomainService(_learningDomainRepositoryMock.Object, _learningDomainOutcomeRepositoryMock.Object);
-        _outcomes = TestDataGenerator.GenerateRandomLearningDomainOutcomes(10, new List<LearningDomain>() { _learningDomain, });
+        _outcomes = TestDataGenerator.GenerateRandomLearningDomainOutcome(_learningDomain).Generate(60);
     }
 
     [Fact]
@@ -53,8 +53,7 @@ public class LearningDomainServiceTests
     [Fact]
     public async Task GetDomain_ReturnsExpectedDomainWithColumnTypes()
     {
-        _learningDomain = TestDataGenerator.GenerateRandomLearningDomain();
-        _learningDomain.ColumnsSet = TestDataGenerator.GenerateRandomLearningDomainTypeSet();
+        _learningDomain.ColumnsSet = TestDataGenerator.GenerateRandomLearningDomainTypeSet().Generate();
         // Arrange
         var domainName = _learningDomain.Id;
         _learningDomainRepositoryMock.Setup(repo => repo.SingleOrDefaultAsync(d => d.Id == domainName, It.IsAny<string[]>())).ReturnsAsync(_learningDomain);
@@ -72,7 +71,7 @@ public class LearningDomainServiceTests
     public async Task GetDomainsFromTenant_ReturnsCorrectDomains()
     {
         // Arrange
-        var expectedDomains = TestDataGenerator.GenerateRandomLearningDomains(3).ToList();
+        var expectedDomains = TestDataGenerator.GenerateRandomLearningDomain().Generate(3);
         _learningDomainRepositoryMock.Setup(static repo => repo.AllToList(null, It.IsAny<string[]?>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(expectedDomains);
 
         // Act

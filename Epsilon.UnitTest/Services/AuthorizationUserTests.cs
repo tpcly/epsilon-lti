@@ -26,8 +26,8 @@ public class AuthorizationUserTests
     public async Task HasCurrentUserAccessToUser_ReturnsTrue_WhenUserHasAccess()
     {
         // Arrange
-        var users = TestDataGenerator.GenerateUsers(10);
-        var user = s_faker.PickRandom(users).First();
+        var users = TestDataGenerator.GenerateUser().Generate(10);
+        var user = s_faker.PickRandom(users);
 
         _mockFilterService.Setup(static fs => fs.GetAccessibleStudents()).ReturnsAsync(users);
         _mockSessionAccessor.Setup(static sa => sa.GetSessionAsync()).ReturnsAsync(new CanvasUserSession(0,int.Parse(user.LegacyId!, CultureInfo.InvariantCulture), false));
@@ -45,9 +45,9 @@ public class AuthorizationUserTests
     public async Task HasCurrentUserAccessToUser_ReturnsTrue_TeacherHasAccessToStudent()
     {
         // Arrange
-        var users = TestDataGenerator.GenerateUsers(10);
-        var user = s_faker.PickRandom(users).First();
-        var currentUser = s_faker.PickRandom(users).Last();
+        var users = TestDataGenerator.GenerateUser().Generate(10);
+        var user = s_faker.PickRandom(users);
+        var currentUser = s_faker.PickRandom(users);
 
         _mockFilterService.Setup(static fs => fs.GetAccessibleStudents()).ReturnsAsync(users);
         _mockSessionAccessor.Setup(static sa => sa.GetSessionAsync()).ReturnsAsync(new CanvasUserSession(0,int.Parse(user.LegacyId!, CultureInfo.InvariantCulture), true));
