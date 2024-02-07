@@ -8,6 +8,7 @@ namespace Epsilon.UnitTest;
 public static class TestDataGenerator
 {
     private static Faker s_faker = new Faker();
+
     private static Faker<LearningDomainType> GenerateRandomLearningDomainType()
     {
         return new Faker<LearningDomainType>()
@@ -43,7 +44,10 @@ public static class TestDataGenerator
                .RuleFor(static o => o.Id, static f => f.Random.Int())
                .RuleFor(static o => o.Name, static f => f.Random.String2(10))
                .RuleFor(static o => o.Row, f => f.PickRandom(domain.RowsSet.Types))
-               .RuleFor(static o => o.Column, f => domain.ColumnsSet?.Types != null ? f.PickRandom(domain.ColumnsSet?.Types): null)
+               .RuleFor(static o => o.Column,
+                   f => domain.ColumnsSet?.Types != null
+                       ? f.PickRandom(domain.ColumnsSet?.Types)
+                       : null)
                .RuleFor(static o => o.Value, f => f.PickRandom(domain.ValuesSet.Types));
     }
 
@@ -69,7 +73,11 @@ public static class TestDataGenerator
     {
         var usedOutcomes = s_faker.PickRandom(outcomes, s_faker.Random.Int(3, 10)).ToList();
         return new Faker<LearningDomainSubmission>()
-               .CustomInstantiator(f => new LearningDomainSubmission(f.Name.JobTitle(), new Uri(f.Internet.Url()), f.Date.Past(), GenerateRandomLearningDomainCriteriaList(usedOutcomes), GenerateRandomLearningDomainResultList(usedOutcomes)));
+            .CustomInstantiator(f => new LearningDomainSubmission(f.Name.JobTitle(),
+                new Uri(f.Internet.Url()),
+                f.Date.Past(),
+                GenerateRandomLearningDomainCriteriaList(usedOutcomes),
+                GenerateRandomLearningDomainResultList(usedOutcomes)));
     }
 
     private static IEnumerable<LearningDomainCriteria> GenerateRandomLearningDomainCriteriaList(IEnumerable<LearningDomainOutcome> outcomes)
@@ -87,5 +95,25 @@ public static class TestDataGenerator
         {
             yield return GenerateRandomLearningDomainResult(outcome).Generate();
         }
+    }
+
+    public static Faker<GraphQlSchema> GenerateUsersEnrollmentsCourse()
+    {
+        return new Faker<GraphQlSchema>().CustomInstantiator(static f =>
+            new GraphQlSchema(null,
+                new Course(null,
+                    null,
+                    null,
+                    null,
+                    new GraphQlConnection<Enrollment>(
+                        new Faker<Enrollment>().CustomInstantiator(static f =>
+                                                   new Enrollment(
+                                                       f.Random.Bool()
+                                                           ? "StudentEnrollment"
+                                                           : f.Random.String(),
+                                                       new User(f.Random.Int(0, 20).ToString(CultureInfo.CurrentCulture), f.Person.FullName, null),
+                                                       null))
+                                               .Generate(40))),
+                null));
     }
 }
