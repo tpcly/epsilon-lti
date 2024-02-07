@@ -17,9 +17,9 @@
 	"dependencies": {
 		"@mdi/font": "^7.4.47",
 		"apexcharts": "^3.45.2",
-		"nuxt": "^3.10.0",
+		"nuxt": "^3.10.1",
 		"pinia": "^2.1.7",
-		"posthog-js": "^1.104.4",
+		"posthog-js": "^1.105.0",
 		"vue": "^3.4.15",
 		"vue-router": "^4.2.5",
 		"vue3-apexcharts": "^1.4.4"
@@ -27,7 +27,7 @@
 	"devDependencies": {
 		"@nuxt/devtools": "^1.0.8",
 		"@nuxt/eslint-config": "^0.2.0",
-		"@nuxt/schema": "^3.10.0",
+		"@nuxt/schema": "^3.10.1",
 		"@types/jsonwebtoken": "^9.0.5",
 		"@types/lodash": "^4.14.202",
 		"@types/node": "^20.11.16",
