@@ -116,4 +116,28 @@ public static class TestDataGenerator
                                                .Generate(40))),
                 null));
     }
+
+
+    public static Faker<GraphQlSchema> GenerateUsersParticipatedTerms(Course currentCourse)
+    {
+        var terms = GenerateEnrollmentTerms().Generate(15);
+        return new Faker<GraphQlSchema>().CustomInstantiator(_ =>
+            new GraphQlSchema(null,
+                null,
+                new LegacyNode(new Faker<Enrollment>().CustomInstantiator(f =>
+                                                          new Enrollment(null,
+                                                              null,
+                                                              new Course(f.Random.Int().ToString(CultureInfo.CurrentCulture), f.Random.String(), f.PickRandom(terms), null, null)))
+                                                      .Generate(30).Append(new Enrollment(null, null, currentCourse)))));
+    }
+
+
+    public static Faker<EnrollmentTerm> GenerateEnrollmentTerms()
+    {
+        return new Faker<EnrollmentTerm>().CustomInstantiator(static f =>
+        {
+            var startDate = f.Date.Past();
+            return new EnrollmentTerm(f.Random.String(), f.Random.String(), startDate, f.Date.Soon(80, startDate));
+        });
+    }
 }
