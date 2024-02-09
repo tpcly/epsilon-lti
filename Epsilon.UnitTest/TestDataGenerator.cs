@@ -96,48 +96,4 @@ public static class TestDataGenerator
             yield return GenerateRandomLearningDomainResult(outcome).Generate();
         }
     }
-
-    public static Faker<GraphQlSchema> GenerateUsersEnrollmentsCourse()
-    {
-        return new Faker<GraphQlSchema>().CustomInstantiator(static f =>
-            new GraphQlSchema(null,
-                new Course(null,
-                    null,
-                    null,
-                    null,
-                    new GraphQlConnection<Enrollment>(
-                        new Faker<Enrollment>().CustomInstantiator(static f =>
-                                                   new Enrollment(
-                                                       f.Random.Bool()
-                                                           ? "StudentEnrollment"
-                                                           : f.Random.String(),
-                                                       new User(f.Random.Int(0, 20).ToString(CultureInfo.CurrentCulture), f.Person.FullName, null),
-                                                       null))
-                                               .Generate(40))),
-                null));
-    }
-
-
-    public static Faker<GraphQlSchema> GenerateUsersParticipatedTerms(Course currentCourse)
-    {
-        var terms = GenerateEnrollmentTerms().Generate(15);
-        return new Faker<GraphQlSchema>().CustomInstantiator(_ =>
-            new GraphQlSchema(null,
-                null,
-                new LegacyNode(new Faker<Enrollment>().CustomInstantiator(f =>
-                                                          new Enrollment(null,
-                                                              null,
-                                                              new Course(f.Random.Int().ToString(CultureInfo.CurrentCulture), f.Random.String(), f.PickRandom(terms), null, null)))
-                                                      .Generate(30).Append(new Enrollment(null, null, currentCourse)))));
-    }
-
-
-    public static Faker<EnrollmentTerm> GenerateEnrollmentTerms()
-    {
-        return new Faker<EnrollmentTerm>().CustomInstantiator(static f =>
-        {
-            var startDate = f.Date.Past();
-            return new EnrollmentTerm(f.Random.String(), f.Random.String(), startDate, f.Date.Soon(80, startDate));
-        });
-    }
 }

@@ -29,7 +29,7 @@ public class FilterServiceTests
     public async Task GetAccessibleStudents_ReturnsValidStudentsListOfCurrentCourse(bool isTeacher = true)
     {
         //Arrange
-        var fakedResult = TestDataGenerator.GenerateUsersEnrollmentsCourse().Generate();
+        var fakedResult = TestDataGeneratorCanvasResponse.GenerateUsersEnrollmentsCourse().Generate();
         var session = new CanvasUserSession(s_faker.Random.Int(0, 1000), s_faker.Random.Int(0, 20), isTeacher);
         _mockSessionAccessor.Setup(static m => m.GetSessionAsync()).ReturnsAsync(session);
         _mockCanvasGraphQl.Setup(static m => m.Query(It.IsAny<string>(), It.IsAny<IDictionary<string, object>>()))
@@ -55,8 +55,8 @@ public class FilterServiceTests
     public async Task GetParticipatedTerms_ReturnsValidStudentsParticipatedTerms(bool isTeacher = true)
     {
         //Arrange
-        var currentCourse = new Course(s_faker.Random.Int(0, 1000).ToString(CultureInfo.CurrentCulture), s_faker.Random.String(), TestDataGenerator.GenerateEnrollmentTerms().Generate(), null, null);
-        var fakedResult = TestDataGenerator.GenerateUsersParticipatedTerms(currentCourse).Generate();
+        var currentCourse = new Course(s_faker.Random.Int(0, 1000).ToString(CultureInfo.CurrentCulture), s_faker.Random.String(), TestDataGeneratorCanvasResponse.GenerateEnrollmentTerms().Generate(), null, null);
+        var fakedResult = TestDataGeneratorCanvasResponse.GenerateUsersParticipatedTerms(currentCourse).Generate();
         var session = new CanvasUserSession(int.Parse(currentCourse.Id!, CultureInfo.CurrentCulture), s_faker.Random.Int(0, 20), isTeacher);
         var student = TestDataGenerator.GenerateUser().Generate();
         _mockSessionAccessor.Setup(static m => m.GetSessionAsync()).ReturnsAsync(session);
@@ -76,7 +76,7 @@ public class FilterServiceTests
     public async Task GetParticipatedTerms_ReturnsNoTerms(bool isTeacher = true)
     {
         //Arrange
-        var currentCourse = new Course(s_faker.Random.Int(0, 1000).ToString(CultureInfo.CurrentCulture), s_faker.Random.String(), TestDataGenerator.GenerateEnrollmentTerms().Generate(), null, null);
+        var currentCourse = new Course(s_faker.Random.Int(0, 1000).ToString(CultureInfo.CurrentCulture), s_faker.Random.String(), TestDataGeneratorCanvasResponse.GenerateEnrollmentTerms().Generate(), null, null);
         var fakedResult = new GraphQlSchema(null, null, new LegacyNode(null));
         var session = new CanvasUserSession(int.Parse(currentCourse.Id!, CultureInfo.CurrentCulture), s_faker.Random.Int(0, 20), isTeacher);
         var student = TestDataGenerator.GenerateUser().Generate();
