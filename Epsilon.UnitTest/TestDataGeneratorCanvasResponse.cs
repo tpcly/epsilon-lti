@@ -95,13 +95,13 @@ public static class TestDataGeneratorCanvasResponse
     }
     
     
-    private static Faker<SubmissionHistory> GenerateSubmissionHistory(Rubric rubric)
-    {
-        return new Faker<SubmissionHistory>().CustomInstantiator(f => new SubmissionHistory(f.Random.Int(0, 4), f.Date.Past(), null, new GraphQlConnection<RubricAssessment>()));
-    }
-
-    private static Faker<RubricAssessment> GenerateRubricAssessment(Rubric rubric)
-    {
-        return new Faker<RubricAssessment>().CustomInstantiator(f => new RubricAssessment());
-    }
+    // private static Faker<SubmissionHistory> GenerateSubmissionHistory(Rubric rubric)
+    // {
+    //     return new Faker<SubmissionHistory>().CustomInstantiator(f => new SubmissionHistory(f.Random.Int(0, 4), f.Date.Past(), null, new GraphQlConnection<RubricAssessment>()));
+    // }
+    //
+    // private static Faker<RubricAssessment> GenerateRubricAssessment(Rubric rubric)
+    // {
+    //     return new Faker<RubricAssessment>().CustomInstantiator(f => new RubricAssessment());
+    // }
 }
