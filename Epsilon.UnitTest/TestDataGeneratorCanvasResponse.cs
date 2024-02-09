@@ -79,13 +79,29 @@ public static class TestDataGeneratorCanvasResponse
                 f.Date.Past(),
                 new Assignment(f.Random.String(),
                     null,
-                    new Rubric(new Faker<Criteria>().CustomInstantiator(_ =>
-                    {
-                        var o = f.PickRandom(outcomes);
-                        return new Criteria(new Outcome(o.Id, o.Name, f.Random.Int(0, 10)));
-                    }).Generate(6)),
+                    GenerateRubric(outcomes),
                     new Uri(f.Internet.Url())),
                 null,
                 null));
+    }
+    
+    private static Rubric GenerateRubric(List<LearningDomainOutcome> outcomes)
+    {
+        return new Rubric(new Faker<Criteria>().CustomInstantiator(f =>
+        {
+            var o = f.PickRandom(outcomes);
+            return new Criteria(new Outcome(o.Id, o.Name, f.Random.Int(0, 10)));
+        }).Generate(6));
+    }
+    
+    
+    private static Faker<SubmissionHistory> GenerateSubmissionHistory(Rubric rubric)
+    {
+        return new Faker<SubmissionHistory>().CustomInstantiator(f => new SubmissionHistory(f.Random.Int(0, 4), f.Date.Past(), null, new GraphQlConnection<RubricAssessment>()));
+    }
+
+    private static Faker<RubricAssessment> GenerateRubricAssessment(Rubric rubric)
+    {
+        return new Faker<RubricAssessment>().CustomInstantiator(f => new RubricAssessment());
     }
 }
