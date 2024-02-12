@@ -22,7 +22,7 @@
 		"posthog-js": "^1.105.6",
 		"vue": "^3.4.17",
 		"vue-router": "^4.2.5",
-		"vue3-apexcharts": "^1.4.4"
+		"vue3-apexcharts": "^1.5.0"
 	},
 	"devDependencies": {
 		"@nuxt/devtools": "^1.0.8",
