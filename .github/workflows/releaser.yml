@@ -27,7 +27,7 @@ jobs:
 
             -   name: Update version
                 run: |
-                    jq '.version = ${{ inputs.tag || github.ref_name }}' package.json > package.json.tmp
+                    jq '.version = "${{ inputs.tag || github.ref_name }}"' package.json > package.json.tmp
                     mv package.json.tmp package.json
 
             -   name: Commit version change
