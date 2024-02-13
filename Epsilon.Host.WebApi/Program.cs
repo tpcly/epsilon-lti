@@ -57,7 +57,11 @@ builder.Services.AddHttpClient<IAccountEndpoint, AccountEndpoint>(canvasHttpClie
 // Add persistence services
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseNpgsql(config.GetConnectionString("Default"));
+    var connectionString = config.GetConnectionString("Default");
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
+    );
 });
 
 builder.Services.AddScoped<IReadOnlyRepository<LearningDomain>, EntityFrameworkReadOnlyRepository<ApplicationDbContext, LearningDomain>>();
