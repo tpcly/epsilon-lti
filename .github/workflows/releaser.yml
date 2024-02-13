@@ -37,6 +37,8 @@ jobs:
                     git add Epsilon.Host.Frontend/package.json
                     git commit -m "Bump version package.json to ${{ inputs.tag || github.ref_name }}"
                     git push origin HEAD:develop
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     ci:
         permissions:
             actions: read
