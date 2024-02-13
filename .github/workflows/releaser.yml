@@ -27,8 +27,8 @@ jobs:
 
             -   name: Update version
                 run: |
-                    jq '.version = "${{ inputs.tag || github.ref_name }}"' package.json > package.json.tmp
-                    mv package.json.tmp package.json
+                    jq '.version = "${{ inputs.tag || github.ref_name }}"' Epsilon.Host.Frontend/package.json > Epsilon.Host.Frontend/package.json.tmp
+                    mv Epsilon.Host.Frontend/package.json.tmp Epsilon.Host.Frontend/package.json
 
             -   name: Commit version change
                 run: |
