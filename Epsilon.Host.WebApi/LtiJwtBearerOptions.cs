@@ -22,7 +22,7 @@ public class LtiJwtBearerOptions : IConfigureNamedOptions<JwtBearerOptions>
         options.SaveToken = true;
     }
 
-    public void Configure(string name, JwtBearerOptions options)
+    public void Configure(string? name, JwtBearerOptions options)
     {
         Configure(options);
     }
