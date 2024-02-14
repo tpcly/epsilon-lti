@@ -1,0 +1,36 @@
+name: Release
+on:
+    pull_request:
+        branches:
+            - 'release/V*.*.*[-Beta.*]'
+        types:
+            - closed
+
+jobs:
+    ci:
+        if: github.event.pull_request.merged == true
+        permissions:
+            actions: read
+            contents: read
+            security-events: write
+        needs: [ update_version ]
+        uses: ./.github/workflows/continuous-integration.yml
+    tagged-release:
+        runs-on: ubuntu-latest
+        needs: [ ci ]
+        permissions:
+            contents: write
+        steps:
+            -   name: Split branch name
+                id: split
+                run: echo "::set-output name=fragment::${{GITHUB_REF##*/}}"
+            -   uses: actions/checkout@v4
+            -   uses: ncipollo/release-action@v1
+                with:
+                    token: ${{ secrets.GITHUB_TOKEN }}
+                    draft: false
+                    commit: ${{ github.sha }}
+                    generateReleaseNotes: true
+                    allowUpdates: true
+                    tag: ${{ steps.split.outputs.fragment }}
+                    prerelease: ${{ !contains(steps.split.outputs.fragment, 'Beta') }}               

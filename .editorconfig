@@ -536,6 +536,7 @@ dotnet_diagnostic.CS1998.severity = silent
 dotnet_diagnostic.CA1849.severity = silent
 dotnet_diagnostic.CA1859.severity = silent
 dotnet_diagnostic.CS1591.severity = silent
+dotnet_diagnostic.IDE0028.severity = silent
 
 dotnet_analyzer_diagnostic.category-Reliability.severity = error
 dotnet_analyzer_diagnostic.category-Usage.severity = error
