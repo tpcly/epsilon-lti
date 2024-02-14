@@ -6,7 +6,7 @@ on:
             - 'release/**-Beta.*'
 env:
     CURRENT_BRANCH: ${{ github.ref }}
-    APP_VERSION: ${{ github.ref##*/ }}
+    APP_VERSION: ${{ github.ref_name##*/ }}
 jobs:
     define-version:
         if: github.event.created
