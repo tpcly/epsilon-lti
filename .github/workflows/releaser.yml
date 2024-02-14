@@ -1,4 +1,4 @@
-name: Release Pull Request
+name: Release
 on:
     push:
         branches:
@@ -9,7 +9,8 @@ env:
     APP_VERSION: ''
 jobs:
     define-version:
-#        if: github.event.created
+        if: github.event.created
+        name: Set new version in package.json
         permissions: write-all
         runs-on: ubuntu-latest
         steps:
@@ -25,7 +26,7 @@ jobs:
             -   name: Set version
                 run: |
                     cd Epsilon.Host.Frontend
-                    npm version ${{ env.APP_VERSION }} --git-tag-version false
+                    npm version ${{ env.APP_VERSION }} --git-tag-version false -f
             -   name: Commit changes
                 uses: EndBug/add-and-commit@v9
                 with:
@@ -35,6 +36,7 @@ jobs:
                     push: origin HEAD:release/${{env.APP_VERSION}}
     pull-request-creation:
         needs: [ define-version ]
+        name: Create Pull Request
         permissions:
             contents: write
             pull-requests: write
@@ -50,4 +52,26 @@ jobs:
                     The version is updated in the package.json file.'
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    ci:
+        name: Continuous Integration on release
+        if: github.event.pull_request.merged == true
+        permissions:
+            actions: read
+            contents: read
+            security-events: write
+        needs: [ update_version ]
+        uses: ./.github/workflows/continuous-integration.yml
+    tagged-release:
+        name: Creating Tag and Release
+        runs-on: ubuntu-latest
+        needs: [ ci ]
+        permissions:
+            contents: write
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: Extract branch name
+                shell: bash
+                run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
+            -   name: Create Release & Tag
+                run: gh release create ${{APP_VERSION}} --generate-notes ${{ !contains(APP_VERSION, 'Beta') || '--prerelease' }}     
     
