@@ -11,22 +11,19 @@ jobs:
         runs-on: ubuntu-latest
         
         steps:
-            -   name: Split branch name
-                id: split
-                run: echo "::set-output name=fragment::${{GITHUB_REF##*/}}"
             -   name: Checkout repository
                 uses: actions/checkout@v2
 
             -   name: Update version
                 run: |
-                    jq '.version = "${{ steps.split.outputs.fragment }}"' Epsilon.Host.Frontend/package.json > Epsilon.Host.Frontend/package.json.tmp
+                    jq '.version = "${{ GITHUB_REF##*/ }}"' Epsilon.Host.Frontend/package.json > Epsilon.Host.Frontend/package.json.tmp
                     mv Epsilon.Host.Frontend/package.json.tmp Epsilon.Host.Frontend/package.json
 
             -   name: Commit changes
                 uses: EndBug/add-and-commit@v9
                 with:
                     default_author: github_actions
-                    message: "Bump version package.json to ${{ steps.split.outputs.fragment }}"
+                    message: "Bump version package.json to ${{ GITHUB_REF##*/ }}"
                     add: 'Epsilon.Host.Frontend/package.json'
                     push: "origin HEAD:${{GITHUB_REF##*/}}"
     create-pr:
