@@ -27,8 +27,8 @@ dependencies:
     specifier: ^4.2.5
     version: 4.2.5(vue@3.4.19)
   vue3-apexcharts:
-    specifier: ^1.4.4
-    version: 1.4.4(apexcharts@3.45.2)(vue@3.4.19)
+    specifier: ^1.5.2
+    version: 1.5.2(apexcharts@3.45.2)(vue@3.4.19)
 
 devDependencies:
   '@nuxt/devtools':
@@ -6208,8 +6208,8 @@ packages:
       '@vue/devtools-api': 6.5.1
       vue: 3.4.19(typescript@5.3.3)
 
-  /vue3-apexcharts@1.4.4(apexcharts@3.45.2)(vue@3.4.19):
-    resolution: {integrity: sha512-TH89uZrxGjaDvkaYAISvj8+k6Bf1rUKFillc8oJirs5XZEPiwM1ELKZQ786wz0rfPqkSHHny2lqqUCK7Rw+LcQ==}
+  /vue3-apexcharts@1.5.2(apexcharts@3.45.2)(vue@3.4.19):
+    resolution: {integrity: sha512-rGbgUJDjtsyjfRF0uzwDjzt8+M7ICSRAbm1N9KCDiczW8BSpbEZuaEsJDJYnJuLFIIVXIGilYzIcjNBf6NbeYA==}
     peerDependencies:
       apexcharts: '> 3.0.0'
       vue: '> 3.0.0'
