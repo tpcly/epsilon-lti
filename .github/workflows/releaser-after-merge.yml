@@ -1,4 +1,4 @@
-name: Release Tag creation 
+name: Release Tag creation
 on:
     pull_request:
         branches:
@@ -7,7 +7,7 @@ on:
         types:
             - closed
 env:
-    APP_VERSION: ${{ GITHUB_REF##*/ }}
+    APP_VERSION: ''
 jobs:
     ci:
         if: github.event.pull_request.merged == true
@@ -24,6 +24,9 @@ jobs:
             contents: write
         steps:
             -   uses: actions/checkout@v4
+            -   name: Extract branch name
+                shell: bash
+                run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
             -   uses: ncipollo/release-action@v1
                 with:
                     token: ${{ secrets.GITHUB_TOKEN }}
