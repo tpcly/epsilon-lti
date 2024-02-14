@@ -27,7 +27,7 @@ jobs:
             -   name: Set version
                 run: |
                     cd ${{ env.FRONTEND_LOCATION }}
-                    npm version ${{ env.APP_VERSION }} --git-tag-version false -f
+                    npm version ${{ env.APP_VERSION }} --git-tag-version false -f --allow-same-version true
             -   name: Commit changes
                 uses: EndBug/add-and-commit@v9
                 with:
