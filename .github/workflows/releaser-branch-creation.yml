@@ -36,13 +36,14 @@ jobs:
             pull-requests: write
         runs-on: ubuntu-latest
         steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v3
             -   name: Extract branch name
                 shell: bash
                 run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
             -   name: Create Pull Request
                 uses: peter-evans/create-pull-request@v6
                 with:
-                    commit-message: Bump version package.json to ${{ env.APP_VERSION }}
                     branch: ${{ env.CURRENT_BRANCH }}
                     base: 'main'
                     title: ${{ env.APP_VERSION }}
