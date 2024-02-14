@@ -8,6 +8,7 @@ jobs:
         if: github.event.created
         permissions: write-all
         runs-on: ubuntu-latest
+        
         steps:
             -   name: Split branch name
                 id: split
