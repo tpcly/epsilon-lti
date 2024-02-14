@@ -14,7 +14,7 @@ jobs:
                 id: split
                 run: echo "::set-output name=fragment::${{GITHUB_REF##*/}}"
             -   name: Checkout repository
-                uses: actions/checkout@v2
+                uses: actions/checkout@v4
 
             -   name: Update version
                 run: |
