@@ -17,11 +17,20 @@ jobs:
                 shell: bash
                 run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
             -   name: Checkout repository
-                uses: actions/checkout@v2
+                uses: actions/checkout@v3
             -   name: Update version
                 run: |
                     jq '.version = "${{ env.APP_VERSION }}"' Epsilon.Host.Frontend/package.json > Epsilon.Host.Frontend/package.json.tmp
                     mv Epsilon.Host.Frontend/package.json.tmp Epsilon.Host.Frontend/package.json
+            -   name: Format package.json
+                uses: actions/setup-node@v4
+                with:
+                    node-version: 20
+                    cache: 'pnpm'
+                    cache-dependency-path: 'Epsilon.Host.Frontend/pnpm-lock.yaml'
+                run: |
+                    pnpm install
+                    pnpm run format-code --write
             -   name: Commit changes
                 uses: EndBug/add-and-commit@v9
                 with:
