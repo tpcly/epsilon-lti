@@ -12,6 +12,9 @@ jobs:
         if: github.event.created
         permissions: write-all
         runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: Epsilon.Host.Frontend
         steps:
             -   name: Extract branch name
                 shell: bash
