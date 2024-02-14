@@ -16,31 +16,28 @@ jobs:
         steps:
             -   name: Extract branch name
                 shell: bash
-                run: echo "env.APP_VERSION=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-                id: extract_branch
-            -   name: Branch name
-                run: echo running on branch ${GITHUB_REF##*/}
-#            -   name: Checkout repository
-#                uses: actions/checkout@v2
-#
-#            -   name: Update version
-#                run: |
-#                    jq '.version = "${{ env.APP_VERSION }}"' Epsilon.Host.Frontend/package.json > Epsilon.Host.Frontend/package.json.tmp
-#                    mv Epsilon.Host.Frontend/package.json.tmp Epsilon.Host.Frontend/package.json
-#
-#            -   name: Commit changes
-#                uses: EndBug/add-and-commit@v9
-#                with:
-#                    default_author: github_actions
-#                    message: Bump version package.json to ${{ env.APP_VERSION }}
-#                    add: Epsilon.Host.Frontend/package.json
-#                    push: origin HEAD:${{env.APP_VERSION}}
-#    create-pr:
-#        needs: [ define-version ]
-#        runs-on: ubuntu-latest
-#        steps:
-#            -   name: create pull request
-#                run: gh pr create -B main -H ${{env.CURRENT_BRANCH}} --title ${{env.APP_VERSION}} --body 'Created by Github action'
-#                env:
-#                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
+            -   name: Checkout repository
+                uses: actions/checkout@v2
+
+            -   name: Update version
+                run: |
+                    jq '.version = "${{ env.APP_VERSION }}"' Epsilon.Host.Frontend/package.json > Epsilon.Host.Frontend/package.json.tmp
+                    mv Epsilon.Host.Frontend/package.json.tmp Epsilon.Host.Frontend/package.json
+
+            -   name: Commit changes
+                uses: EndBug/add-and-commit@v9
+                with:
+                    default_author: github_actions
+                    message: Bump version package.json to ${{ env.APP_VERSION }}
+                    add: Epsilon.Host.Frontend/package.json
+                    push: origin HEAD:${{env.APP_VERSION}}
+    create-pr:
+        needs: [ define-version ]
+        runs-on: ubuntu-latest
+        steps:
+            -   name: create pull request
+                run: gh pr create -B main -H ${{env.CURRENT_BRANCH}} --title ${{env.APP_VERSION}} --body 'Created by Github action'
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
