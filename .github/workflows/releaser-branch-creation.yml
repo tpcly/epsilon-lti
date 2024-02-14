@@ -2,7 +2,7 @@ name: Release
 on:
     push:
         branches:
-            - 'release/V*.*.*[-Beta.*]'
+            - 'release/V?.?.?'
 jobs:
     define-version:
         if: github.event.created
