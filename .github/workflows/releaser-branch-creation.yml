@@ -18,7 +18,8 @@ jobs:
             -   name: Extract branch name
                 shell: bash
                 run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
-                
+            -   name: Checkout repository
+                uses: actions/checkout@v3
             -   name: Update package.json version
                 run: |
                     jq '.version = "${{ env.APP_VERSION }}"' Epsilon.Host.Frontend/package.json > Epsilon.Host.Frontend/package.json.tmp
