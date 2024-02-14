@@ -22,12 +22,13 @@ jobs:
                 run: |
                     jq '.version = "${{ env.APP_VERSION }}"' Epsilon.Host.Frontend/package.json > Epsilon.Host.Frontend/package.json.tmp
                     mv Epsilon.Host.Frontend/package.json.tmp Epsilon.Host.Frontend/package.json
-            -   name: Format package.json
+            -   name: Install js dependencies
                 uses: actions/setup-node@v4
                 with:
                     node-version: 20
                     cache: 'pnpm'
                     cache-dependency-path: 'Epsilon.Host.Frontend/pnpm-lock.yaml'
+            -   name: Format package.json
                 run: |
                     pnpm install
                     pnpm run format-code --write
