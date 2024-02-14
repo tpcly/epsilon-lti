@@ -6,7 +6,8 @@ on:
             - 'release/**-Beta.*'
         types:
             - closed
-
+env:
+    APP_VERSION: ${{ GITHUB_REF##*/ }}
 jobs:
     ci:
         if: github.event.pull_request.merged == true
@@ -30,5 +31,5 @@ jobs:
                     commit: ${{ github.sha }}
                     generateReleaseNotes: true
                     allowUpdates: true
-                    tag: ${{GITHUB_REF##*/}}
-                    prerelease: ${{ !contains(GITHUB_REF##*/, 'Beta') }}               
+                    tag: ${{APP_VERSION}}
+                    prerelease: ${{ !contains(APP_VERSION, 'Beta') }}               
