@@ -46,7 +46,7 @@ jobs:
                 id: cpr
                 uses: peter-evans/create-pull-request@v6
                 with:
-                    branch: ${{GITHUB_REF}}
+                    branch: ${{ env.CURRENT_BRANCH }}
                     base: 'main'
                     delete-branch: true
                     title: ${{ env.APP_VERSION }}
