@@ -8,8 +8,29 @@ env:
     CURRENT_BRANCH: ${{ github.ref }}
     APP_VERSION: ''
 jobs:
-    pull-request-creation:
+    define-version:
         if: github.event.created
+        permissions: write-all
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Extract branch name
+                shell: bash
+                run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
+            -   name: Checkout repository
+                uses: actions/checkout@v2
+            -   name: Update version
+                run: |
+                    jq '.version = "${{ env.APP_VERSION }}"' Epsilon.Host.Frontend/package.json > Epsilon.Host.Frontend/package.json.tmp
+                    mv Epsilon.Host.Frontend/package.json.tmp Epsilon.Host.Frontend/package.json
+            -   name: Commit changes
+                uses: EndBug/add-and-commit@v9
+                with:
+                    default_author: github_actions
+                    message: Bump version package.json to ${{ env.APP_VERSION }}
+                    add: Epsilon.Host.Frontend/package.json
+                    push: origin HEAD:release/${{env.APP_VERSION}}
+    pull-request-creation:
+        needs: [ define-version ]
         permissions:
             contents: write
             pull-requests: write
@@ -18,13 +39,6 @@ jobs:
             -   name: Extract branch name
                 shell: bash
                 run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
-            -   name: Checkout repository
-                uses: actions/checkout@v3
-            -   name: Update package.json version
-                run: |
-                    jq '.version = "${{ env.APP_VERSION }}"' Epsilon.Host.Frontend/package.json > Epsilon.Host.Frontend/package.json.tmp
-                    mv Epsilon.Host.Frontend/package.json.tmp Epsilon.Host.Frontend/package.json        
-        
             -   name: Create Pull Request
                 uses: peter-evans/create-pull-request@v6
                 with:
