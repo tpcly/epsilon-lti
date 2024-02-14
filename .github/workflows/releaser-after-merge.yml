@@ -22,9 +22,6 @@ jobs:
         permissions:
             contents: write
         steps:
-            -   name: Split branch name
-                id: split
-                run: echo "::set-output name=fragment::${{GITHUB_REF##*/}}"
             -   uses: actions/checkout@v4
             -   uses: ncipollo/release-action@v1
                 with:
@@ -33,5 +30,5 @@ jobs:
                     commit: ${{ github.sha }}
                     generateReleaseNotes: true
                     allowUpdates: true
-                    tag: ${{ steps.split.outputs.fragment }}
-                    prerelease: ${{ !contains(steps.split.outputs.fragment, 'Beta') }}               
+                    tag: ${{GITHUB_REF##*/}}
+                    prerelease: ${{ !contains(GITHUB_REF##*/, 'Beta') }}               
