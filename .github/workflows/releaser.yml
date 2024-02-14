@@ -59,7 +59,6 @@ jobs:
             actions: read
             contents: read
             security-events: write
-        needs: [ update_version ]
         uses: ./.github/workflows/continuous-integration.yml
     tagged-release:
         name: Creating Tag and Release
@@ -73,5 +72,5 @@ jobs:
                 shell: bash
                 run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
             -   name: Create Release & Tag
-                run: gh release create ${{APP_VERSION}} --generate-notes ${{ !contains(APP_VERSION, 'Beta') || '--prerelease' }}     
+                run: gh release create ${{env.APP_VERSION}} --generate-notes ${{ !contains(env.APP_VERSION, 'Beta') || '--prerelease' }}     
     
