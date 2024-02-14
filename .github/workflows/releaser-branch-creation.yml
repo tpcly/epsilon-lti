@@ -18,24 +18,14 @@ jobs:
                 run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
             -   name: Checkout repository
                 uses: actions/checkout@v3
-            -   name: Update version
-                run: |
-                    jq '.version = "${{ env.APP_VERSION }}"' Epsilon.Host.Frontend/package.json > Epsilon.Host.Frontend/package.json.tmp
-                    mv Epsilon.Host.Frontend/package.json.tmp Epsilon.Host.Frontend/package.json
-            -   name: Install Pnpm
-                run: |
-                    npm install -g pnpm
-            -   name: Install js dependencies
+            -   name: Setup node
                 uses: actions/setup-node@v4
                 with:
                     node-version: 20
-                    cache: 'pnpm'
-                    cache-dependency-path: 'Epsilon.Host.Frontend/pnpm-lock.yaml'
-            -   name: Format package.json
+            -   name: Set version
                 run: |
                     cd Epsilon.Host.Frontend
-                    pnpm install
-                    pnpm run format-code --write
+                    npm version ${{ env.APP_VERSION }} --git-tag-version false
             -   name: Commit changes
                 uses: EndBug/add-and-commit@v9
                 with:
