@@ -1,4 +1,4 @@
-name: Release
+name: Release Pull Request
 on:
     push:
         branches:
@@ -37,6 +37,9 @@ jobs:
         needs: [ define-version ]
         runs-on: ubuntu-latest
         steps:
+            -   name: Extract branch name
+                shell: bash
+                run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
             -   name: create pull request
                 run: gh pr create -B main -H ${{env.CURRENT_BRANCH}} --title ${{env.APP_VERSION}} --body 'Created by Github action'
                 env:
