@@ -73,5 +73,5 @@ jobs:
                 shell: bash
                 run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
             -   name: Create Release & Tag
-                run: gh release create ${{env.APP_VERSION}} --generate-notes ${{ !contains(env.APP_VERSION, 'Beta') || '--prerelease' }}     
+                run: gh release create ${{env.APP_VERSION}} --generate-notes ${{ !contains(env.APP_VERSION, 'Beta') || '--prerelease' }} ${{ contains(env.APP_VERSION, 'Beta') || '--latest' }}     
     
