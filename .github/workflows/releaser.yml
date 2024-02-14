@@ -19,7 +19,7 @@ jobs:
                 shell: bash
                 run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
             -   name: Checkout repository
-                uses: actions/checkout@v3
+                uses: actions/checkout@v4
             -   name: Setup node
                 uses: actions/setup-node@v4
                 with:
@@ -44,7 +44,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout repository
-                uses: actions/checkout@v3
+                uses: actions/checkout@v4
             -   name: Extract branch name
                 shell: bash
                 run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
