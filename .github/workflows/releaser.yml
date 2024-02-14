@@ -2,8 +2,8 @@ name: Release
 on:
     push:
         branches:
-            - 'release/**'
-            - 'release/**-Beta.*'
+            - 'release/?.?.?'
+            - 'release/?.?.?-beta.??'
 env:
     CURRENT_BRANCH: ${{ github.ref }}
     APP_VERSION: ''
