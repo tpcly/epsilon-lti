@@ -9,7 +9,7 @@ env:
     APP_VERSION: ''
 jobs:
     define-version:
-        if: github.event.created
+#        if: github.event.created
         permissions: write-all
         runs-on: ubuntu-latest
         steps:
