@@ -32,7 +32,7 @@ jobs:
                     message: Bump version package.json to ${{ env.APP_VERSION }}
                     add: Epsilon.Host.Frontend/package.json
                     push: origin HEAD:release/${{env.APP_VERSION}}
-    create-pr:
+    pull-request-creation:
         needs: [ define-version ]
         permissions:
             contents: write
@@ -46,7 +46,6 @@ jobs:
                 id: cpr
                 uses: peter-evans/create-pull-request@v6
                 with:
-                    committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
                     branch: ${{GITHUB_REF}}
                     base: 'main'
                     delete-branch: true
