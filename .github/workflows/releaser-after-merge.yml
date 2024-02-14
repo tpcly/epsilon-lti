@@ -4,12 +4,11 @@ on:
         branches:
             - 'release/**'
             - 'release/**-Beta.*'
-        types:
-            - closed
 env:
     APP_VERSION: ''
 jobs:
     ci:
+        name: Continuous Integration on release
         if: github.event.pull_request.merged == true
         permissions:
             actions: read
@@ -18,6 +17,7 @@ jobs:
         needs: [ update_version ]
         uses: ./.github/workflows/continuous-integration.yml
     tagged-release:
+        name: Creating Tag and Release
         runs-on: ubuntu-latest
         needs: [ ci ]
         permissions:
@@ -27,12 +27,5 @@ jobs:
             -   name: Extract branch name
                 shell: bash
                 run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
-            -   uses: ncipollo/release-action@v1
-                with:
-                    token: ${{ secrets.GITHUB_TOKEN }}
-                    draft: false
-                    commit: ${{ github.sha }}
-                    generateReleaseNotes: true
-                    allowUpdates: true
-                    tag: ${{APP_VERSION}}
-                    prerelease: ${{ !contains(APP_VERSION, 'Beta') }}               
+            -   name: Create Release & Tag
+                run: gh release create ${{APP_VERSION}} --generate-notes ${{ !contains(APP_VERSION, 'Beta') || '--prerelease' }}            
