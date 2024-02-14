@@ -12,9 +12,6 @@ jobs:
         if: github.event.created
         permissions: write-all
         runs-on: ubuntu-latest
-        defaults:
-            run:
-                working-directory: Epsilon.Host.Frontend
         steps:
             -   name: Extract branch name
                 shell: bash
@@ -33,6 +30,7 @@ jobs:
                     cache-dependency-path: 'Epsilon.Host.Frontend/pnpm-lock.yaml'
             -   name: Format package.json
                 run: |
+                    cd Epsilon.Host.Frontend
                     pnpm install
                     pnpm run format-code --write
             -   name: Commit changes
