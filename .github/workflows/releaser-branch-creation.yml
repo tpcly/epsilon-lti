@@ -25,15 +25,15 @@ jobs:
                 uses: EndBug/add-and-commit@v9
                 with:
                     default_author: github_actions
-                    message: Bump version package.json to ${{ APP_VERSION }}
+                    message: Bump version package.json to ${ APP_VERSION }
                     add: Epsilon.Host.Frontend/package.json
-                    push: origin HEAD:${{APP_VERSION}}
+                    push: origin HEAD:${APP_VERSION}
     create-pr:
         needs: [ define-version ]
         runs-on: ubuntu-latest
         steps:
             -   name: create pull request
-                run: gh pr create -B main -H ${GITHUB_REF} --title '${{APP_VERSION}}' --body 'Created by Github action'
+                run: gh pr create -B main -H ${GITHUB_REF} --title ${APP_VERSION} --body 'Created by Github action'
                 env:
                     GITHUB_TOKEN: ${ secrets.GITHUB_TOKEN }
     
