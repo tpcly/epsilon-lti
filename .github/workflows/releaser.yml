@@ -4,6 +4,12 @@ on:
         branches:
             - 'release/[0-9].[0-9].[0-9]'
             - 'release/[0-9].[0-9].[0-9]-beta.[0-9][0-9]'
+    pull_request: 
+        types:
+            - closed
+        branches:
+            - 'release/[0-9].[0-9].[0-9]'
+            - 'release/[0-9].[0-9].[0-9]-beta.[0-9][0-9]'
 env:
     CURRENT_BRANCH: ${{ github.ref }}
     APP_VERSION: ''
