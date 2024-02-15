@@ -25,6 +25,7 @@ jobs:
             -   name: Checkout repository
                 uses: actions/checkout@v4
             -   name: Extract branch name
+                id: extract-version
                 shell: bash
                 run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
     define-version:
