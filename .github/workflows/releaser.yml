@@ -44,14 +44,14 @@ jobs:
             -   name: Set version
                 run: |
                     cd ${{ env.FRONTEND_LOCATION }}
-                    npm version ${{ needs.collect-version.APP_VERSION }} --git-tag-version false -f --allow-same-version true
+                    npm version ${{ needs.collect-version.outputs.APP_VERSION }} --git-tag-version false -f --allow-same-version true
             -   name: Commit changes
                 uses: EndBug/add-and-commit@v9
                 with:
                     default_author: github_actions
-                    message: Bump version package.json to ${{ needs.collect-version.APP_VERSION }}
+                    message: Bump version package.json to ${{ needs.collect-version.outputs.APP_VERSION }}
                     add: ${{ env.FRONTEND_LOCATION }}package.json
-                    push: origin HEAD:release/${{ needs.collect-version.APP_VERSION }}
+                    push: origin HEAD:release/${{ needs.collect-version.outputs.APP_VERSION }}
     pull-request-creation:
         needs: [ define-version ]
         name: Create Pull Request
@@ -63,7 +63,7 @@ jobs:
             -   name: Checkout repository
                 uses: actions/checkout@v4
             -   name: create pull request
-                run: gh pr create -B main -H ${{ env.CURRENT_BRANCH }} -d --title '${{ needs.collect-version.APP_VERSION }}' --body 'This is an automated pull request to update the version of the project to ${{ needs.collect-version.APP_VERSION }}.
+                run: gh pr create -B main -H ${{ env.CURRENT_BRANCH }} -d --title '${{ needs.collect-version.outputs.APP_VERSION }}' --body 'This is an automated pull request to update the version of the project to ${{ needs.collect-version.outputs.APP_VERSION }}.
                     The version is updated in the package.json file.'
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -77,5 +77,5 @@ jobs:
         steps:
             -   uses: actions/checkout@v4
             -   name: Create Release & Tag
-                run: gh release create ${{needs.collect-version.APP_VERSION}} --generate-notes ${{ !contains(needs.collect-version.APP_VERSION, 'Beta') || '--prerelease' }} ${{ contains(env.APP_VERSION, 'Beta') || '--latest' }}     
+                run: gh release create ${{needs.collect-version.outputs.APP_VERSION}} --generate-notes ${{ !contains(needs.collect-version.outputs.APP_VERSION, 'Beta') || '--prerelease' }} ${{ contains(needs.collect-version.outputs.APP_VERSION, 'Beta') || '--latest' }}     
     
