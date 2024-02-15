@@ -8,8 +8,7 @@ on:
         types:
             - closed
         branches:
-            - 'release/[0-9].[0-9].[0-9]'
-            - 'release/[0-9].[0-9].[0-9]-beta.[0-9][0-9]'
+            - 'main'
 env:
     CURRENT_BRANCH: ${{ github.ref }}
     FRONTEND_LOCATION: 'Epsilon.Host.Frontend/'
@@ -70,7 +69,7 @@ jobs:
     tagged-release:
         name: Creating Tag and Release
         runs-on: ubuntu-latest
-        if: github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true && ${{ contains(github.ref, 'refs/heads/releases/') }}
         needs: [ collect-version ]
         permissions:
             contents: write
