@@ -24,6 +24,7 @@
 					label="Students"
 					:items="users"
 					density="compact"
+					:clearable="true"
 					:flat="true"
 					item-value="_id"
 					item-title="name"
