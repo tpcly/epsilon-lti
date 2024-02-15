@@ -69,14 +69,14 @@ jobs:
     tagged-release:
         name: Creating Tag and Release
         runs-on: ubuntu-latest
-        if: github.event.pull_request.merged == true && ${{ contains(github.ref, 'refs/heads/releases/') }}
+        if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
         needs: [ collect-version ]
         permissions:
             contents: write
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         steps:
-            -   uses: actions/checkout@v4
-            -   name: Create Release & Tag
-                run: gh release create ${{needs.collect-version.outputs.APP_VERSION}} --generate-notes ${{ !contains(needs.collect-version.outputs.APP_VERSION, 'Beta') || '--prerelease' }} ${{ contains(needs.collect-version.outputs.APP_VERSION, 'Beta') || '--latest' }}     
-    
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+            -   name: Create Release & Tag ${{needs.collect-version.outputs.APP_VERSION}}
+                run: gh release create ${{needs.collect-version.outputs.APP_VERSION}} --generate-notes ${{ !contains(needs.collect-version.outputs.APP_VERSION, 'Beta') || '--prerelease' }} ${{ contains(needs.collect-version.outputs.APP_VERSION, 'Beta') || '--latest' }}
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
