@@ -53,7 +53,7 @@ jobs:
                     add: ${{ env.FRONTEND_LOCATION }}package.json
                     push: origin HEAD:release/${{ needs.collect-version.outputs.APP_VERSION }}
     pull-request-creation:
-        needs: [ define-version ]
+        needs: [ define-version, collect-version ]
         name: Create Pull Request
         permissions:
             contents: write
