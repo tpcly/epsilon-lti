@@ -8,10 +8,9 @@ on:
         types:
             - closed
         branches:
-            - 'release/[0-9].[0-9].[0-9]'
-            - 'release/[0-9].[0-9].[0-9]-beta.[0-9][0-9]'
+            - 'main'
 env:
-    CURRENT_BRANCH: ${{ github.ref }}
+    CURRENT_BRANCH: ${{ github.base_ref || github.ref_name }
     FRONTEND_LOCATION: 'Epsilon.Host.Frontend/'
 jobs:
     collect-version:
@@ -27,7 +26,7 @@ jobs:
             -   name: Extract branch name
                 id: extract-version
                 shell: bash
-                run: echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+                run: echo "APP_VERSION=${env.CURRENT_BRANCH##*/}" >> $GITHUB_OUTPUT
     define-version:
         if: github.event.created
         name: Set new version in package.json
@@ -70,12 +69,14 @@ jobs:
     tagged-release:
         name: Creating Tag and Release
         runs-on: ubuntu-latest
-        if: github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
         needs: [ collect-version ]
         permissions:
             contents: write
         steps:
-            -   uses: actions/checkout@v4
-            -   name: Create Release & Tag
-                run: gh release create ${{needs.collect-version.outputs.APP_VERSION}} --generate-notes ${{ !contains(needs.collect-version.outputs.APP_VERSION, 'Beta') || '--prerelease' }} ${{ contains(needs.collect-version.outputs.APP_VERSION, 'Beta') || '--latest' }}     
-    
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+            -   name: Create Release & Tag ${{needs.collect-version.outputs.APP_VERSION}}
+                run: gh release create ${{needs.collect-version.outputs.APP_VERSION}} --generate-notes ${{ !contains(needs.collect-version.outputs.APP_VERSION, 'Beta') || '--prerelease' }} ${{ contains(needs.collect-version.outputs.APP_VERSION, 'Beta') || '--latest' }}
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
