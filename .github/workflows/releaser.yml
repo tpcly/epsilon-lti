@@ -10,7 +10,7 @@ on:
         branches:
             - 'main'
 env:
-    CURRENT_BRANCH: ${{ github.base_ref || github.ref_name }
+    CURRENT_BRANCH: ${{ github.base_ref || github.ref_name }}
     FRONTEND_LOCATION: 'Epsilon.Host.Frontend/'
 jobs:
     collect-version:
