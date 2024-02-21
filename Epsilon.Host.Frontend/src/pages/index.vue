@@ -1,20 +1,10 @@
 <template>
 	<ClientOnly>
-		<TopNavigation
-			@user-change="handleUserChange"
-			@range-change="handleRangeChange">
-			<template #default="navigationProps">
-				<v-col
-					v-if="enableSemesterWrapped && !loadingSubmissions"
-					cols="12"
-					md="2">
-					<WrappedDialog
-						:submissions="submissions"
-						:outcomes="outcomes"
-						:terms="navigationProps.terms"
-						:domains="domains"></WrappedDialog>
-				</v-col>
-			</template>
+		<TopNavigation>
+			<ResultFiltering
+				@user-change="handleUserChange"
+				@range-change="handleRangeChange">
+			</ResultFiltering>
 		</TopNavigation>
 		<v-card v-if="store.errors.length" color="error" class="mt-4">
 			<v-card-title>An error accord</v-card-title>
@@ -88,6 +78,7 @@ import { Generator } from "~/utils/generator"
 import LoadingDialog from "~/LoadingDialog.vue"
 import { useEpsilonStore } from "~/composables/use-store"
 import CompetenceGenerationBanner from "~/components/competence/CompetenceGenerationBanner.vue"
+import ResultFiltering from "~/components/ResultFiltering.vue"
 
 const runtimeConfig = useRuntimeConfig()
 const store = useEpsilonStore()
