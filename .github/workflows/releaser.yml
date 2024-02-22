@@ -10,7 +10,7 @@ on:
         branches:
             - 'main'
 env:
-    CURRENT_BRANCH: ${{ github.base_ref || github.ref_name }}
+    CURRENT_BRANCH: ${{ github.base_ref || github.ref }}
     FRONTEND_LOCATION: 'Epsilon.Host.Frontend/'
 jobs:
     collect-version:
@@ -26,7 +26,7 @@ jobs:
             -   name: Extract branch name
                 id: extract-version
                 shell: bash
-                run: echo "APP_VERSION=${env.CURRENT_BRANCH##*/}" >> $GITHUB_OUTPUT
+                run: echo "APP_VERSION=${CURRENT_BRANCH##*/}" >> $GITHUB_OUTPUT
     define-version:
         if: github.event.created
         name: Set new version in package.json
