@@ -1,16 +1,12 @@
 <template>
 	<ClientOnly>
 		<TopNavigation>
-			<template #default="navigationProps">
+			<template>
 				<v-col
 					v-if="enableSemesterWrapped && !loadingSubmissions"
 					cols="12"
 					md="2">
-					<WrappedDialog
-						:submissions="submissions"
-						:outcomes="outcomes"
-						:terms="navigationProps.terms"
-						:domains="domains"></WrappedDialog>
+					<WrappedDialog></WrappedDialog>
 				</v-col>
 			</template>
 		</TopNavigation>
@@ -44,7 +40,7 @@
 				<PerformanceDashboard
 					:is-loading="loadingSubmissions"
 					:submissions="filteredSubmissions"
-					:domains="domains" />
+					:domains="store.domains" />
 			</v-window-item>
 			<v-window-item v-if="enableCompetenceProfile" :value="1">
 				<CompetenceGenerationBanner
@@ -54,10 +50,10 @@
 						store.selectedUser
 					"></CompetenceGenerationBanner>
 				<CompetenceDocument
-					:outcomes="outcomes"
+					:outcomes="store.outcomes"
 					:submissions="filteredSubmissions"
 					:filter-range="store.selectedTermRange"
-					:domains="domains" />
+					:domains="store.domains" />
 			</v-window-item>
 		</v-window>
 		<div class="credits">
@@ -74,20 +70,17 @@
 
 <script lang="ts" setup>
 import TopNavigation from "~/components/TopNavigation.vue"
-import {
-	type LearningDomain,
-	type LearningDomainOutcome,
-	type LearningDomainSubmission,
-} from "~/api.generated"
+import { type LearningDomainSubmission } from "~/api.generated"
 import { Posthog } from "~/utils/posthog"
 import type { PostHog } from "posthog-js"
 import PerformanceDashboard from "~/components/performance/PerformanceDashboard.vue"
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
 import { Generator } from "~/utils/generator"
 import LoadingDialog from "~/LoadingDialog.vue"
-import { useEpsilonStore } from "~/stores/use-store"
 import CompetenceGenerationBanner from "~/components/competence/CompetenceGenerationBanner.vue"
 import { storeToRefs } from "pinia"
+import { useEpsilonStore } from "~/stores/use-store"
+import { useServices } from "~/composables/use-services"
 
 const runtimeConfig = useRuntimeConfig()
 const store = useEpsilonStore()
@@ -121,8 +114,6 @@ const enableSemesterWrapped = ref<boolean | undefined>(false)
 const api = useApi()
 const loadingSubmissions = ref<boolean>(true)
 const submissions = ref<LearningDomainSubmission[]>([])
-const domains = ref<LearningDomain[]>([])
-const outcomes = ref<LearningDomainOutcome[]>([])
 const { selectedUser } = storeToRefs(store)
 if (process.client) {
 	const po = Posthog.init() as PostHog
@@ -136,29 +127,14 @@ if (process.client) {
 	})
 
 	setInterval(() => {
-		if (loadingSubmissions.value && outcomes.value.length > 0) {
+		if (loadingSubmissions.value && store.outcomes.length > 0) {
 			filteredSubmissions.value = Generator.generateSubmissions(
-				outcomes.value
+				store.outcomes
 			)
 		}
 	}, 1000)
 
-	loadDomains(["hbo-i-2018", "pd-2020-bsc"])
-}
-
-function loadDomains(domainNames: string[]): void {
-	api.learning
-		.learningDomainOutcomesList()
-		.then((r) => (outcomes.value = r.data))
-		.catch((r) => store.addError(r))
-	domainNames.map(function (domainName) {
-		api.learning
-			.learningDomainDetail(domainName)
-			.then((hboIData) => {
-				domains.value?.push(hboIData.data)
-			})
-			.catch((r) => store.addError(r))
-	})
+	useServices().loadDomains(["hbo-i-2018", "pd-2020-bsc"])
 }
 
 const filteredSubmissions = computed({

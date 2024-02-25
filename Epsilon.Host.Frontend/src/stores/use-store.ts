@@ -1,4 +1,10 @@
-import type { EnrollmentTerm, User } from "~/api.generated"
+import type {
+	EnrollmentTerm,
+	LearningDomain,
+	LearningDomainOutcome,
+	LearningDomainSubmission,
+	User,
+} from "~/api.generated"
 import { defineStore } from "pinia"
 import type { TermRange } from "~/composables/use-services"
 
@@ -11,6 +17,9 @@ export const useEpsilonStore = defineStore("Epsilon", {
 			selectedTermRange: {} as TermRange | null,
 			users: [] as User[],
 			selectedUser: {} as User | null,
+			domains: [] as LearningDomain[],
+			outcomes: [] as LearningDomainOutcome[],
+			submissions: [] as LearningDomainSubmission[],
 		}
 	},
 	actions: {
@@ -31,6 +40,12 @@ export const useEpsilonStore = defineStore("Epsilon", {
 		},
 		setSelectedUser(user: User | null) {
 			this.selectedUser = user
+		},
+		setDomains(domains: LearningDomain[]) {
+			this.domains = domains
+		},
+		setOutcomes(outcomes: LearningDomainOutcome[]) {
+			this.outcomes = outcomes
 		},
 	},
 })

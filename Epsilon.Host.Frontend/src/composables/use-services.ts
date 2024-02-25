@@ -1,6 +1,5 @@
 import type { User } from "~/api.generated"
 import { useEpsilonStore } from "~/stores/use-store"
-const api = useApi()
 
 export interface TermRange {
 	customSelection: boolean
@@ -11,6 +10,7 @@ export interface TermRange {
 
 const loadTerms = (user: User): void => {
 	const store = useEpsilonStore()
+	const api = useApi()
 	store.setTerms([])
 	store.setSelectedTerm(null)
 	api.filter
@@ -26,6 +26,8 @@ const loadTerms = (user: User): void => {
 
 const loadStudents = (): void => {
 	const store = useEpsilonStore()
+	const api = useApi()
+
 	api.filter
 		.filterAccessibleStudentsList()
 		.then((r) => {
@@ -36,12 +38,34 @@ const loadStudents = (): void => {
 		.catch((r) => store.addError(r))
 }
 
+const loadDomains = (domainNames: string[]): void => {
+	const store = useEpsilonStore()
+	const api = useApi()
+
+	api.learning
+		.learningDomainOutcomesList()
+		.then((r) => store.setOutcomes(r.data))
+		.catch((r) => store.addError(r))
+	domainNames.map(function (domainName) {
+		api.learning
+			.learningDomainDetail(domainName)
+			.then((r) => {
+				const l = store.domains
+				l.push(r.data)
+				store.setDomains(l)
+			})
+			.catch((r) => store.addError(r))
+	})
+}
+
 export const useServices = (): {
 	loadTerms: (user: User) => void
 	loadStudents: () => void
+	loadDomains: (domainName: string[]) => void
 } => {
 	return {
 		loadTerms,
 		loadStudents,
+		loadDomains,
 	}
 }

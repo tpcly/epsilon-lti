@@ -114,9 +114,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useServices } from "~/composables/use-services"
 import { useEpsilonStore } from "~/stores/use-store"
 import { storeToRefs } from "pinia"
+import { useServices } from "~/composables/use-services"
 
 const store = useEpsilonStore()
 const { selectedTerm, selectedUser } = storeToRefs(store)
