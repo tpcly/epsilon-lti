@@ -17,34 +17,36 @@
 				</a>
 			</v-col>
 			<v-spacer></v-spacer>
-			<slot :terms="terms"></slot>
+			<slot :terms="store.terms"></slot>
 			<v-col cols="12" md="3">
 				<v-autocomplete
 					v-model="selectedUser"
 					label="Students"
-					:items="users"
+					:items="store.users"
 					density="compact"
 					:clearable="true"
 					:flat="true"
 					item-value="_id"
 					item-title="name"
 					return-object
-					no-data-text>
+					no-data-text
+					@update:model-value="(e) => store.setSelectedUser(e)">
 				</v-autocomplete>
 			</v-col>
 			<v-col cols="12" md="2">
 				<v-autocomplete
 					v-model="selectedTerm"
 					label="Semester"
-					:items="terms"
+					:items="store.terms"
 					density="compact"
 					:flat="true"
 					item-title="name"
 					return-object
-					no-data-text
-					@update:model-value="customDateSelection = false">
+					no-data-text>
 					<template #selection="{ item }">
-						<span v-if="customDateSelection"> Custom </span>
+						<span v-if="store.selectedTermRange.customSelection">
+							Custom
+						</span>
 						<span v-else>{{ item.title }}</span>
 					</template>
 					<template #prepend-item>
@@ -59,7 +61,7 @@
 									<v-text-field
 										label="From"
 										:value="
-											correctedFromDate
+											store.selectedTermRange.startCorrected
 												?.toISOString()
 												.slice(0, 10)
 										"
@@ -67,9 +69,13 @@
 										type="date"
 										@update:model-value="
 											(s: string) => {
-												customDateSelection = true
-												correctedFromDate = new Date(s)
-												fromDate = new Date(s)
+												store.setSelectedTermRange({
+													customSelection: true,
+													start: new Date(s),
+													end: store.selectedTermRange
+														.end,
+													startCorrected: new Date(s),
+												})
 											}
 										"></v-text-field>
 								</v-list-item>
@@ -77,14 +83,24 @@
 									<v-text-field
 										label="Until"
 										:value="
-											toDate?.toISOString().slice(0, 10)
+											store.selectedTermRange.end
+												?.toISOString()
+												.slice(0, 10)
 										"
 										density="compact"
 										type="date"
 										@update:model-value="
 											(s: string) => {
-												customDateSelection = true
-												toDate = new Date(s)
+												store.setSelectedTermRange({
+													customSelection: true,
+													start: store
+														.selectedTermRange
+														.start,
+													end: new Date(s),
+													startCorrected:
+														store.selectedTermRange
+															.startCorrected,
+												})
 											}
 										"></v-text-field>
 								</v-list-item>
@@ -98,72 +114,35 @@
 </template>
 
 <script lang="ts" setup>
-import { type EnrollmentTerm, type User } from "~/api.generated"
+import { useServices } from "~/composables/use-services"
+import { useEpsilonStore } from "~/stores/use-store"
+import { storeToRefs } from "pinia"
 
-const emit = defineEmits(["userChange", "rangeChange"])
-const api = useApi()
-
-const users = ref<User[]>([])
-const terms = ref<EnrollmentTerm[]>([])
-const selectedUser = ref<User | null>(null)
-const selectedTerm = ref<EnrollmentTerm | null>(null)
-
-const correctedFromDate = ref<Date | null>(null)
-const fromDate = ref<Date | null>(null)
-const toDate = ref<Date | null>(null)
-const customDateSelection = ref<boolean>(false)
-const runtimeConfig = useRuntimeConfig()
 const store = useEpsilonStore()
+const { selectedTerm, selectedUser } = storeToRefs(store)
+const runtimeConfig = useRuntimeConfig()
 onMounted(() => {
-	api.filter
-		.filterAccessibleStudentsList()
-		.then((r) => {
-			users.value = r.data
-			selectedUser.value = users.value[0]
-		})
-		.catch((r) => store.addError(r))
+	useServices().loadStudents()
 })
 
 // When the user is updated, we should request its terms
 watch(selectedUser, () => {
-	if (!selectedUser?.value?._id) {
-		return
-	}
-	terms.value = []
-	selectedTerm.value = null
-	emit("userChange", selectedUser.value)
-
-	api.filter
-		.filterParticipatedTermsList({
-			studentId: selectedUser.value._id,
-		})
-		.then((r) => {
-			terms.value = r.data
-			selectedTerm.value = terms.value[0]
-		})
-		.catch((r) => store.addError(r))
+	store.setSelectedUser(selectedUser.value)
+	useServices().loadTerms(store.selectedUser!)
 })
 
 watch(selectedTerm, () => {
-	const selectedTermUnwrapped = selectedTerm.value
+	store.setSelectedTerm(selectedTerm.value)
+	const selectedTermUnwrapped = store.selectedTerm
 	if (!selectedTermUnwrapped?.startAt || !selectedTermUnwrapped.endAt) {
 		return
 	}
 
-	const termsUnwrapped = terms.value
-	correctedFromDate.value = new Date(
-		termsUnwrapped[termsUnwrapped.length - 1]?.startAt!
-	)
-
-	toDate.value = new Date(selectedTermUnwrapped?.endAt)
-	fromDate.value = new Date(selectedTermUnwrapped?.startAt)
-})
-
-watch([correctedFromDate, toDate, fromDate], () => {
-	emit("rangeChange", {
-		startCorrected: correctedFromDate.value,
-		start: fromDate.value,
-		end: toDate.value,
+	store.setSelectedTermRange({
+		customSelection: false,
+		start: new Date(selectedTermUnwrapped?.startAt),
+		end: new Date(selectedTermUnwrapped?.endAt),
+		startCorrected: new Date(store.terms[store.terms.length - 1]?.startAt!),
 	})
 })
 </script>
@@ -183,6 +162,7 @@ watch([correctedFromDate, toDate, fromDate], () => {
 		background-color: #ffffff;
 		border-radius: 6px;
 	}
+
 	.v-autocomplete .v-input__details {
 		display: none;
 	}

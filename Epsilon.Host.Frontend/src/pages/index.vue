@@ -1,8 +1,6 @@
 <template>
 	<ClientOnly>
-		<TopNavigation
-			@user-change="handleUserChange"
-			@range-change="handleRangeChange">
+		<TopNavigation>
 			<template #default="navigationProps">
 				<v-col
 					v-if="enableSemesterWrapped && !loadingSubmissions"
@@ -51,12 +49,14 @@
 			<v-window-item v-if="enableCompetenceProfile" :value="1">
 				<CompetenceGenerationBanner
 					v-if="enableCompetenceGeneration"
-					:filter-range="filterRange"
-					:current-user="currentUser"></CompetenceGenerationBanner>
+					:filter-range="store.selectedTermRange"
+					:current-user="
+						store.selectedUser
+					"></CompetenceGenerationBanner>
 				<CompetenceDocument
 					:outcomes="outcomes"
 					:submissions="filteredSubmissions"
-					:filter-range="filterRange"
+					:filter-range="store.selectedTermRange"
 					:domains="domains" />
 			</v-window-item>
 		</v-window>
@@ -78,7 +78,6 @@ import {
 	type LearningDomain,
 	type LearningDomainOutcome,
 	type LearningDomainSubmission,
-	type User,
 } from "~/api.generated"
 import { Posthog } from "~/utils/posthog"
 import type { PostHog } from "posthog-js"
@@ -86,8 +85,9 @@ import PerformanceDashboard from "~/components/performance/PerformanceDashboard.
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
 import { Generator } from "~/utils/generator"
 import LoadingDialog from "~/LoadingDialog.vue"
-import { useEpsilonStore } from "~/composables/use-store"
+import { useEpsilonStore } from "~/stores/use-store"
 import CompetenceGenerationBanner from "~/components/competence/CompetenceGenerationBanner.vue"
+import { storeToRefs } from "pinia"
 
 const runtimeConfig = useRuntimeConfig()
 const store = useEpsilonStore()
@@ -121,15 +121,9 @@ const enableSemesterWrapped = ref<boolean | undefined>(false)
 const api = useApi()
 const loadingSubmissions = ref<boolean>(true)
 const submissions = ref<LearningDomainSubmission[]>([])
-const filterRange = ref<{
-	start: Date
-	end: Date
-	startCorrected: Date
-} | null>(null)
-const currentUser = ref<User | null>(null)
-
 const domains = ref<LearningDomain[]>([])
 const outcomes = ref<LearningDomainOutcome[]>([])
+const { selectedUser } = storeToRefs(store)
 if (process.client) {
 	const po = Posthog.init() as PostHog
 	po.onFeatureFlags(function () {
@@ -169,7 +163,7 @@ function loadDomains(domainNames: string[]): void {
 
 const filteredSubmissions = computed({
 	get(): LearningDomainSubmission[] {
-		const unwrappedFilterRange = filterRange.value
+		const unwrappedFilterRange = store.selectedTermRange
 
 		if (!unwrappedFilterRange) {
 			return submissions.value
@@ -191,16 +185,15 @@ const filteredSubmissions = computed({
 	},
 })
 
-const handleUserChange = async (user: User): Promise<void> => {
-	if (user._id === null) {
+watch(selectedUser, async () => {
+	if (store.selectedUser?._id === null) {
 		return
 	}
-	currentUser.value = user
 	loadingSubmissions.value = true
-	filterRange.value = null
+	// filterRange.value = null
 
 	const response = await api?.learning.learningOutcomesList({
-		studentId: user._id,
+		studentId: store.selectedUser!._id,
 	})
 
 	if (response.error) {
@@ -209,15 +202,7 @@ const handleUserChange = async (user: User): Promise<void> => {
 
 	submissions.value = response.data
 	loadingSubmissions.value = false
-}
-
-const handleRangeChange = (range: {
-	start: Date
-	end: Date
-	startCorrected: Date
-}): void => {
-	filterRange.value = range
-}
+})
 </script>
 
 <style lang="scss" scoped>
