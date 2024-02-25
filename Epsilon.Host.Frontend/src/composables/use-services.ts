@@ -41,6 +41,30 @@ const loadSubmissions = async (): Promise<void> => {
 	}
 	store.setSubmissions(response.data)
 	store.setLoadingSubmissions(false)
+	filterSubmissions()
+}
+
+const filterSubmissions = (): void => {
+	const store = useEpsilonStore()
+	const unwrappedFilterRange = store.selectedTermRange
+
+	if (!unwrappedFilterRange) {
+		store.setFilteredSubmissions(store.submissions)
+		return
+	}
+
+	store.setFilteredSubmissions(
+		store.submissions.filter((submission) => {
+			if (submission.criteria!.length > 0) {
+				const submittedAt = new Date(submission.submittedAt!)
+
+				return (
+					submittedAt >= unwrappedFilterRange.startCorrected &&
+					submittedAt <= unwrappedFilterRange.end
+				)
+			}
+		})
+	)
 }
 
 const loadStudents = (): void => {
@@ -82,11 +106,13 @@ export const useServices = (): {
 	loadStudents: () => void
 	loadDomains: (domainName: string[]) => void
 	loadSubmissions: () => void
+	filterSubmissions: () => void
 } => {
 	return {
 		loadTerms,
 		loadStudents,
 		loadDomains,
 		loadSubmissions,
+		filterSubmissions,
 	}
 }

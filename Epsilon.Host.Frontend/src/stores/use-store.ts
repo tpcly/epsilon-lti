@@ -25,6 +25,7 @@ export const useEpsilonStore = defineStore("Epsilon", {
 			domains: [] as LearningDomain[],
 			outcomes: [] as LearningDomainOutcome[],
 			submissions: [] as LearningDomainSubmission[],
+			filteredSubmissions: [] as LearningDomainSubmission[],
 			loadingSubmissions: false as boolean,
 			featureFlags: {} as FeatureFlags,
 		}
@@ -56,6 +57,11 @@ export const useEpsilonStore = defineStore("Epsilon", {
 		},
 		setSubmissions(submissions: LearningDomainSubmission[]) {
 			this.submissions = submissions
+		},
+		setFilteredSubmissions(
+			filteredSubmissions: LearningDomainSubmission[]
+		) {
+			this.filteredSubmissions = filteredSubmissions
 		},
 		setLoadingSubmissions(loading: boolean) {
 			this.loadingSubmissions = loading

@@ -42,7 +42,7 @@
 					"></CompetenceGenerationBanner>
 				<CompetenceDocument
 					:outcomes="store.outcomes"
-					:submissions="filteredSubmissions"
+					:submissions="store.filterSubmissions"
 					:filter-range="store.selectedTermRange"
 					:domains="store.domains" />
 			</v-window-item>
@@ -61,7 +61,6 @@
 
 <script lang="ts" setup>
 import TopNavigation from "~/components/TopNavigation.vue"
-import { type LearningDomainSubmission } from "~/api.generated"
 import { Posthog } from "~/utils/posthog"
 import PerformanceDashboard from "~/components/performance/PerformanceDashboard.vue"
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
@@ -98,46 +97,20 @@ if (process.client && data.value?.idToken) {
 	}
 }
 const router = useRouter()
-const api = useApi()
 const { selectedUser } = storeToRefs(store)
 if (process.client) {
 	Posthog.init()
 
 	setInterval(() => {
 		if (store.loadingSubmissions && store.outcomes.length > 0) {
-			filteredSubmissions.value = Generator.generateSubmissions(
-				store.outcomes
+			store.setFilteredSubmissions(
+				Generator.generateSubmissions(store.outcomes)
 			)
 		}
 	}, 1000)
 
 	useServices().loadDomains(["hbo-i-2018", "pd-2020-bsc"])
 }
-
-const filteredSubmissions = computed({
-	get(): LearningDomainSubmission[] {
-		const unwrappedFilterRange = store.selectedTermRange
-
-		if (!unwrappedFilterRange) {
-			return store.submissions
-		}
-
-		return store.submissions.filter((submission) => {
-			if (submission.criteria!.length > 0) {
-				const submittedAt = new Date(submission.submittedAt!)
-
-				return (
-					submittedAt >= unwrappedFilterRange.startCorrected &&
-					submittedAt <= unwrappedFilterRange.end
-				)
-			}
-		})
-	},
-	set(values: LearningDomainSubmission[]) {
-		store.setSubmissions(values)
-		// store.submissions = values
-	},
-})
 
 watch(selectedUser, async () => useServices().loadSubmissions())
 </script>
