@@ -116,15 +116,7 @@ const loadingSubmissions = ref<boolean>(true)
 const submissions = ref<LearningDomainSubmission[]>([])
 const { selectedUser } = storeToRefs(store)
 if (process.client) {
-	const po = Posthog.init() as PostHog
-	po.onFeatureFlags(function () {
-		enableSemesterWrapped.value = po.isFeatureEnabled("semester-wrapped")
-		enableCompetenceProfile.value =
-			po.isFeatureEnabled("competence-profile")
-		enableCompetenceGeneration.value = po.isFeatureEnabled(
-			"competence-generation"
-		)
-	})
+	Posthog.init()
 
 	setInterval(() => {
 		if (loadingSubmissions.value && store.outcomes.length > 0) {

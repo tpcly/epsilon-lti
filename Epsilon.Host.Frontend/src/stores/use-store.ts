@@ -8,6 +8,11 @@ import type {
 import { defineStore } from "pinia"
 import type { TermRange } from "~/composables/use-services"
 
+export interface FeatureFlags {
+	teacherMode: boolean
+	eduBadge: boolean
+}
+
 export const useEpsilonStore = defineStore("Epsilon", {
 	state: () => {
 		return {
@@ -20,6 +25,7 @@ export const useEpsilonStore = defineStore("Epsilon", {
 			domains: [] as LearningDomain[],
 			outcomes: [] as LearningDomainOutcome[],
 			submissions: [] as LearningDomainSubmission[],
+			featureFlags: {} as FeatureFlags,
 		}
 	},
 	actions: {
@@ -46,6 +52,9 @@ export const useEpsilonStore = defineStore("Epsilon", {
 		},
 		setOutcomes(outcomes: LearningDomainOutcome[]) {
 			this.outcomes = outcomes
+		},
+		setFeatureFlags(flags: FeatureFlags) {
+			this.featureFlags = flags
 		},
 	},
 })
