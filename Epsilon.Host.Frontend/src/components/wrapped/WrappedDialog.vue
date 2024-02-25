@@ -127,20 +127,11 @@ import type {
 	EnrollmentTerm,
 	LearningDomain,
 	LearningDomainOutcome,
-	LearningDomainSubmission,
 	LearningDomainType,
 } from "~/api.generated"
-
-const componentProps = defineProps<{
-	submissions: LearningDomainSubmission[]
-	domains: LearningDomain[]
-	outcomes: LearningDomainOutcome[]
-	terms: EnrollmentTerm[] | null
-}>()
-
-const term = computed<EnrollmentTerm | undefined>(() =>
-	componentProps.terms?.at(0)
-)
+import { useEpsilonStore } from "~/stores/use-store"
+const store = useEpsilonStore()
+const term = computed<EnrollmentTerm | undefined>(() => store.terms?.at(0))
 const showWrapped = computed<boolean>(() => {
 	if (term.value != undefined) {
 		return (
@@ -155,13 +146,13 @@ const showWrapped = computed<boolean>(() => {
 	return true
 })
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
-	componentProps.submissions.flatMap((submission) =>
+	store.submissions.flatMap((submission) =>
 		submission.results!.map((result) => result.outcome!)
 	)
 )
 
 const allOutcomesPast = computed<LearningDomainOutcome[]>(() =>
-	componentProps.submissions
+	store.submissions
 		.filter(
 			(s) =>
 				new Date(s.submittedAt!) <= new Date(term.value!.startAt ?? "")
@@ -172,7 +163,7 @@ const allOutcomesPast = computed<LearningDomainOutcome[]>(() =>
 )
 
 const allOutcomesCurrentSemester = computed<LearningDomainOutcome[]>(() =>
-	componentProps.submissions
+	store.submissions
 		.filter(
 			(s) =>
 				new Date(s.submittedAt!) >=
@@ -202,7 +193,7 @@ const mostUsedDomains = computed<
 		row: { count: number; row: LearningDomainType }[]
 	}[]
 >(() => {
-	return componentProps.domains.map((d) => {
+	return store.domains.map((d) => {
 		return {
 			row: d.rowsSet?.types?.map((t) => {
 				return {
