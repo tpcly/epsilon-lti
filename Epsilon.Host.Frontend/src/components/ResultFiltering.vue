@@ -38,48 +38,26 @@
 					<v-list>
 						<v-list-item>
 							<v-text-field
+								v-model="startDate"
 								label="From"
-								:value="
-									store.selectedTermRange.startCorrected
-										?.toISOString()
-										.slice(0, 10)
-								"
 								density="compact"
-								type="date"
-								@update:model-value="
-									(s: string) => {
-										store.setSelectedTermRange({
-											customSelection: true,
-											start: new Date(s),
-											end: store.selectedTermRange.end,
-											startCorrected: new Date(s),
-										})
-									}
-								"></v-text-field>
+								type="date"></v-text-field>
 						</v-list-item>
 						<v-list-item>
 							<v-text-field
+								v-model="endDate"
 								label="Until"
-								:value="
-									store.selectedTermRange.end
-										?.toISOString()
-										.slice(0, 10)
-								"
 								density="compact"
-								type="date"
-								@update:model-value="
-									(s: string) => {
-										store.setSelectedTermRange({
-											customSelection: true,
-											start: store.selectedTermRange
-												.start,
-											end: new Date(s),
-											startCorrected:
-												store.selectedTermRange
-													.startCorrected,
-										})
-									}
-								"></v-text-field>
+								type="date"></v-text-field>
+						</v-list-item>
+						<v-list-item>
+							<v-btn
+								color="#11284c"
+								variant="text"
+								class="float-end"
+								@click="applyCustomFilter">
+								Apply
+							</v-btn>
 						</v-list-item>
 					</v-list>
 				</v-menu>
@@ -93,12 +71,29 @@ import { useEpsilonStore } from "~/stores/use-store"
 import { storeToRefs } from "pinia"
 import { useServices } from "~/composables/use-services"
 const store = useEpsilonStore()
-const { selectedTerm, selectedUser } = storeToRefs(store)
+const { selectedTerm, selectedUser, selectedTermRange } = storeToRefs(store)
+const startDate = ref<string | null>()
+const endDate = ref<string | null>()
+
+function applyCustomFilter(): void {
+	store.setSelectedTermRange({
+		customSelection: true,
+		start: new Date(startDate.value!),
+		end: new Date(endDate.value!),
+		startCorrected: new Date(startDate.value!),
+	})
+}
 onMounted(() => {
 	useServices().loadStudents()
 })
 
-// When the user is updated, we should request its terms
+watch(selectedTermRange, () => {
+	startDate.value = selectedTermRange
+		.value!.startCorrected?.toISOString()
+		.slice(0, 10)
+	endDate.value = selectedTermRange.value!.end?.toISOString().slice(0, 10)
+})
+
 watch(selectedUser, () => {
 	store.setSelectedUser(selectedUser.value)
 	useServices().loadTerms(store.selectedUser!)
