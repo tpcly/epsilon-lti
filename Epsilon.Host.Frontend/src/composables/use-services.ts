@@ -47,7 +47,6 @@ const loadSubmissions = async (): Promise<void> => {
 const filterSubmissions = (): void => {
 	const store = useEpsilonStore()
 	const unwrappedFilterRange = store.selectedTermRange
-
 	if (!unwrappedFilterRange) {
 		store.setFilteredSubmissions(store.submissions)
 		return

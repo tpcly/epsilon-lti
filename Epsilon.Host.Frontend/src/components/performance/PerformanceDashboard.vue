@@ -3,7 +3,7 @@
 		<v-row>
 			<v-col xs="12" md="8">
 				<CompetenceProfile
-					:submissions="store.submissions"
+					:submissions="store.filteredSubmissions"
 					:is-loading="store.loadingSubmissions"
 					class="competence-profile"
 					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')" />
@@ -14,18 +14,18 @@
 			</v-col>
 			<v-col xs="12" md="8">
 				<CompetenceGraph
-					v-if="store.domains.length > 1 && store.submissions"
+					v-if="store.domains.length > 1 && store.filteredSubmissions"
 					class="competence-graph"
 					:is-loading="store.loadingSubmissions"
 					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')"
-					:submissions="store.submissions" />
+					:submissions="store.filteredSubmissions" />
 			</v-col>
 			<v-col xs="12" md="4">
 				<PersonalDevelopmentGraph
-					v-if="store.domains.length > 1 && store.submissions"
+					v-if="store.domains.length > 1 && store.filteredSubmissions"
 					:is-loading="store.loadingSubmissions"
 					:domain="store.domains.find((l) => l.id == 'pd-2020-bsc')"
-					:submissions="store.submissions" />
+					:submissions="store.filteredSubmissions" />
 			</v-col>
 		</v-row>
 	</div>

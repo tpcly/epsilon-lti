@@ -97,7 +97,7 @@ if (process.client && data.value?.idToken) {
 	}
 }
 const router = useRouter()
-const { selectedUser } = storeToRefs(store)
+const { selectedUser, selectedTermRange } = storeToRefs(store)
 if (process.client) {
 	Posthog.init()
 
@@ -113,6 +113,7 @@ if (process.client) {
 }
 
 watch(selectedUser, async () => useServices().loadSubmissions())
+watch(selectedTermRange, () => useServices().filterSubmissions())
 </script>
 
 <style lang="scss" scoped>
