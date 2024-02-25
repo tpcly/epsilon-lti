@@ -1,5 +1,7 @@
 <template>
 	<ClientOnly>
+		<DialogStudentSearch
+			v-if="store.isTeacherStartUp()"></DialogStudentSearch>
 		<TopNavigation>
 			<v-col
 				v-if="!store.loadingSubmissions && !store.isTeacherStartUp()"
