@@ -139,22 +139,7 @@ const filteredSubmissions = computed({
 	},
 })
 
-watch(selectedUser, async () => {
-	if (store.selectedUser?._id === null) {
-		return
-	}
-	store.setLoadingSubmissions(true)
-
-	const response = await api?.learning.learningOutcomesList({
-		studentId: store.selectedUser!._id,
-	})
-
-	if (response.error) {
-		store.addError(response.error)
-	}
-	store.setSubmissions(response.data)
-	store.setLoadingSubmissions(false)
-})
+watch(selectedUser, async () => useServices().loadSubmissions())
 </script>
 
 <style lang="scss" scoped>

@@ -24,6 +24,25 @@ const loadTerms = (user: User): void => {
 		.catch((r) => store.addError(r))
 }
 
+const loadSubmissions = async (): Promise<void> => {
+	const store = useEpsilonStore()
+	const api = useApi()
+	if (store.selectedUser?._id === null) {
+		return
+	}
+	store.setLoadingSubmissions(true)
+
+	const response = await api?.learning.learningOutcomesList({
+		studentId: store.selectedUser!._id,
+	})
+
+	if (response.error) {
+		store.addError(response.error)
+	}
+	store.setSubmissions(response.data)
+	store.setLoadingSubmissions(false)
+}
+
 const loadStudents = (): void => {
 	const store = useEpsilonStore()
 	const api = useApi()
@@ -62,10 +81,12 @@ export const useServices = (): {
 	loadTerms: (user: User) => void
 	loadStudents: () => void
 	loadDomains: (domainName: string[]) => void
+	loadSubmissions: () => void
 } => {
 	return {
 		loadTerms,
 		loadStudents,
 		loadDomains,
+		loadSubmissions,
 	}
 }
