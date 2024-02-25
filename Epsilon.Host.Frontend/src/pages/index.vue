@@ -2,10 +2,7 @@
 	<ClientOnly>
 		<TopNavigation>
 			<template>
-				<v-col
-					v-if="enableSemesterWrapped && !loadingSubmissions"
-					cols="12"
-					md="2">
+				<v-col v-if="store.loadingSubmissions" cols="12" md="2">
 					<WrappedDialog></WrappedDialog>
 				</v-col>
 			</template>
@@ -27,24 +24,18 @@
 		</v-card>
 		<v-tabs v-model="tabs" class="toolbar mt-4" show-arrows>
 			<v-tab :value="0">Performance Dashboard</v-tab>
-			<v-tab v-if="enableCompetenceProfile" :value="1">
-				Competence Document
-			</v-tab>
+			<v-tab :value="1"> Competence Document </v-tab>
 		</v-tabs>
 		<loading-dialog
 			v-if="!store.errors.length"
-			v-model="loadingSubmissions"></loading-dialog>
+			v-model="store.loadingSubmissions"></loading-dialog>
 
 		<v-window v-model="tabs" class="mt-4">
 			<v-window-item :value="0">
-				<PerformanceDashboard
-					:is-loading="loadingSubmissions"
-					:submissions="filteredSubmissions"
-					:domains="store.domains" />
+				<PerformanceDashboard />
 			</v-window-item>
-			<v-window-item v-if="enableCompetenceProfile" :value="1">
+			<v-window-item :value="1">
 				<CompetenceGenerationBanner
-					v-if="enableCompetenceGeneration"
 					:filter-range="store.selectedTermRange"
 					:current-user="
 						store.selectedUser
@@ -72,7 +63,6 @@
 import TopNavigation from "~/components/TopNavigation.vue"
 import { type LearningDomainSubmission } from "~/api.generated"
 import { Posthog } from "~/utils/posthog"
-import type { PostHog } from "posthog-js"
 import PerformanceDashboard from "~/components/performance/PerformanceDashboard.vue"
 import CompetenceDocument from "~/components/competence/CompetenceDocument.vue"
 import { Generator } from "~/utils/generator"
@@ -108,18 +98,13 @@ if (process.client && data.value?.idToken) {
 	}
 }
 const router = useRouter()
-const enableCompetenceProfile = ref<boolean | undefined>(false)
-const enableCompetenceGeneration = ref<boolean | undefined>(false)
-const enableSemesterWrapped = ref<boolean | undefined>(false)
 const api = useApi()
-const loadingSubmissions = ref<boolean>(true)
-const submissions = ref<LearningDomainSubmission[]>([])
 const { selectedUser } = storeToRefs(store)
 if (process.client) {
 	Posthog.init()
 
 	setInterval(() => {
-		if (loadingSubmissions.value && store.outcomes.length > 0) {
+		if (store.loadingSubmissions && store.outcomes.length > 0) {
 			filteredSubmissions.value = Generator.generateSubmissions(
 				store.outcomes
 			)
@@ -134,10 +119,10 @@ const filteredSubmissions = computed({
 		const unwrappedFilterRange = store.selectedTermRange
 
 		if (!unwrappedFilterRange) {
-			return submissions.value
+			return store.submissions
 		}
 
-		return submissions.value.filter((submission) => {
+		return store.submissions.filter((submission) => {
 			if (submission.criteria!.length > 0) {
 				const submittedAt = new Date(submission.submittedAt!)
 
@@ -149,7 +134,8 @@ const filteredSubmissions = computed({
 		})
 	},
 	set(values: LearningDomainSubmission[]) {
-		submissions.value = values
+		store.setSubmissions(values)
+		// store.submissions = values
 	},
 })
 
@@ -157,8 +143,7 @@ watch(selectedUser, async () => {
 	if (store.selectedUser?._id === null) {
 		return
 	}
-	loadingSubmissions.value = true
-	// filterRange.value = null
+	store.setLoadingSubmissions(true)
 
 	const response = await api?.learning.learningOutcomesList({
 		studentId: store.selectedUser!._id,
@@ -167,9 +152,8 @@ watch(selectedUser, async () => {
 	if (response.error) {
 		store.addError(response.error)
 	}
-
-	submissions.value = response.data
-	loadingSubmissions.value = false
+	store.setSubmissions(response.data)
+	store.setLoadingSubmissions(false)
 })
 </script>
 

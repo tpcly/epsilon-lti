@@ -3,29 +3,29 @@
 		<v-row>
 			<v-col xs="12" md="8">
 				<CompetenceProfile
-					:submissions="submissions"
-					:is-loading="isLoading"
+					:submissions="store.submissions"
+					:is-loading="store.loadingSubmissions"
 					class="competence-profile"
-					:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')" />
 			</v-col>
 			<v-col xs="12" md="4">
 				<LearningDomainValues
-					:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')" />
 			</v-col>
 			<v-col xs="12" md="8">
 				<CompetenceGraph
-					v-if="domains.length > 1 && submissions"
+					v-if="store.domains.length > 1 && store.submissions"
 					class="competence-graph"
-					:is-loading="isLoading"
-					:domain="domains.find((l) => l.id == 'hbo-i-2018')"
-					:submissions="submissions" />
+					:is-loading="store.loadingSubmissions"
+					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')"
+					:submissions="store.submissions" />
 			</v-col>
 			<v-col xs="12" md="4">
 				<PersonalDevelopmentGraph
-					v-if="domains.length > 1 && submissions"
-					:is-loading="isLoading"
-					:domain="domains.find((l) => l.id == 'pd-2020-bsc')"
-					:submissions="submissions" />
+					v-if="store.domains.length > 1 && store.submissions"
+					:is-loading="store.loadingSubmissions"
+					:domain="store.domains.find((l) => l.id == 'pd-2020-bsc')"
+					:submissions="store.submissions" />
 			</v-col>
 		</v-row>
 	</div>
@@ -35,13 +35,9 @@
 import CompetenceProfile from "~/components/competence/CompetenceProfile.vue"
 import CompetenceGraph from "~/components/performance/CompetenceGraph.vue"
 import PersonalDevelopmentGraph from "~/components/performance/PersonalDevelopmentGraph.vue"
-import type { LearningDomain, LearningDomainSubmission } from "~/api.generated"
+import { useEpsilonStore } from "~/stores/use-store"
 
-defineProps<{
-	submissions: LearningDomainSubmission[]
-	domains: LearningDomain[]
-	isLoading: boolean
-}>()
+const store = useEpsilonStore()
 </script>
 
 <style>
