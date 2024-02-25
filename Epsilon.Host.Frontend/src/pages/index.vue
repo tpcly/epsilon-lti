@@ -1,11 +1,10 @@
 <template>
 	<ClientOnly>
 		<TopNavigation>
-			<template>
-				<v-col v-if="store.loadingSubmissions" cols="12" md="2">
-					<WrappedDialog></WrappedDialog>
-				</v-col>
-			</template>
+			<v-col v-if="!store.loadingSubmissions" cols="12" md="2">
+				<WrappedDialog></WrappedDialog>
+			</v-col>
+			<ResultFiltering></ResultFiltering>
 		</TopNavigation>
 		<v-card v-if="store.errors.length" color="error" class="mt-4">
 			<v-card-title>An error accord</v-card-title>
