@@ -34,6 +34,9 @@ export const useEpsilonStore = defineStore("Epsilon", {
 		isTeacher(): boolean {
 			return this.users.length > 1
 		},
+		isTeacherStartUp(): boolean {
+			return this.isTeacher() && this.submissions.length === 0
+		},
 		addError(error: any) {
 			this.errors.push(error)
 		},

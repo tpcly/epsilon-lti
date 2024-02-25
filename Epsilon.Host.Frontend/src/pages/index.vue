@@ -1,10 +1,13 @@
 <template>
 	<ClientOnly>
 		<TopNavigation>
-			<v-col v-if="!store.loadingSubmissions" cols="12" md="2">
+			<v-col
+				v-if="!store.loadingSubmissions && !store.isTeacherStartUp()"
+				cols="12"
+				md="2">
 				<WrappedDialog></WrappedDialog>
 			</v-col>
-			<ResultFiltering></ResultFiltering>
+			<ResultFiltering v-if="!store.isTeacherStartUp()"></ResultFiltering>
 		</TopNavigation>
 		<v-card v-if="store.errors.length" color="error" class="mt-4">
 			<v-card-title>An error accord</v-card-title>
@@ -103,7 +106,12 @@ if (process.client) {
 	useServices().loadDomains(["hbo-i-2018", "pd-2020-bsc"])
 }
 
-watch(selectedUser, async () => useServices().loadSubmissions())
+watch(selectedUser, async () => {
+	if (store.isTeacherStartUp()) {
+		return
+	}
+	useServices().loadSubmissions()
+})
 watch(selectedTermRange, () => useServices().filterSubmissions())
 </script>
 
