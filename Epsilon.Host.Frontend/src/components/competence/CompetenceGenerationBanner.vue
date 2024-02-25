@@ -19,16 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import type { User } from "~/api.generated"
-
-const props = defineProps<{
-	currentUser: User | null
-	filterRange: {
-		start: Date
-		end: Date
-		startCorrected: Date
-	} | null
-}>()
+import { useEpsilonStore } from "~/stores/use-store"
 const api = useApi()
 const store = useEpsilonStore()
 const isDownloading = ref<boolean>(false)
@@ -36,9 +27,9 @@ function downloadCompetenceDocument(): void {
 	isDownloading.value = true
 	api.document
 		.documentDownloadWordList({
-			userId: props.currentUser?._id as string,
-			from: props.filterRange?.start.toDateString()!,
-			to: props.filterRange?.end.toDateString()!,
+			userId: store.selectedUser?._id as string,
+			from: store.selectedTermRange?.start.toDateString()!,
+			to: store.selectedTermRange?.end.toDateString()!,
 		})
 		.then(async (response) => {
 			const blob = await response.blob()
@@ -47,7 +38,7 @@ function downloadCompetenceDocument(): void {
 			link.href = url
 			link.setAttribute(
 				"download",
-				`CD-Epsilon-${props.currentUser?.name}.docx`
+				`Competence-Document-${store.selectedUser?.name}.docx`
 			)
 			document.body.appendChild(link)
 			link.click()

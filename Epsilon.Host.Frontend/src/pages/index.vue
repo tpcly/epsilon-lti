@@ -35,16 +35,8 @@
 				<PerformanceDashboard />
 			</v-window-item>
 			<v-window-item :value="1">
-				<CompetenceGenerationBanner
-					:filter-range="store.selectedTermRange"
-					:current-user="
-						store.selectedUser
-					"></CompetenceGenerationBanner>
-				<CompetenceDocument
-					:outcomes="store.outcomes"
-					:submissions="store.filterSubmissions"
-					:filter-range="store.selectedTermRange"
-					:domains="store.domains" />
+				<CompetenceGenerationBanner />
+				<CompetenceDocument />
 			</v-window-item>
 		</v-window>
 		<div class="credits">

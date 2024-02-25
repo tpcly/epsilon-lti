@@ -4,18 +4,18 @@
 			<CompetenceProfile
 				:submissions="filteredSubmissionsDateSelection"
 				class="competence-profile"
-				:is-loading="false"
-				:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+				:is-loading="store.loadingSubmissions"
+				:domain="store.domains.find((l) => l.id == 'hbo-i-2018')" />
 		</v-col>
 		<v-col xs="12" md="4">
 			<LearningDomainValues
-				:domain="domains.find((l) => l.id == 'hbo-i-2018')" />
+				:domain="store.domains.find((l) => l.id == 'hbo-i-2018')" />
 		</v-col>
 		<v-col cols="12">
 			<h2>Kpi-Matrix</h2>
 			<KpiMatrix
-				v-if="outcomes.length > 0"
-				:outcomes="outcomes"
+				v-if="store.outcomes.length > 0"
+				:outcomes="store.outcomes"
 				:submissions="filteredSubmissionsDateSelection" />
 		</v-col>
 	</v-row>
@@ -24,31 +24,17 @@
 <script lang="ts" setup>
 import KpiMatrix from "~/components/competence/KpiMatrix.vue"
 import CompetenceProfile from "~/components/competence/CompetenceProfile.vue"
-import type {
-	LearningDomain,
-	LearningDomainOutcome,
-	LearningDomainSubmission,
-} from "~/api.generated"
-
-const componentProps = defineProps<{
-	submissions: LearningDomainSubmission[]
-	domains: LearningDomain[]
-	outcomes: LearningDomainOutcome[]
-	filterRange: {
-		start: Date
-		end: Date
-		startCorrected: Date
-	} | null
-}>()
+import { useEpsilonStore } from "~/stores/use-store"
+const store = useEpsilonStore()
 
 const filteredSubmissionsDateSelection = computed(() => {
-	const unwrappedFilterRange = componentProps.filterRange
+	const unwrappedFilterRange = store.selectedTermRange
 
 	if (!unwrappedFilterRange) {
-		return componentProps.submissions
+		return store.submissions
 	}
 
-	return componentProps.submissions.filter((submission) => {
+	return store.submissions.filter((submission) => {
 		if (submission.criteria!.length > 0) {
 			const submittedAt = new Date(submission.submittedAt!)
 
