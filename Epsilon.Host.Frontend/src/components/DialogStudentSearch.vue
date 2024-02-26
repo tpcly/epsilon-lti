@@ -1,31 +1,37 @@
 <template>
-	<v-dialog
-		:open
-		min-width="75%"
-		min-height="75%"
-		class="wrapped-dialog"
-		:model-value="true">
+	<v-dialog :open class="wrapped-dialog" :model-value="true">
 		<template #default="{ isActive }">
 			<v-card>
 				<v-toolbar>
 					<v-toolbar-title>Student search</v-toolbar-title>
 				</v-toolbar>
 				<v-card-text>
-					<v-row>
-						<v-spacer></v-spacer>
-						<ResultFiltering></ResultFiltering>
-						<v-col>
-							<v-btn variant="text"> Search </v-btn>
-						</v-col>
-						<v-spacer></v-spacer>
-					</v-row>
+					<StudentSelection></StudentSelection>
 				</v-card-text>
+				<v-card-actions>
+					<v-btn
+						variant="text"
+						@click="
+							() => {
+								isActive.value = false
+								useServices().loadSubmissions()
+								store.setStartUp(false)
+							}
+						">
+						Search
+					</v-btn>
+				</v-card-actions>
 			</v-card>
 		</template>
 	</v-dialog>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import StudentSelection from "~/components/filtering/StudentSelection.vue"
+import { useServices } from "~/composables/use-services"
+import { useEpsilonStore } from "~/stores/use-store"
+const store = useEpsilonStore()
+</script>
 
 <style scoped lang="scss">
 .v-toolbar {

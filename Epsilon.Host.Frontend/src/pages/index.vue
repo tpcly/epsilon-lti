@@ -9,7 +9,12 @@
 				md="2">
 				<WrappedDialog></WrappedDialog>
 			</v-col>
-			<ResultFiltering v-if="!store.isTeacherStartUp()"></ResultFiltering>
+			<v-col cols="12" md="3">
+				<StudentSelection></StudentSelection>
+			</v-col>
+			<v-col cols="12" md="2">
+				<TermSelection></TermSelection>
+			</v-col>
 		</TopNavigation>
 		<v-card v-if="store.errors.length" color="error" class="mt-4">
 			<v-card-title>An error accord</v-card-title>
@@ -66,6 +71,8 @@ import CompetenceGenerationBanner from "~/components/competence/CompetenceGenera
 import { storeToRefs } from "pinia"
 import { useEpsilonStore } from "~/stores/use-store"
 import { useServices } from "~/composables/use-services"
+import TermSelection from "~/components/filtering/TermSelection.vue"
+import StudentSelection from "~/components/filtering/StudentSelection.vue"
 
 const runtimeConfig = useRuntimeConfig()
 const store = useEpsilonStore()
