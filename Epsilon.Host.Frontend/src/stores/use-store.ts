@@ -36,7 +36,11 @@ export const useEpsilonStore = defineStore("Epsilon", {
 			return this.users.length > 1
 		},
 		isTeacherStartUp(): boolean {
-			return this.isTeacher() && this.startUp
+			return (
+				this.isTeacher() &&
+				this.startUp &&
+				this.featureFlags.teacherMode
+			)
 		},
 		setStartUp(b: boolean) {
 			this.startUp = b
