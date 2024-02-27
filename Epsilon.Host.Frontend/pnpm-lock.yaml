@@ -41,8 +41,8 @@ devDependencies:
     specifier: ^3.10.3
     version: 3.10.3
   '@types/jsonwebtoken':
-    specifier: ^9.0.5
-    version: 9.0.5
+    specifier: ^9.0.6
+    version: 9.0.6
   '@types/lodash':
     specifier: ^4.14.202
     version: 4.14.202
@@ -1733,8 +1733,8 @@ packages:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
     dev: true
 
-  /@types/jsonwebtoken@9.0.5:
-    resolution: {integrity: sha512-VRLSGzik+Unrup6BsouBeHsf4d1hOEgYWTm/7Nmw1sXoN1+tRly/Gy/po3yeahnP4jfnQWWAhQAqcNfH7ngOkA==}
+  /@types/jsonwebtoken@9.0.6:
+    resolution: {integrity: sha512-/5hndP5dCjloafCXns6SZyESp3Ldq7YjH3zwzwczYnjxIT0Fqzk5ROSYVGfFyczIue7IUEj8hkvLbPoLQ18vQw==}
     dependencies:
       '@types/node': 20.11.20
     dev: true
