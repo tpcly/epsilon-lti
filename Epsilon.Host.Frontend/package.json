@@ -19,7 +19,7 @@
 		"apexcharts": "^3.46.0",
 		"nuxt": "^3.10.3",
 		"pinia": "^2.1.7",
-		"posthog-js": "^1.108.4",
+		"posthog-js": "^1.109.0",
 		"vue": "^3.4.20",
 		"vue-router": "^4.3.0",
 		"vue3-apexcharts": "^1.5.2"
@@ -30,7 +30,7 @@
 		"@nuxt/schema": "^3.10.3",
 		"@types/jsonwebtoken": "^9.0.6",
 		"@types/lodash": "^4.14.202",
-		"@types/node": "^20.11.20",
+		"@types/node": "^20.11.21",
 		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.1.3",
