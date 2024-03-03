@@ -19,7 +19,7 @@
 		<v-card v-if="store.errors.length" color="error" class="mt-4">
 			<v-card-title>An error accord</v-card-title>
 			<v-card-text>
-				{{ store.errors.at(0) }}
+				{{ store.errors.at(0).toString() }}
 			</v-card-text>
 			<v-card-actions>
 				<v-btn @click="router.go()"> Reload application</v-btn>
