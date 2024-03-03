@@ -107,7 +107,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI();
-    app.MapControllers();
+    app.MapControllers().AllowAnonymous();
 }
 else
 {
