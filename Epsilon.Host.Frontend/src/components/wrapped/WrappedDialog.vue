@@ -143,7 +143,7 @@ const showWrapped = computed<boolean>(() => {
 		)
 	}
 
-	return true
+	return false
 })
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 	store.submissions.flatMap((submission) =>
