@@ -1,16 +1,25 @@
 <template>
 	<ClientOnly>
+		<DialogStudentSearch
+			v-if="store.isTeacherStartUp()"></DialogStudentSearch>
 		<TopNavigation>
-			<template>
-				<v-col v-if="store.loadingSubmissions" cols="12" md="2">
-					<WrappedDialog></WrappedDialog>
-				</v-col>
-			</template>
+			<v-col
+				v-if="!store.loadingSubmissions && !store.isTeacherStartUp()"
+				cols="12"
+				md="2">
+				<WrappedDialog></WrappedDialog>
+			</v-col>
+			<v-col cols="12" md="3">
+				<StudentSelection></StudentSelection>
+			</v-col>
+			<v-col cols="12" md="2">
+				<TermSelection></TermSelection>
+			</v-col>
 		</TopNavigation>
 		<v-card v-if="store.errors.length" color="error" class="mt-4">
 			<v-card-title>An error accord</v-card-title>
 			<v-card-text>
-				{{ store.errors.at(0) }}
+				{{ store.errors.at(0).toString() }}
 			</v-card-text>
 			<v-card-actions>
 				<v-btn @click="router.go()"> Reload application</v-btn>
@@ -62,6 +71,8 @@ import CompetenceGenerationBanner from "~/components/competence/CompetenceGenera
 import { storeToRefs } from "pinia"
 import { useEpsilonStore } from "~/stores/use-store"
 import { useServices } from "~/composables/use-services"
+import TermSelection from "~/components/filtering/TermSelection.vue"
+import StudentSelection from "~/components/filtering/StudentSelection.vue"
 
 const runtimeConfig = useRuntimeConfig()
 const store = useEpsilonStore()
@@ -104,7 +115,12 @@ if (process.client) {
 	useServices().loadDomains(["hbo-i-2018", "pd-2020-bsc"])
 }
 
-watch(selectedUser, async () => useServices().loadSubmissions())
+watch(selectedUser, async () => {
+	if (store.isTeacherStartUp()) {
+		return
+	}
+	useServices().loadSubmissions()
+})
 watch(selectedTermRange, () => useServices().filterSubmissions())
 </script>
 

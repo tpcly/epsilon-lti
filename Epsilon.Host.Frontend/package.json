@@ -1,7 +1,7 @@
 {
 	"name": "epsilon-frontend",
 	"private": true,
-	"version": "1.1.4",
+	"version": "1.1.5",
 	"type": "module",
 	"scripts": {
 		"build": "nuxt build",
@@ -40,6 +40,6 @@
 		"prettier": "^3.2.4",
 		"sass": "^1.71.1",
 		"vite-plugin-vuetify": "^2.0.2",
-		"vuetify": "^3.5.6"
+		"vuetify": "^3.5.7"
 	}
 }

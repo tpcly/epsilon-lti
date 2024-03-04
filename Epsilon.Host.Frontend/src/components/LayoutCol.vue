@@ -5,8 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed } from "vue"
-
 const componentProps = defineProps<{
 	cols?: number | string
 	breakpoints?: { [key: string]: number | string }
