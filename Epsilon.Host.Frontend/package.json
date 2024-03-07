@@ -40,6 +40,6 @@
 		"prettier": "^3.2.4",
 		"sass": "^1.71.1",
 		"vite-plugin-vuetify": "^2.0.2",
-		"vuetify": "^3.5.7"
+		"vuetify": "^3.5.8"
 	}
 }
