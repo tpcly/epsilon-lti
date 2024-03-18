@@ -16,6 +16,7 @@ export interface FeatureFlags {
 export const useEpsilonStore = defineStore("Epsilon", {
 	state: () => {
 		return {
+			startUp: true as boolean,
 			errors: [] as string[],
 			terms: [] as EnrollmentTerm[],
 			selectedTerm: {} as EnrollmentTerm | null,
@@ -31,6 +32,19 @@ export const useEpsilonStore = defineStore("Epsilon", {
 		}
 	},
 	actions: {
+		isTeacher(): boolean {
+			return this.users.length > 1
+		},
+		isTeacherStartUp(): boolean {
+			return (
+				this.isTeacher() &&
+				this.startUp &&
+				this.featureFlags.teacherMode
+			)
+		},
+		setStartUp(b: boolean) {
+			this.startUp = b
+		},
 		addError(error: any) {
 			this.errors.push(error)
 		},
