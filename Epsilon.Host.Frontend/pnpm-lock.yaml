@@ -38,8 +38,8 @@ devDependencies:
     specifier: ^0.2.0
     version: 0.2.0(eslint@8.57.0)
   '@nuxt/schema':
-    specifier: ^3.11.0
-    version: 3.11.0
+    specifier: ^3.11.1
+    version: 3.11.1
   '@types/jsonwebtoken':
     specifier: ^9.0.6
     version: 9.0.6
@@ -1019,7 +1019,7 @@ packages:
       vite: '*'
     dependencies:
       '@nuxt/kit': 3.9.3
-      '@nuxt/schema': 3.11.0
+      '@nuxt/schema': 3.11.1
       execa: 7.2.0
       nuxt: 3.11.1(@types/node@20.11.29)(eslint@8.57.0)(sass@1.72.0)(typescript@5.3.3)(vite@5.1.6)
       vite: 5.1.6(@types/node@20.11.29)(sass@1.72.0)
@@ -1159,25 +1159,6 @@ packages:
       - rollup
       - supports-color
 
-  /@nuxt/schema@3.11.0:
-    resolution: {integrity: sha512-vonev7BhcVoXwpOUuyQJAvXQpzw0R1Xi/B/nG24ufCEpIfcwJr6ihhDRYFvQ8yIdxZMK7W8/K73vmUDJQ42dRw==}
-    engines: {node: ^14.18.0 || >=16.10.0}
-    dependencies:
-      '@nuxt/ui-templates': 1.3.1
-      consola: 3.2.3
-      defu: 6.1.4
-      hookable: 5.5.3
-      pathe: 1.1.2
-      pkg-types: 1.0.3
-      scule: 1.3.0
-      std-env: 3.7.0
-      ufo: 1.5.1
-      unimport: 3.7.1(rollup@4.13.0)
-      untyped: 1.4.2
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
-
   /@nuxt/schema@3.11.1:
     resolution: {integrity: sha512-XyGlJsf3DtkouBCvBHlvjz+xvN4vza3W7pY3YBNMnktxlMQtfFiF3aB3A2NGLmBnJPqD3oY0j7lljraELb5hkg==}
     engines: {node: ^14.18.0 || >=16.10.0}
@@ -1209,7 +1190,7 @@ packages:
       pkg-types: 1.0.3
       scule: 1.3.0
       std-env: 3.7.0
-      ufo: 1.5.1
+      ufo: 1.5.2
       unimport: 3.7.1(rollup@4.13.0)
       untyped: 1.4.2
     transitivePeerDependencies:
@@ -4209,7 +4190,7 @@ packages:
       acorn: 8.11.3
       pathe: 1.1.2
       pkg-types: 1.0.3
-      ufo: 1.5.1
+      ufo: 1.5.2
 
   /mlly@1.6.1:
     resolution: {integrity: sha512-vLgaHvaeunuOXHSmEbZ9izxPx3USsk8KCQ8iC+aTlp5sKRSoZvwhHh5L9VbKSaVC6sJDqbyohIS76E2VmHIPAA==}
