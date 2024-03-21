@@ -18,8 +18,8 @@ dependencies:
     specifier: ^2.1.7
     version: 2.1.7(typescript@5.3.3)(vue@3.4.21)
   posthog-js:
-    specifier: ^1.116.2
-    version: 1.116.2
+    specifier: ^1.116.3
+    version: 1.116.3
   vue:
     specifier: ^3.4.21
     version: 3.4.21(typescript@5.3.3)
@@ -153,7 +153,7 @@ packages:
     resolution: {integrity: sha512-5FcvN1JHw2sHJChotgx8Ek0lyuh4kCKelgMTTqhYJJtloNvUfpAFMeNQUtdlIaktwrSV9LtCdqwk48wL2wBacQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@ampproject/remapping': 2.2.1
+      '@ampproject/remapping': 2.3.0
       '@babel/code-frame': 7.24.2
       '@babel/generator': 7.24.1
       '@babel/helper-compilation-targets': 7.23.6
@@ -455,15 +455,6 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.23.7
-      '@babel/helper-plugin-utils': 7.22.5
-
-  /@babel/plugin-syntax-jsx@7.23.3(@babel/core@7.24.3):
-    resolution: {integrity: sha512-EB2MELswq55OHUoRZLGg/zC7QWUKfNLpE57m/S2yr1uEneIgsTgrSzXP3NXEsMkVn76OlaVVnzN+ugObuYGwhg==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.24.3
       '@babel/helper-plugin-utils': 7.22.5
 
   /@babel/plugin-syntax-jsx@7.24.1(@babel/core@7.24.3):
@@ -2292,7 +2283,7 @@ packages:
     resolution: {integrity: sha512-IVU/ZozKTFhP9z1I9ZgSKiEx3WfDFDNXbTYTqwNW2SHPmAj5Qf99kn6o7br7Kd1dnxSjKFXOmNfNGkW9AMDraA==}
     dependencies:
       '@babel/core': 7.24.3
-      '@babel/plugin-syntax-jsx': 7.23.3(@babel/core@7.24.3)
+      '@babel/plugin-syntax-jsx': 7.24.1(@babel/core@7.24.3)
       '@babel/preset-typescript': 7.24.1(@babel/core@7.24.3)
       '@unocss/core': 0.58.6
     transitivePeerDependencies:
@@ -5728,8 +5719,8 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.1.0
 
-  /posthog-js@1.116.2:
-    resolution: {integrity: sha512-s76+xH91mLt/J05sy7XV4/BzfwTJFU+BoBcv9adYOjD3SAUjUFg21+G2rq9A1rRvMHh0lms4t16TRMlO4L463A==}
+  /posthog-js@1.116.3:
+    resolution: {integrity: sha512-KakGsQ8rS/K/U5Q/tiBrRrFRCgGrR0oI9VSYw9hwNCY00EClwAU3EuykUuQTFdQ1EuYMrZDIMWDD4NW6zgf7wQ==}
     dependencies:
       fflate: 0.4.8
       preact: 10.19.3
