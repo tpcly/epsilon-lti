@@ -18,8 +18,8 @@ dependencies:
     specifier: ^2.1.7
     version: 2.1.7(typescript@5.3.3)(vue@3.4.21)
   posthog-js:
-    specifier: ^1.116.5
-    version: 1.116.5
+    specifier: ^1.116.6
+    version: 1.116.6
   vue:
     specifier: ^3.4.21
     version: 3.4.21(typescript@5.3.3)
@@ -5629,8 +5629,8 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.1.0
 
-  /posthog-js@1.116.5:
-    resolution: {integrity: sha512-Dfsy07WGPRqbXNQgfhR5zhcQw4A078xCRX1y0oGmy8xVUmL6QLNNTVKENB4xpo45Ox+88cysi+hEMhd9SfV5Qg==}
+  /posthog-js@1.116.6:
+    resolution: {integrity: sha512-rvt8HxzJD4c2B/xsUa4jle8ApdqljeBI2Qqjp4XJMohQf18DXRyM6b96H5/UMs8jxYuZG14Er0h/kEIWeU6Fmw==}
     dependencies:
       fflate: 0.4.8
       preact: 10.19.3
