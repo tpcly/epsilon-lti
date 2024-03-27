@@ -15,6 +15,7 @@ on:
             - '**.vue'
             - '**.css'
             - '**.yaml'
+            - 'Dockerfile'
 
 jobs:
     
