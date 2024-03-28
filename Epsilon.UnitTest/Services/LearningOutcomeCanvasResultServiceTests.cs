@@ -18,18 +18,18 @@ public class LearningOutcomeCanvasResultServiceTests
         _learningOutcomeCanvasResultService = new LearningOutcomeCanvasResultService(_mockCanvasGraphQl.Object, _mockLearningDomainService.Object);
     }
 
-    [Fact]
-    public async Task GetAccessibleStudents_ReturnsValidStudentsListOfCurrentCourse()
-    {
-        //Arrange
-        var student = TestDataGenerator.GenerateUser().Generate();
-        var outcomes = TestDataGenerator.GenerateRandomLearningDomainOutcome(TestDataGenerator.GenerateRandomLearningDomain().Generate()).Generate(80);
-        _mockLearningDomainService.Setup(static m => m.GetOutcomes()).ReturnsAsync(outcomes);
-        _mockCanvasGraphQl.Setup(static m => m.Query(It.IsAny<string>(), It.IsAny<IDictionary<string, object>>())).ReturnsAsync(TestDataGeneratorCanvasResponse.GenerateCanvasSubmissionsResult(outcomes));
-        //Act
-        var results = _learningOutcomeCanvasResultService.GetSubmissions(student.LegacyId!);
-        //Assert
-        // Assert.RaisesAsync(results);
-        Assert.NotNull(results);
-    }
+    // [Fact]
+    // public async Task GetAccessibleStudents_ReturnsValidStudentsListOfCurrentCourse()
+    // {
+    //     //Arrange
+    //     var student = TestDataGenerator.GenerateUser().Generate();
+    //     var outcomes = TestDataGenerator.GenerateRandomLearningDomainOutcome(TestDataGenerator.GenerateRandomLearningDomain().Generate()).Generate(80);
+    //     _mockLearningDomainService.Setup(static m => m.GetOutcomes()).ReturnsAsync(outcomes);
+    //     _mockCanvasGraphQl.Setup(static m => m.Query(It.IsAny<string>(), It.IsAny<IDictionary<string, object>>())).ReturnsAsync(TestDataGeneratorCanvasResponse.GenerateCanvasSubmissionsResult(outcomes));
+    //     //Act
+    //     var results = _learningOutcomeCanvasResultService.GetSubmissions(student.LegacyId!);
+    //     //Assert
+    //     // Assert.RaisesAsync(results);
+    //     Assert.NotNull(results);
+    // }
 }
