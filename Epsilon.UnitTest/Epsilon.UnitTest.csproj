@@ -25,10 +25,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Services\FilterService\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Epsilon.Abstractions\Epsilon.Abstractions.csproj" />
       <ProjectReference Include="..\Epsilon\Epsilon.csproj" />
     </ItemGroup>
