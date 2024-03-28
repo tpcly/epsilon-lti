@@ -12,12 +12,7 @@ public class TitleComponent : IWordCompetenceComponent
     public async Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
         
-        var body = mainDocumentPart.Document.Body;
-        
-        if (body == null)
-        {
-            return body;
-        }
+        var body = mainDocumentPart.Document.Body ?? throw new InvalidOperationException("The main document part does not contain a body.");
 
         body.AppendChild(new Paragraph(
             new Run(
