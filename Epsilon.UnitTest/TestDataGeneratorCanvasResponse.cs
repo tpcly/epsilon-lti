@@ -32,12 +32,12 @@ public static class TestDataGeneratorCanvasResponse
     public static Faker<GraphQlSchema> GenerateUsersParticipatedTerms(Course currentCourse)
     {
         var terms = GenerateEnrollmentTerms().Generate(15);
-        var enrolments = new AutoFaker<Enrollment>()
-                         .RuleFor(static e => e.User, static _ => null)
-                         .RuleFor(static e => e.Type, static _ => null)
-                         .RuleFor(static e => e.Course, f => new Course(f.Random.Int().ToString(CultureInfo.CurrentCulture), f.Random.String(), terms[0], null, null));
-        return new AutoFaker<GraphQlSchema>()
-            .RuleFor(static g => g.LegacyNode, f => new LegacyNode(enrolments.Generate(1)));
+        var enrolments = new Faker<Enrollment>().CustomInstantiator(f => 
+                                                    new Enrollment(f.Random.String(10), null, 
+                                                    new Course(f.Random.Int().ToString(CultureInfo.CurrentCulture), f.Random.String(), terms[0], null, null)))
+            .Generate(5);
+        return new Faker<GraphQlSchema>()
+            .CustomInstantiator(f => new GraphQlSchema(null, null, new LegacyNode(enrolments)));
     }
 
 
