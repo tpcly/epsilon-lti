@@ -30,7 +30,7 @@
 		"@nuxt/schema": "^3.11.1",
 		"@types/jsonwebtoken": "^9.0.6",
 		"@types/lodash": "^4.17.0",
-		"@types/node": "^20.12.3",
+		"@types/node": "^20.12.4",
 		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.1.3",
