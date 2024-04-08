@@ -122,45 +122,4 @@ public abstract class AbstractCompetenceComponent : IWordCompetenceComponent
 
         return cell;
     }
-    
-    protected static TableCell CreateTableCell(string width, Shading shading, string text)
-    {
-        var cell = new TableCell();
-        var cellProperties = new TableCellProperties()
-        {
-            TableCellVerticalAlignment = new TableCellVerticalAlignment() {Val = TableVerticalAlignmentValues.Center,},
-            TableCellWidth = new TableCellWidth()
-            {
-                Type = TableWidthUnitValues.Dxa,
-                Width = width,
-            },
-            Shading = (Shading)shading.CloneNode(true),
-        };
-        
-        cell.TableCellProperties = cellProperties;
-        
-        cell.Append(CreateText(text));
-
-        return cell;
-    }
-    
-    protected static TableCell CreateTableCell(string width, string text)
-    {
-        var cell = new TableCell();
-        var cellProperties = new TableCellProperties()
-        {
-            TableCellVerticalAlignment = new TableCellVerticalAlignment() {Val = TableVerticalAlignmentValues.Center,},
-            TableCellWidth = new TableCellWidth()
-            {
-                Type = TableWidthUnitValues.Dxa,
-                Width = width,
-            },
-        };
-        
-        cell.TableCellProperties = cellProperties;
-        
-        cell.Append(CreateText(text));
-
-        return cell;
-    }
 }

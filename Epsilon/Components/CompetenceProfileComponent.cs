@@ -22,12 +22,8 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
     public override async Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
-        var body = mainDocumentPart.Document.Body;
+        var body = mainDocumentPart.Document.Body ?? throw new InvalidOperationException("The main document part does not contain a body.");
 
-        if (body == null)
-        {
-            return body;
-        }
 
         var outcomes = Submissions.SelectMany(static o => o.Results.Select(static r => r.Outcome)).ToList();
 
@@ -98,13 +94,8 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
             var cell = CreateTableCell(
                 "1000",
+                new Shading { Val = ShadingPatternValues.Clear, Fill = value?.HexColor ?? "FFFFFF", },
                 contentCell);
-
-
-            if (value != null)
-            {
-                cell.TableCellProperties?.AppendChild(new Shading { Fill = "#" + value.HexColor, });
-            }
 
             domainRow.AppendChild(cell);
         }
@@ -176,13 +167,8 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
 
                 var cell = CreateTableCell(
                     "1000",
+                    new Shading { Val = ShadingPatternValues.Clear, Fill = value?.HexColor ?? "FFFFFF", },
                     contentCell);
-
-
-                if (value != null)
-                {
-                    cell.TableCellProperties?.AppendChild(new Shading { Fill = "#" + value.HexColor, });
-                }
 
                 domainRow.AppendChild(cell);
             }
