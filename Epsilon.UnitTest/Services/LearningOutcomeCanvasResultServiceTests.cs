@@ -30,7 +30,17 @@ public class LearningOutcomeCanvasResultServiceTests
         //Act
         var results = await _learningOutcomeCanvasResultService.GetSubmissions(student.LegacyId!).ToListAsync();
         //Assert
-        // Assert.RaisesAsync(results);
         Assert.NotNull(results);
+        Assert.Equal(40, results.Count);
+        Assert.Equal(80, outcomes.Count);
+
+        foreach (var submission in results)
+        {
+            foreach (var criteria in submission.Criteria)
+            {
+                Assert.Contains(submission.Results, r => r.Outcome.Id == criteria.Id);
+                Assert.NotNull(criteria.MasteryPoints);
+            }
+        }
     }
 }
