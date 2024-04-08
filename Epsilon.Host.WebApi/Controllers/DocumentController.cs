@@ -33,9 +33,9 @@ public class DocumentController : ControllerBase
     }
     
     
-    [HttpGet("download/csv")]
-    public async Task<IActionResult> DownloadCsv(List<string> userIds, DateTime from, DateTime to)
-    {
+    // [HttpGet("download/csv")]
+    // public async Task<IActionResult> DownloadCsv(List<string> userIds, DateTime from, DateTime to)
+    // {
         // var document = _competenceDocumentService.GetDocument(userId, from, to);
         //
         // using var stream = new MemoryStream();
@@ -46,5 +46,5 @@ public class DocumentController : ControllerBase
         //     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         //     "CompetenceDocument.docx"
         // );
-    }
+    // }
 }

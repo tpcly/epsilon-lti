@@ -16,7 +16,9 @@ public class EduBadgeService : IEduBadgeService
     {
         foreach (var userId in userIds)
         {
-            yield return _canvasResultService.GetSubmissions(userId);
+            var userSubmissions = _canvasResultService.GetSubmissions(userId, from);
+
+            yield return userSubmissions.Where(s => s.SubmittedAt <= to);
         }
     }
 

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
 using Tpcly.Canvas.Abstractions.GraphQl;
@@ -15,7 +16,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 course {
                   _id
                   name
-                  submissionsConnection(studentIds: [$studentIds]) {
+                  submissionsConnection(studentIds: [$studentIds],  filter: {gradedSince: '2024-01-01'}) {
                     nodes {
                       assignment {
                         _id
@@ -74,9 +75,9 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         _learningDomainService = learningDomainService;
     }
 
-    public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId)
+    public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId, DateTime? gradedSince = null)
     {
-        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
+        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId },{ "gradedSince", gradedSince?.ToString("yyyy-M-d", CultureInfo.InvariantCulture) ?? "" }, });
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
 
         Task.WaitAll(submissionsTask, domainOutcomesTask);
