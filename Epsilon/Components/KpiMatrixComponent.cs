@@ -21,12 +21,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
 
     public override async Task<Body?> AddToWordDocument(MainDocumentPart mainDocumentPart)
     {
-        var body = mainDocumentPart.Document.Body;
-
-        if (body == null)
-        {
-            return body;
-        }
+        var body = mainDocumentPart.Document.Body ?? throw new InvalidOperationException("The main document part does not contain a body.");
 
         body.AppendChild(CreateLegend());
         body.AppendChild(CreateWhiteSpace());
@@ -96,10 +91,6 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
 
                 var status = GetStatus(result?.Grade, criteria?.MasteryPoints);
                 var fillColor = GetColor(status);
-                if (string.IsNullOrEmpty(fillColor))
-                {
-                    fillColor = "FFFFFF"; // default color code
-                }
 
                 var shading = new Shading { Val = ShadingPatternValues.Clear, Fill = fillColor, };
                 var cell = CreateTableCell("100",
@@ -159,7 +150,6 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
             OutcomeGradeStatus.Mastered => "44F656",
             OutcomeGradeStatus.NotMastered => "FA1818",
             OutcomeGradeStatus.NotAssessed => "9F2B68",
-            null => "FFFFFF",
             _ => "FFFFFF",
         };
     }
