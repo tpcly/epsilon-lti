@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Epsilon.Abstractions.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace Epsilon.Host.WebApi.Controllers;
 public class DocumentController : ControllerBase
 {
     private readonly ICompetenceDocumentService _competenceDocumentService;
+    private readonly IEduBadgeService _eduBadgeService;
 
-    public DocumentController(ICompetenceDocumentService competenceDocumentService)
+    public DocumentController(ICompetenceDocumentService competenceDocumentService, IEduBadgeService eduBadgeService)
     {
         _competenceDocumentService = competenceDocumentService;
+        _eduBadgeService = eduBadgeService;
     }
 
 
@@ -33,18 +36,18 @@ public class DocumentController : ControllerBase
     }
     
     
-    // [HttpGet("download/csv")]
-    // public async Task<IActionResult> DownloadCsv(List<string> userIds, DateTime from, DateTime to)
-    // {
-        // var document = _competenceDocumentService.GetDocument(userId, from, to);
-        //
-        // using var stream = new MemoryStream();
-        // await _competenceDocumentService.WriteDocument(stream, await document);
+    [HttpGet("download/csv")]
+    public async Task<IActionResult> DownloadCsv(Collection<string> userIds, DateTime from, DateTime to)
+    {
+        var data = _eduBadgeService.GetData(userIds, from, to);
+        
+        using var stream = new MemoryStream();
+        _eduBadgeService.WriteDocument(stream, data);
 
-        // return File(
-        //     stream.ToArray(),
-        //     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        //     "CompetenceDocument.docx"
-        // );
-    // }
+        return File(
+            stream.ToArray(),
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "CompetenceDocument.docx"
+        );
+    }
 }

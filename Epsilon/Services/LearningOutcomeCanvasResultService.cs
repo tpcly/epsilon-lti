@@ -8,7 +8,7 @@ namespace Epsilon.Services;
 public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultService
 {
     private const string Query = @"
-        query GetSubmissions($studentIds: ID!) {
+        query GetSubmissions($studentIds: ID!, $submittedSince: DateTime) {
           legacyNode(_id: $studentIds, type: User) {
             ... on User {
               enrollments {
@@ -16,7 +16,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 course {
                   _id
                   name
-                  submissionsConnection(studentIds: [$studentIds],  filter: {gradedSince: '2024-01-01'}) {
+                  submissionsConnection(studentIds: [$studentIds],  filter: {submittedSince: $submittedSince}) {
                     nodes {
                       assignment {
                         _id
@@ -75,9 +75,9 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         _learningDomainService = learningDomainService;
     }
 
-    public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId, DateTime? gradedSince = null)
+    public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId, DateTime? submittedSince = null)
     {
-        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId },{ "gradedSince", gradedSince?.ToString("yyyy-M-d", CultureInfo.InvariantCulture) ?? "" }, });
+        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId },{ "submittedSince", submittedSince?.ToString("yyyy-M-d", CultureInfo.InvariantCulture) ?? "1970-01-01" }, });
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
 
         Task.WaitAll(submissionsTask, domainOutcomesTask);

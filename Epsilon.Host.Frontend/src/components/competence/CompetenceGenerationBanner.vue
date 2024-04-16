@@ -26,8 +26,7 @@ const isDownloading = ref<boolean>(false)
 function downloadCompetenceDocument(): void {
 	isDownloading.value = true
 	api.document
-		.documentDownloadWordList({
-			userId: store.selectedUser?._id as string,
+		.documentDownloadCsvList([store.selectedUser?._id] as string[], {
 			from: store.selectedTermRange?.start.toDateString()!,
 			to: store.selectedTermRange?.end.toDateString()!,
 		})

@@ -12,7 +12,7 @@ public class EduBadgeService : IEduBadgeService
         _canvasResultService = canvasResultService;
     }
 
-    public IEnumerable<IAsyncEnumerable<LearningDomainSubmission>> GetData(IEnumerable<string> userIds, DateTime from, DateTime to)
+    public IEnumerable<IAsyncEnumerable<LearningDomainSubmission>> GetData(ICollection<string> userIds, DateTime from, DateTime to)
     {
         foreach (var userId in userIds)
         {
