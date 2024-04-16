@@ -1,7 +1,7 @@
 {
 	"name": "epsilon-frontend",
 	"private": true,
-	"version": "1.1.6",
+	"version": "1.1.7",
 	"type": "module",
 	"scripts": {
 		"build": "nuxt build",
@@ -19,14 +19,14 @@
 		"apexcharts": "^3.48.0",
 		"nuxt": "^3.11.2",
 		"pinia": "^2.1.7",
-		"posthog-js": "^1.121.1",
-		"vue": "^3.4.21",
+		"posthog-js": "^1.122.0",
+		"vue": "^3.4.22",
 		"vue-router": "^4.3.0",
 		"vue3-apexcharts": "^1.5.2"
 	},
 	"devDependencies": {
 		"@nuxt/devtools": "^1.1.5",
-		"@nuxt/eslint-config": "^0.3.6",
+		"@nuxt/eslint-config": "^0.3.7",
 		"@nuxt/schema": "^3.11.2",
 		"@types/jsonwebtoken": "^9.0.6",
 		"@types/lodash": "^4.17.0",
@@ -38,7 +38,7 @@
 		"jwt-decode": "^4.0.0",
 		"lodash": "^4.17.21",
 		"prettier": "^3.2.4",
-		"sass": "^1.74.1",
+		"sass": "^1.75.0",
 		"vite-plugin-vuetify": "^2.0.3",
 		"vuetify": "^3.5.15"
 	}
