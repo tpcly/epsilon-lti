@@ -1,0 +1,33 @@
+﻿name: Release draft
+
+on:
+  pull_request: 
+    types:
+      - closed
+
+permissions:
+  contents: read
+
+jobs:  
+  draft-release:
+    if: ${{ github.event.pull_request.merged == true}}
+    name: Draft release
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Release type
+        id: release_type
+        run: |
+          echo "IS_PRERELEASE=$(gh pr view ${{ github.head_ref }}  --json="labels" -q='any(.labels[]; .name == "beta")')" >> $GITHUB_ENV
+      - uses: release-drafter/release-drafter@v6.0.0
+        with:
+          prerelease-identifier: 'beta'
+          prerelease: ${{ env.IS_PRERELEASE == 'true' }}
