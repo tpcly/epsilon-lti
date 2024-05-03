@@ -118,5 +118,4 @@ jobs:
                     tags: |
                         ${{ matrix.image }}:'acc'
                         ${{ matrix.image }}:${{ needs.publish-release.outputs.tag }}
-                        ${{ matrix.image }}:${{needs.publish-release.outputs.isBeta == 'true' && 'beta' || 'prod' }}
-                    labels: ${{ steps.meta.outputs.labels }}
+                        ${{ needs.publish-release.outputs.isBeta == 'true' && format('{0}:prod', matrix.image) || '' }}
