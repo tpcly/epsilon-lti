@@ -72,7 +72,7 @@ public class FilterService : IFilterService
         var participatedTerms = response.LegacyNode.Enrollments
                                         .Select(static e => e.Course?.Term!)
                                         .DistinctBy(static t => t?.Id)
-                                        .Where(term => term is { StartAt: not null, EndAt: not null, } && term.StartAt <= currentCourseEnrolment?.Course?.Term?.StartAt)
+                                        .Where(term => term is { StartAt: not null, EndAt: not null, } && term.StartAt <= (currentCourseEnrolment?.Course?.Term?.StartAt ?? DateTime.Now))
                                         .OrderByDescending(static term => term?.StartAt).ToList();
 
 
