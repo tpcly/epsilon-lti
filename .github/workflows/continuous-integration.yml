@@ -165,7 +165,7 @@ jobs:
   build-docker:
     name: Build Docker
     runs-on: ubuntu-20.04
-    needs: [ config, changes, build-backend, build-frontend ]
+    needs: [ config, changes ]
     strategy:
       fail-fast: false
       matrix:
@@ -182,7 +182,7 @@ jobs:
   
   code-analysis:
     name: Code analysis
-    needs: [ build-frontend, build-backend, lint-frontend, unit-testing ]
+    needs: [ changes, config ]
     runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
     if: ${{ needs.config.outputs.code-analysis != 'false' }}
