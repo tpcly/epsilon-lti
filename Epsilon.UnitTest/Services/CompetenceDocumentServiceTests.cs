@@ -27,7 +27,7 @@ public class CompetenceDocumentServiceTests
     }
 
     [Fact]
-    public async void WriteDocument_WritesToStream()
+    public async Task WriteDocument_WritesToStream()
     {
         // Arrange
         _canvasResultServiceMock.Setup(static s => s.GetSubmissions(It.IsAny<string>())).Returns(_submissions);
@@ -44,7 +44,7 @@ public class CompetenceDocumentServiceTests
     }
 
     [Fact]
-    private async void ValidateOpenXmlWordGeneration()
+    private async Task ValidateOpenXmlWordGeneration()
     {
         // Arrange
         _canvasResultServiceMock.Setup(static s => s.GetSubmissions(It.IsAny<string>())).Returns(_submissions);
