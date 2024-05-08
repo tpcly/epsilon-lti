@@ -1,4 +1,4 @@
-﻿name-template: 'v$RESOLVED_VERSION'
+name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
 categories:
   - title: 'Features'
@@ -23,13 +23,18 @@ include-pre-releases: true
 version-resolver:
   major:
     labels:
-      - 'major'
+      - 'upgrade'
   minor:
     labels:
-      - 'minor'
+      - 'enhancement'
+      - 'feature'
   patch:
     labels:
-      - 'patch'
+      - 'documentation'
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+      - 'dependencies'
   default: patch
 template: |
   ## Changes
