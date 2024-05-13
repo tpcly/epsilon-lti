@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0
       - name: Get latest release
         id: latest_release
-        run: echo "LATEST_RELEASE=$(gh release list -q="map(select(.isLatest))[0]?.tagName" --json tagName,isLatest)" >> $GITHUB_ENV
+        run: echo "LATEST_RELEASE=$(gh release list --json tagName,publishedAt,isDraft -q='map(select(.isDraft == false)) |  sort_by(.publishedAt) | reverse[0]?.tagName')" >> $GITHUB_ENV
       - name: Changes with main
         run: |
           git fetch origin main
