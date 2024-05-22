@@ -50,7 +50,7 @@
 		</v-window>
 		<div class="credits">
 			<a class="version" :href="versionUrl" target="_blank">
-				{{ runtimeConfig.public.clientVersion }}
+				v{{ runtimeConfig.public.clientVersion }}
 			</a>
 			| Epsilon © {{ new Date().getFullYear() }} |
 			<a target="_blank" href="https://github.com/tpcly/epsilon-lti">
@@ -78,7 +78,7 @@ const runtimeConfig = useRuntimeConfig()
 const store = useEpsilonStore()
 const tabs = ref<number>(0)
 const versionUrl =
-	"https://github.com/tpcly/epsilon-lti/releases/tag/" +
+	"https://github.com/tpcly/epsilon-lti/releases/tag/v" +
 	runtimeConfig.public.clientVersion
 const { readCallback, validateCallback } = useLti()
 
