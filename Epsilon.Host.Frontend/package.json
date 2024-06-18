@@ -20,8 +20,8 @@
 		"nuxt": "^3.12.2",
 		"pinia": "^2.1.7",
 		"posthog-js": "^1.138.1",
-		"vue": "^3.4.27",
-		"vue-router": "^4.3.2",
+		"vue": "^3.4.29",
+		"vue-router": "^4.3.3",
 		"vue3-apexcharts": "^1.5.3"
 	},
 	"devDependencies": {
@@ -37,9 +37,9 @@
 		"h3": "^1.11.1",
 		"jwt-decode": "^4.0.0",
 		"lodash": "^4.17.21",
-		"prettier": "^3.3.1",
+		"prettier": "^3.3.2",
 		"sass": "^1.77.4",
 		"vite-plugin-vuetify": "^2.0.3",
-		"vuetify": "^3.6.8"
+		"vuetify": "^3.6.9"
 	}
 }
