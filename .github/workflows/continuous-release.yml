@@ -1,121 +1,124 @@
-﻿name: Continuous Release
+name: Continuous Release
 
 on:
-    schedule:
-        -   cron: '0 0 * * *'
-    workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 permissions: write-all
 
 env:
-    GH_TOKEN: ${{ github.token }}
+  REGISTRY: ghcr.io
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
-    change-validation:
-        name: Validate changes for new release
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-        steps:
-            -   uses: actions/checkout@v4
-                with:
-                    fetch-depth: 0
-            -   name: Get latest release
-                id: latest_release
-                run: echo "LATEST_RELEASE=$(gh release list -q="map(select(.isLatest))[0]?.tagName" --json tagName,isLatest)" >> $GITHUB_ENV
-            -   name: Changes with main
-                run: |
-                    git fetch origin main
-                     git diff --name-only ${{ env.LATEST_RELEASE }}...HEAD > CHANGES
-                     echo $CHANGES
-                     if [ -s CHANGES ]; then
-                       echo "CHANGES_FOUND=True" >> $GITHUB_ENV
-                     else
-                       echo "CHANGES_FOUND=False" >> $GITHUB_ENV
-                     fi
-        outputs:
-            CHANGES: ${{ env.CHANGES_FOUND }}
-    integration:
-        if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
-        name: Continuous Integration
-        needs: [ change-validation ]
-        permissions:
-            pull-requests: write
-            actions: read
-            contents: read
-            security-events: write
-        uses: ./.github/workflows/continuous-integration.yml
+  change-validation:
+    name: Validate changes for new release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get latest release
+        id: latest_release
+        run: echo "LATEST_RELEASE=$(gh release list --json tagName,publishedAt,isDraft -q='map(select(.isDraft == false)) |  sort_by(.publishedAt) | reverse[0]?.tagName')" >> $GITHUB_ENV
+      - name: Changes with main
+        run: |
+          git fetch origin main
+           git diff --name-only ${{ env.LATEST_RELEASE }}...HEAD > CHANGES
+           echo $CHANGES
+           if [ -s CHANGES ]; then
+             echo "CHANGES_FOUND=True" >> $GITHUB_ENV
+           else
+             echo "CHANGES_FOUND=False" >> $GITHUB_ENV
+           fi
+    outputs:
+      CHANGES: ${{ env.CHANGES_FOUND }}
+  integration:
+    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
+    name: Continuous Integration
+    needs: [ change-validation ]
+    permissions:
+      pull-requests: write
+      actions: read
+      contents: read
+      security-events: write
+    uses: ./.github/workflows/continuous-integration.yml
+  
+  publish-release:
+    name: Publish release
+    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    needs: [ change-validation, integration ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Define release type
+        run: echo "IS_PRERELEASE=$(gh pr list -B main -l beta -s merged --json mergedAt -q='map(select((now | strftime("%s")|tonumber) - (.mergedAt | fromdate | strftime("%s")|tonumber) <= 86400)) | length > 0')" >> $GITHUB_ENV
+      - uses: release-drafter/release-drafter@v6.0.0
+        id: releaser
+        with:
+          prerelease-identifier: 'beta'
+          publish: true
+          prerelease: ${{ env.IS_PRERELEASE == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Set version
+        run: |
+          cd ${{needs.integration.outputs.frontend}}
+          npm version ${{ steps.releaser.outputs.tag_name }} --git-tag-version false -f --allow-same-version true
+      - name: force update major tag
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "Github action"
+          git add ${{needs.integration.outputs.frontend}}/package.json
+          git commit -m "Bump package.json version to ${{ steps.releaser.outputs.tag_name }}"
+          git tag ${{ steps.releaser.outputs.tag_name }} -f
+          git push origin refs/tags/${{ steps.releaser.outputs.tag_name }} -f
+    outputs:
+      tag: ${{ steps.releaser.outputs.tag_name }}
+      isBeta: ${{ env.IS_PRERELEASE }}
+  
+  
+  deploy:
+    if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
+    name: Publish images to package registry
+    runs-on: ubuntu-20.04
+    needs: [ change-validation, integration, publish-release ]
+    permissions: write-all
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{fromJson(needs.integration.outputs.docker)}}
     
-    publish-release:
-        name: Publish release
-        if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
-        permissions:
-            contents: write
-            pull-requests: write
-        runs-on: ubuntu-latest
-        needs: [ change-validation, integration ]
-        steps:
-            -   uses: actions/checkout@v4
-                with:
-                    fetch-depth: 0
-            -   name: Define release type
-                run: echo "IS_PRERELEASE=$(gh pr list -B main -l beta -s merged --json mergedAt -q='map(select((now | strftime("%s")|tonumber) - (.mergedAt | fromdate | strftime("%s")|tonumber) <= 86400)) | length > 0')" >> $GITHUB_ENV
-            -   uses: release-drafter/release-drafter@v6.0.0
-                id: releaser
-                with:
-                    prerelease-identifier: 'beta'
-                    publish: true
-                    prerelease: ${{ env.IS_PRERELEASE == 'true' }}
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   name: Setup node
-                uses: actions/setup-node@v4
-                with:
-                    node-version: 20
-            -   name: Set version
-                run: |
-                    cd ${{needs.integration.outputs.frontend}}
-                    npm version ${{ steps.releaser.outputs.tag_name }} --git-tag-version false -f --allow-same-version true
-            -   name: force update major tag
-                run: |
-                    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                    git config --global user.name "Github action"
-                    git add ${{needs.integration.outputs.frontend}}/package.json
-                    git commit -m "Bump package.json version to ${{ steps.releaser.outputs.tag_name }}"
-                    git tag ${{ steps.releaser.outputs.tag_name }} -f
-                    git push origin refs/tags/${{ steps.releaser.outputs.tag_name }} -f
-        outputs:
-            tag: ${{ steps.releaser.outputs.tag_name }}
-            isBeta: ${{ env.IS_PRERELEASE }}
-    
-    
-    deploy:
-        if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
-        name: Publish images to docker
-        runs-on: ubuntu-20.04
-        needs: [ change-validation, integration, publish-release ]
-        permissions: write-all
-        strategy:
-            fail-fast: false
-            matrix:
-                include: ${{fromJson(needs.integration.outputs.docker)}}
-        
-        steps:
-            -   uses: actions/checkout@v4
-                name: Check out code
-            -   name: Log in to Docker Hub
-                uses: docker/login-action@v3
-                with:
-                    username: ${{ secrets.DOCKER_USERNAME }}
-                    password: ${{ secrets.DOCKER_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.publish-release.outputs.tag }}
+        name: Check out code
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-            -   name: Build and push Docker image
-                uses: docker/build-push-action@v5
-                with:
-                    context: ${{ matrix.context }}
-                    push: true
-                    file: ${{ matrix.file }}
-                    tags: |
-                        ${{ matrix.image }}:acc
-                        ${{ matrix.image }}:${{ needs.publish-release.outputs.tag }}
-                        ${{ needs.publish-release.outputs.isBeta == 'true' && format('{0}:prod', matrix.image) || '' }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.context }}
+          push: true
+          file: ${{ matrix.file }}
+          tags: |
+            ${{ matrix.image }}:acc
+            ${{ matrix.image }}:${{ needs.publish-release.outputs.tag }}
+            ${{ needs.publish-release.outputs.isBeta != 'true' && format('{0}:prod', matrix.image) || '' }}
