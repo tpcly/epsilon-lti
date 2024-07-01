@@ -19,7 +19,7 @@
 		"apexcharts": "^3.49.1",
 		"nuxt": "^3.12.2",
 		"pinia": "^2.1.7",
-		"posthog-js": "^1.140.1",
+		"posthog-js": "^1.142.1",
 		"vue": "^3.4.31",
 		"vue-router": "^4.4.0",
 		"vue3-apexcharts": "^1.5.3"

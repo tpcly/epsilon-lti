@@ -21,8 +21,8 @@ importers:
         specifier: ^2.1.7
         version: 2.1.7(typescript@5.4.5)(vue@3.4.31(typescript@5.4.5))
       posthog-js:
-        specifier: ^1.140.1
-        version: 1.140.1
+        specifier: ^1.142.1
+        version: 1.142.1
       vue:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.4.5)
@@ -3168,8 +3168,8 @@ packages:
     resolution: {integrity: sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-js@1.140.1:
-    resolution: {integrity: sha512-UeKuAtQSvbzmTCzNVaauku8F194EYwAP33WrRrWZlDlMNbMy7GKcZOgKbr7jZqnha7FlVlHrWk+Rpyr1zCFhPQ==}
+  posthog-js@1.142.1:
+    resolution: {integrity: sha512-yqeWTWitlb0sCaH5v6s7UJ+pPspzf/lkzPaSE5pMMXRM2i2KNsMoZEAZqbPCW8fQ8QL6lHs6d8PLjHrvbR288w==}
 
   preact@10.19.3:
     resolution: {integrity: sha512-nHHTeFVBTHRGxJXKkKu5hT8C/YWBkPso4/Gad6xuj5dbptt9iF9NZr9pHbPhBrnT2klheu7mHTxTZ/LjwJiEiQ==}
@@ -4012,6 +4012,9 @@ packages:
         optional: true
       webpack-plugin-vuetify:
         optional: true
+
+  web-vitals@4.2.1:
+    resolution: {integrity: sha512-U6bAxeudnhDqcXNl50JC4hLlqox9DZnngxfISZm3DMZnonW35xtJOVUc091L+DOY+6hVZVpKXoiCP0RiT6339Q==}
 
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
@@ -7647,10 +7650,11 @@ snapshots:
       picocolors: 1.0.1
       source-map-js: 1.2.0
 
-  posthog-js@1.140.1:
+  posthog-js@1.142.1:
     dependencies:
       fflate: 0.4.8
       preact: 10.19.3
+      web-vitals: 4.2.1
 
   preact@10.19.3: {}
 
@@ -8502,6 +8506,8 @@ snapshots:
     optionalDependencies:
       typescript: 5.4.5
       vite-plugin-vuetify: 2.0.3(vite@5.3.1(@types/node@20.14.8)(sass@1.77.6)(terser@5.27.0))(vue@3.4.31(typescript@5.4.5))(vuetify@3.6.10)
+
+  web-vitals@4.2.1: {}
 
   webidl-conversions@3.0.1: {}
 
