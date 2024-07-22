@@ -75,15 +75,6 @@ export interface LearningDomainTypeSet {
 	types: LearningDomainType[]
 }
 
-export interface PageComponent {
-	html?: string | null
-}
-
-export interface PageUpdateRequest {
-	/** @minLength 1 */
-	body: string
-}
-
 export interface User {
 	_id?: string | null
 	name?: string | null
@@ -311,55 +302,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Document
-		 * @name DocumentPageDetail
-		 * @request GET:/api/Document/page/{pageName}
-		 */
-		documentPageDetail: (
-			pageName: string,
-			query?: {
-				/** @format int32 */
-				courseId?: number
-			},
-			params: RequestParams = {}
-		) =>
-			this.request<PageComponent, any>({
-				path: `/api/Document/page/${pageName}`,
-				method: "GET",
-				query: query,
-				format: "json",
-				...params,
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Document
-		 * @name DocumentPageCreate
-		 * @request POST:/api/Document/page/{pageName}
-		 */
-		documentPageCreate: (
-			pageName: string,
-			data: PageUpdateRequest,
-			query?: {
-				/** @format int32 */
-				courseId?: number
-			},
-			params: RequestParams = {}
-		) =>
-			this.request<PageComponent, any>({
-				path: `/api/Document/page/${pageName}`,
-				method: "POST",
-				query: query,
-				body: data,
-				type: ContentType.Json,
-				format: "json",
-				...params,
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Document
 		 * @name DocumentDownloadWordList
 		 * @request GET:/api/Document/download/word
 		 */
@@ -377,6 +319,32 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/api/Document/download/word`,
 				method: "GET",
 				query: query,
+				...params,
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Document
+		 * @name DocumentDownloadCsvList
+		 * @request GET:/api/Document/download/csv
+		 */
+		documentDownloadCsvList: (
+			data: string[],
+			query?: {
+				/** @format date-time */
+				from?: string
+				/** @format date-time */
+				to?: string
+			},
+			params: RequestParams = {}
+		) =>
+			this.request<void, any>({
+				path: `/api/Document/download/csv`,
+				method: "GET",
+				query: query,
+				body: data,
+				type: ContentType.Json,
 				...params,
 			}),
 	}
