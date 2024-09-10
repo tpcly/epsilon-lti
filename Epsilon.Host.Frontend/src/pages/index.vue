@@ -45,6 +45,7 @@
 			</v-window-item>
 			<v-window-item :value="1">
 				<CompetenceGenerationBanner />
+				<EdubadgeGenerationBanner />
 				<CompetenceDocument />
 			</v-window-item>
 		</v-window>
@@ -73,6 +74,7 @@ import { useEpsilonStore } from "~/stores/use-store"
 import { useServices } from "~/composables/use-services"
 import TermSelection from "~/components/filtering/TermSelection.vue"
 import StudentSelection from "~/components/filtering/StudentSelection.vue"
+import EdubadgeGenerationBanner from "~/components/competence/EdubadgeGenerationBanner.vue"
 
 const runtimeConfig = useRuntimeConfig()
 const store = useEpsilonStore()

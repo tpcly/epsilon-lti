@@ -341,7 +341,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		) =>
 			this.request<void, any>({
 				path: `/api/Document/download/csv`,
-				method: "GET",
+				method: "POST",
 				query: query,
 				body: data,
 				type: ContentType.Json,

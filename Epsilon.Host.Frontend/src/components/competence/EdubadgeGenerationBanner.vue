@@ -5,13 +5,13 @@
 		color="#ffffff"
 		elevation="4"
 		bg-color="#11284c">
-		<v-banner-text> Download your competence document </v-banner-text>
+		<v-banner-text> Download EduBadges</v-banner-text>
 
 		<template #actions>
 			<v-btn
 				color="#fff"
 				:loading="isDownloading"
-				@click="downloadCompetenceDocument">
+				@click="downloadEdubadgeList">
 				Download
 			</v-btn>
 		</template>
@@ -20,14 +20,15 @@
 
 <script setup lang="ts">
 import { useEpsilonStore } from "~/stores/use-store"
+
 const api = useApi()
 const store = useEpsilonStore()
 const isDownloading = ref<boolean>(false)
-function downloadCompetenceDocument(): void {
+
+function downloadEdubadgeList(): void {
 	isDownloading.value = true
 	api.document
-		.documentDownloadWordList({
-			userId: store.selectedUser?._id ?? "",
+		.documentDownloadCsvList([store.selectedUser?._id ?? ""], {
 			from: store.selectedTermRange?.start.toDateString()!,
 			to: store.selectedTermRange?.end.toDateString()!,
 		})
@@ -38,7 +39,7 @@ function downloadCompetenceDocument(): void {
 			link.href = url
 			link.setAttribute(
 				"download",
-				`Competence-Document-${store.selectedUser?.name}.docx`
+				`EduBadge-List-${store.selectedUser?.name}.csv`
 			)
 			document.body.appendChild(link)
 			link.click()

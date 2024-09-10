@@ -2,7 +2,7 @@
 
 public interface IEduBadgeService
 {
-    IEnumerable<IAsyncEnumerable<LearningDomainSubmission>> GetData(ICollection<string> userIds, DateTime from, DateTime to);
+    Task<List<LearningDomainSubmission>> GetData(ICollection<string> userIds, DateTime from, DateTime to);
 
     void WriteDocument(Stream stream, IEnumerable<IAsyncEnumerable<LearningDomainSubmission>> data);
 }

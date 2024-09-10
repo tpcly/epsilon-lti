@@ -5,21 +5,19 @@ namespace Epsilon.Services;
 
 public class EduBadgeService : IEduBadgeService
 {
-    private readonly LearningOutcomeCanvasResultService _canvasResultService;
+    private readonly ILearningOutcomeCanvasResultService _canvasResultService;
 
-    public EduBadgeService(LearningOutcomeCanvasResultService canvasResultService)
+    public EduBadgeService(ILearningOutcomeCanvasResultService canvasResultService)
     {
         _canvasResultService = canvasResultService;
     }
 
-    public IEnumerable<IAsyncEnumerable<LearningDomainSubmission>> GetData(ICollection<string> userIds, DateTime from, DateTime to)
+    public async Task<List<LearningDomainSubmission>> GetData(ICollection<string> userIds, DateTime from, DateTime to)
     {
-        foreach (var userId in userIds)
-        {
-            var userSubmissions = _canvasResultService.GetSubmissions(userId, from);
-
-            yield return userSubmissions.Where(s => s.SubmittedAt <= to);
-        }
+        return await _canvasResultService.GetSubmissions(userIds.First(), from)
+                                                         .Where(s => s.SubmittedAt <= to && s.Criteria.Any())
+                                                         .ToListAsync();
+        
     }
 
     public void WriteDocument(Stream stream, IEnumerable<IAsyncEnumerable<LearningDomainSubmission>> data)

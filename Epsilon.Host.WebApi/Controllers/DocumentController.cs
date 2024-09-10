@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,18 +37,18 @@ public class DocumentController : ControllerBase
     }
     
     
-    [HttpGet("download/csv")]
-    public async Task<IActionResult> DownloadCsv(Collection<string> userIds, DateTime from, DateTime to)
+    [HttpPost("download/csv")]
+    public async Task<List<LearningDomainSubmission>> DownloadCsv(Collection<string> userIds, DateTime from, DateTime to)
     {
-        var data = _eduBadgeService.GetData(userIds, from, to);
-        
-        using var stream = new MemoryStream();
-        _eduBadgeService.WriteDocument(stream, data);
-
-        return File(
-            stream.ToArray(),
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "CompetenceDocument.docx"
-        );
+        var data = await _eduBadgeService.GetData(userIds, from, to);
+        return data;
+        // using var stream = new MemoryStream();
+        // _eduBadgeService.WriteDocument(stream, data);
+        //
+        // return File(
+        //     stream.ToArray(),
+        //     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        //     "CompetenceDocument.docx"
+        // );
     }
 }
