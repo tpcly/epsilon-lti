@@ -17,7 +17,7 @@ export const useEpsilonStore = defineStore("Epsilon", {
 	state: () => {
 		return {
 			startUp: true as boolean,
-			errors: [] as string[],
+			errors: [] as object[],
 			terms: [] as EnrollmentTerm[],
 			selectedTerm: {} as EnrollmentTerm | null,
 			selectedTermRange: {} as TermRange | null,
@@ -45,7 +45,7 @@ export const useEpsilonStore = defineStore("Epsilon", {
 		setStartUp(b: boolean) {
 			this.startUp = b
 		},
-		addError(error: any) {
+		addError(error: object) {
 			this.errors.push(error)
 		},
 		setTerms(terms: EnrollmentTerm[]) {

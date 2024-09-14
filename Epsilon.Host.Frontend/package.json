@@ -10,7 +10,7 @@
 		"preview": "nuxt preview",
 		"start": "node .output/server/index.mjs",
 		"setup-ssl": "node aspnetcore-https && node aspnetcore-nuxt",
-		"lint": "eslint --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore .",
+		"lint": "eslint",
 		"format-code": "prettier --check .",
 		"generate-api-schema": "pnpm dlx swagger-typescript-api -p https://localhost:7084/swagger/v1/swagger.json -o src/ -n api.generated.ts --module-name-index 1"
 	},
@@ -25,6 +25,7 @@
 		"vue3-apexcharts": "^1.5.3"
 	},
 	"devDependencies": {
+		"@eslint/js": "^9.10.0",
 		"@nuxt/devtools": "^1.4.1",
 		"@nuxt/eslint-config": "^0.5.6",
 		"@nuxt/schema": "^3.13.0",
@@ -34,11 +35,14 @@
 		"eslint": "^9.10.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.2.1",
+		"eslint-plugin-vue": "^9.28.0",
+		"globals": "^15.9.0",
 		"h3": "^1.12.0",
 		"jwt-decode": "^4.0.0",
 		"lodash": "^4.17.21",
 		"prettier": "^3.3.3",
 		"sass": "^1.77.8",
+		"typescript-eslint": "^8.5.0",
 		"vite-plugin-vuetify": "^2.0.4",
 		"vuetify": "^3.7.1"
 	}
