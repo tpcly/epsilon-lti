@@ -11,6 +11,12 @@ export interface TermRange {
 const loadTerms = (user: User): void => {
 	const store = useEpsilonStore()
 	const api = useApi()
+	if (
+		store.selectedUser?._id === null ||
+		store.selectedUser?._id === undefined
+	) {
+		return
+	}
 	store.setTerms([])
 	store.setSelectedTerm(null)
 	api.filter
@@ -27,7 +33,10 @@ const loadTerms = (user: User): void => {
 const loadSubmissions = async (): Promise<void> => {
 	const store = useEpsilonStore()
 	const api = useApi()
-	if (store.selectedUser?._id === null) {
+	if (
+		store.selectedUser?._id === null ||
+		store.selectedUser?._id === undefined
+	) {
 		return
 	}
 	store.setLoadingSubmissions(true)
