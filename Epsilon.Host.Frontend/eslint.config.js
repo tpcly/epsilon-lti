@@ -22,6 +22,10 @@ export default [
 	eslintConfigPrettier,
 	{
 		rules: {
+			/* Possible consideration to turn on in the future */
+			"@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+			"vue/multi-word-component-names": "off",
+			/**/
 			"vue/no-template-shadow": "error",
 			"@typescript-eslint/no-unused-vars": "error",
 			"@typescript-eslint/explicit-function-return-type": "error",
