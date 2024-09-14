@@ -24,7 +24,7 @@ export default defineNuxtConfig({
 	modules: [
 		(_options, nuxt): void => {
 			nuxt.hooks.hook("vite:extendConfig", (config) => {
-				// @ts-expect-error
+				// @ts-expect-error There is no TS support for internal Vue components
 				config.plugins.push(vuetify({ autoImport: true }))
 			})
 		},
