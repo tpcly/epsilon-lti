@@ -6,25 +6,29 @@
 					:submissions="store.filteredSubmissions"
 					:is-loading="store.loadingSubmissions"
 					class="competence-profile"
-					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')" />
+					:domain="
+						store.domains.find((l) => l.id == 'hbo-i-2018')!
+					" />
 			</v-col>
 			<v-col xs="12" md="4">
 				<LearningDomainValues
-					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')" />
+					:domain="
+						store.domains.find((l) => l.id == 'hbo-i-2018')!
+					" />
 			</v-col>
 			<v-col xs="12" md="8">
 				<CompetenceGraph
 					v-if="store.domains.length > 1 && store.filteredSubmissions"
 					class="competence-graph"
 					:is-loading="store.loadingSubmissions"
-					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')"
+					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')!"
 					:submissions="store.filteredSubmissions" />
 			</v-col>
 			<v-col xs="12" md="4">
 				<PersonalDevelopmentGraph
 					v-if="store.domains.length > 1 && store.filteredSubmissions"
 					:is-loading="store.loadingSubmissions"
-					:domain="store.domains.find((l) => l.id == 'pd-2020-bsc')"
+					:domain="store.domains.find((l) => l.id == 'pd-2020-bsc')!"
 					:submissions="store.filteredSubmissions" />
 			</v-col>
 		</v-row>
