@@ -125,7 +125,9 @@ const series = computed(() => {
 		return {
 			name: row?.name,
 			color: "#" + row?.hexColor + (componentProps.isLoading ? "80" : ""),
-			data: layer.layerActivities.map((column) => column.decayingAverage),
+			data: layer.layerActivities?.map(
+				(column) => column.decayingAverage
+			),
 		}
 	})
 })

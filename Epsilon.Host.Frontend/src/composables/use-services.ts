@@ -49,8 +49,27 @@ const loadSubmissions = async (): Promise<void> => {
 		store.addError(response.error)
 	}
 	store.setSubmissions(response.data)
+	store.setUsedDomains(getUsedDomainsByUser())
 	store.setLoadingSubmissions(false)
 	filterSubmissions()
+}
+
+const getUsedDomainsByUser = (): string[] => {
+	const store = useEpsilonStore()
+	const uniqueDomainIds: string[] = []
+	store.submissions.forEach((x) => {
+		x.results?.forEach((y) => {
+			const domainId = store.outcomes.find((o) => o.id === y.outcome?.id)
+				?.domain.id
+			if (domainId && !uniqueDomainIds.includes(domainId)) {
+				uniqueDomainIds.push(domainId)
+			}
+		})
+	})
+	if (uniqueDomainIds.length === 0) {
+		return store.usedDomains
+	}
+	return uniqueDomainIds
 }
 
 const filterSubmissions = (): void => {

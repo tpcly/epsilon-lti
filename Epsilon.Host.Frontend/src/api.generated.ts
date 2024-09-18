@@ -40,6 +40,7 @@ export interface LearningDomainOutcome {
 	value: LearningDomainType
 	/** @minLength 1 */
 	name: string
+    domain: LearningDomain
 }
 
 export interface LearningDomainOutcomeRecord {
