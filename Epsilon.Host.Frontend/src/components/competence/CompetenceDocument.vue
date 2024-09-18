@@ -5,11 +5,23 @@
 				:submissions="filteredSubmissionsDateSelection"
 				class="competence-profile"
 				:is-loading="store.loadingSubmissions"
-				:domain="store.domains.find((l) => l.id == 'hbo-i-2018')" />
+				:domain="
+					store.domains.find(
+						(l) =>
+							store.usedDomains.includes(l.id!) &&
+							l.columnsSet != undefined
+					)!
+				" />
 		</v-col>
 		<v-col xs="12" md="4">
 			<LearningDomainValues
-				:domain="store.domains.find((l) => l.id == 'hbo-i-2018')" />
+				:domain="
+					store.domains.find(
+						(l) =>
+							store.usedDomains.includes(l.id!) &&
+							l.columnsSet != undefined
+					)!
+				" />
 		</v-col>
 		<v-col cols="12">
 			<h2>Kpi-Matrix</h2>
