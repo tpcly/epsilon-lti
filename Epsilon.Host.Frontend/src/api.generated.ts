@@ -370,9 +370,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				/** @format date-time */
 				from?: string
 				/** @format date-time */
-				to?: string
+				to?: string,
+                domains?: string
 			},
-			params: RequestParams = {}
+			params: RequestParams = {
+            }
 		) =>
 			this.request<void, any>({
 				path: `/api/Document/download/word`,
