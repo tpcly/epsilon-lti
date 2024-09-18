@@ -24,7 +24,6 @@ export default defineNuxtConfig({
  build: {
 					transpile: [/vue/],
 	},
-
  modules: [
 					(_options, nuxt): void => {
 									nuxt.hooks.hook("vite:extendConfig", (config) => {
@@ -32,7 +31,6 @@ export default defineNuxtConfig({
 													config.plugins.push(vuetify({ autoImport: true }))
 									})
 					},
-					//...
 	],
 
  ssr: true,

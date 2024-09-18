@@ -57,6 +57,18 @@
 			<a target="_blank" href="https://github.com/tpcly/epsilon-lti">
 				GitHub
 			</a>
+			<br />
+			<a
+				target="_blank"
+				href="https://github.com/tpcly/epsilon-lti/issues/new/choose">
+				Report a bug
+			</a>
+			|
+			<a
+				target="_blank"
+				href="https://github.com/tpcly/epsilon-lti/discussions">
+				Request a feature
+			</a>
 		</div>
 	</ClientOnly>
 </template>
