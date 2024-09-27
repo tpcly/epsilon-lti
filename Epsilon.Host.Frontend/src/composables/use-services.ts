@@ -1,6 +1,5 @@
 import type { LearningDomain, User } from "~/api.generated"
 import { useEpsilonStore } from "~/stores/use-store"
-import * as domain from "node:domain"
 
 export interface TermRange {
 	customSelection: boolean
