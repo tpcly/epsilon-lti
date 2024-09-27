@@ -57,20 +57,22 @@ const loadSubmissions = async (): Promise<void> => {
 
 const getUsedDomainsByUser = (): string[] => {
 	const store = useEpsilonStore()
-	const uniqueDomainIds: string[] = []
-	store.submissions.forEach((x) => {
-		x.results?.forEach((y) => {
-			const domainId = store.outcomes.find((o) => o.id === y.outcome?.id)
-				?.domain.id
-			if (domainId && !uniqueDomainIds.includes(domainId)) {
-				uniqueDomainIds.push(domainId)
+	const uniqueDomainIds = new Set<string>()
+
+	store.submissions.forEach((submission) => {
+		submission.results?.forEach((result) => {
+			const domainId = store.outcomes.find(
+				(outcome) => outcome.id === result.outcome?.id
+			)?.domain.id
+			if (domainId) {
+				uniqueDomainIds.add(domainId)
 			}
 		})
 	})
-	if (uniqueDomainIds.length === 0) {
-		return store.usedDomains
-	}
-	return uniqueDomainIds
+
+	return uniqueDomainIds.size > 0
+		? Array.from(uniqueDomainIds)
+		: store.usedDomains
 }
 
 const filterSubmissions = (): void => {
