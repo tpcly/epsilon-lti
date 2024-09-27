@@ -1,5 +1,6 @@
-import type { User } from "~/api.generated"
+import type { LearningDomain, User } from "~/api.generated"
 import { useEpsilonStore } from "~/stores/use-store"
+import * as domain from "node:domain"
 
 export interface TermRange {
 	customSelection: boolean
@@ -128,12 +129,24 @@ const loadDomains = (domainNames: string[]): void => {
 	})
 }
 
+const getDomain = (hasColumnsRow: boolean): LearningDomain => {
+	const store = useEpsilonStore()
+	return store.domains.find(
+		(l) =>
+			store.usedDomains.includes(l.id!) &&
+			(hasColumnsRow
+				? l.columnsSet != undefined
+				: l.columnsSet == undefined)
+	)!
+}
+
 export const useServices = (): {
 	loadTerms: (user: User) => void
-	loadStudents: () => void
-	loadDomains: (domainName: string[]) => void
-	loadSubmissions: () => void
+	getDomain: (hasColumnsRow: boolean) => LearningDomain
+	loadSubmissions: () => Promise<void>
 	filterSubmissions: () => void
+	loadStudents: () => void
+	loadDomains: (domainNames: string[]) => void
 } => {
 	return {
 		loadTerms,
@@ -141,5 +154,6 @@ export const useServices = (): {
 		loadDomains,
 		loadSubmissions,
 		filterSubmissions,
+		getDomain,
 	}
 }
