@@ -24,6 +24,7 @@ export const useEpsilonStore = defineStore("Epsilon", {
 			users: [] as User[],
 			selectedUser: {} as User | null,
 			domains: [] as LearningDomain[],
+			usedDomains: ["hbo-i-2018", "pd-2020-bsc"] as string[],
 			outcomes: [] as LearningDomainOutcome[],
 			submissions: [] as LearningDomainSubmission[],
 			filteredSubmissions: [] as LearningDomainSubmission[],
@@ -82,6 +83,9 @@ export const useEpsilonStore = defineStore("Epsilon", {
 		},
 		setFeatureFlags(flags: FeatureFlags) {
 			this.featureFlags = flags
+		},
+		setUsedDomains(usedDomains: string[]) {
+			this.usedDomains = usedDomains
 		},
 	},
 })

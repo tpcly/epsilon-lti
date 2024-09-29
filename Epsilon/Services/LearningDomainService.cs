@@ -7,7 +7,7 @@ namespace Epsilon.Services;
 public class LearningDomainService : ILearningDomainService
 {
     private static readonly string[] s_learningDomainProperties = { "RowsSet", "RowsSet.Types", "ColumnsSet", "ColumnsSet.Types", "ValuesSet", "ValuesSet.Types", };
-    private static readonly string[] s_learningDomainOutcomeProperties = { "Row", "Column", "Value", };
+    private static readonly string[] s_learningDomainOutcomeProperties = { "Row", "Column", "Value", "Domain",};
 
     private readonly IReadOnlyRepository<LearningDomain> _learningDomainRepository;
     private readonly IReadOnlyRepository<LearningDomainOutcome> _learningDomainOutcomeRepository;

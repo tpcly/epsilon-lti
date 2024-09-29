@@ -124,7 +124,12 @@ if (process.client) {
 		}
 	}, 1000)
 
-	useServices().loadDomains(["hbo-i-2018", "pd-2020-bsc"])
+	useServices().loadDomains([
+		"hbo-i-2018",
+		"pd-2020-bsc",
+		"hbo-i-2023",
+		"pdf-2024",
+	])
 }
 
 watch(selectedUser, async () => {
