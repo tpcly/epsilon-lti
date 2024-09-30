@@ -12,8 +12,8 @@ importers:
         specifier: ^7.4.47
         version: 7.4.47
       apexcharts:
-        specifier: ^3.53.0
-        version: 3.53.0
+        specifier: ^3.54.0
+        version: 3.54.0
       nuxt:
         specifier: ^3.13.0
         version: 3.13.0(@parcel/watcher@2.4.1)(@types/node@22.5.5)(encoding@0.1.13)(eslint@9.11.1(jiti@1.21.6))(ioredis@5.4.1)(magicast@0.3.4)(optionator@0.9.3)(rollup@4.18.0)(sass@1.79.4)(terser@5.27.0)(typescript@5.4.5)(vite@5.4.2(@types/node@22.5.5)(sass@1.79.4)(terser@5.27.0))
@@ -31,7 +31,7 @@ importers:
         version: 4.4.3(vue@3.4.38(typescript@5.4.5))
       vue3-apexcharts:
         specifier: ^1.6.0
-        version: 1.6.0(apexcharts@3.53.0)(vue@3.4.38(typescript@5.4.5))
+        version: 1.6.0(apexcharts@3.54.0)(vue@3.4.38(typescript@5.4.5))
     devDependencies:
       '@eslint/js':
         specifier: ^9.11.1
@@ -1536,8 +1536,8 @@ packages:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
     engines: {node: '>= 8'}
 
-  apexcharts@3.53.0:
-    resolution: {integrity: sha512-QESZHZY3w9LPQ64PGh1gEdfjYjJ5Jp+Dfy0D/CLjsLOPTpXzdxwlNMqRj+vPbTcP0nAHgjWv1maDqcEq6u5olw==}
+  apexcharts@3.54.0:
+    resolution: {integrity: sha512-ZgI/seScffjLpwNRX/gAhIkAhpCNWiTNsdICv7qxnF0xisI23XSsaENUKIcMlyP1rbe8ECgvybDnp7plZld89A==}
 
   aproba@2.0.0:
     resolution: {integrity: sha512-lYe4Gx7QT+MKGbDsA+Z+he/Wtef0BiwDOlK/XkBrdfsh9J/jPPXbX0tE9x9cl27Tmu5gg3QUbUrQYa/y+KOHPQ==}
@@ -5746,7 +5746,7 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
-  apexcharts@3.53.0:
+  apexcharts@3.54.0:
     dependencies:
       '@yr/monotone-cubic-spline': 1.0.3
       svg.draggable.js: 2.2.2
@@ -8572,9 +8572,9 @@ snapshots:
       '@vue/devtools-api': 6.6.3
       vue: 3.4.38(typescript@5.4.5)
 
-  vue3-apexcharts@1.6.0(apexcharts@3.53.0)(vue@3.4.38(typescript@5.4.5)):
+  vue3-apexcharts@1.6.0(apexcharts@3.54.0)(vue@3.4.38(typescript@5.4.5)):
     dependencies:
-      apexcharts: 3.53.0
+      apexcharts: 3.54.0
       vue: 3.4.38(typescript@5.4.5)
 
   vue@3.4.38(typescript@5.4.5):
