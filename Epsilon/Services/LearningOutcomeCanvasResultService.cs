@@ -77,7 +77,12 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
     public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId, DateTime? submittedSince = null)
     {
-        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId },{ "submittedSince", submittedSince?.ToString("yyyy-M-d", CultureInfo.InvariantCulture) ?? "1970-01-01" }, });
+        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object>
+        {
+            { "studentIds", studentId },
+            { "submittedSince", submittedSince?.ToString("yyyy-M-d", CultureInfo.InvariantCulture) ?? "1970-01-01" },
+        });
+        
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
 
         Task.WaitAll(submissionsTask, domainOutcomesTask);
