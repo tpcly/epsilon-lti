@@ -1,4 +1,4 @@
-import type { User } from "~/api.generated"
+import type { LearningDomain, User } from "~/api.generated"
 import { useEpsilonStore } from "~/stores/use-store"
 
 export interface TermRange {
@@ -49,8 +49,29 @@ const loadSubmissions = async (): Promise<void> => {
 		store.addError(response.error)
 	}
 	store.setSubmissions(response.data)
+	store.setUsedDomains(getUsedDomainsByUser())
 	store.setLoadingSubmissions(false)
 	filterSubmissions()
+}
+
+const getUsedDomainsByUser = (): string[] => {
+	const store = useEpsilonStore()
+	const uniqueDomainIds = new Set<string>()
+
+	store.submissions.forEach((submission) => {
+		submission.results?.forEach((result) => {
+			const domainId = store.outcomes.find(
+				(outcome) => outcome.id === result.outcome?.id
+			)?.domain.id
+			if (domainId) {
+				uniqueDomainIds.add(domainId)
+			}
+		})
+	})
+
+	return uniqueDomainIds.size > 0
+		? Array.from(uniqueDomainIds)
+		: store.usedDomains
 }
 
 const filterSubmissions = (): void => {
@@ -109,12 +130,24 @@ const loadDomains = (domainNames: string[]): void => {
 	})
 }
 
+const getDomain = (hasColumnsRow: boolean): LearningDomain => {
+	const store = useEpsilonStore()
+	return store.domains.find(
+		(l) =>
+			store.usedDomains.includes(l.id!) &&
+			(hasColumnsRow
+				? l.columnsSet != undefined
+				: l.columnsSet == undefined)
+	)!
+}
+
 export const useServices = (): {
 	loadTerms: (user: User) => void
-	loadStudents: () => void
-	loadDomains: (domainName: string[]) => void
-	loadSubmissions: () => void
+	getDomain: (hasColumnsRow: boolean) => LearningDomain
+	loadSubmissions: () => Promise<void>
 	filterSubmissions: () => void
+	loadStudents: () => void
+	loadDomains: (domainNames: string[]) => void
 } => {
 	return {
 		loadTerms,
@@ -122,5 +155,6 @@ export const useServices = (): {
 		loadDomains,
 		loadSubmissions,
 		filterSubmissions,
+		getDomain,
 	}
 }

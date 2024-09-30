@@ -22,9 +22,9 @@ public class DocumentController : ControllerBase
 
 
     [HttpGet("download/word")]
-    public async Task<IActionResult> DownloadWord(string userId, DateTime from, DateTime to)
+    public async Task<IActionResult> DownloadWord(string userId, DateTime from, DateTime to, string domains)
     {
-        var document = _competenceDocumentService.GetDocument(userId, from, to);
+        var document = _competenceDocumentService.GetDocument(userId, from, to, domains.Split(','));
 
         using var stream = new MemoryStream();
         await _competenceDocumentService.WriteDocument(stream, await document);

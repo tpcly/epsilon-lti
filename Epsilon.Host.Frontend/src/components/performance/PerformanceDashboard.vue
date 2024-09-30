@@ -6,25 +6,24 @@
 					:submissions="store.filteredSubmissions"
 					:is-loading="store.loadingSubmissions"
 					class="competence-profile"
-					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')" />
+					:domain="service.getDomain(true)" />
 			</v-col>
 			<v-col xs="12" md="4">
-				<LearningDomainValues
-					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')" />
+				<LearningDomainValues :domain="service.getDomain(false)" />
 			</v-col>
 			<v-col xs="12" md="8">
 				<CompetenceGraph
 					v-if="store.domains.length > 1 && store.filteredSubmissions"
 					class="competence-graph"
 					:is-loading="store.loadingSubmissions"
-					:domain="store.domains.find((l) => l.id == 'hbo-i-2018')"
+					:domain="service.getDomain(true)"
 					:submissions="store.filteredSubmissions" />
 			</v-col>
 			<v-col xs="12" md="4">
 				<PersonalDevelopmentGraph
 					v-if="store.domains.length > 1 && store.filteredSubmissions"
 					:is-loading="store.loadingSubmissions"
-					:domain="store.domains.find((l) => l.id == 'pd-2020-bsc')"
+					:domain="service.getDomain(false)"
 					:submissions="store.filteredSubmissions" />
 			</v-col>
 		</v-row>
@@ -38,6 +37,7 @@ import PersonalDevelopmentGraph from "~/components/performance/PersonalDevelopme
 import { useEpsilonStore } from "~/stores/use-store"
 
 const store = useEpsilonStore()
+const service = useServices()
 </script>
 
 <style>

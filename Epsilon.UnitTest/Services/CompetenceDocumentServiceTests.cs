@@ -33,7 +33,7 @@ public class CompetenceDocumentServiceTests
         _canvasResultServiceMock.Setup(static s => s.GetSubmissions(It.IsAny<string>(), It.IsAny<DateTime>())).Returns(_submissions);
         _domainServiceMock.Setup(static s => s.GetDomainsFromTenant()).Returns(_domains);
         _domainServiceMock.Setup(static s => s.GetOutcomes()).ReturnsAsync(_outcomes);
-        var document = await _competenceDocumentService.GetDocument("01010", DateTime.Now.AddDays(-365), DateTime.Now);
+        var document = await _competenceDocumentService.GetDocument("01010", DateTime.Now.AddDays(-365), DateTime.Now, _domains.Select(static d => d.Id).ToArray());
         using var stream = new MemoryStream();
 
         // Act
@@ -52,7 +52,7 @@ public class CompetenceDocumentServiceTests
         _domainServiceMock.Setup(static s => s.GetOutcomes()).ReturnsAsync(_outcomes);
 
         //Act
-        var document = await _competenceDocumentService.GetDocument("01010", DateTime.Now.AddDays(-365), DateTime.Now);
+        var document = await _competenceDocumentService.GetDocument("01010", DateTime.Now.AddDays(-365), DateTime.Now, _domains.Select(static d => d.Id).ToArray());
         using var stream = new MemoryStream();
         await _competenceDocumentService.WriteDocument(stream, document);
         using var wordprocessingDocument = WordprocessingDocument.Open(stream, false);

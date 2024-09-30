@@ -22,13 +22,13 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         _canvasResultService = canvasResultService;
     }
 
-    public async Task<CompetenceDocument> GetDocument(string userId, DateTime from, DateTime to)
+    public async Task<CompetenceDocument> GetDocument(string userId, DateTime from, DateTime to, string[] domains)
     {
         var submissions = await _canvasResultService.GetSubmissions(userId)
                                               .Where(static e => e.Criteria.Any())
                                               .ToListAsync();
 
-        var components = FetchComponents(submissions, from, to);
+        var components = FetchComponents(submissions, from, to, domains);
         return new CompetenceDocument(components);
     }
 
@@ -48,9 +48,9 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         return wordDocument;
     }
 
-    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(IList<LearningDomainSubmission> submissions, DateTime from, DateTime to )
+    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(IList<LearningDomainSubmission> submissions, DateTime from, DateTime to, string[] usedDomains )
     {
-        var domains = _domainService.GetDomainsFromTenant().ToList();
+        var domains = _domainService.GetDomainsFromTenant().ToList().FindAll(d => usedDomains.Contains(d?.Id));
         var outcomes = (await _domainService.GetOutcomes()).ToList();
         var delta = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to).ToList();
         var startSubmissions = submissions.Where(s => s.SubmittedAt <= from).ToList();

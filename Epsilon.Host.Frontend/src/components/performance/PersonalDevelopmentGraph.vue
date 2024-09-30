@@ -41,7 +41,7 @@ const series = computed(() => [
 		)?.map((d) => {
 			return {
 				y: d.decayingAverage?.toFixed(2),
-				x: componentProps.domain.rowsSet.types.find(
+				x: componentProps.domain?.rowsSet?.types.find(
 					(s: LearningDomainType) => s.id == d.skill
 				)!.shortName,
 				fillColor:

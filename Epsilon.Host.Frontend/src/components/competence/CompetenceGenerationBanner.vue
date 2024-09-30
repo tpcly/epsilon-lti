@@ -5,7 +5,7 @@
 		color="#ffffff"
 		elevation="4"
 		bg-color="#11284c">
-		<v-banner-text> Download your competence document </v-banner-text>
+		<v-banner-text> Download your competence document</v-banner-text>
 
 		<template #actions>
 			<v-btn
@@ -20,9 +20,11 @@
 
 <script setup lang="ts">
 import { useEpsilonStore } from "~/stores/use-store"
+
 const api = useApi()
 const store = useEpsilonStore()
 const isDownloading = ref<boolean>(false)
+
 function downloadCompetenceDocument(): void {
 	isDownloading.value = true
 	api.document
@@ -30,6 +32,7 @@ function downloadCompetenceDocument(): void {
 			userId: store.selectedUser?._id ?? "",
 			from: store.selectedTermRange?.start.toDateString()!,
 			to: store.selectedTermRange?.end.toDateString()!,
+			domains: store.usedDomains.join(","),
 		})
 		.then(async (response) => {
 			const blob = await response.blob()
