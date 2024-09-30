@@ -29,6 +29,12 @@ public class LearningDomainService : ILearningDomainService
 
         return domain;
     }
+    
+    public async Task<LearningDomain?> GetDomainFromResults(LearningDomainSubmission submission)
+    {
+        var domainId = _learningDomainOutcomeRepository.Find(submission.Criteria.First().Id)!.Domain.Id;
+        return await GetDomain(domainId);
+    }
 
     public IEnumerable<LearningDomain?> GetDomainsFromTenant()
     { 

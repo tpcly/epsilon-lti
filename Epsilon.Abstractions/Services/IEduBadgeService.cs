@@ -3,7 +3,7 @@ namespace Epsilon.Abstractions.Services;
 
 public interface IEduBadgeService
 {
-    Task<List<LearningDomainSubmission>> GetData(Collection<string> userIds, DateTime from, DateTime to);
+    Task<Dictionary<string, List<LearningDomainSubmission>>> GetData(Collection<string> userIds, DateTime from, DateTime to);
 
-    void WriteDocument(Stream stream, IEnumerable<IAsyncEnumerable<LearningDomainSubmission>> data);
+    public Task<string> WriteDocument(Dictionary<string, List<LearningDomainSubmission>> data);
 }
