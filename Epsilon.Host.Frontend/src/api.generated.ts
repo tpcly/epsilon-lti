@@ -40,7 +40,7 @@ export interface LearningDomainOutcome {
 	value: LearningDomainType
 	/** @minLength 1 */
 	name: string
-    domain: LearningDomain
+	domain?: LearningDomain
 }
 
 export interface LearningDomainOutcomeRecord {
@@ -189,8 +189,8 @@ export class HttpClient<SecurityDataType = unknown> {
 					property instanceof Blob
 						? property
 						: typeof property === "object" && property !== null
-						? JSON.stringify(property)
-						: `${property}`
+							? JSON.stringify(property)
+							: `${property}`
 				)
 				return formData
 			}, new FormData()),
@@ -263,7 +263,7 @@ export class HttpClient<SecurityDataType = unknown> {
 			signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
 			body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
 		}).then(async (response) => {
-			const r = response as HttpResponse<T, E>
+			const r = response.clone() as HttpResponse<T, E>
 			r.data = null as unknown as T
 			r.error = null as unknown as E
 
@@ -312,11 +312,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				/** @format date-time */
 				from?: string
 				/** @format date-time */
-				to?: string,
-                domains?: string
+				to?: string
+				domains?: string
 			},
-			params: RequestParams = {
-            }
+			params: RequestParams = {}
 		) =>
 			this.request<void, any>({
 				path: `/api/Document/download/word`,
