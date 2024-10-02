@@ -62,7 +62,7 @@ const getUsedDomainsByUser = (): string[] => {
 		submission.results?.forEach((result) => {
 			const domainId = store.outcomes.find(
 				(outcome) => outcome.id === result.outcome?.id
-			)?.domain.id
+			)?.domain?.id
 			if (domainId) {
 				uniqueDomainIds.add(domainId)
 			}
