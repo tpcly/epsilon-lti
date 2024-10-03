@@ -52,7 +52,7 @@ public class EduBadgeService : IEduBadgeService
             listResults.AddRange(submission.Results);
         }
 
-        foreach (var rowTypes in domainFromResults!.RowsSet.Types)
+        foreach (var rowTypes in domainFromResults!.RowsSet.Types.OrderBy(static r => r.Order))
         {
             table += $"|{rowTypes.Name}";
         }
@@ -62,10 +62,10 @@ public class EduBadgeService : IEduBadgeService
         table += "\n";
 
 
-        foreach (var columnTypes in domainFromResults.ColumnsSet!.Types)
+        foreach (var columnTypes in domainFromResults.ColumnsSet!.Types.OrderBy(static r => r.Order))
         {
             table += $"|{columnTypes.Name}";
-            foreach (var rowTypes in domainFromResults!.RowsSet.Types)
+            foreach (var rowTypes in domainFromResults!.RowsSet.Types.OrderBy(static r => r.Order))
             {
                 var count = listResults.Count(r => r.Outcome.Column?.Id == columnTypes.Id && r.Outcome.Row.Id == rowTypes.Id);
                 table += $"|{count}";
