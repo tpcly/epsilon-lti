@@ -23,7 +23,7 @@ public class LearningDomainService : ILearningDomainService
 
     public async Task<LearningDomain?> GetDomain(string name)
     {
-        var domain = await _learningDomainRepository.FirstOrDefaultAsync(
+        var domain = await _learningDomainRepository.SingleOrDefaultAsync(
             d => d.Id == name,
             includeProperties: s_learningDomainProperties);
 
