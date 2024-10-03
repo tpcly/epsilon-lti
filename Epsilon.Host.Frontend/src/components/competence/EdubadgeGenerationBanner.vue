@@ -28,7 +28,7 @@ const isDownloading = ref<boolean>(false)
 function downloadEdubadgeList(): void {
 	isDownloading.value = true
 	api.document
-		.documentDownloadCsvList([store.selectedUser?._id ?? ""], {
+		.documentDownloadCsvList(store.users.map((u) => u._id) as string[], {
 			from: store.selectedTermRange?.start.toDateString()!,
 			to: store.selectedTermRange?.end.toDateString()!,
 		})

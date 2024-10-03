@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
 
@@ -20,51 +21,72 @@ public class EduBadgeService : IEduBadgeService
         var results = new Dictionary<string, List<LearningDomainSubmission>>();
         foreach (var userId in userIds)
         {
-            results.Add(userId, await _canvasResultService.GetSubmissions(userId, from)
-                                                          .Where(static e => e.Criteria.Any())
-                                                          .ToListAsync()); 
+            var result = await _canvasResultService.GetSubmissions(userId, from)
+                                                   .Where(static e => e.Criteria.Any())
+                                                   .ToListAsync();
+            results.Add(userId, result);
         }
 
         return results;
     }
 
-    public async Task<string> WriteDocument(Dictionary<string, List<LearningDomainSubmission>> data)
+    private static string CreateHorizontalLine(int columns)
     {
-        var fileContents = "";
-        foreach (var userSubmissions in data)
+        var line = "|";
+        for (var i = 0; i < columns; i++)
         {
-            var domainFromResults = await _learningDomainService.GetDomainFromResults(userSubmissions.Value.First());
-            var table = $"|{userSubmissions.Key}|";
-            var listResults = new List<LearningDomainOutcomeRecord>();
-            
-            foreach (var submission in userSubmissions.Value)
-            {
-                listResults.AddRange(submission.Results);
-            }
-
-            foreach (var rowTypes in domainFromResults!.RowsSet.Types)
-            {
-                table += $"|{rowTypes.Name}|";
-            }
-            table += "\n";
-
-
-            foreach (var columnTypes in domainFromResults.ColumnsSet!.Types)
-            {
-                table += $"|{columnTypes.Name}|";
-                foreach (var rowTypes in domainFromResults!.RowsSet.Types)
-                {
-                    var count = listResults.FindAll(r => r.Outcome.Column!.Id == columnTypes.Id && r.Outcome.Row.Id == rowTypes.Id).Count;
-                    table += $"|{count}|";
-                }
-                table += "\n";
-            }
-            
-            fileContents += table;
-            
-
+            line += "---|";
         }
 
-        return fileContents;
+        return line;
+    }
+
+    private async Task<string> GenerateMarkdownDelta(KeyValuePair<string, List<LearningDomainSubmission>> userSubmissions)
+    {
+        var domainFromResults = await _learningDomainService.GetDomain("hbo-i-2018");
+        var table = $"|{userSubmissions.Key}";
+        var listResults = new List<LearningDomainOutcomeRecord>();
+
+        foreach (var submission in userSubmissions.Value)
+        {
+            listResults.AddRange(submission.Results);
+        }
+
+        foreach (var rowTypes in domainFromResults!.RowsSet.Types)
+        {
+            table += $"|{rowTypes.Name}";
+        }
+
+        table += "|\n";
+        table += CreateHorizontalLine(domainFromResults.RowsSet.Types.Count() + 1);
+        table += "\n";
+
+
+        foreach (var columnTypes in domainFromResults.ColumnsSet!.Types)
+        {
+            table += $"|{columnTypes.Name}";
+            foreach (var rowTypes in domainFromResults!.RowsSet.Types)
+            {
+                var count = listResults.Count(r => r.Outcome.Column?.Id == columnTypes.Id && r.Outcome.Row.Id == rowTypes.Id);
+                table += $"|{count}";
+            }
+
+            table += "|\n";
+        }
+
+        return table;
+    }
+
+    public async Task<string> WriteDocument(Dictionary<string, List<LearningDomainSubmission>> data)
+    {
+        var csvBuilder = new StringBuilder();
+        
+        csvBuilder.AppendLine("Key,Value");
+        foreach (var userSubmissions in data)
+        {
+            csvBuilder.AppendLine(userSubmissions.Key + "," + await GenerateMarkdownDelta(userSubmissions));
+        }
+
+        return csvBuilder.ToString();
     }
 }

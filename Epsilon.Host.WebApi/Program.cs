@@ -34,6 +34,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 // Add Canvas services
+// Add Canvas services
 const string canvasHttpClient = "CanvasHttpClient";
 var canvasConfiguration = config.GetSection("Canvas");
 

@@ -80,12 +80,12 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object>
         {
             { "studentIds", studentId },
-            { "submittedSince", submittedSince?.ToString("yyyy-M-d", CultureInfo.InvariantCulture) ?? "1970-01-01" },
+            { "submittedSince", submittedSince?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) ?? "1970-01-01" },
         });
         
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
 
-        Task.WaitAll(submissionsTask, domainOutcomesTask);
+        await Task.WhenAll(submissionsTask, domainOutcomesTask);
 
         var enrollments = submissionsTask.Result?.LegacyNode?.Enrollments ?? throw new HttpRequestException("No Enrollments are given");
 
