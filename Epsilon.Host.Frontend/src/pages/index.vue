@@ -166,12 +166,6 @@ watch(selectedTermRange, () => useServices().filterSubmissions())
 		text-transform: unset;
 		color: #ffffff;
 
-		&:active,
-		&:focus {
-			outline: transparent;
-			color: black;
-		}
-
 		&:hover {
 			background-color: #d8d9dd;
 			color: black;
