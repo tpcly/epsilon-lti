@@ -2,9 +2,11 @@
 	<table v-if="domain" class="competence-profile">
 		<thead>
 			<tr>
-				<th class="w-0" />
+				<th class="w-0 competence-profile-header">{{ title }}</th>
 				<th
-					v-for="col of domain?.columnsSet?.types"
+					v-for="col of domain?.columnsSet?.types.sort(
+						(a, b) => (a.order ?? 0) - (b.order ?? 0)
+					)"
 					:key="col.id"
 					class="competence-profile-header competence-profile-header-col">
 					<div class="d-sm-none text-center">
@@ -17,7 +19,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="row of domain?.rowsSet.types" :key="row.id">
+			<tr
+				v-for="row of domain?.rowsSet.types.sort(
+					(a, b) => (a.order ?? 0) - (b.order ?? 0)
+				)"
+				:key="row.id">
 				<th
 					class="competence-profile-header competence-profile-header-row">
 					<div
@@ -31,7 +37,9 @@
 					</div>
 				</th>
 				<CompetenceProfileCell
-					v-for="col of domain?.columnsSet?.types"
+					v-for="col of domain?.columnsSet?.types.sort(
+						(a, b) => (a.order ?? 0) - (b.order ?? 0)
+					)"
 					:key="col.id"
 					:is-loading="isLoading"
 					class="competence-profile-cell"
@@ -75,6 +83,7 @@ const componentProps = defineProps<{
 	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
 	isLoading: boolean
+	title: string
 }>()
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>

@@ -34,6 +34,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 // Add Canvas services
+// Add Canvas services
 const string canvasHttpClient = "CanvasHttpClient";
 var canvasConfiguration = config.GetSection("Canvas");
 
@@ -85,6 +86,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.ConfigureOptions<LtiJwtBearerOptions>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICanvasUserSessionAccessor, CanvasUserSessionAccessor>();
+builder.Services.AddScoped<IEduBadgeService, EduBadgeService>();
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();

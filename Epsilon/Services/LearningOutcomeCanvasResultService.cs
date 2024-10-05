@@ -1,3 +1,4 @@
+using System.Globalization;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
 using Tpcly.Canvas.Abstractions.GraphQl;
@@ -7,7 +8,7 @@ namespace Epsilon.Services;
 public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultService
 {
     private const string Query = @"
-        query GetSubmissions($studentIds: ID!) {
+        query GetSubmissions($studentIds: ID!, $submittedSince: DateTime) {
           legacyNode(_id: $studentIds, type: User) {
             ... on User {
               enrollments {
@@ -15,7 +16,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 course {
                   _id
                   name
-                  submissionsConnection(studentIds: [$studentIds]) {
+                  submissionsConnection(studentIds: [$studentIds],  filter: {submittedSince: $submittedSince}) {
                     nodes {
                       assignment {
                         _id
@@ -74,12 +75,17 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
         _learningDomainService = learningDomainService;
     }
 
-    public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId)
+    public async IAsyncEnumerable<LearningDomainSubmission> GetSubmissions(string studentId, DateTime? submittedSince = null)
     {
-        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object> { { "studentIds", studentId }, });
+        var submissionsTask = _canvasGraphQlApi.Query(Query, new Dictionary<string, object>
+        {
+            { "studentIds", studentId },
+            { "submittedSince", submittedSince?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) ?? "1970-01-01" },
+        });
+        
         var domainOutcomesTask = _learningDomainService.GetOutcomes();
 
-        Task.WaitAll(submissionsTask, domainOutcomesTask);
+        await Task.WhenAll(submissionsTask, domainOutcomesTask);
 
         var enrollments = submissionsTask.Result?.LegacyNode?.Enrollments ?? throw new HttpRequestException("No Enrollments are given");
 

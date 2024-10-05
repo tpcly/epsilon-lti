@@ -1,13 +1,14 @@
 <template>
-	<v-row class="mt-3">
-		<v-col xs="12" md="8">
+	<v-row class="mt-3 competence-document">
+		<v-col cols="12" md="8">
 			<CompetenceProfile
 				:submissions="filteredSubmissionsDateSelection"
 				class="competence-profile"
 				:is-loading="store.loadingSubmissions"
-				:domain="service.getDomain(true)" />
+				:domain="service.getDomain(true)"
+				:title="'Progression ' + store.selectedTerm?.name" />
 		</v-col>
-		<v-col xs="12" md="4">
+		<v-col cols="12" md="4">
 			<LearningDomainValues :domain="service.getDomain(true)" />
 		</v-col>
 		<v-col cols="12">
@@ -48,8 +49,10 @@ const filteredSubmissionsDateSelection = computed(() => {
 </script>
 
 <style scoped>
-.competence-document {
-	display: grid;
-	gap: 2rem 0;
+.performance-dashboard .competence-graph {
+	float: right;
+}
+.competence-document .competence-profile {
+	float: right;
 }
 </style>

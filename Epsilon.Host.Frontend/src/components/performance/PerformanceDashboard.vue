@@ -6,6 +6,7 @@
 					:submissions="store.filteredSubmissions"
 					:is-loading="store.loadingSubmissions"
 					class="competence-profile"
+					:title="''"
 					:domain="service.getDomain(true)" />
 			</v-col>
 			<v-col xs="12" md="4">

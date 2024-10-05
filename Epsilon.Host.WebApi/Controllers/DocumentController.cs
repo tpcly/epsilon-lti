@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using System.Text;
 using Epsilon.Abstractions.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +12,12 @@ namespace Epsilon.Host.WebApi.Controllers;
 public class DocumentController : ControllerBase
 {
     private readonly ICompetenceDocumentService _competenceDocumentService;
+    private readonly IEduBadgeService _eduBadgeService;
 
-    public DocumentController(ICompetenceDocumentService competenceDocumentService)
+    public DocumentController(ICompetenceDocumentService competenceDocumentService, IEduBadgeService eduBadgeService)
     {
         _competenceDocumentService = competenceDocumentService;
+        _eduBadgeService = eduBadgeService;
     }
 
 
@@ -29,6 +33,23 @@ public class DocumentController : ControllerBase
             stream.ToArray(),
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "CompetenceDocument.docx"
+        );
+    }
+    
+    
+    [HttpPost("download/csv")]
+    public async Task<IActionResult> DownloadCsv(Collection<string> userIds, DateTime from, DateTime to)
+    {
+        var data = await _eduBadgeService.GetData(userIds, from, to);
+        var contents  = await _eduBadgeService.WriteDocument(data);
+        
+        var byteArray = Encoding.UTF8.GetBytes(contents);
+        var stream = new MemoryStream(byteArray);
+        
+        return File(
+            stream.ToArray(),
+            "text/csv",
+            "Edubadges.csv"
         );
     }
 }

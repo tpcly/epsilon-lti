@@ -102,9 +102,11 @@ const chartOptions = {
 onMounted(() => {
 	const columnTypes = componentProps.domain?.columnsSet?.types
 	if (columnTypes != undefined) {
-		columnTypes.forEach((s) => {
-			chartOptions.xaxis.categories.push(s.name as never)
-		})
+		columnTypes
+			.sort((a, b) => a.order - b.order)
+			.forEach((s) => {
+				chartOptions.xaxis.categories.push(s.name as never)
+			})
 	}
 })
 

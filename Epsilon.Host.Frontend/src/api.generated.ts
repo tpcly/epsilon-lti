@@ -323,6 +323,32 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				query: query,
 				...params,
 			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Document
+		 * @name DocumentDownloadCsvList
+		 * @request GET:/api/Document/download/csv
+		 */
+		documentDownloadCsvList: (
+			data: string[],
+			query?: {
+				/** @format date-time */
+				from?: string
+				/** @format date-time */
+				to?: string
+			},
+			params: RequestParams = {}
+		) =>
+			this.request<void, any>({
+				path: `/api/Document/download/csv`,
+				method: "POST",
+				query: query,
+				body: data,
+				type: ContentType.Json,
+				...params,
+			}),
 	}
 	filter = {
 		/**

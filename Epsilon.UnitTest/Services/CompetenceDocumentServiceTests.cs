@@ -30,7 +30,7 @@ public class CompetenceDocumentServiceTests
     public async Task WriteDocument_WritesToStream()
     {
         // Arrange
-        _canvasResultServiceMock.Setup(static s => s.GetSubmissions(It.IsAny<string>())).Returns(_submissions);
+        _canvasResultServiceMock.Setup(static s => s.GetSubmissions(It.IsAny<string>(), null)).Returns(_submissions);
         _domainServiceMock.Setup(static s => s.GetDomainsFromTenant()).Returns(_domains);
         _domainServiceMock.Setup(static s => s.GetOutcomes()).ReturnsAsync(_outcomes);
         var document = await _competenceDocumentService.GetDocument("01010", DateTime.Now.AddDays(-365), DateTime.Now, _domains.Select(static d => d.Id).ToArray());
@@ -47,7 +47,7 @@ public class CompetenceDocumentServiceTests
     private async Task ValidateOpenXmlWordGeneration()
     {
         // Arrange
-        _canvasResultServiceMock.Setup(static s => s.GetSubmissions(It.IsAny<string>())).Returns(_submissions);
+        _canvasResultServiceMock.Setup(static s => s.GetSubmissions(It.IsAny<string>(), null)).Returns(_submissions);
         _domainServiceMock.Setup(static s => s.GetDomainsFromTenant()).Returns(_domains);
         _domainServiceMock.Setup(static s => s.GetOutcomes()).ReturnsAsync(_outcomes);
 
