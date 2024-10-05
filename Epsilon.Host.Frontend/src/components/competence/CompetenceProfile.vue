@@ -1,9 +1,8 @@
-// eslint-disable-next-line vue/no-mutating-props
 <template>
 	<table v-if="domain" class="competence-profile">
 		<thead>
 			<tr>
-				<th class="w-0" />
+				<th class="w-0 competence-profile-header">{{ title }}</th>
 				<th
 					v-for="col of domain?.columnsSet?.types.sort(
 						(a, b) => (a.order ?? 0) - (b.order ?? 0)
@@ -84,6 +83,7 @@ const componentProps = defineProps<{
 	domain: LearningDomain
 	submissions: LearningDomainSubmission[]
 	isLoading: boolean
+	title: string
 }>()
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
