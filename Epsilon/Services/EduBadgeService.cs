@@ -22,7 +22,7 @@ public class EduBadgeService : IEduBadgeService
         foreach (var userId in userIds)
         {
             var result = await _canvasResultService.GetSubmissions(userId, from)
-                                                   .Where(static e => e.Criteria.Any())
+                                                   .Where(e => e.Criteria.Any() && e.SubmittedAt <= to)
                                                    .ToListAsync();
             results.Add(userId, result);
         }

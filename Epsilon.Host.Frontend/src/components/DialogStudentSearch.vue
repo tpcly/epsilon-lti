@@ -27,17 +27,7 @@
 					</v-card>
 				</v-col>
 				<v-col v-if="store.featureFlags.eduBadge" cols="12" md="6">
-					<v-card>
-						<v-toolbar>
-							<v-toolbar-title>
-								Edu-badge generation
-							</v-toolbar-title>
-						</v-toolbar>
-						<v-card-actions>
-							<v-spacer></v-spacer>
-							<EdubadgeGenerationButton />
-						</v-card-actions>
-					</v-card>
+					<EdubadgeGenerationCard></EdubadgeGenerationCard>
 				</v-col>
 			</v-row>
 		</template>
@@ -48,7 +38,7 @@
 import StudentSelection from "~/components/filtering/StudentSelection.vue"
 import { useServices } from "~/composables/use-services"
 import { useEpsilonStore } from "~/stores/use-store"
-import EdubadgeGenerationButton from "~/components/competence/EdubadgeGenerationButton.vue"
+import EdubadgeGenerationCard from "~/components/competence/EdubadgeGenerationCard.vue"
 const store = useEpsilonStore()
 </script>
 
