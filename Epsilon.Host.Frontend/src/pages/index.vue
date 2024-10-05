@@ -10,9 +10,6 @@
 				<WrappedDialog></WrappedDialog>
 			</v-col>
 			<v-col cols="12" md="2">
-				<EdubadgeGenerationButton />
-			</v-col>
-			<v-col cols="12" md="2">
 				<StudentSelection></StudentSelection>
 			</v-col>
 			<v-col cols="12" md="2">
