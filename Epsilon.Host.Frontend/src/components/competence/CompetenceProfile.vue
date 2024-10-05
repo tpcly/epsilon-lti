@@ -4,7 +4,9 @@
 			<tr>
 				<th class="w-0" />
 				<th
-					v-for="col of domain?.columnsSet?.types"
+					v-for="col of currentDomain?.columnsSet?.types.sort(
+						(a, b) => a.order - b.order
+					)"
 					:key="col.id"
 					class="competence-profile-header competence-profile-header-col">
 					<div class="d-sm-none text-center">
@@ -17,7 +19,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="row of domain?.rowsSet.types" :key="row.id">
+			<tr
+				v-for="row of currentDomain?.rowsSet.types.sort(
+					(a, b) => a.order - b.order
+				)"
+				:key="row.id">
 				<th
 					class="competence-profile-header competence-profile-header-row">
 					<div
@@ -31,7 +37,9 @@
 					</div>
 				</th>
 				<CompetenceProfileCell
-					v-for="col of domain?.columnsSet?.types"
+					v-for="col of currentDomain?.columnsSet?.types.sort(
+						(a, b) => a.order - b.order
+					)"
 					:key="col.id"
 					:is-loading="isLoading"
 					class="competence-profile-cell"
@@ -76,6 +84,8 @@ const componentProps = defineProps<{
 	submissions: LearningDomainSubmission[]
 	isLoading: boolean
 }>()
+
+const currentDomain = ref<LearningDomain>(componentProps.domain)
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 	componentProps.submissions.flatMap((submission) =>

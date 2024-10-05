@@ -27,9 +27,11 @@ const componentProps = defineProps<{
 watch(componentProps.domain, () => {
 	const rowTypes = componentProps.domain?.rowsSet?.types
 
-	rowTypes.forEach((s: LearningDomainType) => {
-		chartOptions.xaxis.categories.push(s.shortName)
-	})
+	rowTypes
+		.sort((a, b) => a.order - b.order)
+		.forEach((s: LearningDomainType) => {
+			chartOptions.xaxis.categories.push(s.shortName)
+		})
 })
 
 const series = computed(() => [
