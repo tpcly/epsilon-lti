@@ -30,6 +30,7 @@ export default [
 			"@typescript-eslint/no-unused-vars": "error",
 			"@typescript-eslint/explicit-function-return-type": "error",
 			"@typescript-eslint/explicit-module-boundary-types": "error",
+			"vue/no-mutating-props": "warn",
 			indent: ["error", "tab"],
 			"vue/component-tags-order": [
 				"error",

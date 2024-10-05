@@ -1,11 +1,12 @@
+// eslint-disable-next-line vue/no-mutating-props
 <template>
 	<table v-if="domain" class="competence-profile">
 		<thead>
 			<tr>
 				<th class="w-0" />
 				<th
-					v-for="col of currentDomain?.columnsSet?.types.sort(
-						(a, b) => a.order - b.order
+					v-for="col of domain?.columnsSet?.types.sort(
+						(a, b) => (a.order ?? 0) - (b.order ?? 0)
 					)"
 					:key="col.id"
 					class="competence-profile-header competence-profile-header-col">
@@ -20,8 +21,8 @@
 		</thead>
 		<tbody>
 			<tr
-				v-for="row of currentDomain?.rowsSet.types.sort(
-					(a, b) => a.order - b.order
+				v-for="row of domain?.rowsSet.types.sort(
+					(a, b) => (a.order ?? 0) - (b.order ?? 0)
 				)"
 				:key="row.id">
 				<th
@@ -37,8 +38,8 @@
 					</div>
 				</th>
 				<CompetenceProfileCell
-					v-for="col of currentDomain?.columnsSet?.types.sort(
-						(a, b) => a.order - b.order
+					v-for="col of domain?.columnsSet?.types.sort(
+						(a, b) => (a.order ?? 0) - (b.order ?? 0)
 					)"
 					:key="col.id"
 					:is-loading="isLoading"
@@ -84,8 +85,6 @@ const componentProps = defineProps<{
 	submissions: LearningDomainSubmission[]
 	isLoading: boolean
 }>()
-
-const currentDomain = ref<LearningDomain>(componentProps.domain)
 
 const allOutcomes = computed<LearningDomainOutcome[]>(() =>
 	componentProps.submissions.flatMap((submission) =>
