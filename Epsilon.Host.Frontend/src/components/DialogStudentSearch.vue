@@ -2,7 +2,7 @@
 	<v-dialog :open class="wrapped-dialog" :model-value="true">
 		<template #default="{ isActive }">
 			<v-row>
-				<v-col cols="12" md="6">
+				<v-col cols="12" :md="store.featureFlags.eduBadge ? 6 : 12">
 					<v-card>
 						<v-toolbar>
 							<v-toolbar-title>Student selection</v-toolbar-title>
@@ -26,7 +26,7 @@
 						</v-card-actions>
 					</v-card>
 				</v-col>
-				<v-col cols="12" md="6">
+				<v-col v-if="store.featureFlags.eduBadge" cols="12" md="6">
 					<v-card>
 						<v-toolbar>
 							<v-toolbar-title>
