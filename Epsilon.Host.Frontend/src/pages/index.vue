@@ -9,7 +9,10 @@
 				md="2">
 				<WrappedDialog></WrappedDialog>
 			</v-col>
-			<v-col cols="12" md="3">
+			<v-col cols="12" md="2">
+				<EdubadgeGenerationButton />
+			</v-col>
+			<v-col cols="12" md="2">
 				<StudentSelection></StudentSelection>
 			</v-col>
 			<v-col cols="12" md="2">
@@ -45,7 +48,6 @@
 			</v-window-item>
 			<v-window-item :value="1">
 				<CompetenceGenerationBanner />
-				<EdubadgeGenerationBanner />
 				<CompetenceDocument />
 			</v-window-item>
 		</v-window>
@@ -86,7 +88,7 @@ import { useEpsilonStore } from "~/stores/use-store"
 import { useServices } from "~/composables/use-services"
 import TermSelection from "~/components/filtering/TermSelection.vue"
 import StudentSelection from "~/components/filtering/StudentSelection.vue"
-import EdubadgeGenerationBanner from "~/components/competence/EdubadgeGenerationBanner.vue"
+import EdubadgeGenerationButton from "~/components/competence/EdubadgeGenerationButton.vue"
 
 const runtimeConfig = useRuntimeConfig()
 const store = useEpsilonStore()
