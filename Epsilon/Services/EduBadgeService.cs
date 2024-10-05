@@ -57,9 +57,9 @@ public class EduBadgeService : IEduBadgeService
             table += $"|{rowTypes.Name}";
         }
 
-        table += "|\n";
+        table += "|";
         table += CreateHorizontalLine(domainFromResults.RowsSet.Types.Count() + 1);
-        table += "\n";
+        table += "";
 
 
         foreach (var columnTypes in domainFromResults.ColumnsSet!.Types.OrderBy(static r => r.Order))
@@ -71,7 +71,7 @@ public class EduBadgeService : IEduBadgeService
                 table += $"|{count}";
             }
 
-            table += "|\n";
+            table += "|";
         }
 
         return table;
@@ -81,11 +81,16 @@ public class EduBadgeService : IEduBadgeService
     {
         var csvBuilder = new StringBuilder();
         
-        csvBuilder.AppendLine("Key,Value");
+        csvBuilder.AppendLine("Student-Id,Delta-Table");
         foreach (var userSubmissions in data)
         {
-            csvBuilder.AppendLine(userSubmissions.Key + "," + await GenerateMarkdownDelta(userSubmissions));
-        }
+            var markdownTable = await GenerateMarkdownDelta(userSubmissions);
+#pragma warning disable CA1307
+            var escapedMarkdownTable = markdownTable.Replace("||", "|\n|");
+#pragma warning restore CA1307
+#pragma warning disable CA1305
+            csvBuilder.AppendLine($"{userSubmissions.Key},\"{escapedMarkdownTable}\"");        }
+#pragma warning restore CA1305
 
         return csvBuilder.ToString();
     }
