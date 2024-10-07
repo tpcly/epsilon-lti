@@ -30,10 +30,17 @@
 <script setup lang="ts">
 import { useEpsilonStore } from "~/stores/use-store"
 import type { EnrollmentTerm } from "~/api.generated"
-
-const selectedTerm = ref<EnrollmentTerm>()
-const api = useApi()
+import { storeToRefs } from "pinia"
 const store = useEpsilonStore()
+
+const selectedTerm = ref<EnrollmentTerm | null>(null)
+const api = useApi()
+
+const { terms } = storeToRefs(store)
+watch(terms, () => {
+	selectedTerm.value = terms.value.at(0) as EnrollmentTerm
+})
+
 const isDownloading = ref<boolean>(false)
 
 function downloadEdubadgeList(): void {
