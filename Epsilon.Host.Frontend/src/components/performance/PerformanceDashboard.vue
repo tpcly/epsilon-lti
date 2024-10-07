@@ -14,7 +14,7 @@
 			</v-col>
 			<v-col xs="12" md="8">
 				<CompetenceGraph
-					v-if="store.domains.length > 1 && store.filteredSubmissions"
+					v-if="store.domains.length > 3 && store.filteredSubmissions"
 					class="competence-graph"
 					:is-loading="store.loadingSubmissions"
 					:domain="service.getDomain(true)"
@@ -22,7 +22,7 @@
 			</v-col>
 			<v-col xs="12" md="4">
 				<PersonalDevelopmentGraph
-					v-if="store.domains.length > 1 && store.filteredSubmissions"
+					v-if="store.domains.length > 3 && store.filteredSubmissions"
 					:is-loading="store.loadingSubmissions"
 					:domain="service.getDomain(false)"
 					:submissions="store.filteredSubmissions" />

@@ -1,5 +1,5 @@
 <template>
-	<v-dialog :open class="wrapped-dialog" :model-value="true">
+	<v-dialog class="wrapped-dialog" :model-value="true" :persistent="true">
 		<template #default="{ isActive }">
 			<v-row>
 				<v-col cols="12" :md="store.featureFlags.eduBadge ? 6 : 12">
@@ -39,6 +39,7 @@ import StudentSelection from "~/components/filtering/StudentSelection.vue"
 import { useServices } from "~/composables/use-services"
 import { useEpsilonStore } from "~/stores/use-store"
 import EdubadgeGenerationCard from "~/components/competence/EdubadgeGenerationCard.vue"
+
 const store = useEpsilonStore()
 </script>
 
