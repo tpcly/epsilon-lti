@@ -24,7 +24,11 @@ public class EduBadgeService : IEduBadgeService
             var result = await _canvasResultService.GetSubmissions(userId, from)
                                                    .Where(e => e.Criteria.Any() && e.SubmittedAt <= to)
                                                    .ToListAsync();
-            results.Add(userId, result);
+            
+            if (result.Any(static r => r.Results.Any(static rr => rr.Grade >= 3)))
+            {
+                results.Add(userId, result);
+            }
         }
 
         return results;
@@ -52,22 +56,22 @@ public class EduBadgeService : IEduBadgeService
             listResults.AddRange(submission.Results);
         }
 
-        foreach (var rowTypes in domainFromResults!.RowsSet.Types.OrderBy(static r => r.Order))
+        foreach (var rowTypes in domainFromResults!.ColumnsSet!.Types.OrderBy(static r => r.Order))
         {
             table += $"|{rowTypes.Name}";
         }
 
         table += "|";
-        table += CreateHorizontalLine(domainFromResults.RowsSet.Types.Count() + 1);
+        table += CreateHorizontalLine(domainFromResults.ColumnsSet!.Types.Count() + 1);
         table += "";
 
 
-        foreach (var columnTypes in domainFromResults.ColumnsSet!.Types.OrderBy(static r => r.Order))
+        foreach (var rowTypes in domainFromResults.RowsSet.Types.OrderBy(static r => r.Order))
         {
-            table += $"|{columnTypes.Name}";
-            foreach (var rowTypes in domainFromResults!.RowsSet.Types.OrderBy(static r => r.Order))
+            table += $"|{rowTypes.Name}";
+            foreach (var columnTypes in domainFromResults!.ColumnsSet.Types.OrderBy(static r => r.Order))
             {
-                var count = listResults.Count(r => r.Outcome.Column?.Id == columnTypes.Id && r.Outcome.Row.Id == rowTypes.Id);
+                var count = listResults.Count(r => r.Outcome.Column?.Id == columnTypes.Id && r.Outcome.Row.Id == rowTypes.Id && r.Grade >= 3);
                 table += $"|{count}";
             }
 
