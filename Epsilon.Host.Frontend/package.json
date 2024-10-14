@@ -17,7 +17,7 @@
 	"dependencies": {
 		"@mdi/font": "^7.4.47",
 		"apexcharts": "^3.54.0",
-		"nuxt": "^3.13.0",
+		"nuxt": "^3.13.2",
 		"pinia": "^2.2.4",
 		"posthog-js": "^1.165.0",
 		"vue": "^3.5.11",
