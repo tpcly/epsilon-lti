@@ -30,8 +30,8 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(vue@3.5.11(typescript@5.4.5))
       vue3-apexcharts:
-        specifier: ^1.6.0
-        version: 1.6.0(apexcharts@3.54.0)(vue@3.5.11(typescript@5.4.5))
+        specifier: ^1.7.0
+        version: 1.7.0(apexcharts@3.54.0)(vue@3.5.11(typescript@5.4.5))
     devDependencies:
       '@eslint/js':
         specifier: ^9.13.0
@@ -4044,8 +4044,8 @@ packages:
     peerDependencies:
       vue: ^3.2.0
 
-  vue3-apexcharts@1.6.0:
-    resolution: {integrity: sha512-gemKFXpw4TuVcllwyKJGYjTwiJQxxCUwbXsiiEEZjs0zc9jvOHvreN8frXz7QbnYqMqOHF9D1TBqwENvoPNjLw==}
+  vue3-apexcharts@1.7.0:
+    resolution: {integrity: sha512-BmWoS8+x5XLCtk2ml7rLVO+QU+fjgQUUCjUXSFW9cNQpCMa5Z0eRPvZjvYLt5aDKNREtuZoidlG9WRjZ/Af7lA==}
     peerDependencies:
       apexcharts: '> 3.0.0'
       vue: '> 3.0.0'
@@ -8479,7 +8479,7 @@ snapshots:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.11(typescript@5.4.5)
 
-  vue3-apexcharts@1.6.0(apexcharts@3.54.0)(vue@3.5.11(typescript@5.4.5)):
+  vue3-apexcharts@1.7.0(apexcharts@3.54.0)(vue@3.5.11(typescript@5.4.5)):
     dependencies:
       apexcharts: 3.54.0
       vue: 3.5.11(typescript@5.4.5)
