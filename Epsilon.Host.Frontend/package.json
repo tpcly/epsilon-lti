@@ -22,7 +22,7 @@
 		"posthog-js": "^1.165.0",
 		"vue": "^3.5.11",
 		"vue-router": "^4.4.5",
-		"vue3-apexcharts": "^1.6.0"
+		"vue3-apexcharts": "^1.7.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.13.0",
