@@ -18,8 +18,8 @@ importers:
         specifier: ^3.13.2
         version: 3.13.2(@parcel/watcher@2.4.1)(@types/node@22.9.0)(encoding@0.1.13)(eslint@9.14.0(jiti@1.21.6))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.3)(rollup@4.24.0)(sass@1.79.4)(terser@5.27.0)(typescript@5.4.5)(vite@5.4.8(@types/node@22.9.0)(sass@1.79.4)(terser@5.27.0))(webpack-sources@3.2.3)
       pinia:
-        specifier: ^2.2.4
-        version: 2.2.4(typescript@5.4.5)(vue@3.5.11(typescript@5.4.5))
+        specifier: ^2.2.6
+        version: 2.2.6(typescript@5.4.5)(vue@3.5.11(typescript@5.4.5))
       posthog-js:
         specifier: ^1.165.0
         version: 1.165.0
@@ -1385,9 +1385,6 @@ packages:
 
   '@vue/compiler-ssr@3.5.11':
     resolution: {integrity: sha512-P4+GPjOuC2aFTk1Z4WANvEhyOykcvEd5bIj2KVNGKGfM745LaXGr++5njpdBTzVz5pZifdlR1kpYSJJpIlSePA==}
-
-  '@vue/devtools-api@6.6.3':
-    resolution: {integrity: sha512-0MiMsFma/HqA6g3KLKn+AGpL1kgKhFWszC9U29NfpWK5LE7bjeXxySWJrOJ77hBz+TBrBQ7o4QJqbPbqbs8rJw==}
 
   '@vue/devtools-api@6.6.4':
     resolution: {integrity: sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==}
@@ -3077,12 +3074,12 @@ packages:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
     engines: {node: '>=12'}
 
-  pinia@2.2.4:
-    resolution: {integrity: sha512-K7ZhpMY9iJ9ShTC0cR2+PnxdQRuwVIsXDO/WIEV/RnMC/vmSoKDTKW/exNQYPI+4ij10UjXqdNiEHwn47McANQ==}
+  pinia@2.2.6:
+    resolution: {integrity: sha512-vIsR8JkDN5Ga2vAxqOE2cJj4VtsHnzpR1Fz30kClxlh0yCHfec6uoMeM3e/ddqmwFUejK3NlrcQa/shnpyT4hA==}
     peerDependencies:
       '@vue/composition-api': ^1.4.0
       typescript: '>=4.4.4'
-      vue: ^2.6.14 || ^3.3.0
+      vue: ^2.6.14 || ^3.5.11
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
@@ -5556,8 +5553,6 @@ snapshots:
       '@vue/compiler-dom': 3.5.11
       '@vue/shared': 3.5.11
 
-  '@vue/devtools-api@6.6.3': {}
-
   '@vue/devtools-api@6.6.4': {}
 
   '@vue/devtools-core@7.4.4(vite@5.4.8(@types/node@22.9.0)(sass@1.79.4)(terser@5.27.0))(vue@3.5.11(typescript@5.4.5))':
@@ -7493,9 +7488,9 @@ snapshots:
 
   picomatch@4.0.2: {}
 
-  pinia@2.2.4(typescript@5.4.5)(vue@3.5.11(typescript@5.4.5)):
+  pinia@2.2.6(typescript@5.4.5)(vue@3.5.11(typescript@5.4.5)):
     dependencies:
-      '@vue/devtools-api': 6.6.3
+      '@vue/devtools-api': 6.6.4
       vue: 3.5.11(typescript@5.4.5)
       vue-demi: 0.14.10(vue@3.5.11(typescript@5.4.5))
     optionalDependencies:
