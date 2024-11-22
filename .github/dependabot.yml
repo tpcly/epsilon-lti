@@ -3,24 +3,24 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
   - package-ecosystem: nuget
     directory: /
     target-branch: main
     schedule:
-      interval: weekly
+      interval: monthly
   - package-ecosystem: npm
     directory: /Epsilon.Host.Frontend
     target-branch: main
     schedule:
-      interval: weekly
+      interval: monthly
   - package-ecosystem: docker
     directory: /Epsilon.Host.Frontend
     target-branch: main
     schedule:
-      interval: weekly
+      interval: monthly
   - package-ecosystem: docker
     directory: /Epsilon.Host.WebApi
     target-branch: main
     schedule:
-      interval: weekly
+      interval: monthly
