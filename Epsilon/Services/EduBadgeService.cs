@@ -16,19 +16,20 @@ public class EduBadgeService : IEduBadgeService
         _learningDomainService = learningDomainService;
     }
 
-    public async Task<Dictionary<string, List<LearningDomainSubmission>>> GetData(Collection<string> userIds, DateTime from, DateTime to)
+    public async Task<Dictionary<string, List<LearningDomainSubmission>>> GetData(Collection<string> searchQuery, DateTime from, DateTime to)
     {
         var results = new Dictionary<string, List<LearningDomainSubmission>>();
-        foreach (var userId in userIds)
+        foreach (var search in searchQuery)
+
         {
-            var result = await _canvasResultService.GetSubmissions(userId, from)
+            var users = await _canvasResultService.SearchUsers(1, search);
+            var user = users?.First() ?? throw new HttpRequestException("No user found");
+            var result = await _canvasResultService.GetSubmissions(user.Id, from)
                                                    .Where(e => e.Criteria.Any() && e.SubmittedAt <= to)
                                                    .ToListAsync();
-            
+
             if (result.Any(static r => r.Results.Any(static rr => rr.Grade >= 3)))
-            {
-                results.Add(userId, result);
-            }
+                results.Add(user.Id, result);
         }
 
         return results;
@@ -38,9 +39,7 @@ public class EduBadgeService : IEduBadgeService
     {
         var line = "|";
         for (var i = 0; i < columns; i++)
-        {
             line += "---|";
-        }
 
         return line;
     }
@@ -52,14 +51,10 @@ public class EduBadgeService : IEduBadgeService
         var listResults = new List<LearningDomainOutcomeRecord>();
 
         foreach (var submission in userSubmissions.Value)
-        {
             listResults.AddRange(submission.Results);
-        }
 
         foreach (var rowTypes in domainFromResults!.ColumnsSet!.Types.OrderBy(static r => r.Order))
-        {
             table += $"|{rowTypes.Name}";
-        }
 
         table += "|";
         table += CreateHorizontalLine(domainFromResults.ColumnsSet!.Types.Count() + 1);
@@ -84,7 +79,7 @@ public class EduBadgeService : IEduBadgeService
     public async Task<string> WriteDocument(Dictionary<string, List<LearningDomainSubmission>> data)
     {
         var csvBuilder = new StringBuilder();
-        
+
         csvBuilder.AppendLine("Student-Id,Delta-Table");
         foreach (var userSubmissions in data)
         {
@@ -93,7 +88,8 @@ public class EduBadgeService : IEduBadgeService
             var escapedMarkdownTable = markdownTable.Replace("||", "|\n|");
 #pragma warning restore CA1307
 #pragma warning disable CA1305
-            csvBuilder.AppendLine($"{userSubmissions.Key},\"{escapedMarkdownTable}\"");        }
+            csvBuilder.AppendLine($"{userSubmissions.Key},\"{escapedMarkdownTable}\"");
+        }
 #pragma warning restore CA1305
 
         return csvBuilder.ToString();
