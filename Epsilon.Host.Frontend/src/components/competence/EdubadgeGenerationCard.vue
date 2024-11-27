@@ -46,10 +46,13 @@ const isDownloading = ref<boolean>(false)
 function downloadEdubadgeList(): void {
 	isDownloading.value = true
 	api.document
-		.documentDownloadCsvList(store.users.map((u) => u._id) as string[], {
-			from: new Date(selectedTerm?.value?.startAt!).toDateString()!,
-			to: new Date(selectedTerm.value?.endAt!).toDateString()!,
-		})
+		.documentDownloadEdubadgeCsvCreate(
+			store.users.map((u) => u.name) as string[],
+			{
+				from: new Date(selectedTerm?.value?.startAt!).toDateString()!,
+				to: new Date(selectedTerm.value?.endAt!).toDateString()!,
+			}
+		)
 		.then(async (response) => {
 			const blob = await response.blob()
 			const url = window.URL.createObjectURL(blob)

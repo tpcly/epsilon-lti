@@ -37,7 +37,7 @@ public class DocumentController : ControllerBase
     }
     
     
-    [HttpPost("download/edubadege/csv")]
+    [HttpPost("download/edubadge/csv")]
     public async Task<IActionResult> DownloadCsv(Collection<string> searchQuery, DateTime from, DateTime to)
     {
         var data = await _eduBadgeService.GetData(searchQuery, from, to);
