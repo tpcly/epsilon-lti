@@ -5,11 +5,11 @@
 				:submissions="filteredSubmissionsDateSelection"
 				class="competence-profile"
 				:is-loading="store.loadingSubmissions"
-				:domain="service.getDomain(true)"
+				:domain="domain"
 				:title="'Progression ' + store.selectedTerm?.name" />
 		</v-col>
 		<v-col cols="12" md="4">
-			<LearningDomainValues :domain="service.getDomain(true)" />
+			<LearningDomainValues :domain="domain" />
 		</v-col>
 		<v-col cols="12">
 			<h2>Kpi-Matrix</h2>
@@ -27,6 +27,8 @@ import CompetenceProfile from "~/components/competence/CompetenceProfile.vue"
 import { useEpsilonStore } from "~/stores/use-store"
 const store = useEpsilonStore()
 const service = useServices()
+
+const domain = computed(() => service.getDomain(true))
 
 const filteredSubmissionsDateSelection = computed(() => {
 	const unwrappedFilterRange = store.selectedTermRange
