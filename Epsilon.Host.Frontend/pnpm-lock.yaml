@@ -21,8 +21,8 @@ importers:
         specifier: ^2.2.6
         version: 2.2.6(typescript@5.4.5)(vue@3.5.13(typescript@5.4.5))
       posthog-js:
-        specifier: ^1.187.2
-        version: 1.187.2
+        specifier: ^1.194.1
+        version: 1.194.1
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.4.5)
@@ -3035,8 +3035,8 @@ packages:
     resolution: {integrity: sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-js@1.187.2:
-    resolution: {integrity: sha512-IGKsZ7M4AYACm5I6gGGFrv9kR/MOnVYw11XFYCLk363n0nq+ghwenoW1jJVL9gZLGKiMsConUR8rG2DD2OMKyg==}
+  posthog-js@1.194.1:
+    resolution: {integrity: sha512-d68hmU9DY4iPe3WneBlnglERhimRhXuF7Lx0Au6OTmOL+IFdFUxB3Qf5LaLqJc1QLt3NUolMq1HiXOaIULe3kQ==}
 
   preact@10.25.0:
     resolution: {integrity: sha512-6bYnzlLxXV3OSpUxLdaxBmE7PMOu0aR3pG6lryK/0jmvcDFPlcXGQAt5DpK3RITWiDrfYZRI0druyaK/S9kYLg==}
@@ -5191,7 +5191,7 @@ snapshots:
 
   '@vue/shared@3.5.13': {}
 
-  '@vuetify/loader-shared@2.0.3(vue@3.5.13(typescript@5.4.5))(vuetify@3.7.4(typescript@5.4.5)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.4.5)))':
+  '@vuetify/loader-shared@2.0.3(vue@3.5.13(typescript@5.4.5))(vuetify@3.7.4)':
     dependencies:
       upath: 2.0.1
       vue: 3.5.13(typescript@5.4.5)
@@ -7215,7 +7215,7 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  posthog-js@1.187.2:
+  posthog-js@1.194.1:
     dependencies:
       core-js: 3.39.0
       fflate: 0.4.8
@@ -7929,7 +7929,7 @@ snapshots:
 
   vite-plugin-vuetify@2.0.4(vite@5.4.11(@types/node@22.9.1)(sass@1.81.0)(terser@5.36.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.7.4):
     dependencies:
-      '@vuetify/loader-shared': 2.0.3(vue@3.5.13(typescript@5.4.5))(vuetify@3.7.4(typescript@5.4.5)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.4.5)))
+      '@vuetify/loader-shared': 2.0.3(vue@3.5.13(typescript@5.4.5))(vuetify@3.7.4)
       debug: 4.3.7(supports-color@9.4.0)
       upath: 2.0.1
       vite: 5.4.11(@types/node@22.9.1)(sass@1.81.0)(terser@5.36.0)
