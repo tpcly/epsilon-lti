@@ -34,8 +34,8 @@ importers:
         version: 1.8.0(apexcharts@4.1.0)(vue@3.5.13(typescript@5.4.5))
     devDependencies:
       '@eslint/js':
-        specifier: ^9.15.0
-        version: 9.15.0
+        specifier: ^9.16.0
+        version: 9.16.0
       '@nuxt/devtools':
         specifier: ^1.6.1
         version: 1.6.1(rollup@4.27.3)(vite@5.4.11(@types/node@22.10.1)(sass@1.81.0)(terser@5.36.0))(vue@3.5.13(typescript@5.4.5))
@@ -566,6 +566,10 @@ packages:
 
   '@eslint/js@9.15.0':
     resolution: {integrity: sha512-tMTqrY+EzbXmKJR5ToI8lxu7jaN5EdmrBFJpQk5JmSlyLsx6o4t27r883K5xsLuCYCpfKBCGswMSWXsM+jB7lg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@eslint/js@9.16.0':
+    resolution: {integrity: sha512-tw2HxzQkrbeuvyj1tG2Yqq+0H9wGoI2IMk4EOsQeX+vmd75FtJAzf+gTA69WF+baUKRYQ3x2kbLE08js5OsTVg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/object-schema@2.1.4':
@@ -4366,6 +4370,8 @@ snapshots:
 
   '@eslint/js@9.15.0': {}
 
+  '@eslint/js@9.16.0': {}
+
   '@eslint/object-schema@2.1.4': {}
 
   '@eslint/plugin-kit@0.2.3':
@@ -4541,7 +4547,7 @@ snapshots:
 
   '@nuxt/eslint-config@0.6.2(eslint@9.15.0(jiti@2.4.0))(typescript@5.4.5)':
     dependencies:
-      '@eslint/js': 9.15.0
+      '@eslint/js': 9.16.0
       '@nuxt/eslint-plugin': 0.6.2(eslint@9.15.0(jiti@2.4.0))(typescript@5.4.5)
       '@stylistic/eslint-plugin': 2.11.0(eslint@9.15.0(jiti@2.4.0))(typescript@5.4.5)
       '@typescript-eslint/eslint-plugin': 8.15.0(@typescript-eslint/parser@8.15.0(eslint@9.15.0(jiti@2.4.0))(typescript@5.4.5))(eslint@9.15.0(jiti@2.4.0))(typescript@5.4.5)
