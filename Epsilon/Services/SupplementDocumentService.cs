@@ -8,12 +8,12 @@ using Epsilon.Components;
 
 namespace Epsilon.Services;
 
-public class CompetenceDocumentService : ICompetenceDocumentService
+public class SupplementDocumentService : ISupplementDocumentService
 {
     private readonly ILearningDomainService _domainService;
     private readonly ILearningOutcomeCanvasResultService _canvasResultService;
 
-    public CompetenceDocumentService(
+    public SupplementDocumentService(
         ILearningDomainService domainService,
         ILearningOutcomeCanvasResultService canvasResultService
     )
@@ -22,17 +22,17 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         _canvasResultService = canvasResultService;
     }
 
-    public async Task<CompetenceDocument> GetDocument(string userId, DateTime from, DateTime to, string[] domains)
+    public async Task<SupplementDocument> GetDocument(string userId, string[] domains)
     {
         var submissions = await _canvasResultService.GetSubmissions(userId)
                                               .Where(static e => e.Criteria.Any())
                                               .ToListAsync();
 
-        var components = FetchComponents(submissions, from, to, domains);
-        return new CompetenceDocument(components);
+        var components = FetchComponents(submissions, domains);
+        return new SupplementDocument(components);
     }
 
-    public async Task<WordprocessingDocument> WriteDocument(Stream stream, CompetenceDocument document)
+    public async Task<WordprocessingDocument> WriteDocument(Stream stream, SupplementDocument document)
     {
         var wordDocument = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
@@ -46,22 +46,12 @@ public class CompetenceDocumentService : ICompetenceDocumentService
         return wordDocument;
     }
 
-    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(IList<LearningDomainSubmission> submissions, DateTime from, DateTime to, string[] usedDomains )
+    private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(IList<LearningDomainSubmission> submissions, string[] usedDomains )
     {
         var domains = _domainService.GetDomainsFromTenant().ToList().FindAll(d => usedDomains.Contains(d?.Id));
         var outcomes = (await _domainService.GetOutcomes()).ToList();
-        var delta = submissions.Where(s => s.SubmittedAt >= from && s.SubmittedAt <= to).ToList();
-        var startSubmissions = submissions.Where(s => s.SubmittedAt <= from).ToList();
-
-        yield return new TitleComponent("Starting profile");
-        yield return new CompetenceProfileComponent(startSubmissions, domains, outcomes);
-        yield return new TitleComponent("Intended development");
-        yield return new CompetenceProfileComponent(new List<LearningDomainSubmission>(), domains, outcomes);
-        yield return new TitleComponent("Final development");
+        
+        yield return new TitleComponent("Diploma supplements");
         yield return new CompetenceProfileComponent(submissions, domains, outcomes);
-        yield return new TitleComponent("KPI Table");
-        yield return new KpiTableComponent(delta, domains, outcomes);
-        yield return new TitleComponent("KPI Matrix");
-        yield return new KpiMatrixComponent(delta, domains, outcomes);
     }
 }

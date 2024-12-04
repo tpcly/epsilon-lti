@@ -36,6 +36,21 @@ public class DocumentController : ControllerBase
         );
     }
     
+    [HttpGet("download/supplement")]
+    public async Task<IActionResult> DownloadSupplement(string userId, DateTime from, DateTime to, string domains)
+    {
+        var document = _competenceDocumentService.GetDocument(userId, from, to, domains.Split(','));
+
+        using var stream = new MemoryStream();
+        await _competenceDocumentService.WriteDocument(stream, await document);
+
+        return File(
+            stream.ToArray(),
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "SupplementDocument.docx"
+        );
+    }
+    
     
     [HttpPost("download/edubadge/csv")]
     public async Task<IActionResult> DownloadCsv(Collection<string> searchQuery, DateTime from, DateTime to)
