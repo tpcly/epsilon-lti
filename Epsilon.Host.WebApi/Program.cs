@@ -70,6 +70,7 @@ builder.Services.AddScoped<IReadOnlyRepository<LearningDomainOutcome>, EntityFra
 
 // Add domain services
 builder.Services.AddScoped<ICompetenceDocumentService, CompetenceDocumentService>();
+builder.Services.AddScoped<ISupplementDocumentService, SupplementDocumentService>();
 builder.Services.AddScoped<IFilterService, FilterService>();
 builder.Services.AddScoped<ILearningDomainService, LearningDomainService>();
 builder.Services.AddScoped<ILearningOutcomeCanvasResultService, LearningOutcomeCanvasResultService>();

@@ -12,12 +12,14 @@ namespace Epsilon.Host.WebApi.Controllers;
 public class DocumentController : ControllerBase
 {
     private readonly ICompetenceDocumentService _competenceDocumentService;
+    private readonly ISupplementDocumentService _supplementDocumentService;
     private readonly IEduBadgeService _eduBadgeService;
 
-    public DocumentController(ICompetenceDocumentService competenceDocumentService, IEduBadgeService eduBadgeService)
+    public DocumentController(ICompetenceDocumentService competenceDocumentService, IEduBadgeService eduBadgeService, ISupplementDocumentService supplementDocumentService)
     {
         _competenceDocumentService = competenceDocumentService;
         _eduBadgeService = eduBadgeService;
+        _supplementDocumentService = supplementDocumentService;
     }
 
 
@@ -37,12 +39,12 @@ public class DocumentController : ControllerBase
     }
     
     [HttpGet("download/supplement")]
-    public async Task<IActionResult> DownloadSupplement(string userId, DateTime from, DateTime to, string domains)
+    public async Task<IActionResult> DownloadSupplement(string userId, string domains)
     {
-        var document = _competenceDocumentService.GetDocument(userId, from, to, domains.Split(','));
+        var document = _supplementDocumentService.GetDocument(userId, domains.Split(','));
 
         using var stream = new MemoryStream();
-        await _competenceDocumentService.WriteDocument(stream, await document);
+        await _supplementDocumentService.WriteDocument(stream, await document);
 
         return File(
             stream.ToArray(),
