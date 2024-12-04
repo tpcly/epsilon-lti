@@ -328,6 +328,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Document
+		 * @name DocumentDownloadSupplementList
+		 * @request GET:/api/Document/download/supplement
+		 */
+		documentDownloadSupplementList: (
+			query?: {
+				userId?: string
+				domains?: string
+			},
+			params: RequestParams = {}
+		) =>
+			this.request<void, any>({
+				path: `/api/Document/download/supplement`,
+				method: "GET",
+				query: query,
+				...params,
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Document
 		 * @name DocumentDownloadEdubadgeCsvCreate
 		 * @request POST:/api/Document/download/edubadge/csv
 		 */
