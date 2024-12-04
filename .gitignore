@@ -655,3 +655,4 @@ appsettings.*.json
 !appsettings.example.json
 Epsilon.Host.Frontend/vite.config.ts
 Epsilon.Host.Frontend/package-lock.json
+epsilon-data

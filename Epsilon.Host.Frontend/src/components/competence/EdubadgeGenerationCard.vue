@@ -18,6 +18,20 @@
 				</template>
 			</v-autocomplete>
 		</v-card-text>
+		<v-card-text>
+			<v-autocomplete
+				v-model="selectedUser"
+				label="Students"
+				:items="store.users"
+				density="compact"
+				:clearable="true"
+				:flat="true"
+				item-value="_id"
+				item-title="name"
+				return-object
+				no-data-text>
+			</v-autocomplete>
+		</v-card-text>
 		<v-card-actions>
 			<v-spacer></v-spacer>
 			<v-btn :loading="isDownloading" @click="downloadEdubadgeList">
@@ -29,11 +43,12 @@
 
 <script setup lang="ts">
 import { useEpsilonStore } from "~/stores/use-store"
-import type { EnrollmentTerm } from "~/api.generated"
+import type { EnrollmentTerm, User } from "~/api.generated"
 import { storeToRefs } from "pinia"
 const store = useEpsilonStore()
 
 const selectedTerm = ref<EnrollmentTerm | null>(null)
+const selectedUser = ref<User | null>(store.users.at(0) as User)
 const api = useApi()
 
 const { terms } = storeToRefs(store)
@@ -46,13 +61,10 @@ const isDownloading = ref<boolean>(false)
 function downloadEdubadgeList(): void {
 	isDownloading.value = true
 	api.document
-		.documentDownloadEdubadgeCsvCreate(
-			store.users.map((u) => u.name) as string[],
-			{
-				from: new Date(selectedTerm?.value?.startAt!).toDateString()!,
-				to: new Date(selectedTerm.value?.endAt!).toDateString()!,
-			}
-		)
+		.documentDownloadEdubadgeCsvCreate([selectedUser.value?.name], {
+			from: new Date(selectedTerm?.value?.startAt!).toDateString()!,
+			to: new Date(selectedTerm.value?.endAt!).toDateString()!,
+		})
 		.then(async (response) => {
 			const blob = await response.blob()
 			const url = window.URL.createObjectURL(blob)
