@@ -69,22 +69,4 @@ public class DocumentController : ControllerBase
             "Edubadges.csv"
         );
     }
-    
-    
-    
-    // [HttpPost("download/diploma/json")]
-    // public async Task<IActionResult> DownloadJson(Collection<string> searchQuery, DateTime from, DateTime to)
-    // {
-    //     var data = await _eduBadgeService.GetData(userIds, from, to);
-    //     var contents  = await _eduBadgeService.WriteDocument(data);
-    //     
-    //     var byteArray = Encoding.UTF8.GetBytes(contents);
-    //     var stream = new MemoryStream(byteArray);
-    //     
-    //     return File(
-    //         stream.ToArray(),
-    //         "text/csv",
-    //         "Edubadges.csv"
-    //     );
-    // }
 }
