@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
+using CsvHelper;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
 
@@ -30,20 +31,11 @@ public class EduBadgeService : IEduBadgeService
                                                    .ToListAsync();
 
             if (result.Any(static r => r.Results.Any(static rr => rr.Grade >= 3)))
-                results.Add(user.Id.ToString(CultureInfo.CurrentCulture), result);
+                results.Add(user.LoginId, result);
         }
 
         return results;
     }
-
-    // private static string CreateHorizontalLine(int columns)
-    // {
-    //     var line = "|";
-    //     for (var i = 0; i < columns; i++)
-    //         line += "---|";
-    //
-    //     return line;
-    // }
 
     private async Task<string> GenerateTableDelta(KeyValuePair<string, List<LearningDomainSubmission>> userSubmissions)
     {
@@ -53,55 +45,62 @@ public class EduBadgeService : IEduBadgeService
 
         foreach (var submission in userSubmissions.Value)
             listResults.AddRange(submission.Results);
-
-        var lengthFirstColumn = domainFromResults!.RowsSet!.Types.Max(static c => c.Name.Length);
-        var table = $"| {FillColumn(lengthFirstColumn)} ";
+        
+        var table = "<table><tr><td></td>";
         foreach (var rowTypes in domainFromResults!.ColumnsSet!.Types.OrderBy(static r => r.Order))
-            table += $"| {rowTypes.Name} ";
+            table += $"<th>{rowTypes.Name.Replace('&', ' ')}</th>";
 
-        table += "|";
+        table += "</tr>";
 
 
         foreach (var rowTypes in domainFromResults.RowsSet.Types.OrderBy(static r => r.Order))
         {
-            table += $"| {rowTypes.Name} {FillColumn(lengthFirstColumn - rowTypes.Name.Length)}";
+            table += $"<tr><th>{rowTypes.Name.Replace('&', ' ')}</th>";
             
             foreach (var columnTypes in domainFromResults!.ColumnsSet.Types.OrderBy(static r => r.Order))
             {
-                var lengthColumn = columnTypes.Name.Length; 
                 var count = listResults.Count(r => r.Outcome.Column?.Id == columnTypes.Id && r.Outcome.Row.Id == rowTypes.Id && r.Grade >= 3);
-                table += $"| {count} {FillColumn(lengthColumn - count.ToString(CultureInfo.InvariantCulture).Length)}";
+                table += $"<td>{count}</td>";
             }
 
-            table += "|";
+            table += "</tr>";
         }
 
+        table += "</table>";
+
         return table;
+    }
+    
+    private static string CollectAssignmentUrls(List<LearningDomainSubmission> submissions)
+    {
+        var urls = new StringBuilder();
+        foreach (var submission in submissions)
+        {
+            if (submission.AssignmentUrl != null)
+                urls.Append(submission.AssignmentUrl).Append(' ');
+        }
+
+        return urls.ToString();
     }
 
     public async Task<string> WriteDocument(Dictionary<string, List<LearningDomainSubmission>> data)
     {
-        var csvBuilder = new StringBuilder();
-
-        csvBuilder.AppendLine("Student-Id,Delta-Table");
+        var collection = new List<EdubadgeRecord>();
         foreach (var userSubmissions in data)
         {
-            var markdownTable = await GenerateTableDelta(userSubmissions);
-#pragma warning disable CA1307
-            var escapedMarkdownTable = markdownTable.Replace("||", "|<br/>|");
-#pragma warning restore CA1307
-#pragma warning disable CA1305
-            csvBuilder.AppendLine($"{userSubmissions.Key},\"{escapedMarkdownTable}\"");
+            collection.Add(new EdubadgeRecord()
+            {
+                Email = userSubmissions.Key,
+                Eppn = userSubmissions.Key,
+                Narrative = $"{await GenerateTableDelta(userSubmissions)}",
+                EvidenceDescription = $"{CollectAssignmentUrls(userSubmissions.Value)}", 
+             });
         }
 
-        return csvBuilder.ToString();
+        await using var writer = new StringWriter();
+        await using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+        await csv.WriteRecordsAsync(collection);
+        return writer.ToString();
     }
     
-    
-    private static string FillColumn(int length)
-    {
-        if (length < 0)
-            length = 0;
-        return new string(' ', length);
-    }
 }
