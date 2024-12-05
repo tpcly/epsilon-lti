@@ -3,19 +3,21 @@ using Epsilon.Abstractions.Services;
 using Epsilon.Services;
 using Moq;
 using Tpcly.Canvas.Abstractions.GraphQl;
+using Tpcly.Canvas.Abstractions.Rest;
 
 namespace Epsilon.UnitTest.Services;
 
 public class LearningOutcomeCanvasResultServiceTests
 {
     private readonly Mock<ICanvasGraphQlApi> _mockCanvasGraphQl = new Mock<ICanvasGraphQlApi>();
+    private readonly Mock<ICanvasRestApi> _mockCanvasRest = new Mock<ICanvasRestApi>();
     private readonly Mock<ILearningDomainService> _mockLearningDomainService = new Mock<ILearningDomainService>();
     private readonly LearningOutcomeCanvasResultService _learningOutcomeCanvasResultService;
 
 
     public LearningOutcomeCanvasResultServiceTests()
     {
-        _learningOutcomeCanvasResultService = new LearningOutcomeCanvasResultService(_mockCanvasGraphQl.Object, _mockLearningDomainService.Object);
+        _learningOutcomeCanvasResultService = new LearningOutcomeCanvasResultService(_mockCanvasGraphQl.Object, _mockCanvasRest.Object, _mockLearningDomainService.Object);
     }
 
     [Fact]

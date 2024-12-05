@@ -12,12 +12,14 @@ namespace Epsilon.Host.WebApi.Controllers;
 public class DocumentController : ControllerBase
 {
     private readonly ICompetenceDocumentService _competenceDocumentService;
+    private readonly ISupplementDocumentService _supplementDocumentService;
     private readonly IEduBadgeService _eduBadgeService;
 
-    public DocumentController(ICompetenceDocumentService competenceDocumentService, IEduBadgeService eduBadgeService)
+    public DocumentController(ICompetenceDocumentService competenceDocumentService, IEduBadgeService eduBadgeService, ISupplementDocumentService supplementDocumentService)
     {
         _competenceDocumentService = competenceDocumentService;
         _eduBadgeService = eduBadgeService;
+        _supplementDocumentService = supplementDocumentService;
     }
 
 
@@ -36,11 +38,26 @@ public class DocumentController : ControllerBase
         );
     }
     
-    
-    [HttpPost("download/csv")]
-    public async Task<IActionResult> DownloadCsv(Collection<string> userIds, DateTime from, DateTime to)
+    [HttpGet("download/supplement")]
+    public async Task<IActionResult> DownloadSupplement(string userId, string domains)
     {
-        var data = await _eduBadgeService.GetData(userIds, from, to);
+        var document = _supplementDocumentService.GetDocument(userId, domains.Split(','));
+
+        using var stream = new MemoryStream();
+        await _supplementDocumentService.WriteDocument(stream, await document);
+
+        return File(
+            stream.ToArray(),
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "SupplementDocument.docx"
+        );
+    }
+    
+    
+    [HttpPost("download/edubadge/csv")]
+    public async Task<IActionResult> DownloadCsv(Collection<string> searchQuery, DateTime from, DateTime to)
+    {
+        var data = await _eduBadgeService.GetData(searchQuery, from, to);
         var contents  = await _eduBadgeService.WriteDocument(data);
         
         var byteArray = Encoding.UTF8.GetBytes(contents);

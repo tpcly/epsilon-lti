@@ -1,23 +1,8 @@
 <template>
 	<v-card>
 		<v-toolbar>
-			<v-toolbar-title> Edu-badge generation</v-toolbar-title>
+			<v-toolbar-title>Supplement document generation</v-toolbar-title>
 		</v-toolbar>
-		<v-card-text>
-			<v-autocomplete
-				v-model="selectedTerm"
-				label="Semester"
-				:items="store.terms"
-				density="compact"
-				:flat="true"
-				item-title="name"
-				return-object
-				no-data-text>
-				<template #selection="{ item }">
-					<span>{{ item.title }}</span>
-				</template>
-			</v-autocomplete>
-		</v-card-text>
 		<v-card-text>
 			<v-autocomplete
 				v-model="selectedUser"
@@ -34,8 +19,8 @@
 		</v-card-text>
 		<v-card-actions>
 			<v-spacer></v-spacer>
-			<v-btn :loading="isDownloading" @click="downloadEdubadgeList">
-				Edu-badge create
+			<v-btn :loading="isDownloading" @click="downloadSupplement">
+				Supplement create
 			</v-btn>
 		</v-card-actions>
 	</v-card>
@@ -43,34 +28,30 @@
 
 <script setup lang="ts">
 import { useEpsilonStore } from "~/stores/use-store"
-import type { EnrollmentTerm, User } from "~/api.generated"
-import { storeToRefs } from "pinia"
+import type { User } from "~/api.generated"
 const store = useEpsilonStore()
 
-const selectedTerm = ref<EnrollmentTerm | null>(null)
 const selectedUser = ref<User | null>(store.users.at(0) as User)
 const api = useApi()
 
-const { terms } = storeToRefs(store)
-watch(terms, () => {
-	selectedTerm.value = terms.value.at(0) as EnrollmentTerm
-})
-
 const isDownloading = ref<boolean>(false)
 
-function downloadEdubadgeList(): void {
+function downloadSupplement(): void {
 	isDownloading.value = true
 	api.document
-		.documentDownloadEdubadgeCsvCreate([selectedUser.value?.name], {
-			from: new Date(selectedTerm?.value?.startAt!).toDateString()!,
-			to: new Date(selectedTerm.value?.endAt!).toDateString()!,
+		.documentDownloadSupplementList({
+			userId: selectedUser.value?._id ?? "",
+			domains: store.usedDomains.join(","),
 		})
 		.then(async (response) => {
 			const blob = await response.blob()
 			const url = window.URL.createObjectURL(blob)
 			const link = document.createElement("a")
 			link.href = url
-			link.setAttribute("download", `Edu-Badge.csv`)
+			link.setAttribute(
+				"download",
+				`Supplement-Document-${selectedUser.value?.name}.docx`
+			)
 			document.body.appendChild(link)
 			link.click()
 			isDownloading.value = false

@@ -328,10 +328,31 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Document
-		 * @name DocumentDownloadCsvList
-		 * @request GET:/api/Document/download/csv
+		 * @name DocumentDownloadSupplementList
+		 * @request GET:/api/Document/download/supplement
 		 */
-		documentDownloadCsvList: (
+		documentDownloadSupplementList: (
+			query?: {
+				userId?: string
+				domains?: string
+			},
+			params: RequestParams = {}
+		) =>
+			this.request<void, any>({
+				path: `/api/Document/download/supplement`,
+				method: "GET",
+				query: query,
+				...params,
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Document
+		 * @name DocumentDownloadEdubadgeCsvCreate
+		 * @request POST:/api/Document/download/edubadge/csv
+		 */
+		documentDownloadEdubadgeCsvCreate: (
 			data: string[],
 			query?: {
 				/** @format date-time */
@@ -342,7 +363,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 			params: RequestParams = {}
 		) =>
 			this.request<void, any>({
-				path: `/api/Document/download/csv`,
+				path: `/api/Document/download/edubadge/csv`,
 				method: "POST",
 				query: query,
 				body: data,

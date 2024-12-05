@@ -2,6 +2,8 @@ using System.Globalization;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
 using Tpcly.Canvas.Abstractions.GraphQl;
+using Tpcly.Canvas.Abstractions.Rest;
+using User = Tpcly.Canvas.Abstractions.Rest.User;
 
 namespace Epsilon.Services;
 
@@ -64,14 +66,17 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
     ";
 
     private readonly ICanvasGraphQlApi _canvasGraphQlApi;
+    private readonly ICanvasRestApi _canvasRestApi;
     private readonly ILearningDomainService _learningDomainService;
 
     public LearningOutcomeCanvasResultService(
         ICanvasGraphQlApi canvasGraphQlApi,
+        ICanvasRestApi canvasRestApi,
         ILearningDomainService learningDomainService
     )
     {
         _canvasGraphQlApi = canvasGraphQlApi;
+        _canvasRestApi = canvasRestApi;
         _learningDomainService = learningDomainService;
     }
 
@@ -107,6 +112,11 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 }
             }
         }
+    }
+
+    public async Task<IEnumerable<User>?> SearchUsers(int accountId, string query)
+    {
+        return await _canvasRestApi.Accounts.GetUsers(accountId, query);
     }
 
     private static IEnumerable<LearningDomainCriteria> GetSubmissionCriteria(Submission? submission, Task<IEnumerable<LearningDomainOutcome?>>? domainOutcomesTask)
@@ -159,9 +169,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 if (outcome != null)
                 {
                     if (outcomeRecords.All(r => r.Outcome.Id != outcome.Id))
-                    {
                         outcomeRecords.Add(new LearningDomainOutcomeRecord(outcome, assessment?.Points));
-                    }
                 }
             }
         }
@@ -169,4 +177,6 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
 
         return outcomeRecords;
     }
+    
+    
 }
