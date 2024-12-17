@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text;
 using CsvHelper;
+using CsvHelper.Configuration;
 using Epsilon.Abstractions;
 using Epsilon.Abstractions.Services;
 
@@ -97,8 +98,12 @@ public class EduBadgeService : IEduBadgeService
              });
         }
 
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            Delimiter = ";",
+        };
         await using var writer = new StringWriter();
-        await using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+        await using var csv = new CsvWriter(writer, config);
         await csv.WriteRecordsAsync(collection);
         return writer.ToString();
     }
