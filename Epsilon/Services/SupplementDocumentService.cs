@@ -49,7 +49,7 @@ public class SupplementDocumentService : ISupplementDocumentService
     private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(IList<LearningDomainSubmission> submissions, string[] usedDomains )
     {
         var domains = _domainService.GetDomainsFromTenant().ToList().FindAll(d => usedDomains.Contains(d?.Id));
-        var outcomes = (await _domainService.GetOutcomes()).ToList();
+        var outcomes = (await _domainService.GetOutcomes()).ToList().Where(static o => o!.Value.Order > 1);
         
         yield return new TitleComponent("Diploma supplements");
         yield return new CompetenceProfileComponent(submissions, domains, outcomes);
