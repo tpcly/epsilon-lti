@@ -52,6 +52,6 @@ public class SupplementDocumentService : ISupplementDocumentService
         var outcomes = (await _domainService.GetOutcomes()).ToList().Where(static o => o!.Value.Order > 1);
         
         yield return new TitleComponent("Diploma supplements");
-        yield return new CompetenceProfileComponent(submissions, domains, outcomes);
+        yield return new DiplomaSupplementCompetenceProfileComponent(submissions, domains, outcomes);
     }
 }
