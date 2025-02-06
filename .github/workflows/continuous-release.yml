@@ -61,7 +61,7 @@ jobs:
           fetch-depth: 0
       - name: Define release type
         run: echo "IS_PRERELEASE=$(gh pr list -B main -l beta -s merged --json mergedAt -q='map(select((now | strftime("%s")|tonumber) - (.mergedAt | fromdate | strftime("%s")|tonumber) <= 86400)) | length > 0')" >> $GITHUB_ENV
-      - uses: release-drafter/release-drafter@v6.0.0
+      - uses: release-drafter/release-drafter@v6.1.0
         id: releaser
         with:
           prerelease-identifier: 'beta'
