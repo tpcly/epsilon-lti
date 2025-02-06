@@ -91,7 +91,12 @@ jobs:
         working-directory: '${{ needs.config.outputs.frontend }}'
     steps:
       - uses: actions/checkout@v4
-      - run: corepack enable
+      - run: |
+            echo "Before: corepack version => $(corepack --version || echo 'not installed')"
+            npm install -g corepack@latest
+            echo "After: corepack version => $(corepack --version)"
+            corepack enable
+            pnpm --version
       - uses: actions/setup-node@v4
         with:
           node-version: 20
