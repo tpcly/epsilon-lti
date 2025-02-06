@@ -1,8 +1,8 @@
-@import "color";
+@use "color";
 
 $variant-map: (
-	primary: $color-primary,
-	success: $color-success,
-	danger: $color-danger,
-	warning: $color-warning,
+	primary: color.$color-primary,
+	success: color.$color-success,
+	danger: color.$color-danger,
+	warning: color.$color-warning,
 );
