@@ -17,5 +17,6 @@ public record LearningDomainOutcome : Entity<int>
     public LearningDomainType Value { get; set; } = null!;
     [Required]
     public string Name { get; set; } = null!;
+    public string Description { get; set; } = null!;
     public LearningDomain Domain { get; set; } = null!;
 }

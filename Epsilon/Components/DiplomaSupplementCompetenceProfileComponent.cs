@@ -9,9 +9,9 @@ using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
 
 namespace Epsilon.Components;
 
-public class CompetenceProfileComponent : AbstractCompetenceComponent
+public class DiplomaSupplementCompetenceProfileComponent : AbstractCompetenceComponent
 {
-    public CompetenceProfileComponent(
+    public DiplomaSupplementCompetenceProfileComponent(
         IEnumerable<LearningDomainSubmission> submissions,
         IEnumerable<LearningDomain?> domains,
         IEnumerable<LearningDomainOutcome?> outcomes
@@ -25,82 +25,16 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         var body = mainDocumentPart.Document.Body ?? throw new InvalidOperationException("The main document part does not contain a body.");
 
 
-        var outcomes = Submissions.SelectMany(static o => o.Results.Select(static r => r.Outcome)).ToList();
+        var outcomes = Submissions.SelectMany(o => o.Results.Select(static r => r.Outcome).Where(a => Outcomes.Where(o => o!.Id == a.Id).Any())).ToList();
 
         foreach (var domain in Domains)
         {
             if (domain!.ColumnsSet != null)
                 body.AppendChild(GetTableTwoAxis(domain, outcomes));
-            else
-                body.AppendChild(GetTableOneAxis(domain, outcomes));
-
-            body.AppendChild(
-                CreateWhiteSpace()
-            );
         }
 
         return body;
     }
-
-    private static OpenXmlElement GetTableOneAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
-    {
-        var table = CreateTable();
-
-        var headerRow = new TableRow()
-        {
-            TableRowProperties = new TableRowProperties(
-                new TableJustification() { Val = TableRowAlignmentValues.Center, }),
-        };
-
-        foreach (var row in domain.RowsSet.Types.OrderBy(static c => c.Order))
-        {
-            var cell = CreateTableCell(
-                "700",
-                new Paragraph(
-                    new Run(
-                        new Text(row.Name)
-                    ) { RunProperties = new RunProperties() { FontSize = new FontSize() { Val = "16", }, }, }
-                )
-            );
-
-            headerRow.AppendChild(cell);
-        }
-
-        table.AppendChild(headerRow);
-
-        var domainRow = new TableRow()
-        {
-            TableRowProperties = new TableRowProperties(
-                new TableJustification() { Val = TableRowAlignmentValues.Center, },
-                new TableRowHeight() { Val = 2600, }
-            ),
-        };
-
-
-        domainRow.Append();
-
-        foreach (var row in domain.RowsSet.Types.OrderBy(static c => c.Order))
-        {
-            var cellOutcomes = outcomes.Where(o => o.Row.Id == row.Id).ToList();
-            var types = cellOutcomes.Select(static o => o.Value).ToList();
-            var value = types.MaxBy(static t => t.Order);
-            var count = cellOutcomes.Count.ToString(CultureInfo.InvariantCulture);
-
-            var contentCell = CreateCenteredText(count);
-
-            var cell = CreateTableCell(
-                "1000",
-                new Shading { Val = ShadingPatternValues.Clear, Fill = value?.HexColor ?? "FFFFFF", },
-                contentCell);
-
-            domainRow.AppendChild(cell);
-        }
-
-        table.AppendChild(domainRow);
-
-        return table;
-    }
-
     private static OpenXmlElement GetTableTwoAxis(LearningDomain domain, List<LearningDomainOutcome> outcomes)
     {
         var table = CreateTable();
@@ -124,7 +58,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 "700",
                 new Paragraph(
                     new Run(
-                        new Text(col.Name)
+                        new Text(col.ShortName)
                     ) { RunProperties = new RunProperties() { FontSize = new FontSize() { Val = "16", }, }, }
                 )
             );
@@ -148,7 +82,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                     "1000",
                     new Paragraph(
                         new Run(
-                            new Text(row.Name)
+                            new Text(row.ShortName)
                         ) { RunProperties = new RunProperties() { FontSize = new FontSize() { Val = "16", }, }, }
                     )));
 
@@ -157,9 +91,9 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                 var cellOutcomes = outcomes.Where(o => o.Row.Id == row.Id && o.Column?.Id == col.Id).ToList();
                 var types = cellOutcomes.Select(static o => o.Value).ToList();
                 var value = types.MaxBy(static t => t.Order);
-                var count = cellOutcomes.Count.ToString(CultureInfo.InvariantCulture);
+                var count = ((value?.Order ?? 0) + 1).ToString(CultureInfo.InvariantCulture);
 
-                var contentCell = CreateCenteredText(count);
+                var contentCell = CreateCenteredText(count == "1" ? "" : count);
 
                 var cell = CreateTableCell(
                     "1000",
@@ -167,6 +101,7 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
                     contentCell);
 
                 domainRow.AppendChild(cell);
+
             }
 
             table.AppendChild(domainRow);

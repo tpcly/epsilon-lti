@@ -49,9 +49,14 @@ public class SupplementDocumentService : ISupplementDocumentService
     private async IAsyncEnumerable<IWordCompetenceComponent> FetchComponents(IList<LearningDomainSubmission> submissions, string[] usedDomains )
     {
         var domains = _domainService.GetDomainsFromTenant().ToList().FindAll(d => usedDomains.Contains(d?.Id));
-        var outcomes = (await _domainService.GetOutcomes()).ToList();
+        var outcomes = (await _domainService.GetOutcomes()).ToList().Where(static o => o!.Value.Order != 0);
         
-        yield return new TitleComponent("Diploma supplements");
-        yield return new CompetenceProfileComponent(submissions, domains, outcomes);
+        
+
+        var learningDomainOutcomes = outcomes.ToList();
+        yield return new TitleComponent("Applying Knowledge and Understanding");
+        yield return new DiplomaSupplementCompetenceProfileComponent(submissions, domains, learningDomainOutcomes);
+        yield return new TitleComponent("Performance indicators");
+        yield return new KpiListComponent(submissions, domains, learningDomainOutcomes);
     }
 }
