@@ -27,7 +27,7 @@
 	"devDependencies": {
 		"@eslint/js": "^9.16.0",
 		"@nuxt/devtools": "^1.6.1",
-		"@nuxt/eslint-config": "^0.7.2",
+		"@nuxt/eslint-config": "^1.0.0",
 		"@nuxt/schema": "^3.14.1592",
 		"@types/jsonwebtoken": "^9.0.7",
 		"@types/lodash": "^4.17.13",
