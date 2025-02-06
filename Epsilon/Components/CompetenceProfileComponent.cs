@@ -30,13 +30,9 @@ public class CompetenceProfileComponent : AbstractCompetenceComponent
         foreach (var domain in Domains)
         {
             if (domain!.ColumnsSet != null)
-            {
                 body.AppendChild(GetTableTwoAxis(domain, outcomes));
-            }
             else
-            {
                 body.AppendChild(GetTableOneAxis(domain, outcomes));
-            }
 
             body.AppendChild(
                 CreateWhiteSpace()

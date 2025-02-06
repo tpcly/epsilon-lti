@@ -32,9 +32,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         var headerRowHeight = Submissions.Max(static s => s.Assignment?.Length ?? 10);
 
         if (Submissions.Any())
-        {
             headerRowHeight *= 111;
-        }
 
         // Create the table header row.
         var headerRow = new TableRow();
@@ -136,9 +134,7 @@ public class KpiMatrixComponent : AbstractCompetenceComponent
         }
 
         if (!grade.HasValue && masteryPoints.HasValue)
-        {
             return OutcomeGradeStatus.NotAssessed;
-        }
 
         return null;
     }
