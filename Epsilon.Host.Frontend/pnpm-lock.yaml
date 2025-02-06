@@ -34,8 +34,8 @@ importers:
         version: 1.8.0(apexcharts@4.4.0)(vue@3.5.13(typescript@5.4.5))
     devDependencies:
       '@eslint/js':
-        specifier: ^9.16.0
-        version: 9.16.0
+        specifier: ^9.19.0
+        version: 9.19.0
       '@nuxt/devtools':
         specifier: ^1.6.1
         version: 1.6.1(rollup@4.27.3)(vite@5.4.14(@types/node@22.10.3)(sass@1.81.0)(terser@5.36.0))(vue@3.5.13(typescript@5.4.5))
@@ -571,10 +571,6 @@ packages:
 
   '@eslint/eslintrc@3.2.0':
     resolution: {integrity: sha512-grOjVNN8P3hjJn/eIETF1wwd12DdnwFDoyceUJLYYdkpbwq3nLi+4fqrTAONx7XDALqlL220wC/RHSC/QTI/0w==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@eslint/js@9.16.0':
-    resolution: {integrity: sha512-tw2HxzQkrbeuvyj1tG2Yqq+0H9wGoI2IMk4EOsQeX+vmd75FtJAzf+gTA69WF+baUKRYQ3x2kbLE08js5OsTVg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/js@9.19.0':
@@ -4481,8 +4477,6 @@ snapshots:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
-
-  '@eslint/js@9.16.0': {}
 
   '@eslint/js@9.19.0': {}
 
