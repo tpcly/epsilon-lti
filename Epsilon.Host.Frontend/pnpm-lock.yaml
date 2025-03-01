@@ -21,8 +21,8 @@ importers:
         specifier: ^2.3.1
         version: 2.3.1(typescript@5.4.5)(vue@3.5.13(typescript@5.4.5))
       posthog-js:
-        specifier: ^1.215.4
-        version: 1.215.4
+        specifier: ^1.224.1
+        version: 1.224.1(@rrweb/types@2.0.0-alpha.17)
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.4.5)
@@ -874,6 +874,9 @@ packages:
     resolution: {integrity: sha512-p0scwGkR4kZ242xLPBuhSckrJ734frz6v9xZzD+kHVYRAkSUmdSLCIJRfql6H5//aF8Q10K+i7q8DiPfZp0b7A==}
     cpu: [x64]
     os: [win32]
+
+  '@rrweb/types@2.0.0-alpha.17':
+    resolution: {integrity: sha512-AfDTVUuCyCaIG0lTSqYtrZqJX39ZEYzs4fYKnexhQ+id+kbZIpIJtaut5cto6dWZbB3SEe4fW0o90Po3LvTmfg==}
 
   '@sindresorhus/merge-streams@2.3.0':
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
@@ -2893,11 +2896,17 @@ packages:
     resolution: {integrity: sha512-6oz2beyjc5VMn/KV1pPw8fliQkhBXrVn1Z3TVyqZxU8kZpzEKhBdmCFqI6ZbmGtamQvQGuU1sgPTk8ZrXDD7jQ==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-js@1.215.4:
-    resolution: {integrity: sha512-FlPITI3dVPBRMQGk+jbJcL4Z1FXDyc7O2vNfsspNV2C6dKIJ4F1cTkxhQBEdG5jV1nJ6ZQjgZz1LxbbkSgx9Bg==}
+  postcss@8.5.3:
+    resolution: {integrity: sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==}
+    engines: {node: ^10 || ^12 || >=14}
 
-  preact@10.25.4:
-    resolution: {integrity: sha512-jLdZDb+Q+odkHJ+MpW/9U5cODzqnB+fy2EiHSZES7ldV5LK7yjlVzTp7R8Xy6W6y75kfK8iWYtFVH7lvjwrCMA==}
+  posthog-js@1.224.1:
+    resolution: {integrity: sha512-C/0adjCiqvJ9JlGdlBT7HyxqBbMB8wFwb7/DKULyXfT4GJX/8ETaqXaJuSL3HLcuUJjxYPqDinBC6mt8QoVYnA==}
+    peerDependencies:
+      '@rrweb/types': 2.0.0-alpha.17
+
+  preact@10.26.4:
+    resolution: {integrity: sha512-KJhO7LBFTjP71d83trW+Ilnjbo+ySsaAgCfXOXUlmGzJ4ygYPWmysm77yg4emwfmoz3b22yvH5IsVFHbhUaH5w==}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -3052,6 +3061,9 @@ packages:
     resolution: {integrity: sha512-spF66xoyD7rz3o08sHP7wogp1gZ6itSq22SGa/IZTcUDXDlOyrShwMwkVSB+BUxFRZZCUYqdb3KWDEOMVQZxuw==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
+
+  rrweb-snapshot@2.0.0-alpha.18:
+    resolution: {integrity: sha512-hBHZL/NfgQX6wO1D9mpwqFu1NJPpim+moIcKhFEjVTZVRUfCln+LOugRc4teVTCISYHN8Cw5e2iNTWCSm+SkoA==}
 
   run-applescript@7.0.0:
     resolution: {integrity: sha512-9by4Ij99JUr/MCFBUkDKLWK3G9HVXmabKz9U5MlIAIuvuzkiOicRYs8XJLxX+xahD+mLiiCYDqF9dKAgtzKP1A==}
@@ -4712,6 +4724,10 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.34.4':
     optional: true
+
+  '@rrweb/types@2.0.0-alpha.17':
+    dependencies:
+      rrweb-snapshot: 2.0.0-alpha.18
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
@@ -7031,14 +7047,21 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  posthog-js@1.215.4:
+  postcss@8.5.3:
     dependencies:
+      nanoid: 3.3.8
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
+
+  posthog-js@1.224.1(@rrweb/types@2.0.0-alpha.17):
+    dependencies:
+      '@rrweb/types': 2.0.0-alpha.17
       core-js: 3.40.0
       fflate: 0.4.8
-      preact: 10.25.4
+      preact: 10.26.4
       web-vitals: 4.2.4
 
-  preact@10.25.4: {}
+  preact@10.26.4: {}
 
   prelude-ls@1.2.1: {}
 
@@ -7197,6 +7220,10 @@ snapshots:
       '@rollup/rollup-win32-ia32-msvc': 4.34.4
       '@rollup/rollup-win32-x64-msvc': 4.34.4
       fsevents: 2.3.3
+
+  rrweb-snapshot@2.0.0-alpha.18:
+    dependencies:
+      postcss: 8.5.3
 
   run-applescript@7.0.0: {}
 
