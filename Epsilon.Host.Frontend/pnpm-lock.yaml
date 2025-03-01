@@ -12,8 +12,8 @@ importers:
         specifier: ^7.4.47
         version: 7.4.47
       apexcharts:
-        specifier: ^4.4.0
-        version: 4.4.0
+        specifier: ^4.5.0
+        version: 4.5.0
       nuxt:
         specifier: ^3.15.4
         version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.1)(db0@0.2.3)(encoding@0.1.13)(eslint@9.19.0(jiti@2.4.2))(ioredis@5.4.2)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.4)(sass@1.84.0)(terser@5.38.0)(typescript@5.4.5)(vite@6.1.0(@types/node@22.13.1)(jiti@2.4.2)(sass@1.84.0)(terser@5.38.0)(yaml@2.7.0))(yaml@2.7.0)
@@ -31,7 +31,7 @@ importers:
         version: 4.5.0(vue@3.5.13(typescript@5.4.5))
       vue3-apexcharts:
         specifier: ^1.8.0
-        version: 1.8.0(apexcharts@4.4.0)(vue@3.5.13(typescript@5.4.5))
+        version: 1.8.0(apexcharts@4.5.0)(vue@3.5.13(typescript@5.4.5))
     devDependencies:
       '@eslint/js':
         specifier: ^9.19.0
@@ -885,13 +885,13 @@ packages:
     peerDependencies:
       eslint: '>=8.40.0'
 
-  '@svgdotjs/svg.draggable.js@3.0.5':
-    resolution: {integrity: sha512-ljL/fB0tAjRfFOJGhXpr7rEx9DJ6D7Pxt3AXvgxjEM17g6wK3Ho9nXhntraOMx8JLZdq4NBMjokeXMvnQzJVYA==}
+  '@svgdotjs/svg.draggable.js@3.0.6':
+    resolution: {integrity: sha512-7iJFm9lL3C40HQcqzEfezK2l+dW2CpoVY3b77KQGqc8GXWa6LhhmX5Ckv7alQfUXBuZbjpICZ+Dvq1czlGx7gA==}
     peerDependencies:
       '@svgdotjs/svg.js': ^3.2.4
 
-  '@svgdotjs/svg.filter.js@3.0.8':
-    resolution: {integrity: sha512-YshF2YDaeRA2StyzAs5nUPrev7npQ38oWD0eTRwnsciSL2KrRPMoUw8BzjIXItb3+dccKGTX3IQOd2NFzmHkog==}
+  '@svgdotjs/svg.filter.js@3.0.9':
+    resolution: {integrity: sha512-/69XMRCDoam2HgC4ldHIaDgeQf1ViHIsa0Ld4uWgiXtZ+E24DWHe/9Ib6kbNiZ7WRIdlVokUDR1Fg0kjIpkfbw==}
     engines: {node: '>= 0.8.0'}
 
   '@svgdotjs/svg.js@3.2.4':
@@ -1168,8 +1168,8 @@ packages:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
     engines: {node: '>= 8'}
 
-  apexcharts@4.4.0:
-    resolution: {integrity: sha512-JGsHeQEKDlQh1rob8aBai9/HKvXIpbZ83TnobKZAcdOELf+oQZaxZyAnbbldr6PPBdCgG2zzzLaP1dtEsJxzWw==}
+  apexcharts@4.5.0:
+    resolution: {integrity: sha512-E7ZkrVqPNBUWy/Rmg8DEIqHNBmElzICE/oxOX5Ekvs2ICQUOK/VkEkMH09JGJu+O/EA0NL31hxlmF+wrwrSLaQ==}
 
   archiver-utils@5.0.2:
     resolution: {integrity: sha512-wuLJMmIBQYCsGZgYLTy5FIB2pF6Lfb6cXMSF8Qywwk3t20zWnAi7zLcQFdKQmIB8wyZpY5ER38x08GbwtR2cLA==}
@@ -4727,11 +4727,11 @@ snapshots:
       - supports-color
       - typescript
 
-  '@svgdotjs/svg.draggable.js@3.0.5(@svgdotjs/svg.js@3.2.4)':
+  '@svgdotjs/svg.draggable.js@3.0.6(@svgdotjs/svg.js@3.2.4)':
     dependencies:
       '@svgdotjs/svg.js': 3.2.4
 
-  '@svgdotjs/svg.filter.js@3.0.8':
+  '@svgdotjs/svg.filter.js@3.0.9':
     dependencies:
       '@svgdotjs/svg.js': 3.2.4
 
@@ -5099,10 +5099,10 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
-  apexcharts@4.4.0:
+  apexcharts@4.5.0:
     dependencies:
-      '@svgdotjs/svg.draggable.js': 3.0.5(@svgdotjs/svg.js@3.2.4)
-      '@svgdotjs/svg.filter.js': 3.0.8
+      '@svgdotjs/svg.draggable.js': 3.0.6(@svgdotjs/svg.js@3.2.4)
+      '@svgdotjs/svg.filter.js': 3.0.9
       '@svgdotjs/svg.js': 3.2.4
       '@svgdotjs/svg.resize.js': 2.0.5(@svgdotjs/svg.js@3.2.4)(@svgdotjs/svg.select.js@4.0.2(@svgdotjs/svg.js@3.2.4))
       '@svgdotjs/svg.select.js': 4.0.2(@svgdotjs/svg.js@3.2.4)
@@ -7846,9 +7846,9 @@ snapshots:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.13(typescript@5.4.5)
 
-  vue3-apexcharts@1.8.0(apexcharts@4.4.0)(vue@3.5.13(typescript@5.4.5)):
+  vue3-apexcharts@1.8.0(apexcharts@4.5.0)(vue@3.5.13(typescript@5.4.5)):
     dependencies:
-      apexcharts: 4.4.0
+      apexcharts: 4.5.0
       vue: 3.5.13(typescript@5.4.5)
 
   vue@3.5.13(typescript@5.4.5):
