@@ -21,8 +21,8 @@ importers:
         specifier: ^2.3.1
         version: 2.3.1(typescript@5.4.5)(vue@3.5.13(typescript@5.4.5))
       posthog-js:
-        specifier: ^1.215.4
-        version: 1.215.4
+        specifier: ^1.234.4
+        version: 1.234.4
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.4.5)
@@ -923,6 +923,9 @@ packages:
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
 
+  '@types/estree@1.0.7':
+    resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
+
   '@types/http-proxy@1.17.15':
     resolution: {integrity: sha512-25g5atgiVNTIv0LBDTg1H74Hvayx0ajtJPLLcYE3whFv75J0pWNtOBzaXJQgDTmrX1bx5U9YC2w/n65BN1HwRQ==}
 
@@ -1394,8 +1397,8 @@ packages:
   core-js-compat@3.40.0:
     resolution: {integrity: sha512-0XEDpr5y5mijvw8Lbc6E5AkjrHfp7eEoPlu36SWeAbcL8fn1G1ANe8DBlo2XoNN89oVpxWwOjYIPVzR4ZvsKCQ==}
 
-  core-js@3.40.0:
-    resolution: {integrity: sha512-7vsMc/Lty6AGnn7uFpYT56QesI5D2Y/UkgKounk87OP9Z2H9Z8kj6jzcSGAxFmUtDOS0ntK6lbQz+Nsa0Jj6mQ==}
+  core-js@3.41.0:
+    resolution: {integrity: sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==}
 
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -2893,11 +2896,19 @@ packages:
     resolution: {integrity: sha512-6oz2beyjc5VMn/KV1pPw8fliQkhBXrVn1Z3TVyqZxU8kZpzEKhBdmCFqI6ZbmGtamQvQGuU1sgPTk8ZrXDD7jQ==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-js@1.215.4:
-    resolution: {integrity: sha512-FlPITI3dVPBRMQGk+jbJcL4Z1FXDyc7O2vNfsspNV2C6dKIJ4F1cTkxhQBEdG5jV1nJ6ZQjgZz1LxbbkSgx9Bg==}
+  posthog-js@1.234.4:
+    resolution: {integrity: sha512-IH7ISmm7SP+GYeCJ+RjlBnA9AtmbT6W/mZUW/ca/erHNb1EE1K3//IzDGyGYs7dT26b/HH9Z9kdO51h7PVSi6w==}
+    peerDependencies:
+      '@rrweb/types': 2.0.0-alpha.17
+      rrweb-snapshot: 2.0.0-alpha.17
+    peerDependenciesMeta:
+      '@rrweb/types':
+        optional: true
+      rrweb-snapshot:
+        optional: true
 
-  preact@10.25.4:
-    resolution: {integrity: sha512-jLdZDb+Q+odkHJ+MpW/9U5cODzqnB+fy2EiHSZES7ldV5LK7yjlVzTp7R8Xy6W6y75kfK8iWYtFVH7lvjwrCMA==}
+  preact@10.26.4:
+    resolution: {integrity: sha512-KJhO7LBFTjP71d83trW+Ilnjbo+ySsaAgCfXOXUlmGzJ4ygYPWmysm77yg4emwfmoz3b22yvH5IsVFHbhUaH5w==}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -4752,11 +4763,14 @@ snapshots:
 
   '@types/eslint@9.6.1':
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       '@types/json-schema': 7.0.15
     optional: true
 
   '@types/estree@1.0.6': {}
+
+  '@types/estree@1.0.7':
+    optional: true
 
   '@types/http-proxy@1.17.15':
     dependencies:
@@ -5339,7 +5353,7 @@ snapshots:
     dependencies:
       browserslist: 4.24.4
 
-  core-js@3.40.0: {}
+  core-js@3.41.0: {}
 
   core-util-is@1.0.3: {}
 
@@ -7031,14 +7045,14 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  posthog-js@1.215.4:
+  posthog-js@1.234.4:
     dependencies:
-      core-js: 3.40.0
+      core-js: 3.41.0
       fflate: 0.4.8
-      preact: 10.25.4
+      preact: 10.26.4
       web-vitals: 4.2.4
 
-  preact@10.25.4: {}
+  preact@10.26.4: {}
 
   prelude-ls@1.2.1: {}
 
