@@ -42,7 +42,7 @@
 		"lodash": "^4.17.21",
 		"prettier": "^3.4.2",
 		"sass": "^1.84.0",
-		"typescript-eslint": "^8.23.0",
+		"typescript-eslint": "^8.31.1",
 		"vite-plugin-vuetify": "^2.1.0",
 		"vuetify": "^3.7.11"
 	}
