@@ -12,8 +12,8 @@ const loadTerms = (user: User): void => {
 	const store = useEpsilonStore()
 	const api = useApi()
 	if (
-		store.selectedUser?._id === null ||
-		store.selectedUser?._id === undefined
+		store.selectedUser?.id === null ||
+		store.selectedUser?.id === undefined
 	) {
 		return
 	}
@@ -21,7 +21,7 @@ const loadTerms = (user: User): void => {
 	store.setSelectedTerm(null)
 	api.filter
 		.filterParticipatedTermsList({
-			studentId: user._id ?? "",
+			studentId: user.id?.toString() ?? "",
 		})
 		.then((r) => {
 			store.setTerms(r.data)
@@ -34,15 +34,15 @@ const loadSubmissions = async (): Promise<void> => {
 	const store = useEpsilonStore()
 	const api = useApi()
 	if (
-		store.selectedUser?._id === null ||
-		store.selectedUser?._id === undefined
+		store.selectedUser?.id === null ||
+		store.selectedUser?.id === undefined
 	) {
 		return
 	}
 	store.setLoadingSubmissions(true)
 
 	const response = await api?.learning.learningOutcomesList({
-		studentId: store.selectedUser!._id,
+		studentId: store.selectedUser!.id.toString(),
 	})
 
 	if (response.error) {
@@ -99,12 +99,14 @@ const filterSubmissions = (): void => {
 const loadStudents = (): void => {
 	const store = useEpsilonStore()
 	const api = useApi()
+	store.setLoadingStudents(true)
 
 	api.filter
 		.filterAccessibleStudentsList()
 		.then((r) => {
 			store.setUsers(r.data)
 			store.setSelectedUser(store.users[0])
+			store.setLoadingStudents(false)
 			loadTerms(store.selectedUser!)
 		})
 		.catch((r) => store.addError(r))

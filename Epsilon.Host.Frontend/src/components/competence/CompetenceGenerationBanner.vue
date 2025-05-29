@@ -29,7 +29,7 @@ function downloadCompetenceDocument(): void {
 	isDownloading.value = true
 	api.document
 		.documentDownloadWordList({
-			userId: store.selectedUser?._id ?? "",
+			userId: store.selectedUser?.id ?? "",
 			from: store.selectedTermRange?.start.toDateString()!,
 			to: store.selectedTermRange?.end.toDateString()!,
 			domains: store.usedDomains.join(","),

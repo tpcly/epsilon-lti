@@ -6,7 +6,7 @@
 		:persistent="true"
 		attach=".v-window-item .v-window-item--active">
 		<template #default>
-			<v-card title="Building competence profile">
+			<v-card title="Loading">
 				<v-card-text class="pa-5">
 					<v-progress-linear indeterminate></v-progress-linear>
 				</v-card-text>

@@ -26,7 +26,7 @@
 				density="compact"
 				:clearable="true"
 				:flat="true"
-				item-value="_id"
+				item-value="id"
 				item-title="name"
 				return-object
 				no-data-text>

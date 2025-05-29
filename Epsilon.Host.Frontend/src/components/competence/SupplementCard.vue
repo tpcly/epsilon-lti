@@ -11,7 +11,7 @@
 				density="compact"
 				:clearable="true"
 				:flat="true"
-				item-value="_id"
+				item-value="id"
 				item-title="name"
 				return-object
 				no-data-text>
@@ -40,7 +40,7 @@ function downloadSupplement(): void {
 	isDownloading.value = true
 	api.document
 		.documentDownloadSupplementList({
-			userId: selectedUser.value?._id ?? "",
+			userId: selectedUser.value?.id ?? "",
 			domains: store.usedDomains.join(","),
 		})
 		.then(async (response) => {

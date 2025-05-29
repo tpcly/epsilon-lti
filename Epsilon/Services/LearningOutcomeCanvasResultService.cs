@@ -18,7 +18,7 @@ public class LearningOutcomeCanvasResultService : ILearningOutcomeCanvasResultSe
                 course {
                   _id
                   name
-                  submissionsConnection(studentIds: [$studentIds],  filter: {submittedSince: $submittedSince}) {
+                  submissionsConnection(studentIds: [$studentIds],  filter: {submittedSince: $submittedSince}, first: 100) {
                     nodes {
                       assignment {
                         _id

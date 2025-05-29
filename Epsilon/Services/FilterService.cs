@@ -80,7 +80,7 @@ public class FilterService : IFilterService
     }
 
 
-    public async Task<IOrderedEnumerable<User>> GetAccessibleStudents()
+    public async Task<IEnumerable<User>> GetAccessibleStudents()
     {
         var canvasUser = await _sessionAccessor.GetSessionAsync();
 
@@ -104,14 +104,15 @@ public class FilterService : IFilterService
             while (nextUrl != null);
         }
         
-        return  responseContent!.Where(er =>
+        return  responseContent.Where(er =>
             {
                 if (canvasUser?.IsTeacher ?? false)
                     return er.Type == "StudentEnrollment";
 
-                return er.User?.Id == canvasUser?.UserId && er.Type == "StudentEnrollment";
+                return er.User.Id == canvasUser?.UserId && er.Type == "StudentEnrollment";
             }
-        ).Select(static er => er.User!).DistinctBy(static u => u.Id).OrderBy(static u => u.Name);
+        ).Select(static er => er.User).DistinctBy(static u => u.Id).OrderBy(static u => u.Name)
+            .ToList();
     }
 
 

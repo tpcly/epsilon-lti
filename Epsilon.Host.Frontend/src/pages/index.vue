@@ -37,7 +37,7 @@
 		</v-tabs>
 		<loading-dialog
 			v-if="!store.errors.length"
-			v-model="store.loadingSubmissions"></loading-dialog>
+			v-model="loading"></loading-dialog>
 
 		<v-window v-model="tabs" class="mt-4">
 			<v-window-item :value="0">
@@ -111,13 +111,18 @@ if (process.client && data.value?.idToken) {
 		useState("id_token", () => callback?.idToken)
 	}
 }
+const loading = computed(
+	() =>
+		(store.loadingSubmissions && store.outcomes.length > 0) ||
+		store.loadingStudents
+)
 const router = useRouter()
 const { selectedUser, selectedTermRange } = storeToRefs(store)
 if (process.client) {
 	Posthog.init()
 
 	setInterval(() => {
-		if (store.loadingSubmissions && store.outcomes.length > 0) {
+		if (loading.value) {
 			store.setFilteredSubmissions(
 				Generator.generateSubmissions(store.outcomes)
 			)

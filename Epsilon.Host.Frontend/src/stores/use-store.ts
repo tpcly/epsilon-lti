@@ -29,6 +29,7 @@ export const useEpsilonStore = defineStore("Epsilon", {
 			submissions: [] as LearningDomainSubmission[],
 			filteredSubmissions: [] as LearningDomainSubmission[],
 			loadingSubmissions: false as boolean,
+			loadingStudents: false as boolean,
 			featureFlags: {} as FeatureFlags,
 		}
 	},
@@ -80,6 +81,9 @@ export const useEpsilonStore = defineStore("Epsilon", {
 		},
 		setLoadingSubmissions(loading: boolean) {
 			this.loadingSubmissions = loading
+		},
+		setLoadingStudents(loading: boolean) {
+			this.loadingStudents = loading
 		},
 		setFeatureFlags(flags: FeatureFlags) {
 			this.featureFlags = flags
