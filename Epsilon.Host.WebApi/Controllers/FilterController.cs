@@ -2,6 +2,7 @@ using Epsilon.Abstractions.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tpcly.Canvas.Abstractions.GraphQl;
+using User = Tpcly.Canvas.Abstractions.Rest.User;
 
 namespace Epsilon.Host.WebApi.Controllers;
 
@@ -24,7 +25,7 @@ public class FilterController : Controller
     }
 
     [HttpGet("accessible-students")]
-    public async Task<IEnumerable<User>?> GetAccessibleStudents()
+    public async Task<IOrderedEnumerable<User>> GetAccessibleStudents()
     {
         return await _filterService.GetAccessibleStudents();
     }

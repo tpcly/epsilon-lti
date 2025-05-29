@@ -50,6 +50,7 @@ builder.Services.AddHttpClient(
     });
 
 builder.Services.AddScoped<ICanvasRestApi, CanvasRestApi>();
+builder.Services.AddHttpClient<IEpsilonCanvasHttpClient, EpsilonCanvasHttpClient>(canvasHttpClient);
 builder.Services.AddHttpClient<ICanvasGraphQlApi, CanvasGraphQlApi>(canvasHttpClient);
 builder.Services.AddHttpClient<IPageEndpoint, PageEndpoint>(canvasHttpClient);
 builder.Services.AddHttpClient<IFileEndpoint, FileEndpoint>(canvasHttpClient);

@@ -9,7 +9,7 @@ public class AuthorizationUser : IAuthorizationUser
     private readonly IFilterService _filterService;
     private readonly ICanvasUserSessionAccessor _sessionAccessor;
 
-    public AuthorizationUser(IFilterService filterService, ICanvasUserSessionAccessor sessionAccessor)
+    public AuthorizationUser(ICanvasUserSessionAccessor sessionAccessor, IFilterService filterService)
     {
         _filterService = filterService;
         _sessionAccessor = sessionAccessor;
@@ -22,9 +22,7 @@ public class AuthorizationUser : IAuthorizationUser
         var canvasUser = await _sessionAccessor.GetSessionAsync();
         var currentUserId = canvasUser?.UserId.ToString(CultureInfo.InvariantCulture);
         if (userId != currentUserId)
-        {
-            return acceptedStudentList?.Any(u => u.LegacyId == userId) ?? false;
-        }
+            return acceptedStudentList?.Any(u => u.Id.ToString(CultureInfo.CurrentCulture) == userId) ?? false;
 
         return true;
     }
