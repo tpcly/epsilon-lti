@@ -93,7 +93,7 @@ jobs:
   deploy:
     if: ${{ needs.change-validation.outputs.CHANGES == 'True' }}
     name: Publish images to package registry
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: [ change-validation, integration, publish-release ]
     permissions: write-all
     strategy:
