@@ -35,7 +35,7 @@
 		"eslint": "^9.27.0",
 		"eslint-config-prettier": "^10.1.5",
 		"eslint-plugin-prettier": "^5.4.0",
-		"eslint-plugin-vue": "^9.33.0",
+		"eslint-plugin-vue": "^10.1.0",
 		"globals": "^15.15.0",
 		"h3": "^1.15.3",
 		"jwt-decode": "^4.0.0",
