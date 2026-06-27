@@ -23,14 +23,14 @@ jobs:
       frontend: ${{ steps.frontend.outputs.result }}
       code-analysis: ${{ steps.analysis.outputs.result }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Load docker configuration
         id: docker
         uses: mikefarah/yq@v4.45.1
         with:
           cmd: yq '.docker' .github/CICD-Config.yml -o=json
       - run: echo "Docker configuration ${{ steps.docker.outputs.result }}"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Load Code analysis configuration
         id: analysis
         uses: mikefarah/yq@v4.45.1
@@ -54,7 +54,7 @@ jobs:
       backend: ${{ steps.filter.outputs.backend }}
       frontend: ${{ steps.filter.outputs.frontend }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -72,7 +72,7 @@ jobs:
     needs: [ changes, config ]
     if: ${{ needs.changes.outputs.backend == 'true' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-dotnet@v4.3.0
         with:
           dotnet-version: '8.0.x'
@@ -90,7 +90,7 @@ jobs:
       run:
         working-directory: '${{ needs.config.outputs.frontend }}'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Corepack update
         run: |
             echo "Before: corepack version => $(corepack --version || echo 'not installed')"
@@ -117,7 +117,7 @@ jobs:
       run:
         working-directory: '${{ needs.config.outputs.frontend }}'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Corepack update
         run: |
               echo "Before: corepack version => $(corepack --version || echo 'not installed')"
@@ -145,7 +145,7 @@ jobs:
     needs: [ build-backend ]
     if: ${{ needs.changes.outputs.backend == 'true' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-dotnet@v4.3.0
         with:
           dotnet-version: '8.0.x'
@@ -183,7 +183,7 @@ jobs:
       matrix:
         include: ${{fromJson(needs.config.outputs.docker)}}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
@@ -208,7 +208,7 @@ jobs:
         language: ${{fromJson(needs.config.outputs.code-analysis)}}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         if: ${{ matrix.language != null }}
@@ -229,4 +229,4 @@ jobs:
     needs: [ build-frontend, build-backend, lint-frontend, unit-testing, build-docker, code-analysis ]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
