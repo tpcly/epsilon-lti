@@ -1,4 +1,4 @@
-﻿name: Release draft
+name: Release draft
 
 on:
   pull_request: 
@@ -27,7 +27,7 @@ jobs:
         id: release_type
         run: |
           echo "IS_PRERELEASE=$(gh pr view ${{ github.head_ref }}  --json="labels" -q='any(.labels[]; .name == "beta")')" >> $GITHUB_ENV
-      - uses: release-drafter/release-drafter@v6.0.0
+      - uses: release-drafter/release-drafter@v7.5.1
         with:
           prerelease-identifier: 'beta'
           prerelease: ${{ env.IS_PRERELEASE == 'true' }}
