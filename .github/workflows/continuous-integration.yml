@@ -90,7 +90,7 @@ jobs:
       run:
         working-directory: '${{ needs.config.outputs.frontend }}'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - name: Corepack update
         run: |
             echo "Before: corepack version => $(corepack --version || echo 'not installed')"
@@ -98,7 +98,7 @@ jobs:
             echo "After: corepack version => $(corepack --version)"
             corepack enable
             pnpm --version
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
@@ -125,7 +125,7 @@ jobs:
               echo "After: corepack version => $(corepack --version)"
               corepack enable
               pnpm --version
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
