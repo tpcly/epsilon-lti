@@ -8,7 +8,7 @@ EXPOSE 80
 ENV NUXT_HOST=0.0.0.0
 ENV PORT=80
 
-RUN npm install -g pnpm:10
+RUN npm install -g pnpm@10
 COPY pnpm-lock.yaml ./
 
 ADD . ./
