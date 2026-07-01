@@ -100,7 +100,7 @@ jobs:
             pnpm --version
       - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 20
           cache: 'pnpm'
           cache-dependency-path: '${{ needs.config.outputs.frontend}}/pnpm-lock.yaml'
       - name: Install modules
