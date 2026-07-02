@@ -44,7 +44,7 @@ builder.Services.AddHttpClient(
     static (provider, client) =>
     {
         var settings = provider.GetRequiredService<IOptions<CanvasOptions>>().Value;
-
+        client.DefaultRequestHeaders.Add("User-Agent", "Epsilon");
         client.BaseAddress = settings.ApiUrl;
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", settings.AccessToken);
     });
