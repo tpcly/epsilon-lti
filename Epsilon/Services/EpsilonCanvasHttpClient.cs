@@ -16,6 +16,7 @@ public class EpsilonCanvasHttpClient : IEpsilonCanvasHttpClient
     {
         using var request = new HttpRequestMessage(method, path);
         request.Content = body;
+        request.Headers.Add("User-Agent", "Epsilon");
         var response = await _client.SendAsync(request);
         response.EnsureSuccessStatusCode();
 
