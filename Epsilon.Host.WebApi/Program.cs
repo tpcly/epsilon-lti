@@ -44,7 +44,8 @@ builder.Services.AddHttpClient(
     static (provider, client) =>
     {
         var settings = provider.GetRequiredService<IOptions<CanvasOptions>>().Value;
-        client.DefaultRequestHeaders.Add("User-Agent", "Epsilon");
+
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("Epsilon");
         client.BaseAddress = settings.ApiUrl;
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", settings.AccessToken);
     });
@@ -81,6 +82,11 @@ builder.Services.AddScoped<IAuthorizationUser, AuthorizationUser>();
 builder.Services.AddSingleton<LtiSecurityTokenValidator>();
 builder.Services.AddLti()
        .AddPlatforms(config.GetSection("Lti").GetSection("Platforms").Get<List<ToolPlatform>>() ?? throw new InvalidOperationException("No platforms added to configurations"));
+
+builder.Services.AddHttpClient<IToolPlatformService, ToolPlatformService>(static client =>
+{
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("Epsilon");
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer();
