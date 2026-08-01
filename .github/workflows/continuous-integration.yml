@@ -202,15 +202,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
+        uses: github/codeql-action/init@v4.37.3
         if: ${{ matrix.language != null }}
         with:
           languages: ${{ matrix.language }}
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v4
+        uses: github/codeql-action/autobuild@v4.37.3
         if: ${{ matrix.language != null }}
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4
+        uses: github/codeql-action/analyze@v4.37.3
         if: ${{ matrix.language != null }}
         with:
           category: "/language:${{matrix.language}}"
